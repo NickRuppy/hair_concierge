@@ -1,0 +1,134 @@
+{
+  "status": "passed",
+  "captured_at": "2026-10-03",
+  "sources": "Exact source-scoped declarations; no physical batch verified. Maker/DE equivalence limits in source-capture. No variants merged.",
+  "case_count": 10,
+  "fresh_count": 6,
+  "replay_count": 4,
+  "fresh_exact_formula_duplicate_checks": [
+    {
+      "neutral_id": "Q01",
+      "cohort_group": "fresh",
+      "prior_exact_formula_matches": []
+    },
+    {
+      "neutral_id": "Q02",
+      "cohort_group": "replay",
+      "prior_exact_formula_matches": [
+        {
+          "run": "weight-application-round-3",
+          "neutral_id": "W04"
+        }
+      ]
+    },
+    {
+      "neutral_id": "Q03",
+      "cohort_group": "fresh",
+      "prior_exact_formula_matches": []
+    },
+    {
+      "neutral_id": "Q04",
+      "cohort_group": "fresh",
+      "prior_exact_formula_matches": []
+    },
+    {
+      "neutral_id": "Q05",
+      "cohort_group": "replay",
+      "prior_exact_formula_matches": [
+        {
+          "run": "weight-application-round-3",
+          "neutral_id": "W09"
+        }
+      ]
+    },
+    {
+      "neutral_id": "Q06",
+      "cohort_group": "fresh",
+      "prior_exact_formula_matches": []
+    },
+    {
+      "neutral_id": "Q07",
+      "cohort_group": "replay",
+      "prior_exact_formula_matches": [
+        {
+          "run": "weight-application-round-3",
+          "neutral_id": "W06"
+        }
+      ]
+    },
+    {
+      "neutral_id": "Q08",
+      "cohort_group": "fresh",
+      "prior_exact_formula_matches": []
+    },
+    {
+      "neutral_id": "Q09",
+      "cohort_group": "fresh",
+      "prior_exact_formula_matches": []
+    },
+    {
+      "neutral_id": "Q10",
+      "cohort_group": "replay",
+      "prior_exact_formula_matches": [
+        {
+          "run": "weight-application-round-3",
+          "neutral_id": "W01"
+        }
+      ]
+    }
+  ],
+  "history_file_count": 80,
+  "new_material_gap": [
+    "CORYLUS AVELLANA SEED OIL has exact identity/function only; no v0.7 weight prior."
+  ],
+  "literal_gaps": [
+    "ACACIA CONCINNA FRUIT EXTRACT",
+    "ACETYL CEDRENE",
+    "ALOE BARBADENSIS EXTRACT",
+    "ALOE BARBADENSIS LEAF EXTRACT",
+    "ALPHA-TERPINENE",
+    "APIUM GRAVEOLENS (CELERY) SEED EXTRACT",
+    "ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT",
+    "ASCORBIC ACID",
+    "BACOPA MONNIERI LEAF EXTRACT",
+    "BASILICUM (BASIL) OIL",
+    "BENZYL NICOTINATE",
+    "BIOTIN",
+    "CAPSANTHIN/CAPSORUBIN",
+    "CARVONE",
+    "CENTELLA ASIATICA LEAF EXTRACT",
+    "CHOLECALCIFEROL (VITAMIN D)",
+    "CINNAMOMUM CAMPHORA WOOD OIL (DECAMPHORISED)",
+    "DIMETHYL PHENETHYL ACETATE",
+    "ECLIPTA ALBA LEAF EXTRACT",
+    "EMBLICA OFFICINALIS FRUIT EXTRACT",
+    "EQUISETUM ARVENSE (HORSETAIL) EXTRACT",
+    "EUCALYPTUS GLOBOLUS (EUCALYPTUS) LEAF OIL",
+    "HEXAMETHYLINDANOPYRAN",
+    "ISOEUGENYL ACETATE",
+    "LAVANDULA (LAVENDER) OIL/EXTRACT",
+    "LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL",
+    "LAWSONIA INERMIS (HENNA) LEAF EXTRACT",
+    "MELALUECA ALTERNIFOLIA (TEA TREE) LEAF OIL",
+    "MENTHA PIPERITA (PEPPERMINT) OIL",
+    "MENTHA VIRIDIS (SPEARMINT) LEAF OIL",
+    "OCIMUM",
+    "OCIMUM SANCTUM LEAF EXTRACT",
+    "ONOSMA HISPIDUM ROOT EXTRACT",
+    "PELARGONIUM GRAVEOLENS FLOWER OIL",
+    "POGOSTEMON CABLIN (PATCHOULI) OIL",
+    "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+    "SALVIA OFFICINALIS (SAGE) OIL",
+    "SAPINDUS MUKOROSSI FRUIT EXTRACT",
+    "SOLANUM LYCOPERSICUM (TOMATO) FRUIT EXTRACT",
+    "SYMPLOCOS RACEMOSA BARK EXTRACT",
+    "TERPINOLENE",
+    "TRIGONELLA FOENUM-GRAECUM SEED EXTRACT",
+    "URTICA DIOICA (NETTLE) EXTRACT",
+    "VANILLIN",
+    "WITHANIA SOMNIFERA LEAF/ROOT EXTRACT"
+  ],
+  "normalization_limits": "Source-scoped footnotes/codes/common-name parentheses; replay ingredients pin old frozen captures and display receipts. Mielle malformed literals not repaired.",
+  "held_product": "Garnier Wunderöl declarations C204953/1 and C253780/1 conflict; current DE John Frieda used instead.",
+  "review": "Claude plan review reconciled; exact policy JSON/document contract, full six fresh cases, no accuracy interpretation."
+}

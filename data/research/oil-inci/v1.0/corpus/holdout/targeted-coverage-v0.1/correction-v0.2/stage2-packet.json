@@ -1,0 +1,81 @@
+{
+  "run_id": "oil-targeted-coverage-v0.1",
+  "records": [
+    {
+      "case_id": "T02",
+      "identity": {
+        "brand": "OGX",
+        "product": "Argan Oil of Morocco Weightless Healing Dry Oil",
+        "market": "US maker",
+        "size": "4 fl oz",
+        "identifier_if_verified": null
+      },
+      "sources": [
+        {
+          "id": "T02-maker",
+          "url": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-weightless-healing-dry-oil?phrase=2024",
+          "scope": "Exact maker online formula, product text, directions, packaging mechanism and accepted claim review; not package/batch verification."
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "T02-hero-1",
+          "hero_name": "Moroccan argan oil",
+          "canonical_ingredients": [
+            "ARGANIA KERNEL OIL"
+          ],
+          "source_id": "T02-maker",
+          "mapping_note": "Literal species-incomplete source token only; no argan species alias or material prior."
+        }
+      ],
+      "non_oil_features": [],
+      "packaging": {
+        "value": "spray",
+        "status": "confirmed",
+        "source_id": "T02-maker",
+        "observation": "Maker text explicitly describes spray/misting."
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "T02-maker",
+          "reason": {
+            "accepted_explicit": false,
+            "negative_basis": "No explicit heat protection claim in reviewed maker description, benefits or directions."
+          }
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "T02-maker",
+          "reason": {
+            "accepted_explicit": false,
+            "basis": "No explicit hair UV claim in reviewed maker description, benefits or directions."
+          }
+        }
+      },
+      "directions": [
+        {
+          "source_id": "T02-maker",
+          "dose": "mist all over; amount unestablished",
+          "contact_time": "unestablished",
+          "restrictions": "none stated in reviewed exact product text",
+          "direction_id": "T02-direction-1",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "finish_style_unspecified_wet_dry",
+          "removal": "retention_by_styling_context",
+          "text": "Finish style by misting all over for shine and frizz control; no explicit damp/dry instruction."
+        }
+      ],
+      "source_limits": [
+        "Current online formula only; packaging may differ.",
+        "Different Arabia OGX nine-item formula excluded; Argania Kernel Oil literal species-incomplete token preserved."
+      ],
+      "source_record_ref": "source-packet.json#T02"
+    }
+  ],
+  "normalization": "Source-only assembly before root reads any blind output; no blind values included."
+}

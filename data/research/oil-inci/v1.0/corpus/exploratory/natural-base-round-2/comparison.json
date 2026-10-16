@@ -1,0 +1,197 @@
+{
+  "run_id": "oil-natural-base-round-2",
+  "method_revision": "weight-v0.2",
+  "interpretation": "Split denominator metrics; shared priors make material agreement application consistency, not accuracy. No pooled headline agreement or scientific validation.",
+  "groups": {
+    "cosmetic_material_benchmark": {
+      "cases": 8,
+      "raw_value_agreement": {
+        "numerator": 8,
+        "denominator": 8
+      },
+      "both_substantive_coverage": {
+        "numerator": 8,
+        "denominator": 8
+      },
+      "substantive_value_agreement": {
+        "numerator": 8,
+        "denominator": 8
+      },
+      "per_lane_class_counts": {
+        "a": {
+          "rich": 2,
+          "medium": 1,
+          "light": 5
+        },
+        "b": {
+          "rich": 2,
+          "medium": 1,
+          "light": 5
+        }
+      },
+      "confidence_agreement": 8,
+      "both_unknown_ids": []
+    },
+    "hypothetical_formula_probe": {
+      "cases": 6,
+      "raw_value_agreement": {
+        "numerator": 6,
+        "denominator": 6
+      },
+      "both_substantive_coverage": {
+        "numerator": 1,
+        "denominator": 6
+      },
+      "substantive_value_agreement": {
+        "numerator": 1,
+        "denominator": 1
+      },
+      "per_lane_class_counts": {
+        "a": {
+          "unknown": 5,
+          "rich": 1
+        },
+        "b": {
+          "unknown": 5,
+          "rich": 1
+        }
+      },
+      "confidence_agreement": 6,
+      "both_unknown_ids": [
+        "P01",
+        "P03",
+        "P04",
+        "P05",
+        "P06"
+      ]
+    }
+  },
+  "cases": [
+    {
+      "neutral_id": "B01",
+      "input_kind": "cosmetic_material_benchmark",
+      "lane_a": "rich",
+      "lane_b": "rich",
+      "confidence_a": "moderate",
+      "confidence_b": "moderate",
+      "agrees": true
+    },
+    {
+      "neutral_id": "B02",
+      "input_kind": "cosmetic_material_benchmark",
+      "lane_a": "medium",
+      "lane_b": "medium",
+      "confidence_a": "moderate",
+      "confidence_b": "moderate",
+      "agrees": true
+    },
+    {
+      "neutral_id": "B03",
+      "input_kind": "cosmetic_material_benchmark",
+      "lane_a": "light",
+      "lane_b": "light",
+      "confidence_a": "low",
+      "confidence_b": "low",
+      "agrees": true
+    },
+    {
+      "neutral_id": "B04",
+      "input_kind": "cosmetic_material_benchmark",
+      "lane_a": "rich",
+      "lane_b": "rich",
+      "confidence_a": "low",
+      "confidence_b": "low",
+      "agrees": true
+    },
+    {
+      "neutral_id": "B05",
+      "input_kind": "cosmetic_material_benchmark",
+      "lane_a": "light",
+      "lane_b": "light",
+      "confidence_a": "moderate",
+      "confidence_b": "moderate",
+      "agrees": true
+    },
+    {
+      "neutral_id": "B06",
+      "input_kind": "cosmetic_material_benchmark",
+      "lane_a": "light",
+      "lane_b": "light",
+      "confidence_a": "moderate",
+      "confidence_b": "moderate",
+      "agrees": true
+    },
+    {
+      "neutral_id": "B07",
+      "input_kind": "cosmetic_material_benchmark",
+      "lane_a": "light",
+      "lane_b": "light",
+      "confidence_a": "low",
+      "confidence_b": "low",
+      "agrees": true
+    },
+    {
+      "neutral_id": "B08",
+      "input_kind": "cosmetic_material_benchmark",
+      "lane_a": "light",
+      "lane_b": "light",
+      "confidence_a": "moderate",
+      "confidence_b": "moderate",
+      "agrees": true
+    },
+    {
+      "neutral_id": "P01",
+      "input_kind": "hypothetical_formula_probe",
+      "lane_a": "unknown",
+      "lane_b": "unknown",
+      "confidence_a": "low",
+      "confidence_b": "low",
+      "agrees": true
+    },
+    {
+      "neutral_id": "P02",
+      "input_kind": "hypothetical_formula_probe",
+      "lane_a": "rich",
+      "lane_b": "rich",
+      "confidence_a": "low",
+      "confidence_b": "low",
+      "agrees": true
+    },
+    {
+      "neutral_id": "P03",
+      "input_kind": "hypothetical_formula_probe",
+      "lane_a": "unknown",
+      "lane_b": "unknown",
+      "confidence_a": "low",
+      "confidence_b": "low",
+      "agrees": true
+    },
+    {
+      "neutral_id": "P04",
+      "input_kind": "hypothetical_formula_probe",
+      "lane_a": "unknown",
+      "lane_b": "unknown",
+      "confidence_a": "low",
+      "confidence_b": "low",
+      "agrees": true
+    },
+    {
+      "neutral_id": "P05",
+      "input_kind": "hypothetical_formula_probe",
+      "lane_a": "unknown",
+      "lane_b": "unknown",
+      "confidence_a": "low",
+      "confidence_b": "low",
+      "agrees": true
+    },
+    {
+      "neutral_id": "P06",
+      "input_kind": "hypothetical_formula_probe",
+      "lane_a": "unknown",
+      "lane_b": "unknown",
+      "confidence_a": "low",
+      "confidence_b": "low",
+      "agrees": true
+    }
+  ]
+}

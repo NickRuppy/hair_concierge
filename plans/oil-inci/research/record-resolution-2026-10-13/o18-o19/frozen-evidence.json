@@ -1,0 +1,457 @@
+{
+  "version": "oil-record-resolution-evidence-v0.1",
+  "date": "2026-10-13",
+  "scope": [
+    "O18",
+    "O19"
+  ],
+  "fresh_external_research": false,
+  "evidence": [
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json",
+      "sha256": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35",
+      "json_pointer": "/records/5",
+      "record": {
+        "neutral_id": "D06",
+        "identity": {
+          "brand": "Aroma-Zone",
+          "product": "Haircare Oil With 7 Precious Oils",
+          "size_ml": 250,
+          "market": "FR"
+        },
+        "sources": [
+          {
+            "id": "D06-maker",
+            "url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil",
+            "source_author": "Aroma-Zone",
+            "tier": "exact_manufacturer",
+            "accessed_at": "2026-10-05"
+          }
+        ],
+        "directions": [
+          {
+            "source_id": "D06-maker",
+            "site": [
+              "scalp"
+            ],
+            "stage": "before_wash",
+            "dose": "unspecified",
+            "contact_time": "10–15 minutes",
+            "removal": "shampoo",
+            "text": "Apply in scalp sections, massage, leave 10–15 minutes, then shampoo.",
+            "direction_id": "D06-direction-1",
+            "restrictions": "unestablished"
+          },
+          {
+            "source_id": "D06-maker",
+            "site": [
+              "hair"
+            ],
+            "stage": "dry_or_damp_before_wash",
+            "dose": "1–3 tablespoons",
+            "contact_time": "1–3 hours or overnight",
+            "removal": "shampoo",
+            "text": "Apply root-to-tip on dry or damp hair; leave under warm towel; shampoo.",
+            "direction_id": "D06-direction-2",
+            "restrictions": "unestablished"
+          },
+          {
+            "source_id": "D06-maker",
+            "site": [
+              "ends"
+            ],
+            "stage": "dry_finish",
+            "dose": "a dab",
+            "contact_time": "unspecified",
+            "removal": "leave_on",
+            "text": "Apply a dab to dry ends and massage in.",
+            "direction_id": "D06-direction-3",
+            "restrictions": "unestablished"
+          }
+        ],
+        "heroes": [
+          {
+            "hero_id": "castor",
+            "hero_name": "Castor oil",
+            "canonical_ingredients": [
+              "RICINUS COMMUNIS SEED OIL"
+            ],
+            "mapping_note": "Exact maker named oil mapped to its literal INCI; no quantity inferred."
+          },
+          {
+            "hero_id": "coconut",
+            "hero_name": "Coconut oil",
+            "canonical_ingredients": [
+              "COCOS NUCIFERA OIL"
+            ],
+            "mapping_note": "Exact maker named oil mapped to its literal INCI; no quantity inferred."
+          },
+          {
+            "hero_id": "mustard",
+            "hero_name": "Mustard oil",
+            "canonical_ingredients": [
+              "BRASSICA NIGRA SEED OIL"
+            ],
+            "mapping_note": "Exact maker named oil mapped to its literal INCI; no quantity inferred."
+          },
+          {
+            "hero_id": "broccoli",
+            "hero_name": "Broccoli oil",
+            "canonical_ingredients": [
+              "BRASSICA OLERACEA ITALICA SEED OIL"
+            ],
+            "mapping_note": "Exact maker named oil mapped to its literal INCI; no quantity inferred."
+          },
+          {
+            "hero_id": "avocado",
+            "hero_name": "Avocado oil",
+            "canonical_ingredients": [
+              "PERSEA GRATISSIMA OIL"
+            ],
+            "mapping_note": "Exact maker named oil mapped to its literal INCI; no quantity inferred."
+          },
+          {
+            "hero_id": "jojoba",
+            "hero_name": "Jojoba oil",
+            "canonical_ingredients": [
+              "SIMMONDSIA CHINENSIS SEED OIL"
+            ],
+            "mapping_note": "Exact maker named oil mapped to its literal INCI; no quantity inferred."
+          },
+          {
+            "hero_id": "olive",
+            "hero_name": "Olive oil",
+            "canonical_ingredients": [
+              "OLEA EUROPAEA FRUIT OIL"
+            ],
+            "mapping_note": "Exact maker named oil mapped to its literal INCI; no quantity inferred."
+          },
+          {
+            "hero_id": "amla_macerate",
+            "hero_name": "Amla macerated oil",
+            "canonical_ingredients": [
+              "EMBLICA OFFICINALIS FRUIT POWDER"
+            ],
+            "mapping_note": "Maker describes Amla macerate and formula declares exact Amla powder. No specific carrier identity or amount is established merely by other oils being present."
+          }
+        ],
+        "packaging": {
+          "value": "unknown",
+          "mechanism": "unknown",
+          "evidence": "Maker confirms RPET bottle but not supplied outlet; separately sold pump/service cap do not establish inclusion."
+        },
+        "claims": {
+          "heat": {
+            "accepted": false,
+            "source_id": "D06-maker",
+            "excerpt": null,
+            "review_complete": true,
+            "review_scope": "Product body and properties; no heat/thermal protection claim."
+          },
+          "uv": {
+            "accepted": false,
+            "source_id": "D06-maker",
+            "excerpt": null,
+            "review_complete": true,
+            "review_scope": "Product body and properties; no hair UV/sun-protection claim."
+          }
+        },
+        "source_limits": "Base product only; physical pack/batch unverified. Exact final INCI parenthetical retains its internal comma.",
+        "raw_inci": "Ricinus communis seed oil* (organic Ricin carrier oil), Olea europaea fruit oil* (organic Olive carrier oil), Cocos nucifera oil* (organic Coconut carrier oil), Persea gratissima oil* (organic Avocado carrier oil), Brassica nigra seed oil* (organic Mustard carrier oil), Simmondsia chinensis seed oil* (organic Jojoba plant oil), Brassica oleracea italica seed oil* (organic Broccoli plant oil), Emblica officinalis fruit powder* (organic Amla powder), Tocopherol (vitamin E), Helianthus annuus seed oil (Sunflower plant oil, tocopherol carrier oil)",
+        "positioning_review_complete": true
+      }
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json",
+      "sha256": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35",
+      "json_pointer": "/records/0",
+      "record": {
+        "neutral_id": "D01",
+        "identity": {
+          "brand": "Evolve Organic Beauty",
+          "product": "Nourishing Hair Elixir – Dry Hair Serum",
+          "size_ml": 30,
+          "market": "UK"
+        },
+        "sources": [
+          {
+            "id": "D01-maker",
+            "url": "https://www.evolvebeauty.com/products/weightless-hair-serum",
+            "source_author": "Evolve Organic Beauty",
+            "tier": "exact_manufacturer",
+            "accessed_at": "2026-10-05"
+          }
+        ],
+        "directions": [
+          {
+            "source_id": "D01-maker",
+            "site": [
+              "mid_lengths",
+              "ends"
+            ],
+            "stage": "clean_wet_or_dry",
+            "dose": "3–4 drops",
+            "contact_time": "unspecified",
+            "removal": "leave_on",
+            "text": "Apply 3–4 drops from mid to ends of clean hair, wet or dry; comb through gently.",
+            "direction_id": "D01-direction-1",
+            "restrictions": "unestablished"
+          }
+        ],
+        "heroes": [
+          {
+            "hero_id": "argan_oil",
+            "hero_name": "Organic Argan Oil",
+            "canonical_ingredients": [
+              "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+            ],
+            "mapping_note": "Literal INCI match."
+          },
+          {
+            "hero_id": "baobab_oil",
+            "hero_name": "Organic Baobab Oil",
+            "canonical_ingredients": [
+              "ADANSONIA DIGITATA (BAOBAB) SEED OIL"
+            ],
+            "mapping_note": "Literal INCI match."
+          },
+          {
+            "hero_id": "gardenia_monoi",
+            "hero_name": "Gardenia Monoi",
+            "canonical_ingredients": [
+              "GARDENIA TAHITENSIS FLOWER EXTRACT",
+              "COCOS NUCIFERA OIL"
+            ],
+            "mapping_note": "Marketing material is not a single INCI token; both literal declared components retained."
+          }
+        ],
+        "packaging": {
+          "value": "dropper",
+          "mechanism": "pipette",
+          "evidence": "Maker FAQ: pipette is not easily recyclable."
+        },
+        "claims": {
+          "heat": {
+            "accepted": false,
+            "source_id": "D01-maker",
+            "excerpt": null,
+            "review_complete": true,
+            "review_scope": "Product body, benefits, directions and FAQ; no heat/thermal claim."
+          },
+          "uv": {
+            "accepted": false,
+            "source_id": "D01-maker",
+            "excerpt": null,
+            "review_complete": true,
+            "review_scope": "Product body, benefits, directions and FAQ; environmental-damage wording is not hair UV protection."
+          }
+        },
+        "source_limits": "Current maker 22-entry declaration; physical pack/batch unverified.",
+        "raw_inci": "Isoamyl Laurate, Argania Spinosa (Argan) Kernel Oil*, Adansonia Digitata (Baobab) Seed Oil*, Cocos Nucifera (Coconut) Oil, Parfum (Naturally derived Fragrance), Gardenia Tahitensis Flower Extract, Citral, Geraniol, Limonene, Linalool, Beta-Caryophyllene, Linalyl Acetate, Terpineol, Vanillin, Citrus Aurantium Peel Oil, Citrus Aurantium Bergamia Peel Oil, Citrus Limon Peel Oil, Mentha Piperita Oil, Pelargonium Graveolens Flower Oil, Pogostemon Cablin Oil, Geranyl Acetate, Pinene",
+        "positioning_review_complete": true
+      }
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/normalization-audit.json",
+      "sha256": "3da98bf704c87a5a0b1f6f4a600b2f50ca31f4113f1a4963f51795f421d350ce",
+      "json_pointer": "/entries/87",
+      "record": {
+        "neutral_id": "D06",
+        "rank": 10,
+        "raw_name": "Helianthus annuus seed oil (Sunflower plant oil, tocopherol carrier oil)",
+        "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+        "identity_basis": "existing_exact_dictionary_name_or_alias",
+        "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+      }
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/normalization-audit.json",
+      "sha256": "3da98bf704c87a5a0b1f6f4a600b2f50ca31f4113f1a4963f51795f421d350ce",
+      "json_pointer": "/entries/3",
+      "record": {
+        "neutral_id": "D01",
+        "rank": 4,
+        "raw_name": "Cocos Nucifera (Coconut) Oil",
+        "canonical_name": "COCOS NUCIFERA OIL",
+        "identity_basis": "existing_exact_dictionary_name_or_alias",
+        "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+      }
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-packet.json",
+      "sha256": "802edeb887c93f00a4f9194219e55c7695fb7e89f3ea01e697df93b91060bf48",
+      "json_pointer": "/records/5/ingredients/9",
+      "record": {
+        "rank": 10,
+        "raw_name": "Helianthus annuus seed oil (Sunflower plant oil, tocopherol carrier oil)",
+        "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+      }
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-packet.json",
+      "sha256": "802edeb887c93f00a4f9194219e55c7695fb7e89f3ea01e697df93b91060bf48",
+      "json_pointer": "/records/0/ingredients/3",
+      "record": {
+        "rank": 4,
+        "raw_name": "Cocos Nucifera (Coconut) Oil",
+        "canonical_name": "COCOS NUCIFERA OIL"
+      }
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+      "sha256": "7840fe6645b08ab24248463f7cc6abf575fe081c8775ff607dfba7e7298c88ca",
+      "json_pointer": "/entries/25",
+      "record": {
+        "canonical_name": "COCOS NUCIFERA OIL",
+        "aliases": [
+          "COCOS NUCIFERA (COCONUT) OIL",
+          "COCOS NUCIFERA OIL / COCONUT OIL"
+        ],
+        "roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "flags": [],
+        "uv_filter": false,
+        "penetration_evidence": "direct",
+        "exclusions": [
+          "EXTRACT forms",
+          "WATER forms",
+          "HYDROGENATED forms",
+          "ESTERS/PEG derivatives",
+          "feedstock-derived chemicals",
+          "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+          "COCO-CAPRYLATE",
+          "COCO-CAPRYLATE/CAPRATE",
+          "COCONUT ALKANES",
+          "fractionated coconut oil"
+        ],
+        "validation_status": "admitted",
+        "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Initial method penetration anchor; 1 g oil/g hair, 24 h at 40 C in this study. Botanical-to-studied-material transfer and ordinary-use limits remain.",
+        "source_refs": [
+          "ingredient-026-source-1",
+          "ingredient-026-source-2",
+          "ingredient-026-source-3",
+          "ingredient-026-source-4"
+        ]
+      }
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+      "sha256": "7840fe6645b08ab24248463f7cc6abf575fe081c8775ff607dfba7e7298c88ca",
+      "json_pointer": "/entries/34",
+      "record": {
+        "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+        "aliases": [
+          "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        ],
+        "roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "flags": [],
+        "uv_filter": false,
+        "penetration_evidence": "indirect",
+        "exclusions": [
+          "EXTRACT forms",
+          "WATER forms",
+          "HYDROGENATED forms",
+          "ESTERS/PEG derivatives",
+          "feedstock-derived chemicals"
+        ],
+        "validation_status": "admitted",
+        "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Not in initial direct-positive anchor set; no nonpenetration claim.",
+        "source_refs": [
+          "ingredient-035-source-1",
+          "ingredient-035-source-2"
+        ]
+      }
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+      "sha256": "5a440ee45d8ac0a1f2187fda63a8bd28c265cd9ec85060b2e3fe4b632aac70f2",
+      "json_pointer": "/entries/87",
+      "record": {
+        "canonical_name": "COCOS NUCIFERA (COCONUT) OIL",
+        "roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+        "function_source_refs": [
+          "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+        ]
+      }
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+      "sha256": "5a440ee45d8ac0a1f2187fda63a8bd28c265cd9ec85060b2e3fe4b632aac70f2",
+      "json_pointer": "/entries/88",
+      "record": {
+        "canonical_name": "COCOS NUCIFERA OIL",
+        "roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+        "function_source_refs": [
+          "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+        ]
+      }
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+      "sha256": "5a440ee45d8ac0a1f2187fda63a8bd28c265cd9ec85060b2e3fe4b632aac70f2",
+      "json_pointer": "/entries/130",
+      "record": {
+        "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+        "roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+        "function_source_refs": [
+          "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+        ]
+      }
+    }
+  ],
+  "additional_immutable_dependencies": [
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json",
+      "sha256": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/unblinded-packet-v0.1.1.json",
+      "sha256": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/normalization-audit.json",
+      "sha256": "3da98bf704c87a5a0b1f6f4a600b2f50ca31f4113f1a4963f51795f421d350ce"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-packet.json",
+      "sha256": "802edeb887c93f00a4f9194219e55c7695fb7e89f3ea01e697df93b91060bf48"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+      "sha256": "7840fe6645b08ab24248463f7cc6abf575fe081c8775ff607dfba7e7298c88ca"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+      "sha256": "5a440ee45d8ac0a1f2187fda63a8bd28c265cd9ec85060b2e3fe4b632aac70f2"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+      "sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/lane-b/records.json",
+      "sha256": "b97eb34bbe589c6f91937016abd984aa331f3be42fb2ab3c368bf960e52983a8"
+    }
+  ]
+}

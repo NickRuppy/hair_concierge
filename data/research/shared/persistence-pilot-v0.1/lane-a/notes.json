@@ -1,0 +1,38 @@
+{
+  "run_id": "canonical-persistence-pilot-v0.1",
+  "lane": "a",
+  "read_inputs": [
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/shared/persistence-pilot-v0.1/method.md",
+      "sha256": "f827f75a01ff2813f46c08b4ad1a5e93aeb155b32c56a2f8777f339fbb4606c3"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/shared/persistence-pilot-v0.1/blind-packet.json",
+      "sha256": "775864adbe63e20c8dcef69bd28880676cd052c7c6e7f7d956dff4d3aeebff80"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/shared/persistence-pilot-v0.1/function-dictionary.json",
+      "sha256": "2bd95fbeedd7076d38a4cbdaee38bc1a06f26ffb7f184c6524a0f22c55bc980f"
+    }
+  ],
+  "completed_ids": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06"
+  ],
+  "recognized_formulas": [],
+  "access_incidents": [],
+  "limits": [
+    "Judgments use only the three frozen allowed inputs; no source links, identities, native category answers, peer outputs or external evidence were accessed.",
+    "No product identity was recognized with sufficient specificity to report; no prior product classification was used.",
+    "All 93 ordered primary ingredient ranks were considered with their exact admitted functions. Unassessed functions remain unassessed and are neither treated as negligible nor promoted to conditioning-film evidence.",
+    "Rank supplied declaration order only. No concentration, grade, film load, wash count, sensory weight or distribution target was inferred.",
+    "The P05 organic-production declaration was considered separately as a descriptive annotation, not an ingredient or persistence mechanism.",
+    "These are committed whole-formula qualitative decisions for the stated application contexts, not measurements of washout or repeated-use accumulation.",
+    "The first combined tool display was truncated; the complete blind packet and complete function dictionary were subsequently displayed separately before decisions. The method and its complete output/read contract were visible in the initial display.",
+    "Output schemas and references were validated in memory before serialization; output files were not reread because the read scope permits only the three input paths."
+  ]
+}

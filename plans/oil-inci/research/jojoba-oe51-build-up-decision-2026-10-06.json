@@ -1,0 +1,80 @@
+{
+  "decision_id": "OE51",
+  "date": "2026-10-06",
+  "status": "human_accepted_product_and_narrow_material_estimate",
+  "authorization": "Nick: yes - but this should be something that you can get out of an original natural base documentaiotn as well right?",
+  "neutral_id": "N02",
+  "identity": {
+    "brand": "Biopark Cosmetics",
+    "product": "Jojoba Oil Organic",
+    "size": "30 ml",
+    "market": "Maker EUR storefront; country unspecified"
+  },
+  "source_url": "https://biopark-cosmetics.com/products/jojoba-oil-30ml",
+  "raw_inci": "Simmondsia Chinensis Seed Oil, from organic production.",
+  "original_property": {
+    "value": "unknown",
+    "estimate": false,
+    "confidence": "low",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+      }
+    ],
+    "counter_signal": [
+      "The declaration contains no separate gum/resin/polymer film signal, but absence of such ingredients does not establish low.",
+      "Wax-ester chemistry alone does not establish a structured substantial wax coating or elevated potential.",
+      "A generic emollient role supports neither affirmative weak film nor affirmative substantial film."
+    ],
+    "nearest_alternative": "low",
+    "reason": "B4 directly applies to a plant-only backbone lacking affirmative weak/substantial-film support. Low is the nearest conditional alternative because the only admitted functional role is emollience, with no independent substantial conditioning-film support, but that is insufficient to satisfy B3. No measured ranking or established mobility is inferred.",
+    "unresolved": [
+      "The frozen exact-material evidence does not distinguish weak from substantial residual conditioning-film behavior of this intact seed oil.",
+      "Finished-use retained load and persistence under comparable small applications are not supplied; the organic annotation does not resolve them."
+    ]
+  },
+  "approved_property": {
+    "value": "low",
+    "estimate": true,
+    "confidence": "low",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+      }
+    ],
+    "counter_signal": [
+      "Fluidity does not establish low deposited mass, easy shampoo removal or repeated accumulation.",
+      "Whole jojoba leaves a retained lipid coating; dose, grade, temperature and reapplication affect actual residue."
+    ],
+    "nearest_alternative": "unknown",
+    "reason": "OE51 human-approved practical low estimate for the exact pure-jojoba declaration, backed by the separate whole-jojoba rough material prior. This reuses bounded liquid-wax material documentation and is not inferred from the light weight class.",
+    "unresolved": [
+      "No controlled comparative repeat-application/shampoo hair-residue measurement establishes this class."
+    ]
+  },
+  "material_reference": {
+    "path": "data/research/oil-inci/v1.0/reference/natural-oil-build-up-v0.1.json",
+    "sha256": "724f7688d0c97febcc569dd730528a47d9870ab0758367fc890a4fae956579e2",
+    "exact_names": [
+      "SIMMONDSIA CHINENSIS SEED OIL",
+      "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+    ],
+    "scope": "Whole jojoba single-ingredient declaration; derivative identities remain separate. Blend reading remains architecture-based."
+  },
+  "source_hashes": {
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/working-records.json": "2837f5e6c2c9ad31a3ae54e6a49582ae155a6abf04d5fb6d24b3ed9a53957864",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json": "71d2ad5fb72c783a0abcdc89fd2a9eca25b74ce85ab90f8a4432a4e9e250ee83",
+    "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50"
+  },
+  "unchanged": [
+    "Every historical trial, unknown, lane, metric, seal and receipt",
+    "All 68 weight priors, derivative identities and fit rules",
+    "Other three round-7 build-up judgments"
+  ],
+  "remaining_round7_cases": [
+    "JVN Complete Nourishing Shine Drops: grade-dependent derivative gap",
+    "Color Wow Pop & Lock: relative conditioning-film contribution gap"
+  ]
+}

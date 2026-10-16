@@ -1,0 +1,15 @@
+{
+  "inputs": {
+    "method.md": "c142a41df6dae960b6758d5d31922db7c4253b13e816a2fb323a4861162a5aff",
+    "blind-packet.json": "dc011e6b1cf9bdd4139a20324bd5d66d80f3110c3d959b5fb6f0fbf5ab1cbfcd",
+    "function-dictionary.json": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+  },
+  "outputs": {
+    "lane-a/correction-records.json": "03519b1dcbc6232593a46562307095a95c17718f841c176c72d54ba534b79c2c",
+    "lane-a/correction-notes.json": "90788c54f40ba698f8131770557a28db201db3c841f0dc091b438a492a9a6495",
+    "lane-b/correction-records.json": "eb7a83e9fa82b36dd992ee71bd9767b53eb4fc2f86b786e3b6aeb15690474c45",
+    "lane-b/correction-notes.json": "69f06c12ec524f6a9dbdfcb37c4652d31eded3a326f662690c41e0223d081a59"
+  },
+  "sealed_before_semantic_inspection": true
+}

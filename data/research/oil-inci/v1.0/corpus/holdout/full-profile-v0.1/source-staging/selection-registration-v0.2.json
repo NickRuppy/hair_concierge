@@ -1,0 +1,59 @@
+{
+  "artifact": "oil-inci-full-profile-holdout-source-selection-registration",
+  "version": "v0.2",
+  "registered_at": "2026-10-09",
+  "status": "frozen-before-v0.2-source-recapture",
+  "supersedes_for_future_collection_only": "selection-registration.json",
+  "prior_discovery_limit": "source-packet.json is discovery only and is not a compliant cohort admission or classification input.",
+  "admission_rule": "For each slot, select the first source-complete unused exact declaration in this ordered list. Preserve failure/replacement reasons. An admitted record needs one coherent maker-market identity, a complete ordered declaration, retained leave-on hair directions, mechanism evidence or an explicit unknown, named-oil positioning, and completed explicit heat and hair-UV claim review. Do not merge markets, packs, or reformulations.",
+  "slots": [
+    {
+      "slot": "volatile_mobile_oil_spray",
+      "candidates_in_order": [
+        "René Furterer 5 Sens Enhancing Dry Oil for Hair and Body 100 ml (EN global, GTIN 3282770049275)",
+        "Bumble and bumble Hairdresser's Invisible Oil UV Protective Dry Oil Finishing Spray 150 ml"
+      ]
+    },
+    {
+      "slot": "silicone_led_non_spray",
+      "candidates_in_order": [
+        "Wella Professionals Ultimate Smooth Miracle Oil Serum 100 ml (US)",
+        "SACHAJUAN Intensive Hair Oil"
+      ]
+    },
+    {
+      "slot": "ester_or_alkane_led_fluid",
+      "candidates_in_order": [
+        "Biossance 100% Squalane Oil Jumbo Size 250 ml (US)",
+        "The Ordinary 100% Plant-Derived Hemi-Squalane"
+      ]
+    },
+    {
+      "slot": "botanical_oil_blend",
+      "candidates_in_order": [
+        "Rahua Legendary Amazon Oil",
+        "Fable & Mane MahaMane Smooth & Shine Hair Oil"
+      ]
+    },
+    {
+      "slot": "structured_conditioning_or_film_challenge",
+      "candidates_in_order": [
+        "Oribe Gold Lust Nourishing Hair Oil 100 ml (US)",
+        "R+Co TWO-WAY MIRROR Smoothing Oil 2 oz (US)"
+      ]
+    },
+    {
+      "slot": "water_based_or_biphasic_oil_labelled_hair_product",
+      "candidates_in_order": [
+        "Wella Professionals Oil Reflections Light Luminous Reflective Oil",
+        "NUXE Huile Prodigieuse Or Florale Multi-Purpose Dry Oil"
+      ]
+    }
+  ],
+  "exclusions": [
+    "Every prior actual finished formula, material-only declaration, and hypothetical declaration after normalized exact-formula comparison.",
+    "Pure material cases only when the source does not explicitly establish retained hair use.",
+    "A product called a milk, serum, mist, or conditioner without its own exact oil-labelled product/category evidence."
+  ],
+  "integrity_statement": "This registration does not retroactively cure the first discovery pass. It controls all v0.2 source recapture and all later classification work."
+}

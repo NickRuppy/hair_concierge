@@ -1,0 +1,53 @@
+{
+  "status": "passed_local_research_verification",
+  "decision": "OE42",
+  "reviewed_scope": "Approved thickness matrix and scenario handling; remaining-axis research only. No production actions.",
+  "counts": {
+    "products": 6,
+    "source_scenarios": 11,
+    "role_scenarios": 15,
+    "thickness_cells": 45,
+    "values": {
+      "suitable": 25,
+      "conditional": 11,
+      "unknown": 9
+    },
+    "weight_alternative_sensitive_cells": 13
+  },
+  "checks": {
+    "candidate_approved_metadata_only_delta": "passed",
+    "source_parent_policy_hashes": "passed",
+    "complete_source_and_role_scenario_coverage": "passed",
+    "main_alternative_fit_against_approved_matrix_and_routes": "passed",
+    "exact_source_instructions_and_weight_authority": "passed",
+    "CSV_JSON_consistency": "passed",
+    "conditional_explanations": "passed",
+    "direct_formula_mechanism_unchanged": "passed",
+    "historical_219_hashes_and_canonical_fit_unchanged": "passed",
+    "existing_round6_structural_verifier": "passed",
+    "local_links_checked": 66
+  },
+  "counterpart_review": {
+    "verdict": "approve_with_specification_revisions",
+    "raw_report_sha256": "6005427d96bafba02251a5f56e7b29884fac3a273587c6dbff406efca075fd20",
+    "reconciliation": "Named targets, explicit metadata delta and audit checks; authority already provided by latest user request; simplified routine docs and separated pending curl/damage policy. One review pass only.",
+    "raw_disposition": "temporary; removed after reconciliation"
+  },
+  "files_sha256": {
+    "docs/research/oil-inci/README.md": "2cfd5e05b0a69a20569bf4385a61254dcf48d798c6cc74618f8dda267ae5f6ff",
+    "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.2.md": "5f32330bea8b2057e1c68ae8ab7b6c448b252c9ca169b401040aef7d82b4c753",
+    "plans/oil-inci/phase1-decision-coverage.md": "2b973ecef84707937267cfd6d0c36973a81fd0687aae74932dbaed4ca6ac1a22",
+    "plans/oil-inci/thickness-fit-finalization-plan.md": "8320927b640e3deda996a289311ef03b064bde44a6507c3ab163a5c7ad1f8f5e",
+    "plans/oil-inci/research/thickness-fit-oe42-finalization-2026-10-05.md": "219d295c227f88b47886317640d3e77812e89fd1e05b9b22a61b9c7d570f5c74",
+    "plans/oil-inci/research/curl-and-damage-fit-evidence-proposal-2026-10-05.md": "0bff48d94a72e11d549ba36b78dffb7f87364aeed57972d00fb3eda0c7cbf341",
+    "data/research/oil-inci/v1.0/corpus/exploratory/thickness-fit-approved-v0.1/approved-scenario-overlay.json": "a32c26ec25df4d93ede59f362ef462bb40308eab8d304c6a87929c71fe99d63d",
+    "data/research/oil-inci/v1.0/corpus/exploratory/thickness-fit-approved-v0.1/approved-scenario-sheet.csv": "808712682b3aa06d2a5f3c77fbe29f4ea28fdbf7521aa1927448345413333e45"
+  },
+  "limitations": [
+    "No measured sensory calibration or classification-accuracy claim.",
+    "Weight uncertainty and 13 alternative-sensitive cells remain.",
+    "Scalp fibre fit is unknown; curl and damage policy not defined.",
+    "Historical completion receipt does not certify later mutable index/log updates."
+  ]
+}

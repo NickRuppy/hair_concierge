@@ -1,0 +1,269 @@
+{
+  "run_id": "oil-targeted-neutral-v0.2",
+  "lane_id": "b",
+  "records": [
+    {
+      "case_id": "T02",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE",
+          "dictionary_roles": [
+            "silicone_carrier",
+            "conditioning_film"
+          ],
+          "formula_role": "principal",
+          "role_reason": "The declared silicone carrier and conditioning-film functions provide the leading coherent conditioning backbone; the later silicone film supports this reading.",
+          "ambiguity": "Grade and proportions are not disclosed; principal is a functional estimate, not a mass claim."
+        },
+        {
+          "rank": 2,
+          "raw_name": "Isododecane",
+          "canonical_name": "ISODODECANE",
+          "dictionary_roles": [
+            "hydrocarbon_carrier",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "The hydrocarbon carrier/emollient supports the mixed vehicle around the leading conditioning-film system.",
+          "ambiguity": "A co-principal vehicle contribution remains possible; no concentration or volatility is inferred from this dictionary."
+        },
+        {
+          "rank": 3,
+          "raw_name": "C12-15 Alkyl Benzoate",
+          "canonical_name": "C12-15 ALKYL BENZOATE",
+          "dictionary_roles": [
+            "defined_ester_emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "The defined ester emollient supplies a supporting carrier/emollient route alongside the silicone conditioning system.",
+          "ambiguity": "Proportion and finished-film contribution are unestablished."
+        },
+        {
+          "rank": 4,
+          "raw_name": "Argania Kernel Oil",
+          "canonical_name": "ARGANIA KERNEL OIL",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The exact literal declaration has only not_assessed functions. Preserve it without assigning a species, fixed-oil role or material prior.",
+          "ambiguity": "Species and function remain unresolved. This is a real contribution gap, not evidence of trace amount; the independently identified carrier/film system still supports a working backbone reading."
+        },
+        {
+          "rank": 5,
+          "raw_name": "Phenyl Trimethicone",
+          "canonical_name": "PHENYL TRIMETHICONE",
+          "dictionary_roles": [
+            "silicone_carrier",
+            "conditioning_film"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "The recognized silicone carrier and conditioning-film functions reinforce the leading silicone conditioning route.",
+          "ambiguity": "Its quantity and grade are unknown; order does not establish a trace contribution."
+        },
+        {
+          "rank": 6,
+          "raw_name": "Fragrance (Parfum)",
+          "canonical_name": "FRAGRANCE (PARFUM)",
+          "dictionary_roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The exact recognized fragrance composition supplies a fragrance auxiliary function.",
+          "ambiguity": "The role does not establish a concentration or an auxiliary suffix boundary."
+        }
+      ],
+      "auxiliary_suffix": {
+        "boundary": "none",
+        "ranks": [],
+        "markers": [
+          {
+            "rank": 6,
+            "canonical_name": "FRAGRANCE (PARFUM)"
+          }
+        ],
+        "reason": "Only the fragrance-composition function supplies an independent recognized auxiliary marker. No two-function suffix exists; rank 5 is a silicone carrier/film and rank 4 has unresolved functions."
+      },
+      "base": {
+        "value": "silicone_led",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "ARGANIA KERNEL OIL"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "PHENYL TRIMETHICONE"
+          }
+        ],
+        "counter_signal": [
+          "The hydrocarbon carrier and ester emollient support an ester/alkane-led or joint vehicle interpretation.",
+          "Rank 4 is functionally unresolved and cannot be silently counted as an identified botanical oil."
+        ],
+        "nearest_alternative": "ester_alkane_led",
+        "reason": "The leading identified silicone has both carrier and conditioning-film functions, reinforced by the later silicone film. This is a coherent silicone conditioning backbone with supporting hydrocarbon/ester vehicles. A joint backbone is not established merely by different early carriers; the alternative vehicle reading has less affirmative conditioning-backbone support.",
+        "unresolved": [
+          "No carrier ratios or silicone grades are supplied.",
+          "Rank 4 remains species-incomplete and functionally unassessed; no species or intact-oil inventory entry is invented. Its gap lowers robustness but does not erase the independent carrier/film architecture."
+        ]
+      },
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "ARGANIA KERNEL OIL"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "PHENYL TRIMETHICONE"
+          }
+        ],
+        "counter_signal": [
+          "Light remains plausible if the hydrocarbon/ester vehicle contribution and silicone grades produce a smaller residual sensory load.",
+          "Rich would require a stronger whole-system structured or substantial retained-film argument than the admitted qualitative functions provide."
+        ],
+        "nearest_alternative": "light",
+        "reason": "Under B0/B1 and B5, the principal silicone conditioning-film system reinforced by a second silicone film, alongside supporting hydrocarbon and ester emollients, supports an intermediate retained coating hypothesis. This is an affirmative mixed conditioning-film architecture, not an average or a default from missing grade data. B6 does not establish a rich system here.",
+        "unresolved": [
+          "Dimethicone and other carrier grades, ratios, dose and observed hair feel are unavailable.",
+          "Rank 4 has no transferable exact-material weight prior; its contribution remains unresolved. No Argania Spinosa Kernel Oil prior is applied.",
+          "No volatility, viscosity or measured residual fraction is inferred."
+        ]
+      },
+      "penetration_potential": {
+        "value": "surface_led",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "ARGANIA KERNEL OIL"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "PHENYL TRIMETHICONE"
+          }
+        ],
+        "counter_signal": [
+          "A different quantitative balance or resolved function at rank 4 could alter delivery behavior; there is no exact-formula penetration measurement."
+        ],
+        "nearest_alternative": "unknown",
+        "reason": "The positively identified silicone conditioning films and supporting hydrocarbon/ester emollients form a coherent surface-conditioning architecture. No admitted principal plant-penetration backbone is established. The conclusion rests on that affirmative architecture, not on treating absent studies as proof of nonpenetration or on a universal silicone rule.",
+        "unresolved": [
+          "No exact-formula or normal-dose penetration endpoint is supplied.",
+          "Rank 4 is not assigned a species or penetration anchor; formula extrapolation from qualitative ingredient functions remains uncertain."
+        ]
+      },
+      "persistence_potential": "moderate",
+      "ingredient_flags": {
+        "silicones": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 1,
+              "canonical_name": "DIMETHICONE"
+            },
+            {
+              "rank": 5,
+              "canonical_name": "PHENYL TRIMETHICONE"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": false,
+          "reason": "All exact recognized matches are included after review of every declared rank.",
+          "unresolved": []
+        },
+        "mineral_oil": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "Every exact declaration was reviewed against this closed family; none is a recognized match. The explicit dictionary exclusions also cover the species-incomplete rank 4.",
+          "unresolved": []
+        },
+        "drying_alcohol": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "Every exact declaration was reviewed against this closed family; none is a recognized match. The explicit dictionary exclusions also cover the species-incomplete rank 4.",
+          "unresolved": []
+        },
+        "fragrance": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 6,
+              "canonical_name": "FRAGRANCE (PARFUM)"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": false,
+          "reason": "All exact recognized matches are included after review of every declared rank.",
+          "unresolved": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "Every exact declaration was reviewed against this closed family; none is a recognized match. The explicit dictionary exclusions also cover the species-incomplete rank 4.",
+          "unresolved": []
+        }
+      }
+    }
+  ]
+}

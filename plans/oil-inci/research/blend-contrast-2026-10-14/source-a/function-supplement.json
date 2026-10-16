@@ -1,0 +1,374 @@
+{
+  "receipt_id": "blend-contrast-source-a-function-supplement-2026-10-14",
+  "scope": "Neutral exact ingredient function support for selected A01/A02 only; A03 reserve not assessed. Source facts are advisory dictionary evidence awaiting root review, not classification.",
+  "entries": [
+    {
+      "exact_inci_name": "KERATIN",
+      "status": "function_source_checked",
+      "generic_roles": [
+        "hair_conditioning",
+        "skin_conditioning"
+      ],
+      "source": {
+        "publisher": "COSMILE Europe / Cosmetics Europe",
+        "url": "https://cosmileeurope.eu/inci/detail/7702/keratin/",
+        "access_date": "2026-10-14",
+        "access_method": "live full-page web open; exact name and Function(s) section checked",
+        "web_reference": "turn646view0",
+        "verbatim_function_heading_excerpt": "HAIR CONDITIONING; SKIN CONDITIONING"
+      },
+      "limits": "Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. Film forming is not assigned from the broader keratin family or from the Hydrolyzed Keratin entry."
+    },
+    {
+      "exact_inci_name": "HYDROLYZED KERATIN",
+      "status": "function_source_checked",
+      "generic_roles": [
+        "antistatic",
+        "film_forming",
+        "hair_conditioning",
+        "humectant",
+        "skin_conditioning"
+      ],
+      "source": {
+        "publisher": "COSMILE Europe / Cosmetics Europe",
+        "url": "https://cosmileeurope.eu/inci/detail/6885/hydrolyzed-keratin/",
+        "access_date": "2026-10-14",
+        "access_method": "live full-page web open; exact name and Function(s) section checked",
+        "web_reference": "turn646view1",
+        "verbatim_function_heading_excerpt": "ANTISTATIC; FILM FORMING; HAIR CONDITIONING; HUMECTANT; SKIN CONDITIONING"
+      },
+      "limits": "Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. This exact ingredient entry lists film forming; that role is not propagated to the other keratin names."
+    },
+    {
+      "exact_inci_name": "HYDROLYZED KERATIN PG-PROPYL METHYLSILANEDIOL",
+      "status": "function_source_checked",
+      "generic_roles": [
+        "hair_conditioning",
+        "skin_conditioning"
+      ],
+      "source": {
+        "publisher": "COSMILE Europe / Cosmetics Europe",
+        "url": "https://cosmileeurope.eu/inci/detail/6886/hydrolyzed-keratin-pg-propyl-methylsilanediol/",
+        "access_date": "2026-10-14",
+        "access_method": "live full-page web open; exact name and Function(s) section checked",
+        "web_reference": "turn646view2",
+        "verbatim_function_heading_excerpt": "HAIR CONDITIONING; SKIN CONDITIONING"
+      },
+      "limits": "Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. No generic-film or silicone-family direction is inferred merely from the name."
+    },
+    {
+      "exact_inci_name": "COCODIMONIUM HYDROXYPROPYL HYDROLYZED KERATIN",
+      "status": "function_source_checked",
+      "generic_roles": [
+        "antistatic",
+        "hair_conditioning",
+        "skin_conditioning"
+      ],
+      "source": {
+        "publisher": "COSMILE Europe / Cosmetics Europe",
+        "url": "https://cosmileeurope.eu/inci/detail/21758/cocodimonium-hydroxypropyl-hydrolyzed-keratin/",
+        "access_date": "2026-10-14",
+        "access_method": "live full-page web open; exact name and Function(s) section checked",
+        "web_reference": "turn646view3",
+        "verbatim_function_heading_excerpt": "ANTISTATIC; HAIR CONDITIONING; SKIN CONDITIONING"
+      },
+      "limits": "Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. Exact entry; no synonym expansion to hydrolyzed hair keratin or another quaternized protein."
+    },
+    {
+      "exact_inci_name": "LAURDIMONIUM HYDROXYPROPYL HYDROLYZED KERATIN",
+      "status": "function_source_checked",
+      "generic_roles": [
+        "antistatic",
+        "hair_conditioning",
+        "skin_conditioning"
+      ],
+      "source": {
+        "publisher": "COSMILE Europe / Cosmetics Europe",
+        "url": "https://cosmileeurope.eu/inci/detail/8019/laurdimonium-hydroxypropyl-hydrolyzed-keratin/",
+        "access_date": "2026-10-14",
+        "access_method": "live full-page web open; exact name and Function(s) section checked",
+        "web_reference": "turn646view4",
+        "verbatim_function_heading_excerpt": "ANTISTATIC; HAIR CONDITIONING; SKIN CONDITIONING"
+      },
+      "limits": "Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. "
+    },
+    {
+      "exact_inci_name": "PHOSPHATIDYLCHOLINE",
+      "status": "function_source_checked",
+      "generic_roles": [
+        "fragrance_functional",
+        "skin_conditioning",
+        "surfactant_emulsifying"
+      ],
+      "source": {
+        "publisher": "COSMILE Europe / Cosmetics Europe",
+        "url": "https://cosmileeurope.eu/inci/detail/11610/phosphatidylcholine/",
+        "access_date": "2026-10-14",
+        "access_method": "live full-page web open; exact name and Function(s) section checked",
+        "web_reference": "turn650view4",
+        "verbatim_function_heading_excerpt": "FRAGRANCE FUNCTIONAL; SKIN CONDITIONING; SURFACTANT - EMULSIFYING"
+      },
+      "limits": "Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. No hair-conditioning, antistatic, liposome-delivery or repair role is assigned from a different source or family description."
+    },
+    {
+      "exact_inci_name": "HYDROGENATED CASTOR OIL/SEBACIC ACID COPOLYMER",
+      "status": "function_source_checked",
+      "generic_roles": [
+        "hair_conditioning",
+        "skin_conditioning",
+        "skin_conditioning_emollient"
+      ],
+      "source": {
+        "publisher": "COSMILE Europe / Cosmetics Europe",
+        "url": "https://cosmileeurope.eu/inci/detail/6601/hydrogenated-castor-oil-sebacic-acid-copolymer/",
+        "access_date": "2026-10-14",
+        "access_method": "live full-page web open; exact name and Function(s) section checked",
+        "web_reference": "turn646view5",
+        "verbatim_function_heading_excerpt": "HAIR CONDITIONING; SKIN CONDITIONING; SKIN CONDITIONING - EMOLLIENT"
+      },
+      "limits": "Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. Skin-emollient wording is retained as skin-specific. Film forming is not assigned just because this is a copolymer. Not the separate CAPRATE/CAPRYLATE entry."
+    },
+    {
+      "exact_inci_name": "SCHINZIOPHYTON RAUTANENII KERNEL OIL",
+      "status": "supplier_function_source_checked",
+      "generic_roles": [
+        "supplier_conditioning",
+        "supplier_moisturizing"
+      ],
+      "source": {
+        "publisher": "Caribbean Natural Products, Inc. (ingredient supplier)",
+        "url": "https://www.caribnaturalproducts.com/caribpure-manketti-seed-oil.html",
+        "access_date": "2026-10-14",
+        "access_method": "live full-page web open; exact INCI and supplier function bullets checked",
+        "web_reference": "turn650view1",
+        "verbatim_excerpt": "Conditioning; Protective; Moisturizing; INCI Name: Schinziophyton rautanenii Kernel Oil"
+      },
+      "limits": "Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. Supplier describes its Caribpure material. Only generic conditioning/moisturizing descriptors are retained; protective claims are not translated to a product property. No hair-specific mechanism or emollient weight/grade is assigned; no new pure-oil prior."
+    },
+    {
+      "exact_inci_name": "POLYQUATERNIUM-55",
+      "status": "supplier_function_source_checked",
+      "generic_roles": [
+        "film_forming",
+        "foam_stabilizing"
+      ],
+      "source": {
+        "publisher": "Brenntag (ingredient supplier/distributor)",
+        "url": "https://www.brenntag.com/en-us/products/styleze-tm-w20.html",
+        "access_date": "2026-10-14",
+        "access_method": "live full-page web open; exact INCI and supplier description checked",
+        "web_reference": "turn650view0",
+        "verbatim_excerpt": "A film former and foam stabilizer.",
+        "identity_excerpt": "INCI name(s) Polyquaternium-55"
+      },
+      "limits": "Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. Source is Styleze W20: finished Joico grade is unknown. No heat resistance, adhesion, hold, film mechanics, concentration or measured persistence is transferred."
+    },
+    {
+      "exact_inci_name": "SANTALOL",
+      "status": "function_source_checked",
+      "generic_roles": [
+        "fragrance"
+      ],
+      "source": {
+        "publisher": "COSMILE Europe / Cosmetics Europe",
+        "url": "https://cosmileeurope.eu/inci/detail/26777/santalol/",
+        "access_date": "2026-10-14",
+        "access_method": "live full-page web open; exact name and Function(s) section checked",
+        "web_reference": "turn650view2",
+        "verbatim_function_heading_excerpt": "FRAGRANCE"
+      },
+      "limits": "Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. Exact SANTALOL entry used; no separate ALPHA-SANTALOL alias inference."
+    },
+    {
+      "exact_inci_name": "CINNAMOMUM ZEYLANICUM BARK OIL",
+      "status": "function_source_checked",
+      "generic_roles": [
+        "fragrance",
+        "tonic"
+      ],
+      "source": {
+        "publisher": "COSMILE Europe / Cosmetics Europe",
+        "url": "https://cosmileeurope.eu/inci/detail/3349/cinnamomum-zeylanicum-bark-oil/",
+        "access_date": "2026-10-14",
+        "access_method": "live full-page web open; exact name and Function(s) section checked",
+        "web_reference": "turn650view3",
+        "verbatim_function_heading_excerpt": "FRAGRANCE; TONIC"
+      },
+      "limits": "Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. Tonic is retained only as the database cosmetic function. No hair benefit, fixed-oil identity, emollient role or botanical prior inferred."
+    }
+  ],
+  "existing_source_review": {
+    "oil_dictionary_paths_checked": [
+      "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+      "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+      "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json"
+    ],
+    "result": "No exact target-name matches found in these three Oil dictionary entry lists. Existing exact-name/alias hits for other selected formula ingredients are recorded below without carrying product labels.",
+    "existing_exact_formula_name_or_alias_hits": {
+      "ACETYL CEDRENE": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json"
+      ],
+      "ARGANIA SPINOSA KERNEL OIL": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json"
+      ],
+      "BUTYL METHOXYDIBENZOYLMETHANE": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json"
+      ],
+      "C12-15 ALKYL BENZOATE": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json"
+      ],
+      "CITRONELLOL": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json"
+      ],
+      "CITRUS LIMON PEEL OIL": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json"
+      ],
+      "COUMARIN": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json"
+      ],
+      "CYCLOPENTASILOXANE": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json"
+      ],
+      "DIMETHICONE": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json"
+      ],
+      "DIMETHICONOL": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json"
+      ],
+      "ETHYLHEXYL METHOXYCINNAMATE": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json"
+      ],
+      "EUGENOL": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json"
+      ],
+      "FARNESOL": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json"
+      ],
+      "FRAGRANCE/PARFUM": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json"
+      ],
+      "GERANIOL": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json"
+      ],
+      "GLYCERIN": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json"
+      ],
+      "HEXAMETHYLINDANOPYRAN": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json"
+      ],
+      "HEXYL CINNAMAL": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json"
+      ],
+      "HYDROXYCITRONELLAL": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json"
+      ],
+      "ISODODECANE": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json"
+      ],
+      "LAVANDULA OIL/EXTRACT": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json"
+      ],
+      "LIMONENE": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json"
+      ],
+      "LINALOOL": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json"
+      ],
+      "LINALYL ACETATE": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json"
+      ],
+      "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json"
+      ],
+      "PARFUM/FRAGRANCE": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json"
+      ],
+      "PHENOXYETHANOL": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json"
+      ],
+      "PINENE": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json"
+      ],
+      "POTASSIUM SORBATE": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json"
+      ],
+      "ROSA CANINA FRUIT OIL": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json"
+      ],
+      "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json"
+      ],
+      "TOCOPHERYL ACETATE": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json"
+      ],
+      "VANILLIN": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json"
+      ]
+    },
+    "conditioner_path_checked": "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+    "conditioner_result": "Available standard contains category route/ranking statements, not exact function entries for these target names; not transferred. No separately named Conditioner lexicon file found.",
+    "leave_in_path_checked": "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+    "leave_in_result": "Exact Polyquaternium-55 appears in thermal-test context (lines 574 and 1671), not reused as generic function evidence or as Oil heat/protein/weight direction."
+  },
+  "unassessed": [
+    {
+      "exact_inci_name": "FUSANUS SPICATUS WOOD OIL",
+      "reason": "No easy exact COSMILE function entry obtained during bounded pass. Supplier technical-sheet search result found, but not admitted or synonym-mapped. Remains unknown here."
+    }
+  ],
+  "auxiliary_gap_scope": "The following selected-formula names have no exact-name/alias hit in the three inspected Oil dictionaries and no supported function entry in this supplement. This is a bounded source gap list, not a global evidence absence verdict.",
+  "auxiliary_names_without_evidence_in_this_pass": [
+    "ALEURITES MOLUCCANUS SEED OIL",
+    "ALLANTOIN",
+    "ALOE BARBADENSIS LEAF JUICE",
+    "ARGININE HCL",
+    "BENZOIC ACID",
+    "FUSANUS SPICATUS WOOD OIL",
+    "GLYCOLIPIDS",
+    "PSIDIUM GUAJAVA FRUIT EXTRACT",
+    "SODIUM ASCORBYL PHOSPHATE",
+    "SODIUM HYALURONATE",
+    "THIOCTIC ACID",
+    "WATER/AQUA/EAU"
+  ],
+  "access_failures": [
+    {
+      "url": "https://origin-www.ashland.com/industries/personal-and-home-care/hair-care/styleze-w17-polymer",
+      "result": "Web open Internal Error. No function admitted from search snippet; exact Polyquaternium-55 supplier source subsequently opened at Brenntag."
+    }
+  ],
+  "boundary": "No grades/concentrations/retention/weight/classification/new botanical prior; only this file written. No tests, typecheck, lint or build."
+}

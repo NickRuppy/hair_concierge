@@ -1,0 +1,137 @@
+[
+  {
+    "product_key": "oil-persistence-01",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-persistence-03",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "oil-persistence-04",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-persistence-05",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-persistence-06",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "oil-persistence-07",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-persistence-08",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "oil-persistence-09",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-persistence-10",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "oil-persistence-11",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-persistence-12",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "oil-persistence-13",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-persistence-14",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "oil-persistence-15",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "oil-persistence-16",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-persistence-17",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-persistence-18",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-persistence-19",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-persistence-20",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "oil-persistence-21",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-persistence-22",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-persistence-23",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "oil-persistence-24",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "oil-persistence-25",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "oil-persistence-26",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "oil-persistence-27",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-persistence-28",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  }
+]

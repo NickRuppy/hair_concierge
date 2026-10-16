@@ -1,0 +1,86 @@
+{
+  "inventory_id": "oil-product-exposure-inventory-2026-10-14",
+  "purpose": "Negative novelty ledger for a prospective blend-weight contrast cohort. It records prior product/formula exposure only; it does not evaluate weight, fit, or any rule.",
+  "scope": {
+    "searched_roots": [
+      "data/research/oil-inci/v1.0/corpus",
+      "plans/oil-inci/research"
+    ],
+    "primary_receipt_sets": [
+      "corpus/exploratory/round-1/source-packet.json",
+      "corpus/exploratory/blend-weight-round-4/source-capture.json",
+      "corpus/exploratory/blend-weight-round-5/source-capture.json",
+      "corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json",
+      "corpus/exploratory/build-up-round-7/source-packet.json",
+      "corpus/exploratory/build-up-round-8/source-packet.json",
+      "corpus/holdout/full-profile-v0.2/source-packet.json",
+      "corpus/holdout/targeted-coverage-v0.1/source-packet.json",
+      "corpus/exploratory/full-profile-completion-v0.1/source-staging/*.json"
+    ],
+    "formula_fingerprint": "first 16 hexadecimal characters of SHA-256 over the source file's exact ordered raw_inci string; it is an attribution aid, not a formula-normalization or reformulation verdict."
+  },
+  "exact_named_formula_exposures": [
+    {"name":"Biopark Cosmetics Organic Coconut Oil","fingerprint":"12d315272564ff15","receipts":["corpus/exploratory/round-1/source-packet.json#E01","corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json"]},
+    {"name":"NEQI Smooth Strength Rosemary Oil","fingerprint":"a2f4a532222b0be1","receipts":["corpus/exploratory/round-1/source-packet.json#E02","corpus/exploratory/blend-weight-round-4/source-capture.json#Q07"]},
+    {"name":"NEQI Opulent Oil Hair Serum","fingerprint":"da4fa9ad6c6d521e","receipts":["corpus/exploratory/round-1/source-packet.json#E07"]},
+    {"name":"OGX Coconut Miracle Oil Extra Strength Penetrating Oil","fingerprint":"514034a70c1594f3","receipts":["corpus/exploratory/round-1/source-packet.json#E04"]},
+    {"name":"Living Proof No Frizz Vanishing Oil","fingerprint":"c1dd2dbaf452e4fe","receipts":["corpus/exploratory/round-1/source-packet.json#E05"]},
+    {"name":"Kérastase Soleil Huile Sirène","fingerprint":"9c1bb5f4e619e356","receipts":["corpus/exploratory/round-1/source-packet.json#E08"]},
+    {"name":"OLAPLEX No.7 Bonding Oil / Original N°7 Bonding Oil","fingerprint":"f2cf36c05776f5e6","receipts":["corpus/exploratory/round-1/source-packet.json#E03"]},
+    {"name":"K18 Molecular Repair Hair Oil","fingerprint":"48ff98d511f87ee3","receipts":["corpus/exploratory/round-1/source-packet.json#E06","corpus/exploratory/blend-weight-round-4/source-capture.json#Q10"]},
+    {"name":"NUXE Huile Prodigieuse original","fingerprint":"756259ce40386ac6","receipts":["corpus/exploratory/blend-weight-round-4/source-capture.json#Q01"]},
+    {"name":"PRIMAVERA Calendulaöl bio","fingerprint":"6cce263bc3c2647e","receipts":["corpus/exploratory/blend-weight-round-4/source-capture.json#Q02"]},
+    {"name":"Wella Professionals Oil Reflections Luminous Smoothing Oil","fingerprint":"a4e6ff5fbf431c19","receipts":["corpus/exploratory/blend-weight-round-4/source-capture.json#Q03"]},
+    {"name":"Mielle Rosemary Mint Scalp & Hair Strengthening Oil (Original)","fingerprint":"54f10c53a1560939","receipts":["corpus/exploratory/blend-weight-round-4/source-capture.json#Q04"]},
+    {"name":"OLAPLEX DE / New Flag Original N°7 Bonding Oil","fingerprint":"8f7596269817e10c","receipts":["corpus/exploratory/blend-weight-round-4/source-capture.json#Q05"]},
+    {"name":"John Frieda Der Bändiger – Extra Strong Serum","fingerprint":"64314295a62648e0","receipts":["corpus/exploratory/blend-weight-round-4/source-capture.json#Q06"]},
+    {"name":"khadi Strong Amla Haaröl","fingerprint":"a6c9a369aac05160","receipts":["corpus/exploratory/blend-weight-round-4/source-capture.json#Q08"]},
+    {"name":"Moroccanoil Behandlung Original","fingerprint":"57c9c071260d0656","receipts":["corpus/exploratory/blend-weight-round-4/source-capture.json#Q09"]},
+    {"name":"Kérastase Elixir Ultime L’Huile Originale Nachfüllbar","fingerprint":"52fcf285675027f8","receipts":["corpus/exploratory/blend-weight-round-5/source-capture.json#R01"]},
+    {"name":"Sunny Isle Rosemary Mint Hair and Strong Roots LITE Oil","fingerprint":"de392e7b9c47aa07","receipts":["corpus/exploratory/blend-weight-round-5/source-capture.json#R02"]},
+    {"name":"khadi After Color Haaröl Color Protect","fingerprint":"c61e9d9ba504ce48","receipts":["corpus/exploratory/blend-weight-round-5/source-capture.json#R04"]},
+    {"name":"Aroma-Zone Haircare Oil With 7 Precious Oils","fingerprint":"aea7af4a466cb809","receipts":["corpus/exploratory/blend-weight-round-5/source-capture.json#R05"]},
+    {"name":"Evolve Organic Beauty Nourishing Hair Elixir – Dry Hair Serum","fingerprint":"f4dd40fa06bafe92","receipts":["corpus/exploratory/blend-weight-round-5/source-capture.json#R06"]},
+    {"name":"Schwarzkopf Professional Oil Ultime Rose Finishing Oil","fingerprint":"11c18b8d6a189db2","receipts":["corpus/exploratory/blend-weight-round-5/source-capture.json#R08"]},
+    {"name":"JVN Complete Nourishing Shine Drops","fingerprint":"1fd649a1803b6f9d","receipts":["corpus/exploratory/build-up-round-7/source-packet.json"]},
+    {"name":"Biopark Cosmetics Jojoba Oil Organic","fingerprint":"936749b26ae3039c","receipts":["corpus/exploratory/build-up-round-7/source-packet.json"]},
+    {"name":"Bumble and bumble Hairdresser’s Invisible Oil Frizz Reducing Hair Oil","fingerprint":"318aa9726dc4ffdf","receipts":["corpus/exploratory/build-up-round-7/source-packet.json"]},
+    {"name":"Color Wow Pop & Lock High Gloss Finish","fingerprint":"28c35ce415852b4a","receipts":["corpus/exploratory/build-up-round-7/source-packet.json"]},
+    {"name":"Davines OI Oil","fingerprint":"9148da5eb0c1f06b","receipts":["corpus/exploratory/build-up-round-8/source-packet.json"]},
+    {"name":"Verb Ghost Oil","fingerprint":"95c282fa8f91823f","receipts":["corpus/exploratory/build-up-round-8/source-packet.json"]},
+    {"name":"Aveda Nutriplenish Multi-Use Hair Oil","fingerprint":"244b1b636f1dce7a","receipts":["corpus/exploratory/build-up-round-8/source-packet.json"]},
+    {"name":"The Ordinary 100% Cold-Pressed Virgin Marula Oil","fingerprint":"2bb5cc54065c901e","receipts":["corpus/exploratory/build-up-round-8/source-packet.json"]},
+    {"name":"René Furterer 5 Sens Enhancing Dry Oil for Hair and Body","fingerprint":"4644466cfa6268d5","receipts":["corpus/holdout/full-profile-v0.2/source-packet.json#H01"]},
+    {"name":"Wella Professionals Ultimate Smooth Miracle Oil Serum","fingerprint":"2099e25895828aa3","receipts":["corpus/holdout/full-profile-v0.2/source-packet.json#H02"]},
+    {"name":"Biossance 100% Squalane Oil Jumbo Size","fingerprint":"faa813f26f38f88e","receipts":["corpus/holdout/full-profile-v0.2/source-packet.json#H03"]},
+    {"name":"Rahua Legendary Amazon Oil","fingerprint":"75fd031050edb81a","receipts":["corpus/holdout/full-profile-v0.2/source-packet.json#H04"]},
+    {"name":"Oribe Gold Lust Nourishing Hair Oil","fingerprint":"0e2bd60c6c84fbcc","receipts":["corpus/holdout/full-profile-v0.2/source-packet.json#H05"]},
+    {"name":"Wella Professionals Oil Reflections Light Luminous Reflective Oil","fingerprint":"3eabeae17d0a2359","receipts":["corpus/holdout/full-profile-v0.2/source-packet.json#H06"]},
+    {"name":"NUXE Feuchtigkeitsspendendes Sonnenschutz-Haar-Öl","fingerprint":"7b230ee4588dd506","receipts":["corpus/holdout/targeted-coverage-v0.1/source-packet.json#T01"]},
+    {"name":"OGX Argan Oil of Morocco Weightless Healing Dry Oil","fingerprint":"10bdf857c77ab853","receipts":["corpus/holdout/targeted-coverage-v0.1/source-packet.json#T02"]},
+    {"name":"Weleda Intensiv pflegendes Haaröl","fingerprint":"5106ff47e341d4a2","receipts":["corpus/holdout/targeted-coverage-v0.1/source-packet.json#T04"]},
+    {"name":"René Furterer Solaire Schützendes Sommeröl","fingerprint":"8e3552172700c653","receipts":["corpus/holdout/targeted-coverage-v0.1/source-packet.json#T06"]}
+  ],
+  "named_but_formula_or_identity_not_safely_joined": [
+    {"name":"Curlsmith Bonding Oil","status":"rejected_attempt","reason":"Retrieved CA declaration could not safely join to the EU 60 ml identity.","receipt":"corpus/exploratory/build-up-round-7/source-packet.json#source_preflight_rejections"},
+    {"name":"dmBio food-oil original slot","status":"replaced_attempt","reason":"The round-1 cohort records only that Biopark Cosmetics Organic Coconut Oil replaced it; no exact dmBio product/formula is named in the selected source packet.","receipt":"corpus/exploratory/round-1/source-packet.json#E01.identity.selection_note"},
+    {"name":"NUXE Huile Prodigieuse Or / Riche variants","status":"named_distinct_variants_excluded","reason":"The Q01 capture calls them distinct and excluded; no formula-equivalence claim follows for the named variants.","receipt":"corpus/exploratory/blend-weight-round-4/source-capture.json#Q01.alternatives"}
+  ],
+  "name_only_or_single_material_prior_exposure": [
+    {"name":"PRIMAVERA Jojobaöl bio","receipt":"corpus/exploratory/weight-application-round-3/identity-map.json#W02"},
+    {"name":"Cliganic Organic Moringa Oil","receipt":"corpus/exploratory/weight-application-round-3/identity-map.json#W03"},
+    {"name":"Alepia Huile de Ricin Bio","receipt":"corpus/exploratory/weight-application-round-3/identity-map.json#W05"},
+    {"name":"PRIMAVERA Arganöl bio","receipt":"corpus/exploratory/weight-application-round-3/identity-map.json#W07"},
+    {"name":"Kahai SAS Kahai Cacay oil","receipt":"corpus/exploratory/weight-application-round-3/identity-map.json#W08"},
+    {"name":"PRIMAVERA Schwarzkümmelöl bio","receipt":"corpus/exploratory/weight-application-round-3/identity-map.json#W10"}
+  ],
+  "same_or_near_name_formula_variants_not_resolved": [
+    {"name":"OLAPLEX No.7 / Original N°7 Bonding Oil","fingerprints":["f2cf36c05776f5e6","8f7596269817e10c"],"reason":"Both declarations were encountered under near-identical product names, but this inventory does not establish whether the difference is a reformulation, market/label variant, or capture variation.","receipts":["corpus/exploratory/round-1/source-packet.json#E03","corpus/exploratory/blend-weight-round-4/source-capture.json#Q05"]}
+  ],
+  "coverage_limits": [
+    "The ledger deliberately collapses replay copies and later provenance/adapter envelopes to their source packets; those copies do not establish additional exposure.",
+    "A matching product name without the listed fingerprint is not proven identical: packaging, market, size, batch, and reformulation may differ unless the cited source explicitly establishes equality.",
+    "This is a project-tree inventory, not a claim that no identity/formula exists outside the searched roots or in inaccessible historical sources."
+  ],
+  "counts": {"exact_named_formula_exposures":40,"named_but_formula_or_identity_not_safely_joined":3,"name_only_or_single_material_prior_exposure":6}
+}

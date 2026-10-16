@@ -1,0 +1,41 @@
+{
+  "completed_at": "2026-10-06T06:21:40.907841+00:00",
+  "outcome": "Provisional build-up guide and four new declaration checks completed; not general classification readiness.",
+  "content_fingerprint": "00e2828135cbe38cbde7925c70357c8c0b98b7aed62b0881b8afd64c51089b35",
+  "reviewed_paths": 24,
+  "branch": "codex/oil-inci",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "base": "358572da276e2cbe6b6c43edd01fbcc86c25a8c6",
+  "range": "0 ahead / 7 behind origin/main; no rebase or runtime claim",
+  "decision_coverage": {
+    "coverage_acknowledgement": "Nick do it after recommendation to prepare/review/test guidance, 2026-10-05",
+    "internal_revalidation": "Every local outcome verified; no changed ingredient defaults, accepted labels, fit or production scope. Unknowns remain visible.",
+    "pending_next_decision": "Optional pure jojoba low estimate question; no answer inferred or applied."
+  },
+  "review": {
+    "verdict": "No blocking findings; parent accepts scoped local research handoff",
+    "lane": "Read-only bounded normal correctness/data-integrity and proportional verifier maintainability review",
+    "counterpart_plan_review": "Approve with revisions; verified fixes/narrowed B2/aqueous charter correction documented in plan; user scope already authorized",
+    "reviewed_fingerprint": "00e2828135cbe38cbde7925c70357c8c0b98b7aed62b0881b8afd64c51089b35",
+    "residual_limits": [
+      "One of four new cases known; no low result or accuracy validation.",
+      "Manufacturer page declaration, not physical package verification.",
+      "Contractual blind read scopes and self-reported recognition, not technical isolation.",
+      "Indexed-only SEPPIC direct-read limit."
+    ]
+  },
+  "checks": {
+    "round7_verifier": "passed;57 primary ranks;51 closed names;324 preserved artifacts",
+    "round6_verifier": "passed unchanged;6 cases;219 older historical artifacts",
+    "mutation_controls": "8 intended guards rejected corrupted data",
+    "local_links": "88 verified",
+    "manifest_and_whitespace": "24 files passed",
+    "git_diff_check": "passed for tracked changes",
+    "external_skill_changed_gate": "Not available: scripts/check-changed.mjs absent from this repo. Attempted dry run returned MODULE_NOT_FOUND. No installation or runtime test substituted; new research-specific verifiers supplied applicable proof."
+  },
+  "artifact_disposition": {
+    "retained": "All new durable plan/guide/input/output/seal/verification artifacts, local uncommitted",
+    "discarded": "Generated temporary builders/check script, temporary raw Claude review, newly generated verifier pyc",
+    "publication": "No commit, push, PR, DB/catalog/intake/deployment/activation."
+  }
+}

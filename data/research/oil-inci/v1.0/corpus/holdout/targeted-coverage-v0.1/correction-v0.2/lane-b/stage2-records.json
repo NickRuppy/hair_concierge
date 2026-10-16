@@ -1,0 +1,147 @@
+{
+  "run_id": "oil-targeted-neutral-v0.2",
+  "lane_id": "b",
+  "records": [
+    {
+      "case_id": "T02",
+      "named_oils": [
+        {
+          "hero_id": "T02-hero-1",
+          "hero_name": "Moroccan argan oil",
+          "matched_ranks": [
+            4
+          ],
+          "prominence": {
+            "value": "unknown",
+            "estimate": false,
+            "confidence": "low",
+            "evidence": [
+              {
+                "rank": 4,
+                "canonical_name": "ARGANIA KERNEL OIL"
+              },
+              {
+                "source_id": "T02-maker"
+              }
+            ],
+            "counter_signal": [
+              "The maker names this hero, but positioning cannot resolve its frozen formula role."
+            ],
+            "nearest_alternative": "supporting",
+            "reason": "The supplied hero mapping matches the exact literal declaration at rank 4. Its sealed role is unresolved; neither principal nor affirmative secondary status nor a qualified auxiliary suffix is established. Preserve unknown prominence without changing the ledger.",
+            "unresolved": [
+              "Species-incomplete literal token and unassessed functions remain unresolved. Source naming does not create a species alias or demonstrate formula prominence."
+            ]
+          }
+        }
+      ],
+      "dispenser": {
+        "value": "spray",
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T02-maker"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": "unknown",
+        "reason": "The supplied exact maker packaging evidence explicitly describes spray/misting and marks the mechanism confirmed.",
+        "unresolved": []
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T02-maker"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": true,
+        "reason": "Completed maker claim review contains no accepted explicit heat-protection claim. This is absence of an accepted claim, not tested zero protection.",
+        "unresolved": []
+      },
+      "provides_uv_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T02-maker"
+          },
+          {
+            "rank": 1,
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "ARGANIA KERNEL OIL"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "PHENYL TRIMETHICONE"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "FRAGRANCE (PARFUM)"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": true,
+        "reason": "The completed maker claim review contains no accepted explicit hair-UV protection claim, and the exact dictionary review finds no recognized UV filter in the sealed declaration. The required claim-and-filter conjunction is not met.",
+        "unresolved": []
+      },
+      "supported_uses": [
+        "leave_on_fibre_conditioning"
+      ],
+      "use_evidence": {
+        "value": [
+          "leave_on_fibre_conditioning"
+        ],
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T02-maker",
+            "direction_id": "T02-direction-1"
+          }
+        ],
+        "counter_signal": [
+          "Finishing a style does not establish an explicit dry-hair stage."
+        ],
+        "nearest_alternative": [],
+        "reason": "The coherent maker instruction directs misting over hair fibre to finish styling; the styling context establishes retained general fibre use. Wet versus dry is unspecified, so it does not establish dry_finish. No scalp or pre-wash scenario is supplied.",
+        "unresolved": [
+          "Explicit wet/dry stage, numerical dose and contact time are unestablished."
+        ]
+      },
+      "application_scenarios": [
+        {
+          "source_id": "T02-maker",
+          "direction_id": "T02-direction-1",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "finish_style_unspecified_wet_dry",
+          "dose": "mist all over; amount unestablished",
+          "contact_time": "unestablished",
+          "removal": "retention_by_styling_context",
+          "restrictions": "none stated in reviewed exact product text",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "status": "DONE_WITH_CONCERNS",
+  "review_date": "2026-10-13",
+  "case_id": "H04",
+  "review_mode": "known-product evidence follow-up, not blind classification",
+  "exact_formula_case_insensitive_match": true,
+  "frozen_raw_sha256": "75fd031050edb81a13989b83f3e296c1a4c0155e29b53f36be0026237cad7428",
+  "current_formula_sha256": "7b546c6db4a074fb623a117f96dc32309d8bed26ec849f3cd2189cdb7dd4053c",
+  "market": "US maker storefront",
+  "current_maker_text_size": "not established",
+  "context_hashes": {
+    "data/research/oil-inci/v1.0/adapter-replay-v0.2/envelopes/oil-holdout-h04.json": "f35d5fcc8a2cceed7b38b341b240fd423b9c62f07abe6d8ee14ddb4c61f199f8",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md": "2238a966c7cefbae48bec2df72293bef98837e29cba15c0eed9b5c2e91a281cc",
+    "docs/research/oil-inci/v1.0/04_blend-weight-policy-v0.2.md": "5db652413c5dd814f9a9488dfab6a8bedbd7dcc107a9fe002448203429db8391",
+    "docs/research/oil-inci/v1.0/03_weight-reference-v0.10.md": "dc6d7f117cae895014620ce9b3f542f5cb35c980581d0e692aa022862ede657d",
+    "plans/oil-inci/research/rahua-preparation-followup-2026-10-12/report.md": "87cb80c65a51434eff8c07e17abfccae2c67138ac5894b4ded73329004493921"
+  },
+  "decision": {
+    "current_policy_weight": "unknown",
+    "policy_basis": [
+      "B0: decisive preparation identity may block weight",
+      "B7: unidentified backbone cannot default to medium"
+    ],
+    "committed_weight_recommendation_under_current_rules": null,
+    "persistence": "moderate (preserve existing decision)",
+    "missing_observation": "Exact H04 preparation/carrier identities for Calendula Flower Oil and Decolorized Aloe Leaf Oil, or independent hair-weight evidence tied to this exact formulation.",
+    "owner_choice_if_immediate_scalar_required": "Explicit product-specific provisional weight override, stored as owner estimate and not as resolved carrier evidence or blind formula classification.",
+    "conditional_owner_exception_recommendation": {
+      "value": "medium",
+      "nearest_alternative": "rich",
+      "status": "PROPOSED_ONLY_REQUIRES_OWNER_EXCEPTION_TO_B0_B7",
+      "basis": "Source-informed bounded whole-product judgment: retained botanical system argues against calling it light; no established rich-leading or principal structured-film architecture, with weak maker lightweight positioning as counter-signal to rich. Does not admit any unidentified carrier or function."
+    }
+  },
+  "queries": [
+    {
+      "q": "site.rahua.com \"Calendula\" \"sunflower\"",
+      "result": "No preparation-specific carrier relationship found."
+    },
+    {
+      "q": "site.rahua.com \"Aloe\" \"carrier\"",
+      "result": "No preparation-specific carrier relationship found."
+    },
+    {
+      "q": "site.rahua.com \"Legendary Amazon Oil\" \"lightweight\"",
+      "result": "2018 maker launch article contains lightweight positioning; no hair comparison protocol or carrier identities."
+    },
+    {
+      "q": "site.rahua.com \"Legendary\" \"calendula\" \"infused\"",
+      "result": "No preparation-specific carrier relationship found."
+    },
+    {
+      "q": "site.rahua.com \"Legendary\" \"47ml\"",
+      "result": "No size established in standalone maker text; retailer results not imported."
+    }
+  ]
+}

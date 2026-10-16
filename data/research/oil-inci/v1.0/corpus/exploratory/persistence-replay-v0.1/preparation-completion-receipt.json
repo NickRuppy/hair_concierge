@@ -1,0 +1,51 @@
+{
+  "status": "contract_and_preparation_verified; replay_pending_context_decision",
+  "branch": "codex/oil-inci",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "date": "2026-10-09",
+  "content_fingerprint": "323d5f686f75bde5fe2bf97041d6f11ad4cc6bc0bd549b73dd2c95f260227a14",
+  "scope_manifest": {
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/context-source-supplement.json": "bf4df24ece839ac9d347c5fdf3c89fb4a9c33bf30706bfecb3273af96cdf8e00",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/coverage-inventory.json": "d6ad82a2eca7df517054839ef90f38bdc7e0ab91d58c71aa7e7bc783fcadc093",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary-staged.json": "4568298348a7fa61850d9decfaa19e938f789beb3a447b7200ae5d79e82f0c80",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/historical-preservation.json": "daf0d542cad598e29bc8ef84b21f7b0c919b28df399d7993e4bc11909f97f34d",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/preflight-receipt.json": "47b728f18c77c2fc2f894805804bff011e5da95949615de3c9acab80f5fd27ae",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-bindings-staged.json": "0e728187db91744a8d292deb3d827a9ac675da7977b4782b9cf08b5524444692",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet-staged.json": "a617deef728fa147489b8d6e671961a25286601c939fa8ebe690a1f11f4f8199",
+    "docs/research/README.md": "f960db4be0bbc102151a21689f00d0611aa91b41325c5f0399730b55973a33ec",
+    "docs/research/oil-inci/README.md": "5ea0f969d485ff6778fc724bb575dfb5cc003f7d20e7cca3c9240ab1b8ee96ba",
+    "docs/research/oil-inci/v1.0/00_category-charter-v0.1.md": "eb7e3fceedeec405039fa12e4af64b5c8ce7aac78f48a20f9a7b7d0a963f5cb8",
+    "docs/research/oil-inci/v1.0/01_property-set-v0.1.md": "d4bdd033bdd5b957ce64831a31c2c0019f8ba9213702b796346035422557022a",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.7.md": "921a9d5c4f713e642a3814c88b3e030a4d045ee23050c95d7747a5d80904f5ae",
+    "docs/research/oil-inci/v1.0/10_persistence-guidance-v0.1.md": "ad9119b216c7a4f9a4772cb1ffffc60050ce8803a24f7f8d63b46d6ee5dd2597",
+    "docs/research/oil-inci/v1.0/11_operating-guide-v0.1.md": "3d6fa7bfb911088c9f1f51c3a07cb063f1370c305036bf29761d8b2a4a162966",
+    "docs/research/shared/persistence-category-impact-v0.1.md": "c7bc02a0ccf7c3ccd4aa6392cd85c3681e4701344921909750b25b88a1fce639",
+    "plans/oil-inci/oil-engine-finalization-status-2026-10-09.md": "fc50fe1cb55579e248e52519630f089aad76f0008653af03182999bf6f98565c",
+    "plans/oil-inci/oil-persistence-integration-plan.md": "1a42d0042510546a448608a3422c2283ee8452f96ac449abdef4ac6ec4a446bd",
+    "plans/oil-inci/phase1-decision-coverage.md": "38be29bfbb3d0daeb0ad2b5377cf77f19bbc040cc683cf8cff50b37e874e25ef",
+    "plans/oil-inci/reviews/oil-persistence-integration-plan-review-2026-10-09.md": "1055f0bb9b52f91dad6467a13b570fd56db77a2b0a6d289efeba4099c35796e1",
+    "plans/oil-inci/verify-oil-persistence-replay.py": "7b0193f3a94694b21da24584c76e9c93718f60cc94ef93a1defca8e260715b6f"
+  },
+  "local_markdown_links_checked": 171,
+  "checks": [
+    "28-formula preflight, 557 ranks, 272 identities, 64-case inventory",
+    "source and corrected context bindings",
+    "411 earlier oil/pilot artifacts preserved; shared pilot separately verifies576",
+    "four corruption probes rejected",
+    "completed-run command refuses unfinished replay",
+    "shared pilot verifier passed; receipt byte-identical",
+    "JSON/AST/Markdown links and all tracked/untracked whitespace",
+    "git diff --check"
+  ],
+  "review": {
+    "normal_correctness": "No blocking finding in completed contract/preparation; replay completion blocked only by pending source-context selection.",
+    "structural": "One shared property owner, scalar output with separate trace, one consolidated guide, versioned successors and explicit source admission. No runtime abstraction or parallel active residue axis.",
+    "counterpart": "One Claude Opus4.8/high plan review reconciled; detailed report discarded."
+  },
+  "decision_coverage": "pending only dual-context selection; contract/preflight independent work verified",
+  "coverage_acknowledgement": "Nick: Yes do exactly the steps so that we can finalize this oil research engine soon.",
+  "internal_revalidation": "Replacement approved by preceding explicit proposal; no sibling/runtime migration. Source-context choice still awaits answer; no lane dispatched.",
+  "artifact_disposition": "All durable increment files commit-intended, uncommitted. Temporary preparation scripts and detailed review discarded. No unresolved task-owned artifact disposition.",
+  "skipped_checks": "Runtime/browser/database tests not applicable to this docs/data preparation; no source/runtime/database edits. Complete replay and holdout not yet run.",
+  "next": "Resolve selected context, freeze inputs, dispatch two independent lanes and commit28 research judgments; then full-profile gap pass and unseen holdout."
+}

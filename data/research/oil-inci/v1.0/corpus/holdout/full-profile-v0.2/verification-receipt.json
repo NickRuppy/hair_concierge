@@ -1,0 +1,92 @@
+{
+  "status": "passed",
+  "scope": "holdout",
+  "summary": {
+    "case_count": 6,
+    "scenario_role_count": 11,
+    "lane_stage_counts": {
+      "a": {
+        "cases": 6,
+        "ranks": 93
+      },
+      "b": {
+        "cases": 6,
+        "ranks": 93
+      }
+    }
+  },
+  "meaningful_boundary_corruptions": [
+    {
+      "mutation": "drop case",
+      "rejected_for": "case membership/order"
+    },
+    {
+      "mutation": "persistence unknown",
+      "rejected_for": "persistence scalar enum"
+    },
+    {
+      "mutation": "persistence confidence wrapper",
+      "rejected_for": "persistence scalar enum"
+    },
+    {
+      "mutation": "unbound source",
+      "rejected_for": "unbound source"
+    },
+    {
+      "mutation": "changed ordered blind ingredient",
+      "rejected_for": "ordered raw/canonical preservation"
+    },
+    {
+      "mutation": "changed selected base property",
+      "rejected_for": "selected field authority parity: H06/base"
+    },
+    {
+      "mutation": "changed inherited or first base property",
+      "rejected_for": "selected field authority parity: H01/base"
+    }
+  ],
+  "artifact_hashes": {
+    "README.md": "dcbb0b73994fbdd367635aee6948dcd8d66d9d85551f953a85a264fb7a3db89d",
+    "blind-packet.json": "34a5ea5a7fb45240c01963f50f54ebc80021fb798ca4c5394a22d8d97174fb42",
+    "blind-seal.json": "1594f91171bee2c8d10d7838d37f8189973b6ded96cf94c04a7a682a48615ae8",
+    "cohort-manifest.json": "079f360897475ea709477000b49e65cda53ae706e1533cb484582c9d88180a88",
+    "dictionary.json": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+    "formula-overlap-audit-v0.2.json": "185e9c3c33089ae70aa1a75aebaaf9f8a0e9bc51f0975e86c99b8e8406835feb",
+    "function-source-registry.json": "7bbf725b664243ba0a3d56f292abdd964220e9ef85d9bb0094d0f8320a6fff3d",
+    "input-manifest.json": "fd48c425d9b1e1b7ba7f3398e5ab474040f0f60e5f831713197672143e33d07c",
+    "integration-notes.json": "6e0bc6f120728517ba96be329dce1e1720da0d4010f800e01eaf23df460dcd9a",
+    "integration-review-predecessor-v0.1/README.md": "04af893d511f8a84eed248d4e303b33a1c17e2f092c73adc5e13723f8fac3dbc",
+    "integration-review-predecessor-v0.1/integration-notes.json": "086e5046f17eb99f674bc39a54a941dec39e1f96ca1e7f0dfe8c940a1ca252d5",
+    "integration-review-predecessor-v0.1/metrics.json": "9f06c12b0ce7ed116c53e769346bc7e6b540336b863cbff0d48a4c10c73d3585",
+    "integration-review-predecessor-v0.1/profiles.json": "7a16f609d1ea5a58b0b807c3f66b72a37c4119f7ecf73b6ceac0c3f4ffa7fcb6",
+    "integration-review-predecessor-v0.1/projection.json": "71dcff5e7a773a755b2a5aba118e3028200851c515629991452ec7e909ebff76",
+    "integration-review-predecessor-v0.1/results-for-review.md": "6aa501593232e4559655c4460a2480e27e356883128f36f69f6a54cebd9b8f06",
+    "integration-review-predecessor-v0.1/results.csv": "edda535f86c2be75c221af8e9148bbb275fd39bda48bab266cfe6f6e39e30a4a",
+    "integration-review-predecessor-v0.1/scenario-fit.json": "f02d01d3ae18a7f19dd0eab7370ad2908c5817128edcd09df9ecac9bbd256606",
+    "lane-a/blind-notes.json": "9a04b0b660b1141a0c9eec8451d6a5c312fc016e11a8508c174e931cbe1b817a",
+    "lane-a/blind-records.json": "485764b3c2ed7a658e5966ecba9d5628f7e34e79db4d653ee61b9440cbebb556",
+    "lane-a/persistence-research-trace.json": "d39bf1291dc91150969f04238501353ae9f3b974efa7df606fa12c29e1650dc8",
+    "lane-a/stage2-notes.json": "9f4044230a20ff805c62939459221499b12ea2f089e818f677480708dd8a592f",
+    "lane-a/stage2-records.json": "bdd9b0f6235b023feffacc17920975218166ff7a7f42d6b128c9009bc1da812a",
+    "lane-b/blind-notes.json": "7ff5527c99ce23ae9a6a3ff26464ca711f92062df15b885be9f95a4bb799e749",
+    "lane-b/blind-records.json": "0cf5d660f52cef132a14df0d3c3e4780cb186161dda8ff246ca538c878bad46b",
+    "lane-b/persistence-research-trace.json": "4729a40702acd1501965ec47e13f2c5d856ae2bf04e57ec217d59609da65ac61",
+    "lane-b/stage2-notes.json": "bc037e6b25acaf771ada5903e28a9d36b44c3cd1a7b853295eca7de8b0848cbe",
+    "lane-b/stage2-records.json": "fbba44a1781f7249f200da5b9eb04c99db36541e2ebbb195c7570acdea907e00",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7",
+    "method.md": "bed580a121f35c344208add0a561a4291ade68586d4a8eb0120fe606370597e0",
+    "metrics.json": "34b526da81129fa8743bb734c5f3fc1163f4083d69a4027eb78c37b46c4b9f64",
+    "profiles.json": "b0e925e5b568ef8071542f9d8d557136d1a2d8f2949f4bf05311e7193cd1b913",
+    "projection.json": "71dcff5e7a773a755b2a5aba118e3028200851c515629991452ec7e909ebff76",
+    "results-for-review.md": "6aa501593232e4559655c4460a2480e27e356883128f36f69f6a54cebd9b8f06",
+    "results.csv": "edda535f86c2be75c221af8e9148bbb275fd39bda48bab266cfe6f6e39e30a4a",
+    "root-selection-v0.2.json": "78e9c37f31e2eb448d7f789fa82694280995e3752e9b2fdfa28afb039a260825",
+    "root-selection.json": "6d68436583a922273e5f09d959dfa318c906ab21c228fc3861982ed924df6473",
+    "scenario-fit.json": "950c33447946727f9f7cf938da7c417803f2a548a426ad18f83c2299f04a8be6",
+    "source-packet.json": "6fb120c79d58590644dcf18f8eff81d776962975e60b918bcd3b9fa0721eb940",
+    "stage2-manifest.json": "e67797912926bbce700fca34d501eaf8b4ebedb1d9686583cf2e92af7db7f0ed",
+    "stage2-packet.json": "cc598f53fef053fa9d1c5749e07664ee687860b7be6dc3c058da300dee978d42",
+    "stage2-seal.json": "f13a6b2e07ea9a9a06c45d6f4588a2d40a80c410d86a2f6aed54f9587864d96b"
+  },
+  "limits": "Structural/process/source/fit consistency, not sensory accuracy. Acceptance/coverage outcomes are separately reported in metrics.json. No runtime or production action."
+}

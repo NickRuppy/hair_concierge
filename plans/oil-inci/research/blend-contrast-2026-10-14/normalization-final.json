@@ -1,0 +1,709 @@
+[
+  {
+    "neutral_id": "BC02",
+    "rank": 1,
+    "raw_name": "carthamus tinctorius (safflower) seed oil*",
+    "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "CARTHAMUS TINCTORIUS SEED OIL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 2,
+    "raw_name": "rosa canina (rosehip) fruit oil*",
+    "canonical_name": "ROSA CANINA FRUIT OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "ROSA CANINA FRUIT OIL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 3,
+    "raw_name": "argania spinosa (argan) kernel oil*",
+    "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "ARGANIA SPINOSA KERNEL OIL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 4,
+    "raw_name": "hippophae rhamnoides (sea buckthorn) seed oil*",
+    "canonical_name": "HIPPOPHAE RHAMNOIDES SEED OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Source-specific common-name parentheses stripped against the exact new primary entry; no general alias added."
+    ],
+    "identity_status": "batch_exact_primary_entry",
+    "source_refs": [
+      {
+        "id": "SB-FN04",
+        "claim": "Exact Latin ingredient and generic functions."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 5,
+    "raw_name": "rosa damascena (rose) flower oil*",
+    "canonical_name": "ROSA DAMASCENA FLOWER OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "ROSA DAMASCENA FLOWER OIL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 6,
+    "raw_name": "pelargonium graveolens (rose geranium) flower oil*",
+    "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 7,
+    "raw_name": "citrus sinensis (sweet orange) peel oil expressed*",
+    "canonical_name": "CITRUS SINENSIS (SWEET ORANGE) PEEL OIL EXPRESSED",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "not_normalized_without_exact_reviewed_or_primary_match",
+    "source_refs": []
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 8,
+    "raw_name": "cananga odorata (yang ylang) flower oil*",
+    "canonical_name": "CANANGA ODORATA FLOWER OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json",
+        "entry": "CANANGA ODORATA FLOWER OIL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      },
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-source-registry.json",
+        "entry": "F012",
+        "url": "https://www.indesso.com/en/our-catalog/cananga-oil",
+        "claim": "Reviewed manufacturer exact INCI essential flower oil; not all oil/extract forms."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 9,
+    "raw_name": "pogostemon cablin (patchouli) leaf oil*",
+    "canonical_name": "POGOSTEMON CABLIN (PATCHOULI) LEAF OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "not_normalized_without_exact_reviewed_or_primary_match",
+    "source_refs": []
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 10,
+    "raw_name": "lycium barbarum (goji berry) fruit extract*",
+    "canonical_name": "LYCIUM BARBARUM FRUIT EXTRACT",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "LYCIUM BARBARUM FRUIT EXTRACT",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 11,
+    "raw_name": "styrax tonkinensis (benzoin) resin extract",
+    "canonical_name": "STYRAX TONKINENSIS RESIN EXTRACT",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Source-specific common-name parentheses stripped against the exact new primary entry; no general alias added."
+    ],
+    "identity_status": "batch_exact_primary_entry",
+    "source_refs": [
+      {
+        "id": "SB-FN03",
+        "claim": "Exact Latin ingredient and generic functions."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 12,
+    "raw_name": "rosmarinus officinalis (rosemary) extract*",
+    "canonical_name": "ROSMARINUS OFFICINALIS EXTRACT",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Source-specific common-name parentheses stripped against the exact new primary entry; no general alias added."
+    ],
+    "identity_status": "batch_exact_primary_entry",
+    "source_refs": [
+      {
+        "id": "SB-FN06",
+        "claim": "Exact Latin ingredient and generic functions."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 13,
+    "raw_name": "cedrus atlantica (cedar) bark oil*",
+    "canonical_name": "CEDRUS ATLANTICA (CEDAR) BARK OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "not_normalized_without_exact_reviewed_or_primary_match",
+    "source_refs": []
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 14,
+    "raw_name": "citrus aurantium (orange) flower oil*",
+    "canonical_name": "CITRUS AURANTIUM (ORANGE) FLOWER OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "not_normalized_without_exact_reviewed_or_primary_match",
+    "source_refs": []
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 15,
+    "raw_name": "anthemis nobilis (chamomile) flower oil*",
+    "canonical_name": "ANTHEMIS NOBILIS (CHAMOMILE) FLOWER OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "not_normalized_without_exact_reviewed_or_primary_match",
+    "source_refs": []
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 16,
+    "raw_name": "helianthus annuus (sunflower) seed oil",
+    "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "HELIANTHUS ANNUUS SEED OIL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 17,
+    "raw_name": "tocopherol (vitamin E)",
+    "canonical_name": "TOCOPHEROL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "TOCOPHEROL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 18,
+    "raw_name": "citronellol**",
+    "canonical_name": "CITRONELLOL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "CITRONELLOL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 19,
+    "raw_name": "limonene**",
+    "canonical_name": "LIMONENE",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "LIMONENE",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 20,
+    "raw_name": "geraniol**",
+    "canonical_name": "GERANIOL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "GERANIOL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 21,
+    "raw_name": "linalool**",
+    "canonical_name": "LINALOOL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "LINALOOL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 22,
+    "raw_name": "benzyl benzoate**",
+    "canonical_name": "BENZYL BENZOATE",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "BENZYL BENZOATE",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 23,
+    "raw_name": "citral**",
+    "canonical_name": "CITRAL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "CITRAL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 24,
+    "raw_name": "farnesol**",
+    "canonical_name": "FARNESOL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "FARNESOL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 25,
+    "raw_name": "benzyl salicylate**",
+    "canonical_name": "BENZYL SALICYLATE",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "BENZYL SALICYLATE",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC02",
+    "rank": 26,
+    "raw_name": "eugenol**",
+    "canonical_name": "EUGENOL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "EUGENOL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC04",
+    "rank": 1,
+    "raw_name": "Sesamum Indicum (Sesame) Seed Oil",
+    "canonical_name": "SESAMUM INDICUM SEED OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "SESAMUM INDICUM SEED OIL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC04",
+    "rank": 2,
+    "raw_name": "Cocos Nucifera (Coconut) Oil",
+    "canonical_name": "COCOS NUCIFERA OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "COCOS NUCIFERA OIL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC04",
+    "rank": 3,
+    "raw_name": "Persea Americana (Avocado) Oil",
+    "canonical_name": "PERSEA GRATISSIMA OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Strip the explanatory Avocado/Sweet Almond parentheses, then apply only this source-scoped primary-supported whole-oil synonym."
+    ],
+    "identity_status": "source_scoped_whole_oil_synonym_supported",
+    "source_refs": [
+      {
+        "id": "SB-FN01",
+        "claim": "Exact whole-oil synonym identity."
+      },
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/ingredient-lexicon.json",
+        "entry": "PERSEA GRATISSIMA OIL",
+        "claim": "Previously reviewed exact whole-oil generic functions only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC04",
+    "rank": 4,
+    "raw_name": "Prunus Dulcis (Sweet Almond) Oil",
+    "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Strip the explanatory Avocado/Sweet Almond parentheses, then apply only this source-scoped primary-supported whole-oil synonym."
+    ],
+    "identity_status": "source_scoped_whole_oil_synonym_supported",
+    "source_refs": [
+      {
+        "id": "SB-FN02",
+        "claim": "Exact whole-oil synonym identity."
+      },
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/ingredient-lexicon.json",
+        "entry": "PRUNUS AMYGDALUS DULCIS OIL",
+        "claim": "Previously reviewed exact whole-oil generic functions only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC04",
+    "rank": 5,
+    "raw_name": "Argania Spinosa (Argan) Kernel Oil",
+    "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "ARGANIA SPINOSA KERNEL OIL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC04",
+    "rank": 6,
+    "raw_name": "Brahmi Herpestis (Brahmi) Fruit Extract",
+    "canonical_name": "BRAHMI HERPESTIS (BRAHMI) FRUIT EXTRACT",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "unresolved_no_correction",
+    "source_refs": []
+  },
+  {
+    "neutral_id": "BC04",
+    "rank": 7,
+    "raw_name": "Jasminum Officinale (Jasmin Absolute) Oil",
+    "canonical_name": "JASMINUM OFFICINALE (JASMIN ABSOLUTE) OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Latin base matched to primary entry for generic functions; original Jasmin Absolute qualifier retained separately and not treated as a reviewed grade alias."
+    ],
+    "identity_status": "exact_Latin_base_functions_qualifier_retained",
+    "source_refs": [
+      {
+        "id": "SB-FN05",
+        "claim": "Exact Latin ingredient and generic functions."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC04",
+    "rank": 8,
+    "raw_name": "Tocopherol (Vitamin E)",
+    "canonical_name": "TOCOPHEROL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+      "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "TOCOPHEROL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC04",
+    "rank": 9,
+    "raw_name": "Azadirachta Indica (Neem) Oil",
+    "canonical_name": "AZADIRACHTA INDICA (NEEM) OIL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "not_normalized_without_exact_reviewed_or_primary_match",
+    "source_refs": []
+  },
+  {
+    "neutral_id": "BC04",
+    "rank": 10,
+    "raw_name": "Benzyl Benzoate\u03b5",
+    "canonical_name": "BENZYL BENZOATE",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "BENZYL BENZOATE",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC04",
+    "rank": 11,
+    "raw_name": "Linalool\u03b5",
+    "canonical_name": "LINALOOL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "LINALOOL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC04",
+    "rank": 12,
+    "raw_name": "Eugenol\u03b5",
+    "canonical_name": "EUGENOL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "EUGENOL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC04",
+    "rank": 13,
+    "raw_name": "Benzyl Alcohol\u03b5",
+    "canonical_name": "BENZYL ALCOHOL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "BENZYL ALCOHOL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  },
+  {
+    "neutral_id": "BC04",
+    "rank": 14,
+    "raw_name": "Geraniol\u03b5",
+    "canonical_name": "GERANIOL",
+    "basis": [
+      "Preserve source_name unchanged.",
+      "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+    ],
+    "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+    "source_refs": [
+      {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "entry": "GERANIOL",
+        "claim": "Exact reviewed canonical or declared alias with generic roles only."
+      }
+    ]
+  }
+]

@@ -1,0 +1,41 @@
+{
+  "stage": "both_blind_lanes_sealed_before_controlled_unblind",
+  "validation": {
+    "input_hashes_match": true,
+    "lanes": {
+      "lane-a": {
+        "records": 8,
+        "ingredient_rows": 143,
+        "errors": [],
+        "sha256": "38f6306454d8fe9b927f1a07d59c30260b70077f26af6837317ae7666ce0cd84"
+      },
+      "lane-b": {
+        "records": 8,
+        "ingredient_rows": 143,
+        "errors": [],
+        "sha256": "9a1deb80db05490a20f9199e0579aea3b19a669ab607fcf4d0e5602e4fd090ca"
+      }
+    },
+    "errors": []
+  },
+  "files": [
+    {
+      "path": "lane-a/blind-records.json",
+      "sha256": "38f6306454d8fe9b927f1a07d59c30260b70077f26af6837317ae7666ce0cd84"
+    },
+    {
+      "path": "lane-a/blind-notes.md",
+      "sha256": "0d46558192ff6d85689ccd93e96f280770b2999c4d318e1d4072ad03efeab9ba"
+    },
+    {
+      "path": "lane-b/blind-records.json",
+      "sha256": "9a1deb80db05490a20f9199e0579aea3b19a669ab607fcf4d0e5602e4fd090ca"
+    },
+    {
+      "path": "lane-b/blind-notes.md",
+      "sha256": "d9a8dd6124823e4f19e5ab7417b4421b6a4a8e7a64c3ed4a27fbcb20fdfe690a"
+    }
+  ],
+  "access_receipts_reviewed": true,
+  "claim_or_peer_access_incidents": []
+}

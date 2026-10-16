@@ -1,0 +1,44 @@
+{
+  "lane_id": "a",
+  "files_read": [
+    "stage2-packet.json",
+    "lane-a/blind-records.json",
+    "method.md",
+    "dictionary.json"
+  ],
+  "input_hashes": {
+    "stage2-packet.json": "cc598f53fef053fa9d1c5749e07664ee687860b7be6dc3c058da300dee978d42",
+    "lane-a/blind-records.json": "485764b3c2ed7a658e5966ecba9d5628f7e34e79db4d653ee61b9440cbebb556",
+    "method.md": "bed580a121f35c344208add0a561a4291ade68586d4a8eb0120fe606370597e0",
+    "dictionary.json": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1"
+  },
+  "completed_ids": [
+    "H01",
+    "H02",
+    "H03",
+    "H04",
+    "H05",
+    "H06"
+  ],
+  "blind_preservation": {
+    "status": "preserved",
+    "blind_records_sha256": "485764b3c2ed7a658e5966ecba9d5628f7e34e79db4d653ee61b9440cbebb556",
+    "verification": "Matches the Stage 1 sealed digest. Deep-copy equality holds after derivation. No blind property, role, persistence value or research trace was written or revised."
+  },
+  "recognized_formulas": [
+    {
+      "case_id": "H04",
+      "detail": "Previously disclosed spontaneous familiarity with the RAHUA term remains unchanged. Stage 2 now explicitly supplies product identities; none were externally looked up or used to revise formula truth."
+    }
+  ],
+  "access_incidents": [],
+  "gaps": [
+    "H04 Rahua Oil and Sacha Inchi, and H05 Jasmine Oil have exact ingredient matches but unresolved sealed functional roles, so prominence remains unknown rather than absent.",
+    "H04 and H05 dispenser mechanisms remain unknown from supplied source capture.",
+    "H02 and H04 have accepted hair-UV claims without a recognized exact filter; H05 has a recognized filter without an accepted exact-market hair-UV claim. All yield false under the required conjunction.",
+    "H04 establishes dry_finish only. No damp, scalp or pre-wash application is inferred.",
+    "Several doses and all contact times remain unestablished; no numeric conversion is added.",
+    "Sources are reviewed captures supplied in stage2-packet.json. Source URLs, raw source references, other lanes and additional files were not opened.",
+    "Initial combined display was truncated; the remaining source-packet tail and full sealed ingredient ledger/suffix were read in a bounded follow-up. Previously read method and dictionary govern this stage; both complete bytes are included in the input hashes."
+  ]
+}

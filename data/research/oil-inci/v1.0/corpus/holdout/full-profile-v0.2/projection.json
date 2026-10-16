@@ -1,0 +1,32 @@
+[
+  {
+    "product_key": "oil-holdout-h01",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-holdout-h02",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "oil-holdout-h03",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-holdout-h04",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-holdout-h05",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-holdout-h06",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "high"
+  }
+]

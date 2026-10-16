@@ -1,0 +1,8 @@
+{
+  "prior_json_files_scanned": 506,
+  "distinct_prior_raw_formula_strings": 73,
+  "normalization": "case/whitespace/terminal sentence period only; does not assert chemical equivalence",
+  "exact_literal_matches": [],
+  "name_inventory": "exposure-inventory.json",
+  "limits": "Previously reformatted aliases are not proven absent by string comparison; named product/variant exposure checked independently."
+}

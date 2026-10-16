@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-05",
+  "scope": "Bounded current direct-properties round6 artifacts, verifier, plan and guide/decision updates; uncommitted local artifacts",
+  "reviewer": "Independent judgment_worker; read-only normal correctness and structural lens",
+  "structural_trigger": "Standalone staged-artifact verifier >150changedlines; helper structure judged proportionate, no framework proposed",
+  "verdict": "No remaining blocking correctness findings; completion receipt is final administrative item",
+  "canonical_content_fingerprint": "d630a965ecec18021f8bf18bf0d1ba722f40571881146458bf6103f459dd6bf3",
+  "fingerprint_convention": "Sorted sha256  repo-relative-path newline entries",
+  "file_count": 43,
+  "findings_reconciled": [
+    "Scenario facts and finite approved direction-role constraints validated against source observations",
+    "Suffix ranges/distinct marker ingredients/recognized functions and frozen-role prominence checked",
+    "Every literal rank/name reference checked including protection gate evidence",
+    "Optional shake/frequency require sourced observations",
+    "Real corpus baseline precedes19 corruptions and four UV combinations",
+    "Current source revision/read receipts verified; initial unavailable transient seal limitation remains candid",
+    "CSV/working projection and human versus prior-trial weights retain exactsource parity"
+  ],
+  "outstanding_closed_by_root": "Create completion-receipt.json referencing this reviewed manifest; no semantic edits needed",
+  "limitations": "Research contract correctness only; not sensory/scientific accuracy, clean holdout, full coverage or general intake readiness"
+}

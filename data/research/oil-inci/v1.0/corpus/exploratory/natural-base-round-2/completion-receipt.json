@@ -1,0 +1,168 @@
+{
+  "run_id": "oil-natural-base-round-2",
+  "completed_at": "2026-10-02",
+  "status": "requested_local_natural_material_reference_complete",
+  "authority": "OE14/OE16",
+  "method_revision": "weight-v0.2",
+  "reference": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.2.json",
+  "reference_sha256": "3ed3768eaacf076cfc29d3303730d135fc04e45636e93d86a02e1b96918e53be",
+  "coverage": {
+    "material_entries": 25,
+    "source_records": 26,
+    "canonical_names_and_reviewed_aliases": 38,
+    "round1_fixed_oil_identities_covered": 15,
+    "material_cases": 8,
+    "synthetic_probes": 6,
+    "lane_records": 28
+  },
+  "agreement": {
+    "cosmetic_material_benchmark": {
+      "cases": 8,
+      "raw_value_agreement": {
+        "numerator": 8,
+        "denominator": 8
+      },
+      "both_substantive_coverage": {
+        "numerator": 8,
+        "denominator": 8
+      },
+      "substantive_value_agreement": {
+        "numerator": 8,
+        "denominator": 8
+      },
+      "per_lane_class_counts": {
+        "a": {
+          "rich": 2,
+          "medium": 1,
+          "light": 5
+        },
+        "b": {
+          "rich": 2,
+          "medium": 1,
+          "light": 5
+        }
+      },
+      "confidence_agreement": 8,
+      "both_unknown_ids": []
+    },
+    "hypothetical_formula_probe": {
+      "cases": 6,
+      "raw_value_agreement": {
+        "numerator": 6,
+        "denominator": 6
+      },
+      "both_substantive_coverage": {
+        "numerator": 1,
+        "denominator": 6
+      },
+      "substantive_value_agreement": {
+        "numerator": 1,
+        "denominator": 1
+      },
+      "per_lane_class_counts": {
+        "a": {
+          "unknown": 5,
+          "rich": 1
+        },
+        "b": {
+          "unknown": 5,
+          "rich": 1
+        }
+      },
+      "confidence_agreement": 6,
+      "both_unknown_ids": [
+        "P01",
+        "P03",
+        "P04",
+        "P05",
+        "P06"
+      ]
+    }
+  },
+  "verification": {
+    "status": "passed",
+    "scope": "artifact invariants; no scientific accuracy assertion",
+    "reference_materials": 25,
+    "source_records": 26,
+    "reviewed_aliases": 38,
+    "old_fixed_oil_identities": 15,
+    "historical_files_unchanged": 28,
+    "sealed_input_files": 6,
+    "material_cases": 8,
+    "synthetic_probes": 6,
+    "mode": "inputs_and_sealed_lanes",
+    "lane_records_verified": 28,
+    "negative_controls": [
+      {
+        "case": "duplicate_alias",
+        "status": "rejected",
+        "reason": "Duplicate alias: SIMMONDSIA CHINENSIS SEED OIL"
+      },
+      {
+        "case": "changed_sealed_method",
+        "status": "rejected",
+        "reason": "Sealed input changed: method.md"
+      },
+      {
+        "case": "derivative_false_match",
+        "status": "rejected",
+        "reason": "Output material coverage"
+      },
+      {
+        "case": "material_confidence_inflation",
+        "status": "rejected",
+        "reason": "Pure-material confidence inflation"
+      }
+    ],
+    "commands": [
+      "python3 plans/oil-inci/verify-natural-weight-artifacts.py",
+      "Main temporary-copy negative-control harness (four artifact contract violations)"
+    ],
+    "limits": "Validates structure, exact matches and preservation, not class scientific accuracy. Original files were untouched by negative controls.",
+    "final_checks": {
+      "git_diff_check": "passed",
+      "current_artifact_links_and_whitespace": "passed; frozen doc-relative method navigation documented in run README; round-1 trailing whitespace preserved",
+      "real_repo_ci_path_scope": {
+        "chat_eval": false,
+        "retrieval_eval": false,
+        "playwright_smoke": false,
+        "security_scan": false,
+        "personal_plan_journey": false,
+        "full_ci": false
+      },
+      "runtime_tests": "not required/run for research artifacts",
+      "generic_personal_skill_changed_checker": "unavailable in this repo; module-not-found reported and no pass claimed"
+    }
+  },
+  "input_manifest_sha256": "36f0f1804f1449602ca49e87ab749606f2471453b0797e0db19b5e26f44dbe05",
+  "output_seal_sha256": "cf5986e92bfce0a7ebe9fada1534dc4b7825553ef7a7ef0d91057177e7b7fe87",
+  "artifact_hashes": {
+    "README.md": "64be9dfc77428d94fe646f27e984db18f2abe7d0607133dff4e921dc68d70c39",
+    "blind-packet.json": "6375ccbb9992da89fc3700d9988fb5ca984d0a8766b3d41c0b17a0bdffa11308",
+    "comparison.json": "d364cfcb35d836d653893a296fac71e61f9635f37f5bb3414a56df8d0532d5e2",
+    "historical-round1-baseline.json": "eee04257b030ae6a2942dfb56e5eead45a194f4bc3f3525cf0f9f020cd8684af",
+    "identity-map.json": "7bec5b7fa60229727d5d39d4d7a8eaef84082dbed58a18ca523beb85f09e49de",
+    "input-manifest.json": "36f0f1804f1449602ca49e87ab749606f2471453b0797e0db19b5e26f44dbe05",
+    "lane-a/notes.md": "b732fddd810b02db78d9d67c8b0148bc1e2979d697f778f9a98bb968d0e4b6c8",
+    "lane-a/records.json": "0d98e984fff9db7c7f551973f90d3ba549b59d64435802ecd72d1da5500d954a",
+    "lane-b/notes.md": "8c82f4128f1fda565d58733a663019f3bf8da1aae05d460475176b81f82ab6f2",
+    "lane-b/records.json": "9370634d2a8dc3d01ed0874ab58b2254c150317c935c5b9117fa4029ccdee516",
+    "main-working-weights-v0.2.json": "8dfbb2b20dc8327a5d83cb5c55686c9d96e0574a2f3ca1b2c1f28bff89e7e869",
+    "material-reference.json": "3ed3768eaacf076cfc29d3303730d135fc04e45636e93d86a02e1b96918e53be",
+    "method.md": "e1159a782690f5e6b29ee42f436f039843355f5ab65af36c3289b0163d3464b3",
+    "output-seal.json": "cf5986e92bfce0a7ebe9fada1534dc4b7825553ef7a7ef0d91057177e7b7fe87",
+    "results-for-review.md": "c924f966a9a4313d5ad407775cdef6a526f087e28e2a0520db16fab99b752ae0",
+    "role-lexicon.json": "ee8b2face3f484460fbc01dce5c8c3decbe4be69290b199c668b9eb719a0f5cd",
+    "source-capture.json": "1c29f9f91d9205593952afb1efda5ce3d1835ebb0abeadea79e622772c33b3e4",
+    "verification-receipt.json": "7225be28daf71deaae1093b092e2baa8f0db331349c6ddd58e58d1f7ee80e7f5"
+  },
+  "publication": "local uncommitted research artifacts only; no commit/push/PR/runtime/database/production activation",
+  "decisions_required_for_current_outcome": [],
+  "limits": [
+    "All weight labels are estimated; no validated standardized hair-weight class established.",
+    "Pure-material agreement mainly checks shared-reference application.",
+    "Only one of six hypothetical mixed probes has a substantive estimate; five explicit evidence blocks retained.",
+    "No full oil-profile/fit/intake eligibility contract or production adapter supplied."
+  ],
+  "next_step": "Strengthen exact nonbotanical carrier/film weight evidence and assess actual mixed hair-oil formulas under a new frozen derivation; fit policy separately."
+}

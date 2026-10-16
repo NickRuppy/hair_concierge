@@ -1,0 +1,34 @@
+{
+  "run_id": "oil-natural-base-round-2",
+  "sealed_at": "2026-10-02",
+  "method_revision": "weight-v0.2",
+  "blind_input_files": [
+    "method.md",
+    "material-reference.json",
+    "role-lexicon.json",
+    "blind-packet.json",
+    "input-manifest.json"
+  ],
+  "classifier_banned_files": [
+    "source-capture.json",
+    "identity-map.json",
+    "peer lane files",
+    "plans/",
+    "catalog/repository/memory",
+    "internet"
+  ],
+  "files": {
+    "material-reference.json": "3ed3768eaacf076cfc29d3303730d135fc04e45636e93d86a02e1b96918e53be",
+    "role-lexicon.json": "ee8b2face3f484460fbc01dce5c8c3decbe4be69290b199c668b9eb719a0f5cd",
+    "blind-packet.json": "6375ccbb9992da89fc3700d9988fb5ca984d0a8766b3d41c0b17a0bdffa11308",
+    "method.md": "e1159a782690f5e6b29ee42f436f039843355f5ab65af36c3289b0163d3464b3",
+    "source-capture.json": "1c29f9f91d9205593952afb1efda5ce3d1835ebb0abeadea79e622772c33b3e4",
+    "identity-map.json": "7bec5b7fa60229727d5d39d4d7a8eaef84082dbed58a18ca523beb85f09e49de"
+  },
+  "counts": {
+    "cosmetic_material_benchmarks": 8,
+    "hypothetical_overlay_probes": 6
+  },
+  "example_disjointness": "No full formula answer examples in method. Material table is admitted generic reference, intentionally shared with pure-material inputs. Synthetic probes are not claims about any selected real product.",
+  "source_limits": "Exact published declarations, not physical batch inspection; cosmetic ingredient/body-care benchmarks do not assert hair-product eligibility."
+}

@@ -1,0 +1,16 @@
+{
+  "status": "preflight_passed",
+  "classification_status": "not_dispatched_context_selection_pending",
+  "cases": 28,
+  "primary_ranks": 557,
+  "dictionary_identities": 272,
+  "inventoried_prior_cases": 64,
+  "historical_files_preserved": 411,
+  "negative_controls_rejected": [
+    "unknown_class",
+    "confidence_field",
+    "dropped_case",
+    "broken_evidence"
+  ],
+  "limits": "Source/schema integrity only; selected context, frozen run inputs, lanes, decisions and completed replay verification still required."
+}

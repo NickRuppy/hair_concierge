@@ -1,0 +1,37 @@
+{
+  "run_id": "oil-full-profile-holdout-v0.2",
+  "frozen_before_label_dispatch": true,
+  "inputs": {
+    "method.md": "bed580a121f35c344208add0a561a4291ade68586d4a8eb0120fe606370597e0",
+    "blind-packet.json": "34a5ea5a7fb45240c01963f50f54ebc80021fb798ca4c5394a22d8d97174fb42",
+    "dictionary.json": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+  },
+  "sources": {
+    "source-packet.json": "6fb120c79d58590644dcf18f8eff81d776962975e60b918bcd3b9fa0721eb940",
+    "cohort-manifest.json": "079f360897475ea709477000b49e65cda53ae706e1533cb484582c9d88180a88",
+    "formula-overlap-audit-v0.2.json": "185e9c3c33089ae70aa1a75aebaaf9f8a0e9bc51f0975e86c99b8e8406835feb",
+    "function-source-registry.json": "7bbf725b664243ba0a3d56f292abdd964220e9ef85d9bb0094d0f8320a6fff3d"
+  },
+  "case_ids": [
+    "H01",
+    "H02",
+    "H03",
+    "H04",
+    "H05",
+    "H06"
+  ],
+  "ingredient_ranks": 93,
+  "acceptance": {
+    "schema_ranks_stage_preservation": 1.0,
+    "unknown_persistence": 0,
+    "formula_fields_min_exact_matches": 5,
+    "denominator": 6,
+    "factual_flags_and_claim_gates_min": 6,
+    "meaning": "Internal diagnostic, not sensory validation or adapter/production gate."
+  },
+  "predecessor_aborted_incident": {
+    "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.1/aborted-input-incident.json",
+    "sha256": "ce23bfff2e2a2b9a506c74e592e30b8c69628f787ef645a775693e3d01c70ecc"
+  }
+}

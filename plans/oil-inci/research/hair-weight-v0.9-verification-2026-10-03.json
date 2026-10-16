@@ -1,0 +1,56 @@
+{
+  "status": "passed",
+  "scope": "v0.9 artifact integrity and exact declaration resolution; not sensory validation",
+  "decision": "OE35",
+  "reference": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.9.json",
+  "guide": "docs/research/oil-inci/v1.0/03_weight-reference-v0.9.md",
+  "reference_entries": 67,
+  "exact_names": 106,
+  "counts": {
+    "light": 43,
+    "rich": 9,
+    "medium": 14,
+    "unknown": 1
+  },
+  "assigned_low_confidence": 64,
+  "assigned_moderate_confidence": 2,
+  "validated_hair_weight_entries": 0,
+  "unchanged_predecessor_entries": 66,
+  "unchanged_prior_sources": 87,
+  "immutable_files_unchanged": 117,
+  "historical_snapshot": "plans/oil-inci/research/hair-weight-v0.9-historical-hashes-2026-10-03.json",
+  "guide_table_rows": 67,
+  "sole_added_entry": "coconut_fruit_oil_declaration",
+  "exact_name_only": true,
+  "coverage_audit_preserved": true,
+  "current_resolution_overlay": "COCOS NUCIFERA FRUIT OIL → rich/low, medium alternative (OE35)",
+  "retained_material_limits": [
+    "combined sea-buckthorn composition",
+    "unspecified sunflower plant part",
+    "product-specific grade and film contributions"
+  ],
+  "accepted_blend_decisions_unchanged": true,
+  "checked_docs": 8,
+  "checked_local_links": 68,
+  "local_links": "passed",
+  "whitespace_check": "passed (git diff --check plus explicit edited-document scan)",
+  "frozen_verifiers": [
+    {
+      "command": "python3 plans/oil-inci/verify-blend-weight-round-4.py",
+      "status": "passed"
+    }
+  ],
+  "new_classification_runs": 0,
+  "verified_artifact_sha256": {
+    "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.9.json": "cbc3b4a9744a9ec94f9dfef176abeb4925df9a7ce5fe2ec361f25d3be34b5178",
+    "docs/research/oil-inci/v1.0/03_weight-reference-v0.9.md": "d8488bfd04abc3642b7979aa5d6ac43738bbb2cfdc844465f54db333693394f4",
+    "docs/research/oil-inci/README.md": "0a311c04db807b016745b4f1d024c99ef4a5b2cc9ea59b1ae217b452ceb2f698",
+    "docs/research/oil-inci/v1.0/00_category_charter.md": "6041f10c11ed4d7a453e5b500715ea04f4fc0e4e49083f6ff2e5c3253f9e8cc1",
+    "docs/research/oil-inci/v1.0/01_property-set-v0.md": "4f87a546986a00462ed79e7e57a4d2841a9b40b7f4012f4514c47e72714abc93",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.1.md": "de8708de2882b03eab32ed14239a3b2b8b103dbe3e0a2e721d912bc97bcf2d16",
+    "plans/oil-inci/phase1-decision-coverage.md": "331dbcfdc6f254b11d3a74e6c256cc7d3883e34b2bb8aacc67e8c9d000bad98a",
+    "plans/oil-inci/research/weight-uncertainty-decisions-2026-10-02.md": "f132f06da90ec992e5e5f02ac6035846b0c68eda22b26791eb65ac340777616c",
+    "plans/oil-inci/research/hair-weight-v0.9-coconut-fruit-addition-2026-10-03.md": "ec552d6dd0a23d09bd25c19ff779ca421575d37cda141ebdcaa79f81912df5f0",
+    "plans/oil-inci/research/hair-weight-v0.9-historical-hashes-2026-10-03.json": "66866f58b7b834c1c04ec80c23d20e01290c3a138017b78cabcfc89f9e42ba9d"
+  }
+}

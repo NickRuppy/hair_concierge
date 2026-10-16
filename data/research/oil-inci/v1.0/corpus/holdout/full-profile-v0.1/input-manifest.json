@@ -1,0 +1,33 @@
+{
+  "run_id": "oil-full-profile-holdout-v0.1",
+  "frozen_before_label_dispatch": true,
+  "inputs": {
+    "method.md": "845cee92c854ac595d6f747b97d6d9987cc05dea4e72c92b561ee4f71d58841e",
+    "blind-packet.json": "a6a15a5685a6082c9749f26b7980d60a199bbf7e12b7b268a1b77e4c7d2eaab2",
+    "dictionary.json": "c1127574c64c71ed64f31183e1d5f1ffcc0bb234636e208510fd35cb18e49e54",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+  },
+  "sources": {
+    "source-packet.json": "c1cdf30be1103cf44905d65761be06cfcd96eb705d11511baad91a53b7b4bf59",
+    "cohort-manifest.json": "295376e0084b5a8e8704ecec495d46d42599dadd80e25732de74e9f0649488fc",
+    "source-staging/selection-registration-v0.2.json": "3bce24096449d5f00d0c1ac191f61d771be0cde3bb7b9b6b0a3d17cab724c516",
+    "formula-overlap-audit-v0.2.json": "185e9c3c33089ae70aa1a75aebaaf9f8a0e9bc51f0975e86c99b8e8406835feb"
+  },
+  "case_ids": [
+    "H01",
+    "H02",
+    "H03",
+    "H04",
+    "H05",
+    "H06"
+  ],
+  "ingredient_ranks": 93,
+  "acceptance": {
+    "schema_ranks_stage_preservation": 1.0,
+    "unknown_persistence": 0,
+    "formula_fields_min_exact_matches": 5,
+    "denominator": 6,
+    "factual_flags_and_claim_gates_min": 6,
+    "meaning": "Internal diagnostic, not sensory validation or adapter/production gate."
+  }
+}

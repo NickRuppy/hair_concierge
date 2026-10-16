@@ -1,0 +1,2412 @@
+{
+  "run_id": "oil-persistence-leave-on-replay-v0.1",
+  "records": [
+    {
+      "case_id": "O01",
+      "persistence_potential": "moderate",
+      "reason": "The ester, squalane, avocado and sunflower emollients support an ordinary retained lipid coating alongside the hydrocarbon carriers. The modified castor derivative and peptide have no assessed conditioning-film function here, so I do not turn them into an adherent-film mechanism; the positive reading is a fluid emollient remainder.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "CAPRYLYL CAPRYLATE/CAPRATE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "SQUALANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "PERSEA GRATISSIMA OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "HELIANTHUS ANNUUS OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "C13-15 ALKANE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "UNDECANE"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "TRIDECANE"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "CASTOR ISOSTEARATE SUCCINATE"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "PROPANEDIOL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "SH-OLIGOPEPTIDE-78"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "TOCOPHEROL"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "case_id": "O03",
+      "persistence_potential": "high",
+      "reason": "Dimethicone and the ester/botanical oils provide conditioning within an explicitly film-forming VP/VA system. I read the retained conditioning layer as supported by that fixative polymer, rather than merely an ordinary fluid coating; the aqueous and hydrocarbon vehicles do not negate this combined architecture.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "AQUA"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISOPROPYL MYRISTATE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "VP/VA COPOLYMER"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "MAGNESIUM SULFATE"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "CAPRYLYL GLYCOL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "COCOS NUCIFERA OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "ETHYLHEXYL SALICYLATE"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "ORBIGNYA OLEIFERA SEED OIL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "CITRIC ACID"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "SODIUM HYDROXIDE"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "PARFUM"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "case_id": "O04",
+      "persistence_potential": "moderate",
+      "reason": "The complete declaration is intact coconut oil: retained application supports an ordinary lipid conditioning coat, with no declared gum, adherent polymer or combined structuring route. That positive lipid-coating reading supports moderate without importing penetration or washout assumptions.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "COCOS NUCIFERA OIL"
+        }
+      ],
+      "considered_ranks": [
+        1
+      ]
+    },
+    {
+      "case_id": "O05",
+      "persistence_potential": "moderate",
+      "reason": "The hydrocarbons, esters and intact oils form an ordinary retained emollient system. I read the paired styrene copolymers as gelling/rheology support rather than proof of an adherent conditioning film; the modified-oil polymer and lipid derivative lack assessed film functions, so they do not bridge that distinction.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "C13-15 ALKANE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISOHEXADECANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ISOAMYL LAURATE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "ETHYLENE/PROPYLENE/STYRENE COPOLYMER"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "C9-12 ALKANE"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "HIPPOPHAE RHAMNOIDES FRUIT OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "BRASSICA CAMPESTRIS/ALEURITES FORDI OIL COPOLYMER"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "CITRULLUS LANATUS SEED OIL"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "MORINGA OLEIFERA SEED OIL"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "ORBIGNYA OLEIFERA SEED OIL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "PHYTOSTERYL/OCTYLDODECYL LAUROYL GLUTAMATE"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "BUTYLENE/ETHYLENE/STYRENE COPOLYMER"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "AMARANTHUS CAUDATUS SEED EXTRACT"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "DIISOSTEARYL MALATE"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "PARFUM"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ]
+    },
+    {
+      "case_id": "O06",
+      "persistence_potential": "high",
+      "reason": "The aqueous humectant/solubilizer system delivers an explicit cationic Polyquaternium-10 conditioning film, with emollient and peptide support rather than a self-standing bulk oil coat. I read this as polymer-based retained conditioning; the solubilizers do not establish cancellation of that adherent route, and unassessed auxiliaries supply no additional film claim.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "AQUA"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "POLYQUATERNIUM-10"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "POLYSORBATE 20"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PEG-40 HYDROGENATED CASTOR OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "AVENA SATIVA PEPTIDE"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "GARDENIA TAITENSIS FLOWER EXTRACT"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "LYCIUM BARBARUM FRUIT EXTRACT"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "MALVA SYLVESTRIS EXTRACT"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "PPG-3 CAPRYLYL ETHER"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "ETHYLHEXYLGLYCERIN"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "C13-15 ALKANE"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "PROPYLENE GLYCOL"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "CITRIC ACID"
+        },
+        {
+          "rank": 22,
+          "canonical_name": "1,2-HEXANEDIOL"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "CAPRYLYL GLYCOL"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "PARFUM"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ]
+    },
+    {
+      "case_id": "O07",
+      "persistence_potential": "moderate",
+      "reason": "Dimethicone and phenyl trimethicone join hydrocarbons, coco-caprylate and botanical oils in a retained fluid conditioning layer. Their film functions support ordinary coating, while the unassessed dimaleate/propanediol and botanical preparations do not establish a gum-like or adherent network that would favor high.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISOHEXADECANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C13-14 ISOALKANE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "COCO-CAPRYLATE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "BIS-AMINOPROPYL DIGLYCOL DIMALEATE"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "PROPANEDIOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "ZEA MAYS OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "BETA-CAROTENE"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "PUNICA GRANATUM SEED OIL"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "AQUA"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "MORINDA CITRIFOLIA FRUIT EXTRACT"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "PSEUDOZYMA EPICOLA/CAMELLIA SINENSIS SEED OIL FERMENT EXTRACT FILTRATE"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "PARFUM"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ]
+    },
+    {
+      "case_id": "O08",
+      "persistence_potential": "high",
+      "reason": "The dimethiconol gum and dimethicone form a complementary conditioning-film system within the ester and botanical-oil emollients. The whole remainder therefore favors a cohesive silicone-supported coat over fluid lipids alone; the extracts, antioxidant and fragrance declarations do not establish a competing dispersible conditioning architecture.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISOPROPYL MYRISTATE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "COCOS NUCIFERA OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "GARDENIA TAITENSIS FLOWER EXTRACT"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "VANILLA PLANIFOLIA FRUIT EXTRACT"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "PARFUM"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "case_id": "O09",
+      "persistence_potential": "moderate",
+      "reason": "The ester/ether emollients and exact fixed oils support an ordinary retained lipid layer. Polyglyceryl-3 diisostearate and water add emulsifying context, not an assessed cohesive conditioning polymer; unassessed extracts and aromatic auxiliaries are not treated as absent or as an independent high-film route.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "MACADAMIA INTEGRIFOLIA SEED OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "DICAPRYLYL ETHER"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "CORYLUS AVELLANA SEED OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "CAMELLIA OLEIFERA SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "CAMELLIA JAPONICA SEED OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "BORAGO OFFICINALIS SEED OIL"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "POLYGLYCERYL-3 DIISOSTEARATE"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "AQUA/WATER"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "ASCORBIC ACID"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "SOLANUM LYCOPERSICUM (TOMATO) FRUIT EXTRACT"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "ACETYL CEDRENE"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "CITRUS AURANTIUM PEEL OIL"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "DIMETHYL PHENETHYL ACETATE"
+        },
+        {
+          "rank": 27,
+          "canonical_name": "VANILLIN"
+        },
+        {
+          "rank": 29,
+          "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL"
+        },
+        {
+          "rank": 30,
+          "canonical_name": "ISOEUGENYL ACETATE"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ]
+    },
+    {
+      "case_id": "O10",
+      "persistence_potential": "high",
+      "reason": "The volatile silicone/alcohol delivery system leaves a plausible dimethiconol-gum conditioning film together with coconut, macadamia and avocado lipids. I read the gum as part of the retained conditioning architecture, not merely a carrier-thickening clue; vehicle mobility does not remove that film mechanism.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "CYCLOPENTASILOXANE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ALCOHOL DENAT."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "MACADAMIA TERNIFOLIA SEED OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "PERSEA GRATISSIMA (AVOCADO) OIL"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "case_id": "O11",
+      "persistence_potential": "moderate",
+      "reason": "The soybean, castor, jojoba and other exact fixed oils provide a retained lipid-conditioning system alongside glycerin, aromatic components, extracts and particulate silica. Ordinary lipid coating is the affirmative reading; the unassessed botanical/vitamin auxiliaries and silica do not substantiate a cohesive conditioning network.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "GLYCINE SOJA (SOYBEAN) OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "MENTHA PIPERITA (PEPPERMINT) OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "EUCALYPTUS GLOBOLUS (EUCALYPTUS) LEAF OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "MENTHOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "MELALUECA ALTERNIFOLIA (TEA TREE) LEAF OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "EQUISETUM ARVENSE (HORSETAIL) EXTRACT"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "ALOE BARBADENSIS EXTRACT"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "TRITICUM VULGARE (WHEAT) GERM OIL"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "BENZYL NICOTINATE"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "ORYZA SATIVA (RICE) BRAN OIL"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "BIOTIN"
+        },
+        {
+          "rank": 22,
+          "canonical_name": "ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "APIUM GRAVEOLENS (CELERY) SEED EXTRACT"
+        },
+        {
+          "rank": 25,
+          "canonical_name": "CHOLECALCIFEROL (VITAMIN D)"
+        },
+        {
+          "rank": 26,
+          "canonical_name": "ASCORBIC ACID"
+        },
+        {
+          "rank": 27,
+          "canonical_name": "OCIMUM"
+        },
+        {
+          "rank": 28,
+          "canonical_name": "BASILICUM (BASIL) OIL"
+        },
+        {
+          "rank": 29,
+          "canonical_name": "POGOSTEMON CABLIN (PATCHOULI) OIL"
+        },
+        {
+          "rank": 30,
+          "canonical_name": "SALVIA OFFICINALIS (SAGE) OIL"
+        },
+        {
+          "rank": 31,
+          "canonical_name": "SILICA"
+        },
+        {
+          "rank": 32,
+          "canonical_name": "URTICA DIOICA (NETTLE) EXTRACT"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ]
+    },
+    {
+      "case_id": "O12",
+      "persistence_potential": "high",
+      "reason": "Dimethicone with dimethiconol supplies a carrier/conditioning-film and gum combination, complemented by rice-bran oil. This is a coherent retained silicone-gum coating rather than only a fluid lipid residue; the antioxidant, fragrance and unassessed aromatic auxiliaries provide no basis to recast that conditioning system as dispersible.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ORYZA SATIVA (RICE) BRAN OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "FRAGRANCE/PARFUM"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "VANILLIN"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "case_id": "O13",
+      "persistence_potential": "moderate",
+      "reason": "Sunflower, sesame and sweet-almond oils support an ordinary retained lipid layer within the aromatic and botanical-extract mixture. The exact extracts and decamphorised wood oil lack assessed conditioning-film functions, so I retain the positive lipid-coating interpretation without treating those components as negligible or inventing an adherent network.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "SESAMUM INDICUM SEED OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "CANANGA ODORATA OIL/EXTRACT"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "ONOSMA HISPIDUM ROOT EXTRACT"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "CINNAMOMUM CAMPHORA WOOD OIL (DECAMPHORISED)"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "EMBLICA OFFICINALIS FRUIT EXTRACT"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "OCIMUM SANCTUM LEAF EXTRACT"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "BACOPA MONNIERI LEAF EXTRACT"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "CENTELLA ASIATICA LEAF EXTRACT"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "ECLIPTA ALBA LEAF EXTRACT"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "LAWSONIA INERMIS (HENNA) LEAF EXTRACT"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "ACACIA CONCINNA FRUIT EXTRACT"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "ALOE BARBADENSIS LEAF EXTRACT"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "SAPINDUS MUKOROSSI FRUIT EXTRACT"
+        },
+        {
+          "rank": 22,
+          "canonical_name": "GERANYL ACETATE"
+        },
+        {
+          "rank": 25,
+          "canonical_name": "SYMPLOCOS RACEMOSA BARK EXTRACT"
+        },
+        {
+          "rank": 26,
+          "canonical_name": "TRIGONELLA FOENUM-GRAECUM SEED EXTRACT"
+        },
+        {
+          "rank": 27,
+          "canonical_name": "WITHANIA SOMNIFERA LEAF/ROOT EXTRACT"
+        },
+        {
+          "rank": 29,
+          "canonical_name": "ALPHA-TERPINENE"
+        },
+        {
+          "rank": 33,
+          "canonical_name": "TERPINOLENE"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33
+      ]
+    },
+    {
+      "case_id": "O14",
+      "persistence_potential": "high",
+      "reason": "Dimethicone, dimethiconol gum and phenylpropyldimethylsiloxysilicate jointly support a cohesive conditioning film within the carrier/emollient mixture. The wetting agent and silicone elastomer add delivery/structure context but are not the basis of promotion; the explicit gum-plus-film-former conditioning route supports high.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "TRISILOXANE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "UNDECANE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "CAPRYLYL METHICONE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "TRIDECANE"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "OCTYLDODECANOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "PHENYLPROPYLDIMETHYLSILOXYSILICATE"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "CAPSANTHIN/CAPSORUBIN"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "DIETHYLHEXYL SODIUM SULFOSUCCINATE"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "DIMETHICONE/VINYL DIMETHICONE CROSSPOLYMER"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ]
+    },
+    {
+      "case_id": "O15",
+      "persistence_potential": "high",
+      "reason": "Dimethicone and dimethiconol create a complementary retained silicone-gum conditioning route alongside the botanical oils and triglyceride emollient. The hydrocarbon carrier does not cancel that film, and the extract/fragrance portion does not justify replacing the gum-supported reading with an ordinary fluid-oil coat.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "CAMELLIA OLEIFERA SEED OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "ZEA MAYS GERM OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "SCLEROCARYA BIRREA SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "PENTACLETHRA MACROLOBA SEED OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "CAMELINA SATIVA SEED OIL"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "CAMELLIA JAPONICA FLOWER EXTRACT"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "PHYLLANTHUS EMBLICA FRUIT EXTRACT"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "PARFUM"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "case_id": "O16",
+      "persistence_potential": "moderate",
+      "reason": "Castor, avocado, grape-seed, coconut and the remaining exact fixed oils form a retained lipid-conditioning blend. Glycerin and the numerous unassessed extracts, aromatic oils and vitamin preparations do not establish a separate cohesive film; I read ordinary lipid retention while preserving both declared wheat-germ-oil occurrences.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "PERSEA GRATISSIMA (AVOCADO) OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "ALOE BARBADENSIS LEAF OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "VITAMIN E (MIXED TOCOPHEROL) OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "MENTHA ARVENSIS (PEPPERMINT) OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "BIOTIN"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "LAVANDULA LATIFOLIA (LAVENDER) OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "EUCALYPTUS GLOBULUS LEAF (EUCALYPTUS) OIL"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "GLYCINE SOJA (SOYBEAN) OIL"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) OIL"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "MELALEUCA ALTERNIFOLIA (TEA TREE) OIL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "TRITICUM VULGARE (WHEAT) GERM OIL"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "EQUISETUM ARVENSE (HORSETAIL) EXTRACT"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "TRITICUM VULGARE (WHEAT) GERM OIL"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "ORYZA SATIVA (RICE) BRAN OIL"
+        },
+        {
+          "rank": 22,
+          "canonical_name": "ARCTIUM LAPPA (BURDOCK ROOT) EXTRACT"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "APIUM GRAVEOLENS (CELERY) SEED EXTRACT"
+        },
+        {
+          "rank": 25,
+          "canonical_name": "ASCORBIC ACID (VITAMIN C)"
+        },
+        {
+          "rank": 26,
+          "canonical_name": "OCIMUM BASILICUM (BASIL) OIL"
+        },
+        {
+          "rank": 27,
+          "canonical_name": "POGOSTEMON CABLIN (PATCHOULI) OIL"
+        },
+        {
+          "rank": 28,
+          "canonical_name": "SALVIA OFFICINALIS (SAGE) OIL"
+        },
+        {
+          "rank": 29,
+          "canonical_name": "URTICA DIOICA (NETTLE) EXTRACT"
+        },
+        {
+          "rank": 30,
+          "canonical_name": "ARGANIA SPINOSA KERNEL (ARGAN) OIL"
+        },
+        {
+          "rank": 31,
+          "canonical_name": "PIMENTA OFFICINALIS (PIMENTO) LEAF OIL"
+        },
+        {
+          "rank": 32,
+          "canonical_name": "NIGELLA SATIVA SEED OIL"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ]
+    },
+    {
+      "case_id": "O17",
+      "persistence_potential": "moderate",
+      "reason": "Sesame, rice-bran, broccoli, wheat-germ and grape-seed oils combine with triglyceride and isoamyl-laurate emollients to support ordinary retained lipid coating. The botanical-extract and aromatic portion supplies no assessed adherent-film architecture; its unassessed components are not assigned either negligible residue or a polymer-like contribution.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "SESAMUM INDICUM (SESAME) SEED OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ORYZA SATIVA (RICE) BRAN OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "BRASSICA OLERACEA ITALICA (BROCCOLI) SEED OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "ISOAMYL LAURATE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "TRITICUM VULGARE (WHEAT) GERM OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "PARFUM (FRAGRANCE)"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "CITRUS AURANTIUM PEEL OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "MELIA AZADIRACHTA SEED OIL"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "ECLIPTA ALBA LEAF EXTRACT"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "CASSIA AURICULATA LEAF EXTRACT"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "CENTELLA ASIATICA LEAF EXTRACT"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "LAVANDULA OIL/ EXTRACT"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "EUCALYPTUS GLOBULUS OIL"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "AZADIRACHTA INDICA LEAF EXTRACT"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "EMBLICA OFFICINALIS FRUIT EXTRACT"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "LAWSONIA INERMIS (HENNA) LEAF EXTRACT"
+        },
+        {
+          "rank": 25,
+          "canonical_name": "EUGENIA CARYOPHYLLUS (CLOVE) OIL"
+        },
+        {
+          "rank": 29,
+          "canonical_name": "VANILLIN"
+        },
+        {
+          "rank": 31,
+          "canonical_name": "TERPINOLENE"
+        },
+        {
+          "rank": 32,
+          "canonical_name": "SANTALUM ALBUM (SANDALWOOD) OIL"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ]
+    },
+    {
+      "case_id": "O18",
+      "persistence_potential": "moderate",
+      "reason": "The exact intact oils, including fluid jojoba, provide a retained mixed-lipid coat. The amla fruit powder has no assessed film function and tocopherol is an antioxidant, so neither substantiates a cohesive conditioning network; ordinary lipid retention is the best whole-declaration reading.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "RICINUS COMMUNIS SEED OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "OLEA EUROPAEA FRUIT OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "COCOS NUCIFERA OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "PERSEA GRATISSIMA OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "BRASSICA NIGRA SEED OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "BRASSICA OLERACEA ITALICA SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "EMBLICA OFFICINALIS FRUIT POWDER"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "case_id": "O19",
+      "persistence_potential": "moderate",
+      "reason": "Isoamyl laurate with argan, baobab and coconut oils supports an ordinary retained emollient layer. The fragrance, flower extract and exact aromatic preparations do not establish a gum/adherent conditioning route; their unassessed contributions remain unquantified rather than being used to erase or promote the lipid coat.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "ISOAMYL LAURATE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ADANSONIA DIGITATA (BAOBAB) SEED OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PARFUM (NATURALLY DERIVED FRAGRANCE)"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "GARDENIA TAHITENSIS FLOWER EXTRACT"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "VANILLIN"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "CITRUS AURANTIUM PEEL OIL"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "CITRUS AURANTIUM BERGAMIA PEEL OIL"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "CITRUS LIMON PEEL OIL"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "MENTHA PIPERITA OIL"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "POGOSTEMON CABLIN OIL"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "GERANYL ACETATE"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "case_id": "O20",
+      "persistence_potential": "high",
+      "reason": "The dimethicone/dimethiconol combination supports a retained cohesive conditioning film alongside rosehip and apricot-kernel lipids. Trisiloxane and disiloxane are delivery context, while the flower oil and aromatic auxiliaries provide no assessed competing conditioning structure; the gum-plus-conditioning-fluid architecture favors high.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ROSA CANINA FRUIT OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ROSA DAMASCENA FLOWER OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PRUNUS ARMENIACA (APRICOT) KERNEL OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "PARFUM (FRAGRANCE)"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "TRISILOXANE"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "DISILOXANE"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "GERANYL ACETATE"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "ROSE KETONES"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "case_id": "O21",
+      "persistence_potential": "moderate",
+      "reason": "Hydrogenated farnesene, squalane, exact fixed oils, jojoba esters and meadowfoam estolide support a retained emollient blend. The unspecified jojoba-ester grade does not establish a cohesive wax network, and the extracts provide no assessed film route; ordinary lipid/emollient coating is favored, with the fragrance footnote kept separate from primary ranks.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "HYDROGENATED FARNESENE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "SQUALANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "JOJOBA ESTERS"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "MEADOWFOAM ESTOLIDE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "HIBISCUS SABDARIFFA FLOWER EXTRACT"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "ECLIPTA PROSTRATA EXTRACT"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "MORINGA OLEIFERA SEED OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "FRAGRANCE/PARFUM"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "case_id": "O22",
+      "persistence_potential": "moderate",
+      "reason": "The complete primary declaration is whole jojoba seed oil, explicitly described as a fluid liquid-wax emollient. That supports an ordinary retained lipid coat; the word wax does not establish a structured adherent film, and the organic annotation adds no conditioning mechanism.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+        }
+      ],
+      "considered_ranks": [
+        1
+      ]
+    },
+    {
+      "case_id": "O23",
+      "persistence_potential": "high",
+      "reason": "Dimethicone, dimethiconol gum and bis-cetearyl amodimethicone form a complementary silicone conditioning-film architecture within the ester, olive-derived and botanical emollients. The hydrocarbon carrier and optical filters do not cancel or independently establish persistence; the joined gum/polymer conditioning system favors a more cohesive retained coat.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "HYDROGENATED ETHYLHEXYL OLIVATE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "VITIS VINIFERA (GRAPE) SEED EXTRACT"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "GARDENIA TAITENSIS FLOWER EXTRACT"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "BIS-CETEARYL AMODIMETHICONE"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "MACADAMIA TERNIFOLIA SEED OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "HYDROGENATED OLIVE OIL UNSAPONIFIABLES"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "BUTYL METHOXYDIBENZOYLMETHANE"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "ETHYLHEXYL SALICYLATE"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "SQUALANE"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "TOCOPHEROL"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ]
+    },
+    {
+      "case_id": "O24",
+      "persistence_potential": "high",
+      "reason": "Phenyl trimethicone and dimethiconol support a retained silicone-gum conditioning film within the aqueous glycol delivery system. I treat polyacrylamide/isoparaffin/Laureth-7 as rheology and emulsifying context, not another conditioning polymer; the explicit conditioning-film pair, rather than the gel or particles, tips this toward high.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "PROPYLENE GLYCOL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "AQUA/WATER"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "CYCLOPENTASILOXANE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "HEXYLENE GLYCOL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "PHENOXYETHANOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "CAPRYLYL GLYCOL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "POLYACRYLAMIDE"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "C13-14 ISOPARAFFIN"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "MICA"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "ETHYLHEXYL SALICYLATE"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "LAURETH-7"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "TITANIUM DIOXIDE (CI 77891)"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "BUTYLENE GLYCOL"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "case_id": "O25",
+      "persistence_potential": "high",
+      "reason": "The silicone carriers deliver a dimethiconol-gum conditioning remainder with sunflower and buriti lipids. This reads as gum-supported retained coating rather than only mobile carrier residue; the UV filter, extract and aromatic auxiliaries are not assigned an additional conditioning-film mechanism.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "CYCLOPENTASILOXANE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DISILOXANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "CYCLOHEXASILOXANE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "BIXA ORELLANA SEED EXTRACT"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "MAURITIA FLEXUOSA FRUIT OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "HEXAMETHYLINDANOPYRAN"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "EUCALYPTUS GLOBULUS OIL"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "ACETYL CEDRENE"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "METHYL SALICYLATE"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "LAVANDULA OIL/EXTRACT"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ]
+    },
+    {
+      "case_id": "O26",
+      "persistence_potential": "high",
+      "reason": "Dimethiconol, dimethicone and phenyl trimethicone form the retained conditioning-film system, supplemented by oils, lipid esters and exact protein conditioners. The volatile carrier does not negate it; I do not use the texture crosspolymer, UV-filter polymer or unassessed extracts as automatic film multipliers.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "CYCLOPENTASILOXANE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "CAPRYLYL METHICONE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "MORINGA OLEIFERA SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "ORYZA SATIVA BRAN OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "BAMBUSA VULGARIS EXTRACT"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "CAMELLIA SINENSIS LEAF EXTRACT"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "HYDROLYZED SOY PROTEIN"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "ETHYLHEXYLGLYCERIN"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "DIMETHICONE CROSSPOLYMER"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "POLYSILICONE-15"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "GLYCERYL LINOLEATE"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "GLYCERYL LINOLENATE"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "PHENOXYETHANOL"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "DISODIUM EDTA"
+        },
+        {
+          "rank": 22,
+          "canonical_name": "POTASSIUM SORBATE"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "ACETYL CEDRENE"
+        },
+        {
+          "rank": 25,
+          "canonical_name": "AMYL SALICYLATE"
+        },
+        {
+          "rank": 26,
+          "canonical_name": "BENZYL CINNAMATE"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
+      ]
+    },
+    {
+      "case_id": "O27",
+      "persistence_potential": "moderate",
+      "reason": "The intact oils and mango seed fat form a retained lipid-conditioning blend. The butter is a botanical fat clue, not by itself proof of a coherent adherent network within these oils; ordinary lipid coating remains the better reading after including the rosemary extract, antioxidant and complete fragrance declaration.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "PERSEA GRATISSIMA OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "BENZYL CINNAMATE"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ]
+    },
+    {
+      "case_id": "O28",
+      "persistence_potential": "moderate",
+      "reason": "The entire declaration is intact marula seed oil with an admitted emollient function. Retained use supports an ordinary lipid conditioning coat; no additional ingredient supplies a gum, adherent-polymer or combined structural route that would favor a more cohesive film.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "SCLEROCARYA BIRREA SEED OIL"
+        }
+      ],
+      "considered_ranks": [
+        1
+      ]
+    }
+  ]
+}

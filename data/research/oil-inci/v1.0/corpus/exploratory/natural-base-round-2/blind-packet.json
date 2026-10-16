@@ -1,0 +1,324 @@
+{
+  "run_id": "oil-natural-base-round-2",
+  "method_revision": "weight-v0.2",
+  "records": [
+    {
+      "neutral_id": "B01",
+      "input_kind": "cosmetic_material_benchmark",
+      "raw_inci": "Ricinus Communis (Castor) Seed Oil",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Ricinus Communis (Castor) Seed Oil",
+          "canonical_name": "RICINUS COMMUNIS SEED OIL",
+          "normalization_basis": "reviewed_declared_alias; organic footnote marker retained as annotation only"
+        }
+      ],
+      "formula_status": "complete_published_declaration",
+      "scope": "weight_only_material_benchmark"
+    },
+    {
+      "neutral_id": "B02",
+      "input_kind": "cosmetic_material_benchmark",
+      "raw_inci": "Prunus Armeniaca (Apricot) Kernel Oil*",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Prunus Armeniaca (Apricot) Kernel Oil*",
+          "canonical_name": "PRUNUS ARMENIACA KERNEL OIL",
+          "normalization_basis": "reviewed_declared_alias; organic footnote marker retained as annotation only"
+        }
+      ],
+      "formula_status": "complete_published_declaration",
+      "scope": "weight_only_material_benchmark"
+    },
+    {
+      "neutral_id": "B03",
+      "input_kind": "cosmetic_material_benchmark",
+      "raw_inci": "Simmondsia Chinensis (Jojoba) Seed Oil*",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Simmondsia Chinensis (Jojoba) Seed Oil*",
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+          "normalization_basis": "reviewed_declared_alias; organic footnote marker retained as annotation only"
+        }
+      ],
+      "formula_status": "complete_published_declaration",
+      "scope": "weight_only_material_benchmark"
+    },
+    {
+      "neutral_id": "B04",
+      "input_kind": "cosmetic_material_benchmark",
+      "raw_inci": "Cocos Nucifera Fruit Oil",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Cocos Nucifera Fruit Oil",
+          "canonical_name": "COCOS NUCIFERA OIL",
+          "normalization_basis": "source-reconciled whole coconut identity for this declaration; Fruit Oil is not admitted as a generic alias"
+        }
+      ],
+      "formula_status": "complete_published_declaration",
+      "scope": "weight_only_material_benchmark"
+    },
+    {
+      "neutral_id": "B05",
+      "input_kind": "cosmetic_material_benchmark",
+      "raw_inci": "Prunus Amygdalus Dulcis (Sweet Almond) Oil*",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Prunus Amygdalus Dulcis (Sweet Almond) Oil*",
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+          "normalization_basis": "reviewed_declared_alias; organic footnote marker retained as annotation only"
+        }
+      ],
+      "formula_status": "complete_published_declaration",
+      "scope": "weight_only_material_benchmark"
+    },
+    {
+      "neutral_id": "B06",
+      "input_kind": "cosmetic_material_benchmark",
+      "raw_inci": "Caprylic / capric triglycerides",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Caprylic / capric triglycerides",
+          "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+          "normalization_basis": "exact-product display normalization from documented official CCT nomenclature; no generic plural alias"
+        }
+      ],
+      "formula_status": "complete_published_declaration",
+      "scope": "weight_only_material_benchmark"
+    },
+    {
+      "neutral_id": "B07",
+      "input_kind": "cosmetic_material_benchmark",
+      "raw_inci": "Carthamus tinctorius Seed Oil*",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Carthamus tinctorius Seed Oil*",
+          "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL",
+          "normalization_basis": "reviewed_declared_alias; organic footnote marker retained as annotation only"
+        }
+      ],
+      "formula_status": "complete_published_declaration",
+      "scope": "weight_only_material_benchmark"
+    },
+    {
+      "neutral_id": "B08",
+      "input_kind": "cosmetic_material_benchmark",
+      "raw_inci": "Vitis vinifera Seed Oil",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Vitis vinifera Seed Oil",
+          "canonical_name": "VITIS VINIFERA SEED OIL",
+          "normalization_basis": "reviewed_declared_alias; organic footnote marker retained as annotation only"
+        }
+      ],
+      "formula_status": "complete_published_declaration",
+      "scope": "weight_only_material_benchmark"
+    },
+    {
+      "neutral_id": "P01",
+      "input_kind": "hypothetical_formula_probe",
+      "raw_inci": "COCO-CAPRYLATE/CAPRATE, CAPRYLIC/CAPRIC TRIGLYCERIDE, SIMMONDSIA CHINENSIS SEED OIL, TOCOPHEROL, PARFUM, RICINUS COMMUNIS SEED OIL",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "COCO-CAPRYLATE/CAPRATE",
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 2,
+          "raw_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+          "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 3,
+          "raw_name": "SIMMONDSIA CHINENSIS SEED OIL",
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 4,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 5,
+          "raw_name": "PARFUM",
+          "canonical_name": "PARFUM",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 6,
+          "raw_name": "RICINUS COMMUNIS SEED OIL",
+          "canonical_name": "RICINUS COMMUNIS SEED OIL",
+          "normalization_basis": "literal synthetic declaration"
+        }
+      ],
+      "formula_status": "complete_hypothetical_sketch; concentrations/grades not provided",
+      "scope": "weight_only_overlay_probe; no product performance or identity claim"
+    },
+    {
+      "neutral_id": "P02",
+      "input_kind": "hypothetical_formula_probe",
+      "raw_inci": "RICINUS COMMUNIS SEED OIL, COCOS NUCIFERA OIL, OLEA EUROPAEA FRUIT OIL, TOCOPHEROL",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "RICINUS COMMUNIS SEED OIL",
+          "canonical_name": "RICINUS COMMUNIS SEED OIL",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 2,
+          "raw_name": "COCOS NUCIFERA OIL",
+          "canonical_name": "COCOS NUCIFERA OIL",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 3,
+          "raw_name": "OLEA EUROPAEA FRUIT OIL",
+          "canonical_name": "OLEA EUROPAEA FRUIT OIL",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 4,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL",
+          "normalization_basis": "literal synthetic declaration"
+        }
+      ],
+      "formula_status": "complete_hypothetical_sketch; concentrations/grades not provided",
+      "scope": "weight_only_overlay_probe; no product performance or identity claim"
+    },
+    {
+      "neutral_id": "P03",
+      "input_kind": "hypothetical_formula_probe",
+      "raw_inci": "SIMMONDSIA CHINENSIS SEED OIL, RICINUS COMMUNIS SEED OIL, TOCOPHEROL",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "SIMMONDSIA CHINENSIS SEED OIL",
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 2,
+          "raw_name": "RICINUS COMMUNIS SEED OIL",
+          "canonical_name": "RICINUS COMMUNIS SEED OIL",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 3,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL",
+          "normalization_basis": "literal synthetic declaration"
+        }
+      ],
+      "formula_status": "complete_hypothetical_sketch; concentrations/grades not provided",
+      "scope": "weight_only_overlay_probe; no product performance or identity claim"
+    },
+    {
+      "neutral_id": "P04",
+      "input_kind": "hypothetical_formula_probe",
+      "raw_inci": "COFFEA ARABICA SEED OIL, TOCOPHEROL",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "COFFEA ARABICA SEED OIL",
+          "canonical_name": "COFFEA ARABICA SEED OIL",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 2,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL",
+          "normalization_basis": "literal synthetic declaration"
+        }
+      ],
+      "formula_status": "complete_hypothetical_sketch; concentrations/grades not provided",
+      "scope": "weight_only_overlay_probe; no product performance or identity claim"
+    },
+    {
+      "neutral_id": "P05",
+      "input_kind": "hypothetical_formula_probe",
+      "raw_inci": "AQUA, GLYCERIN, PEG-40 HYDROGENATED CASTOR OIL, SODIUM BENZOATE",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "AQUA",
+          "canonical_name": "AQUA",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 2,
+          "raw_name": "GLYCERIN",
+          "canonical_name": "GLYCERIN",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 3,
+          "raw_name": "PEG-40 HYDROGENATED CASTOR OIL",
+          "canonical_name": "PEG-40 HYDROGENATED CASTOR OIL",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 4,
+          "raw_name": "SODIUM BENZOATE",
+          "canonical_name": "SODIUM BENZOATE",
+          "normalization_basis": "literal synthetic declaration"
+        }
+      ],
+      "formula_status": "complete_hypothetical_sketch; concentrations/grades not provided",
+      "scope": "weight_only_overlay_probe; no product performance or identity claim"
+    },
+    {
+      "neutral_id": "P06",
+      "input_kind": "hypothetical_formula_probe",
+      "raw_inci": "CYCLOPENTASILOXANE, DIMETHICONOL, DIMETHICONE, VITIS VINIFERA SEED OIL, TOCOPHEROL",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "CYCLOPENTASILOXANE",
+          "canonical_name": "CYCLOPENTASILOXANE",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 2,
+          "raw_name": "DIMETHICONOL",
+          "canonical_name": "DIMETHICONOL",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 3,
+          "raw_name": "DIMETHICONE",
+          "canonical_name": "DIMETHICONE",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 4,
+          "raw_name": "VITIS VINIFERA SEED OIL",
+          "canonical_name": "VITIS VINIFERA SEED OIL",
+          "normalization_basis": "literal synthetic declaration"
+        },
+        {
+          "rank": 5,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL",
+          "normalization_basis": "literal synthetic declaration"
+        }
+      ],
+      "formula_status": "complete_hypothetical_sketch; concentrations/grades not provided",
+      "scope": "weight_only_overlay_probe; no product performance or identity claim"
+    }
+  ]
+}

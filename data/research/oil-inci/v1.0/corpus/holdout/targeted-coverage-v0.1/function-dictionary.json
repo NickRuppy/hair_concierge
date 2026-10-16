@@ -1,0 +1,3252 @@
+{
+  "version": "targeted-material-functions-v0.1",
+  "scope": "Neutral qualitative ingredient identities and functions only. Roles do not establish concentrations, grade or finished-product behavior. No product labels.",
+  "entries": [
+    {
+      "canonical_name": "ALCOHOL",
+      "aliases": [],
+      "roles": [
+        "solvent_alcohol"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": true,
+          "matches": [
+            "ALCOHOL"
+          ],
+          "reviewed_exclusions": []
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Qualitative ingredient function only; no concentration, grade, finished-form retention or performance established.",
+      "source_refs": [
+        {
+          "id": "F001",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "ALCOHOL DENAT.",
+      "aliases": [
+        "SD ALCOHOL 23-A",
+        "SD ALCOHOL 40",
+        "SD ALCOHOL 40-B"
+      ],
+      "roles": [
+        "solvent_alcohol"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": true,
+          "matches": [
+            "ALCOHOL DENAT."
+          ],
+          "reviewed_exclusions": []
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F002",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "AMYL SALICYLATE",
+      "aliases": [],
+      "roles": [
+        "fragrance",
+        "skin_conditioner"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "AMYL SALICYLATE"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F003",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "AQUA/WATER",
+      "aliases": [],
+      "roles": [
+        "aqueous_vehicle"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F004",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "ARACHIS HYPOGAEA OIL",
+      "aliases": [
+        "ARACHIS HYPOGAEA (PEANUT) OIL"
+      ],
+      "roles": [
+        "intact_botanical_fixed_oil"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Qualitative ingredient function only; no concentration, grade, finished-form retention or performance established.",
+      "source_refs": [
+        {
+          "id": "F005",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT",
+      "aliases": [
+        "ARCTIUM LAPPA ROOT EXTRACT"
+      ],
+      "roles": [
+        "not_assessed"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F006",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "ARGANIA KERNEL OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Species-incomplete literal declaration. Do not alias to Argania Spinosa Kernel Oil or transfer an oil weight/penetration prior. Secondary contribution remains unresolved; review decisive-identity impact under the method.",
+      "source_refs": [
+        {
+          "id": "F007",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "BENZYL SALICYLATE",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "BENZYL SALICYLATE"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F008",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "BHT",
+      "aliases": [],
+      "roles": [
+        "antioxidant"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in frozen closed scalp-active-botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "admitted_penetration_anchor": false,
+      "penetration_evidence": "not_assessed",
+      "penetration_form_exclusions": [
+        "No new penetration anchor admitted; frozen exact-form anchors only."
+      ],
+      "penetration_notes": "Function/identity review only; no finished-product, base, weight, persistence, or penetration inference.",
+      "source_refs": [
+        {
+          "id": "F009",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ],
+      "notes": "Qualitative ingredient role only; no formula-level conclusion."
+    },
+    {
+      "canonical_name": "BRASSICA CAMPESTRIS SEED OIL",
+      "aliases": [
+        "BRASSICA CAMPESTRIS (RAPESEED) SEED OIL"
+      ],
+      "roles": [
+        "intact_botanical_fixed_oil"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Qualitative ingredient function only; no concentration, grade, finished-form retention or performance established.",
+      "source_refs": [
+        {
+          "id": "F010",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "C12-15 ALKYL BENZOATE",
+      "aliases": [],
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F011",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "CANANGA ODORATA FLOWER OIL",
+      "aliases": [
+        "CANANGA ODORATA FLOWER OIL (CANANGA ODORATA OIL/EXTRACT)"
+      ],
+      "roles": [
+        "essential_oil",
+        "declared_fragrance_allergen"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "CANANGA ODORATA FLOWER OIL"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact flower oil identity retained; parenthetical collective Oil/Extract label does not alias this oil to all extracts. Not in the closed scalp-active essential-oil family.",
+      "source_refs": [
+        {
+          "id": "F012",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "CITRIC ACID",
+      "aliases": [],
+      "roles": [
+        "acid",
+        "ph_adjustment_clue"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F013",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "CITRONELLOL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "CITRONELLOL"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F014",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "CITRUS AURANTIUM PEEL OIL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen",
+        "essential_oil"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "CITRUS AURANTIUM PEEL OIL"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity retained; cosmetic function is not assessed here. No carrier, film, volatility, or low-residue inference.",
+      "source_refs": [
+        {
+          "id": "F015",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+      "aliases": [],
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F016",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "COCOS NUCIFERA OIL",
+      "aliases": [
+        "COCOS NUCIFERA (COCONUT) OIL",
+        "COCOS NUCIFERA OIL / COCONUT OIL"
+      ],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "direct",
+      "admitted_penetration_anchor": true,
+      "penetration_form_exclusions": [
+        "EXTRACT forms",
+        "WATER forms",
+        "HYDROGENATED forms",
+        "ESTERS/PEG derivatives",
+        "feedstock-derived chemicals",
+        "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+        "COCO-CAPRYLATE",
+        "COCO-CAPRYLATE/CAPRATE",
+        "COCONUT ALKANES",
+        "fractionated coconut oil"
+      ],
+      "penetration_notes": "Initial admitted penetration anchor. Study condition: 1 g oil/g hair for 24 h at 40 C. Botanical-to-studied-material transfer and ordinary-use limits remain.",
+      "penetration_source_refs": [
+        {
+          "id": "F017",
+          "claim_supported": "Exact-form admitted penetration evidence and exclusions retained from reviewed predecessor."
+        }
+      ],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F017",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "COUMARIN",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "COUMARIN"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F018",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "DIBUTYL ADIPATE",
+      "aliases": [],
+      "roles": [
+        "defined_ester_emollient",
+        "solvent"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Qualitative ingredient function only; no concentration, grade, finished-form retention or performance established.",
+      "source_refs": [
+        {
+          "id": "F019",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "DICAPRYLYL CARBONATE",
+      "aliases": [],
+      "roles": [
+        "emollient"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in frozen closed scalp-active-botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "admitted_penetration_anchor": false,
+      "penetration_evidence": "not_assessed",
+      "penetration_form_exclusions": [
+        "No new penetration anchor admitted; frozen exact-form anchors only."
+      ],
+      "penetration_notes": "Function/identity review only; no finished-product, base, weight, persistence, or penetration inference.",
+      "source_refs": [
+        {
+          "id": "F020",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ],
+      "notes": "Qualitative ingredient role only; no formula-level conclusion."
+    },
+    {
+      "canonical_name": "DICAPRYLYL ETHER",
+      "aliases": [],
+      "roles": [
+        "emollient"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F021",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "DIETHYLAMINO HYDROXYBENZOYL HEXYL BENZOATE",
+      "aliases": [],
+      "roles": [
+        "recognized_uv_filter"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": true,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Qualitative ingredient function only; no concentration, grade, finished-form retention or performance established.",
+      "source_refs": [
+        {
+          "id": "F022",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "DIMETHICONE",
+      "aliases": [],
+      "roles": [
+        "silicone_carrier",
+        "conditioning_film"
+      ],
+      "flags": {
+        "silicones": {
+          "value": true,
+          "matches": [
+            "DIMETHICONE"
+          ],
+          "reviewed_exclusions": []
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F023",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "DIMETHYL PHENETHYL ACETATE",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "DIMETHYL PHENETHYL ACETATE"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Qualitative ingredient function only; no concentration, grade, finished-form retention or performance established.",
+      "source_refs": [
+        {
+          "id": "F024",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+      "aliases": [],
+      "roles": [
+        "recognized_uv_filter"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": true,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F025",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "ETHYLHEXYL TRIAZONE",
+      "aliases": [],
+      "roles": [
+        "recognized_uv_filter"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": true,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Qualitative ingredient function only; no concentration, grade, finished-form retention or performance established.",
+      "source_refs": [
+        {
+          "id": "F026",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "FRAGRANCE (PARFUM)",
+      "aliases": [],
+      "roles": [
+        "fragrance_composition"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "FRAGRANCE (PARFUM)"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F027",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "FRUCTOOLIGOSACCHARIDES",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Literal exact identity retained; qualitative cosmetic function is not assessed here. No carrier, film, volatility, low-residue, essential-oil or active-botanical inference.",
+      "source_refs": [
+        {
+          "id": "F028",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "GERANIOL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "GERANIOL"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F029",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "GERANYL ACETATE",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "GERANYL ACETATE"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity retained; cosmetic function is not assessed here. No carrier, film, volatility, or low-residue inference.",
+      "source_refs": [
+        {
+          "id": "F030",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "HEXYLENE GLYCOL",
+      "aliases": [],
+      "roles": [
+        "solvent",
+        "emulsifying_auxiliary"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F031",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "INULIN",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Literal exact identity retained; qualitative cosmetic function is not assessed here. No carrier, film, volatility, low-residue, essential-oil or active-botanical inference.",
+      "source_refs": [
+        {
+          "id": "F032",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "ISODODECANE",
+      "aliases": [],
+      "roles": [
+        "hydrocarbon_carrier",
+        "emollient"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F033",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "ISOEUGENYL ACETATE",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "ISOEUGENYL ACETATE"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Qualitative ingredient function only; no concentration, grade, finished-form retention or performance established.",
+      "source_refs": [
+        {
+          "id": "F034",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "LIMONENE",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "LIMONENE"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F035",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "LINALOOL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "LINALOOL"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F036",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "LINALYL ACETATE",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "LINALYL ACETATE"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F037",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "PANTHENOL",
+      "aliases": [],
+      "roles": [
+        "humectant"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Qualitative ingredient function only; no concentration, grade, finished-form retention or performance established.",
+      "source_refs": [
+        {
+          "id": "F038",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "PANTOLACTONE",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Literal exact identity retained; qualitative cosmetic function is not assessed here. No carrier, film, volatility, low-residue, essential-oil or active-botanical inference.",
+      "source_refs": [
+        {
+          "id": "F039",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "PARFUM/FRAGRANCE",
+      "aliases": [],
+      "roles": [
+        "fragrance_composition"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "PARFUM/FRAGRANCE"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F040",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+      "aliases": [],
+      "roles": [
+        "aromatic_auxiliary"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "PELARGONIUM GRAVEOLENS FLOWER OIL"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F041",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+      "aliases": [],
+      "roles": [
+        "antioxidant"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F042",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "PHENYL TRIMETHICONE",
+      "aliases": [],
+      "roles": [
+        "silicone_carrier",
+        "conditioning_film"
+      ],
+      "flags": {
+        "silicones": {
+          "value": true,
+          "matches": [
+            "PHENYL TRIMETHICONE"
+          ],
+          "reviewed_exclusions": []
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F043",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "PROPANEDIOL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F044",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "QUATERNIUM-95",
+      "aliases": [],
+      "roles": [
+        "cationic_conditioning_clue"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "A supplier blend identifies this quaternary ammonium component in a hair-conditioning preparation. Exact grade, molecular architecture and substantivity are not established. UV-filter gate remains false: the reviewed primary evidence describes a two-component preparation, not a standalone exact-filter proof.",
+      "source_refs": [
+        {
+          "id": "F045",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+      "aliases": [
+        "RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL)"
+      ],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F046",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL",
+      "aliases": [
+        "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF OIL"
+      ],
+      "roles": [
+        "essential_oil",
+        "aromatic_auxiliary"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": true,
+          "matches": [
+            "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL"
+          ],
+          "reviewed_exclusions": []
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F047",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "SESAMUM INDICUM SEED OIL",
+      "aliases": [
+        "SESAMUM INDICUM (SESAME) SEED OIL (SESAMUM INDICUM SEED OIL)"
+      ],
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F048",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F049",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "SODIUM CHLORIDE",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Literal inorganic salt identity retained. Formulation function and impact are not assessed; do not infer film, low residue or concentration.",
+      "source_refs": [
+        {
+          "id": "F050",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity retained; cosmetic function is not assessed here. No carrier, film, volatility, or low-residue inference.",
+      "source_refs": [
+        {
+          "id": "F051",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "TOCOPHEROL",
+      "aliases": [],
+      "roles": [
+        "antioxidant"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F052",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "TOCOPHERYL ACETATE",
+      "aliases": [],
+      "roles": [
+        "antioxidant_auxiliary"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F053",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "TRIFOLIUM PRATENSE FLOWER EXTRACT",
+      "aliases": [
+        "TRIFOLIUM PRATENSE (CLOVER) FLOWER EXTRACT"
+      ],
+      "roles": [
+        "not_assessed"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Literal exact identity retained; qualitative cosmetic function is not assessed here. No carrier, film, volatility, low-residue, essential-oil or active-botanical inference.",
+      "source_refs": [
+        {
+          "id": "F054",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "Exact identity reviewed against the five closed families in the current method; this form is not a recognized match. No substring inference."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Qualitative ingredient function only; no concentration, grade, finished-form retention or performance established.",
+      "source_refs": [
+        {
+          "id": "F055",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    },
+    {
+      "canonical_name": "VANILLIN",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact canonical-name or reviewed-alias match against the closed family; no substring inference."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "VANILLIN"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match in closed reviewed family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [],
+      "penetration_notes": "No admitted penetration evidence for this exact form; this is not a negative inference.",
+      "penetration_source_refs": [],
+      "notes": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established.",
+      "source_refs": [
+        {
+          "id": "F056",
+          "claim_supported": "Reviewed exact ingredient identity/qualitative functions and limits only. Full references registered outside blind lane."
+        }
+      ]
+    }
+  ]
+}

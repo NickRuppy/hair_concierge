@@ -1,0 +1,594 @@
+{
+  "run_id": "oil-direct-properties-round-6",
+  "captured_at": "2026-10-05",
+  "records": [
+    {
+      "neutral_id": "D01",
+      "identity": {
+        "brand": "Evolve Organic Beauty",
+        "product": "Nourishing Hair Elixir – Dry Hair Serum",
+        "size_ml": 30,
+        "market": "UK"
+      },
+      "sources": [
+        {
+          "id": "D01-maker",
+          "url": "https://www.evolvebeauty.com/products/weightless-hair-serum",
+          "source_author": "Evolve Organic Beauty",
+          "tier": "exact_manufacturer",
+          "accessed_at": "2026-10-05"
+        }
+      ],
+      "directions": [
+        {
+          "source_id": "D01-maker",
+          "site": [
+            "mid_lengths",
+            "ends"
+          ],
+          "stage": "clean_wet_or_dry",
+          "dose": "3–4 drops",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "text": "Apply 3–4 drops from mid to ends of clean hair, wet or dry; comb through gently.",
+          "direction_id": "D01-direction-1",
+          "restrictions": "unestablished"
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "argan_oil",
+          "hero_name": "Organic Argan Oil",
+          "canonical_ingredients": [
+            "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+          ],
+          "mapping_note": "Literal INCI match."
+        },
+        {
+          "hero_id": "baobab_oil",
+          "hero_name": "Organic Baobab Oil",
+          "canonical_ingredients": [
+            "ADANSONIA DIGITATA (BAOBAB) SEED OIL"
+          ],
+          "mapping_note": "Literal INCI match."
+        },
+        {
+          "hero_id": "gardenia_monoi",
+          "hero_name": "Gardenia Monoi",
+          "canonical_ingredients": [
+            "GARDENIA TAHITENSIS FLOWER EXTRACT",
+            "COCOS NUCIFERA OIL"
+          ],
+          "mapping_note": "Marketing material is not a single INCI token; both literal declared components retained."
+        }
+      ],
+      "packaging": {
+        "value": "dropper",
+        "mechanism": "pipette",
+        "evidence": "Maker FAQ: pipette is not easily recyclable."
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "source_id": "D01-maker",
+          "excerpt": null,
+          "review_complete": true,
+          "review_scope": "Product body, benefits, directions and FAQ; no heat/thermal claim."
+        },
+        "uv": {
+          "accepted": false,
+          "source_id": "D01-maker",
+          "excerpt": null,
+          "review_complete": true,
+          "review_scope": "Product body, benefits, directions and FAQ; environmental-damage wording is not hair UV protection."
+        }
+      },
+      "source_limits": "Current maker 22-entry declaration; physical pack/batch unverified.",
+      "raw_inci": "Isoamyl Laurate, Argania Spinosa (Argan) Kernel Oil*, Adansonia Digitata (Baobab) Seed Oil*, Cocos Nucifera (Coconut) Oil, Parfum (Naturally derived Fragrance), Gardenia Tahitensis Flower Extract, Citral, Geraniol, Limonene, Linalool, Beta-Caryophyllene, Linalyl Acetate, Terpineol, Vanillin, Citrus Aurantium Peel Oil, Citrus Aurantium Bergamia Peel Oil, Citrus Limon Peel Oil, Mentha Piperita Oil, Pelargonium Graveolens Flower Oil, Pogostemon Cablin Oil, Geranyl Acetate, Pinene",
+      "positioning_review_complete": true
+    },
+    {
+      "neutral_id": "D02",
+      "identity": {
+        "brand": "Biopark Cosmetics",
+        "product": "Organic Coconut Oil",
+        "size_ml": 100,
+        "market": "DE"
+      },
+      "sources": [
+        {
+          "id": "D02-maker",
+          "url": "https://biopark-cosmetics.com/products/organic-coconut-oil-100ml",
+          "source_author": "Biopark Cosmetics",
+          "tier": "exact_manufacturer_with_DE_pack_corroboration",
+          "accessed_at": "2026-10-01"
+        },
+        {
+          "id": "D02-retailer",
+          "url": "https://www.ecco-verde.de/biopark-cosmetics/coconut-oil",
+          "source_author": "Ecco Verde",
+          "tier": "exact_DE_retailer",
+          "accessed_at": "2026-10-01"
+        }
+      ],
+      "directions": [
+        {
+          "source_id": "D02-maker",
+          "site": [
+            "hair",
+            "scalp"
+          ],
+          "stage": "dry_before_wash",
+          "dose": "unspecified",
+          "contact_time": "at least 30 minutes; overnight offered",
+          "removal": "shampoo",
+          "text": "Massage into dry hair; leave at least 30 minutes or overnight, then shampoo.",
+          "direction_id": "D02-direction-1",
+          "restrictions": "unestablished"
+        },
+        {
+          "source_id": "D02-maker",
+          "site": [
+            "ends"
+          ],
+          "stage": "after_wash",
+          "dose": "small amount; unit unspecified",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "text": "After washing, put a small amount on ends and retain it.",
+          "direction_id": "D02-direction-2",
+          "restrictions": "unestablished"
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "coconut_oil",
+          "hero_name": "Organic Coconut Oil",
+          "canonical_ingredients": [
+            "COCOS NUCIFERA FRUIT OIL"
+          ],
+          "mapping_note": "Exact maker declaration."
+        }
+      ],
+      "packaging": {
+        "value": "other",
+        "mechanism": "jar with removable lid",
+        "evidence": "Exact DE retailer identifies jar; maker product-image alternative text corroborates jar."
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "source_id": "D02-maker",
+          "excerpt": null,
+          "review_complete": true,
+          "review_scope": "Product description and directions; no hair heat-protection claim."
+        },
+        "uv": {
+          "accepted": false,
+          "source_id": "D02-maker",
+          "excerpt": null,
+          "review_complete": true,
+          "review_scope": "Maker product material; skin after-sun context excluded from hair UV claim."
+        }
+      },
+      "source_limits": "International maker formula corroborated by exact DE cosmetic pack; no physical label transcription.",
+      "raw_inci": "Cocos Nucifera Fruit Oil",
+      "positioning_review_complete": true
+    },
+    {
+      "neutral_id": "D03",
+      "identity": {
+        "brand": "Kérastase",
+        "product": "Elixir Ultime L’Huile Originale Nachfüllbar",
+        "size_ml": 75,
+        "market": "DE"
+      },
+      "sources": [
+        {
+          "id": "D03-maker",
+          "url": "https://www.kerastase.de/produktlinien/produktart/ole-seren/nach-haartyp-filtern/widerspenstiges-haar/l-huile-originale-nachfullbar/KER_00303.html",
+          "source_author": "Kérastase DE",
+          "tier": "exact_manufacturer",
+          "accessed_at": "2026-10-05"
+        }
+      ],
+      "directions": [
+        {
+          "source_id": "D03-maker",
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "damp_or_dry",
+          "dose": "1–2 drops",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "text": "Apply 1–2 drops on damp or dry lengths and ends.",
+          "direction_id": "D03-direction-1",
+          "restrictions": "Maker FAQ advises no direct scalp application; intended for lengths."
+        },
+        {
+          "source_id": "D03-maker",
+          "direction_id": "D03-direction-2",
+          "site": [
+            "hair"
+          ],
+          "stage": "before_wash",
+          "dose": "unspecified",
+          "contact_time": "unspecified",
+          "removal": "shampoo",
+          "restrictions": "Maker FAQ advises no direct scalp application.",
+          "text": "Maker product description permits an oil bath before shampoo; no application amount or contact time is supplied for this route."
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "french_camellia",
+          "hero_name": "French camellia oil",
+          "canonical_ingredients": [],
+          "mapping_note": "Maker names French camellia oil but does not explicitly map the geographic/wild positioning to a unique species or declared preparation. No ingredient is fabricated as an exact match.",
+          "identity_unresolved": true
+        },
+        {
+          "hero_id": "marula_oil",
+          "hero_name": "Marula oil",
+          "canonical_ingredients": [
+            "SCLEROCARYA BIRREA SEED OIL"
+          ],
+          "mapping_note": "Exact maker material and botanical identity."
+        },
+        {
+          "hero_id": "wild_camellia",
+          "hero_name": "Wild camellia oil",
+          "canonical_ingredients": [],
+          "identity_unresolved": true,
+          "mapping_note": "Geographic/wild maker wording lacks unique exact-INCI identity mapping; preserve unknown rather than infer species."
+        }
+      ],
+      "packaging": {
+        "value": "pump",
+        "mechanism": "pump",
+        "evidence": "Manufacturer refill instructions explicitly remove the pump; FAQ instructs dispense with pump. No pump-to-drop conversion inferred."
+      },
+      "claims": {
+        "heat": {
+          "accepted": true,
+          "source_id": "D03-maker",
+          "excerpt": "Hitzeschutz bis 230°C",
+          "review_complete": true,
+          "review_scope": "Root fresh maker page review 2026-10-05: exact product benefits and application/FAQ; explicit heat claim. Temperature retained as source text only."
+        },
+        "uv": {
+          "accepted": false,
+          "source_id": "D03-maker",
+          "excerpt": null,
+          "review_complete": true,
+          "review_scope": "Exact maker product page reviewed; no accepted hair UV claim captured."
+        }
+      },
+      "source_limits": "DE maker 75ml full 19-entry declaration unchanged, rechecked 2026-10-05; physical batch/refill unverified. French/wild camellia oil wording lacks an exact species/preparation mapping; those named-oil identities remain unresolved. Heat and pre-wash permission were omitted from initial source projection and are corrected in this separate revision.",
+      "raw_inci": "ISODODECANE, DIMETHICONE, DIMETHICONOL, CAMELLIA OLEIFERA SEED OIL, ZEA MAYS GERM OIL / CORN GERM OIL, ARGANIA SPINOSA KERNEL OIL, SCLEROCARYA BIRREA SEED OIL, PENTACLETHRA MACROLOBA SEED OIL, CAPRYLIC/CAPRIC TRIGLYCERIDE, CAMELINA SATIVA SEED OIL, LINALOOL, ALPHA-ISOMETHYL IONONE, LIMONENE, COUMARIN, BENZYL ALCOHOL, CAMELLIA JAPONICA FLOWER EXTRACT, PHYLLANTHUS EMBLICA FRUIT EXTRACT, TOCOPHEROL, PARFUM / FRAGRANCE",
+      "positioning_review_complete": true
+    },
+    {
+      "neutral_id": "D04",
+      "identity": {
+        "brand": "NEQI",
+        "product": "Smooth Strength Rosemary Oil",
+        "size_ml": 75,
+        "market": "DE"
+      },
+      "sources": [
+        {
+          "id": "D04-maker",
+          "url": "https://neqi-hair.com/products/smooth-strength-rosemary-oil",
+          "source_author": "NEQI",
+          "tier": "exact_local_manufacturer",
+          "accessed_at": "2026-10-05"
+        }
+      ],
+      "directions": [
+        {
+          "source_id": "D04-maker",
+          "site": [
+            "scalp"
+          ],
+          "stage": "dry_or_damp_before_shampoo",
+          "dose": "small amount; unit unspecified",
+          "contact_time": "at least 10 minutes",
+          "removal": "shampoo",
+          "text": "Apply to palms or directly to scalp, massage, leave at least 10 minutes, then shampoo.",
+          "direction_id": "D04-direction-1",
+          "restrictions": "unestablished"
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "rosemary_oil",
+          "hero_name": "Rosemary oil",
+          "canonical_ingredients": [
+            "ROSMARINUS OFFICINALIS LEAF OIL"
+          ],
+          "mapping_note": "Literal INCI match."
+        },
+        {
+          "hero_id": "castor_oil",
+          "hero_name": "Castor oil",
+          "canonical_ingredients": [
+            "RICINUS COMMUNIS SEED OIL"
+          ],
+          "mapping_note": "Literal INCI match."
+        },
+        {
+          "hero_id": "sweet_almond_oil",
+          "hero_name": "Sweet almond oil",
+          "canonical_ingredients": [
+            "PRUNUS AMYGDALUS DULCIS OIL"
+          ],
+          "mapping_note": "Literal INCI match."
+        }
+      ],
+      "packaging": {
+        "value": "unknown",
+        "mechanism": "unknown",
+        "evidence": "Current exact maker page has no textual pack-outlet specification; physical pack unverified."
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "source_id": "D04-maker",
+          "excerpt": null,
+          "review_complete": true,
+          "review_scope": "Exact product page; no Hitz/heat claim."
+        },
+        "uv": {
+          "accepted": false,
+          "source_id": "D04-maker",
+          "excerpt": null,
+          "review_complete": true,
+          "review_scope": "Exact product page; no UV/Sonne/sun claim."
+        }
+      },
+      "source_limits": "Current 17-entry maker declaration matches prior capture; maker marketing mentions peptides although none is named in displayed INCI.",
+      "raw_inci": "Prunus amygdalus dulcis (Sweet almond) oil, Ricinus communis (Castor) seed oil, Carthamus tinctorius (Safflower) seed oil, Rosmarinus officinalis (Rosemary) leaf oil, Mentha arvensis (Wild mint) leaf oil, Lavandula oil/extract, Camphor, Menthol, Tocopheryl acetate, Beta-caryophyllene, Pinene, Terpineol, Geranyl acetate, Linalyl acetate, Geraniol, Limonene, Linalool",
+      "positioning_review_complete": true
+    },
+    {
+      "neutral_id": "D05",
+      "identity": {
+        "brand": "Kérastase",
+        "product": "Soleil Huile Sirène",
+        "size_ml": 150,
+        "market": "DE"
+      },
+      "sources": [
+        {
+          "id": "D05-maker",
+          "url": "https://www.kerastase.de/alle-produkte/huile-sirene/KER_00054.html",
+          "source_author": "Kérastase DE",
+          "tier": "exact_manufacturer",
+          "accessed_at": "2026-10-05"
+        },
+        {
+          "id": "D05-partner",
+          "url": "https://de.lorealpartnershop.com/de/soleil-huile-sir%C3%A8ne/DE3474636695324.html",
+          "source_author": "L’Oréal Partner Shop DE",
+          "tier": "exact_official_partner",
+          "accessed_at": "2026-10-01T08:18:00Z"
+        }
+      ],
+      "directions": [
+        {
+          "source_id": "D05-maker",
+          "site": [
+            "hair",
+            "ends"
+          ],
+          "stage": "damp_or_dry",
+          "dose": "unspecified",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "text": "Shake well; spray into damp or dry hair, especially ends; air dry.",
+          "direction_id": "D05-direction-1",
+          "restrictions": "unestablished"
+        },
+        {
+          "source_id": "D05-partner",
+          "site": [
+            "hair"
+          ],
+          "stage": "unspecified",
+          "dose": "unspecified",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "text": "Shake to mix phases, spray into hands, distribute through hair and leave in.",
+          "direction_id": "D05-direction-2",
+          "restrictions": "unestablished"
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "babassu_oil",
+          "hero_name": "Babassu oil",
+          "canonical_ingredients": [
+            "ORBIGNYA OLEIFERA SEED OIL"
+          ],
+          "mapping_note": "Exact official DE partner hero, literal INCI match."
+        }
+      ],
+      "packaging": {
+        "value": "spray",
+        "mechanism": "spray",
+        "evidence": "Exact maker direction expressly says spray; no actuation count."
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "source_id": "D05-maker",
+          "excerpt": null,
+          "review_complete": true,
+          "review_scope": "Exact benefits, highlighted ingredients and application; no heat claim."
+        },
+        "uv": {
+          "accepted": true,
+          "source_id": "D05-maker",
+          "excerpt": "Bietet Sonnenschutz für das Haar. Absorbiert UV-Strahlen und minimiert ihren Effekt auf die Haarfaser.",
+          "review_complete": true,
+          "review_scope": "Exact product benefits and ETHYLHEXYL SALICYLATE description."
+        }
+      },
+      "source_limits": "DE maker 19-entry formula corroborated by official DE partner; formula code C227530/1 is not an ingredient.",
+      "raw_inci": "Aqua / Water, Isopropyl Myristate, Isododecane, Dimethicone, Vp/Va Copolymer, Magnesium Sulfate, Phenoxyethanol, Chlorphenesin, Caprylyl Glycol, Cocos Nucifera Oil / Coconut Oil, Ethylhexyl Salicylate, Benzyl Alcohol, Orbignya Oleifera Seed Oil, Tocopherol, Citric Acid, Ci 19140 / Yellow 5, Ci 17200 / Red 33, Sodium Hydroxide, Parfum / Fragrance",
+      "positioning_review_complete": true
+    },
+    {
+      "neutral_id": "D06",
+      "identity": {
+        "brand": "Aroma-Zone",
+        "product": "Haircare Oil With 7 Precious Oils",
+        "size_ml": 250,
+        "market": "FR"
+      },
+      "sources": [
+        {
+          "id": "D06-maker",
+          "url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil",
+          "source_author": "Aroma-Zone",
+          "tier": "exact_manufacturer",
+          "accessed_at": "2026-10-05"
+        }
+      ],
+      "directions": [
+        {
+          "source_id": "D06-maker",
+          "site": [
+            "scalp"
+          ],
+          "stage": "before_wash",
+          "dose": "unspecified",
+          "contact_time": "10–15 minutes",
+          "removal": "shampoo",
+          "text": "Apply in scalp sections, massage, leave 10–15 minutes, then shampoo.",
+          "direction_id": "D06-direction-1",
+          "restrictions": "unestablished"
+        },
+        {
+          "source_id": "D06-maker",
+          "site": [
+            "hair"
+          ],
+          "stage": "dry_or_damp_before_wash",
+          "dose": "1–3 tablespoons",
+          "contact_time": "1–3 hours or overnight",
+          "removal": "shampoo",
+          "text": "Apply root-to-tip on dry or damp hair; leave under warm towel; shampoo.",
+          "direction_id": "D06-direction-2",
+          "restrictions": "unestablished"
+        },
+        {
+          "source_id": "D06-maker",
+          "site": [
+            "ends"
+          ],
+          "stage": "dry_finish",
+          "dose": "a dab",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "text": "Apply a dab to dry ends and massage in.",
+          "direction_id": "D06-direction-3",
+          "restrictions": "unestablished"
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "castor",
+          "hero_name": "Castor oil",
+          "canonical_ingredients": [
+            "RICINUS COMMUNIS SEED OIL"
+          ],
+          "mapping_note": "Exact maker named oil mapped to its literal INCI; no quantity inferred."
+        },
+        {
+          "hero_id": "coconut",
+          "hero_name": "Coconut oil",
+          "canonical_ingredients": [
+            "COCOS NUCIFERA OIL"
+          ],
+          "mapping_note": "Exact maker named oil mapped to its literal INCI; no quantity inferred."
+        },
+        {
+          "hero_id": "mustard",
+          "hero_name": "Mustard oil",
+          "canonical_ingredients": [
+            "BRASSICA NIGRA SEED OIL"
+          ],
+          "mapping_note": "Exact maker named oil mapped to its literal INCI; no quantity inferred."
+        },
+        {
+          "hero_id": "broccoli",
+          "hero_name": "Broccoli oil",
+          "canonical_ingredients": [
+            "BRASSICA OLERACEA ITALICA SEED OIL"
+          ],
+          "mapping_note": "Exact maker named oil mapped to its literal INCI; no quantity inferred."
+        },
+        {
+          "hero_id": "avocado",
+          "hero_name": "Avocado oil",
+          "canonical_ingredients": [
+            "PERSEA GRATISSIMA OIL"
+          ],
+          "mapping_note": "Exact maker named oil mapped to its literal INCI; no quantity inferred."
+        },
+        {
+          "hero_id": "jojoba",
+          "hero_name": "Jojoba oil",
+          "canonical_ingredients": [
+            "SIMMONDSIA CHINENSIS SEED OIL"
+          ],
+          "mapping_note": "Exact maker named oil mapped to its literal INCI; no quantity inferred."
+        },
+        {
+          "hero_id": "olive",
+          "hero_name": "Olive oil",
+          "canonical_ingredients": [
+            "OLEA EUROPAEA FRUIT OIL"
+          ],
+          "mapping_note": "Exact maker named oil mapped to its literal INCI; no quantity inferred."
+        },
+        {
+          "hero_id": "amla_macerate",
+          "hero_name": "Amla macerated oil",
+          "canonical_ingredients": [
+            "EMBLICA OFFICINALIS FRUIT POWDER"
+          ],
+          "mapping_note": "Maker describes Amla macerate and formula declares exact Amla powder. No specific carrier identity or amount is established merely by other oils being present."
+        }
+      ],
+      "packaging": {
+        "value": "unknown",
+        "mechanism": "unknown",
+        "evidence": "Maker confirms RPET bottle but not supplied outlet; separately sold pump/service cap do not establish inclusion."
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "source_id": "D06-maker",
+          "excerpt": null,
+          "review_complete": true,
+          "review_scope": "Product body and properties; no heat/thermal protection claim."
+        },
+        "uv": {
+          "accepted": false,
+          "source_id": "D06-maker",
+          "excerpt": null,
+          "review_complete": true,
+          "review_scope": "Product body and properties; no hair UV/sun-protection claim."
+        }
+      },
+      "source_limits": "Base product only; physical pack/batch unverified. Exact final INCI parenthetical retains its internal comma.",
+      "raw_inci": "Ricinus communis seed oil* (organic Ricin carrier oil), Olea europaea fruit oil* (organic Olive carrier oil), Cocos nucifera oil* (organic Coconut carrier oil), Persea gratissima oil* (organic Avocado carrier oil), Brassica nigra seed oil* (organic Mustard carrier oil), Simmondsia chinensis seed oil* (organic Jojoba plant oil), Brassica oleracea italica seed oil* (organic Broccoli plant oil), Emblica officinalis fruit powder* (organic Amla powder), Tocopherol (vitamin E), Helianthus annuus seed oil (Sunflower plant oil, tocopherol carrier oil)",
+      "positioning_review_complete": true
+    }
+  ]
+}

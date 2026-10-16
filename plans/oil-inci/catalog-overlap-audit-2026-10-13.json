@@ -1,0 +1,171 @@
+{
+  "observed_date": "2026-10-13",
+  "source": "live read-only Supabase SELECT via oil_catalog_overlap subagent",
+  "project_id": "pqdkhefxsxkyeqelqegq",
+  "writes": 0,
+  "catalog_counts": {
+    "oil_products": 54,
+    "oil_products_with_specs": 52,
+    "active": 53,
+    "recommended": 41
+  },
+  "research_counts": {
+    "total": 37,
+    "profiles_with_declared_verified_gtin": 9,
+    "identifier_matched_catalog_identities": 3,
+    "declared_gtin_not_matched_by_audit_query": 6,
+    "profiles_without_declared_verified_gtin": 28,
+    "unlinked_profiles": 34,
+    "unverified_name_reconciliation_leads_within_unlinked": 3
+  },
+  "automatic_impact_of_intake_integration": {
+    "new_products": 0,
+    "updated_products": 0
+  },
+  "identity_does_not_prove_current_formula": true,
+  "verified_identity_candidates": [
+    {
+      "case_id": "O06",
+      "catalog_product_id": "27a2dd61-6e54-4746-8e24-a698dbafbf91",
+      "catalog_name": "Neqi Opulent Oil",
+      "gtin": "4063528078520",
+      "catalog_specs": {
+        "weight": "light",
+        "role_support": [
+          "dry_finish",
+          "leave_on_fibre_conditioning"
+        ],
+        "provides_heat_protection": true
+      },
+      "frozen_research_projection": {
+        "weight": "medium",
+        "role_support": [
+          "leave_on_fibre_conditioning"
+        ],
+        "provides_heat_protection": true
+      }
+    },
+    {
+      "case_id": "O07",
+      "catalog_product_id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+      "catalog_name": "Olaplex No.7 Bonding Oil",
+      "gtin": "0850045076085",
+      "catalog_specs": {
+        "weight": "light",
+        "role_support": [
+          "dry_finish",
+          "leave_on_fibre_conditioning"
+        ],
+        "provides_heat_protection": true
+      },
+      "frozen_research_projection": {
+        "weight": "medium",
+        "role_support": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "provides_heat_protection": true
+      }
+    },
+    {
+      "case_id": "O08",
+      "catalog_product_id": "2858a8b6-018b-4949-ae58-eedc348d20b4",
+      "catalog_name": "OGX Miracle Coconut Oil",
+      "gtin": "3574661563398",
+      "catalog_specs": {
+        "weight": "rich",
+        "role_support": [
+          "leave_on_fibre_conditioning"
+        ],
+        "provides_heat_protection": null
+      },
+      "frozen_research_projection": {
+        "weight": "medium",
+        "role_support": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "provides_heat_protection": false
+      }
+    }
+  ],
+  "limits": [
+    "This is not a product-import or enrichment manifest",
+    "Barcode matches identify catalog candidates but do not establish current INCI or direction parity",
+    "Existing-product enrichment allowlist currently excludes product_oil_specs and is a separate follow-up",
+    "Historical profiles remain consolidation/replay evidence, not current submission payloads",
+    "34 are unlinked at this audit stage, not34new products;3name leads are unverified and are a subset of those34"
+  ],
+  "query_scope": {
+    "identifier_lookup": "all catalog products, no category filter",
+    "catalog_counts": "category_key/category oil OR product_oil_specs exists",
+    "identifier_normalization": "digits only; not proof of absence across alternative UPC/EAN leading-zero representations",
+    "name_query": "discarded: non-ASCII stripping produced unreliable normalization; no audited name-match evidence used"
+  },
+  "count_query_sql": "SELECT count(*)::int AS current_oil_catalog_products, count(*) FILTER (WHERE s.product_id IS NOT NULL)::int AS with_oil_specs, count(*) FILTER (WHERE p.is_active)::int AS active, count(*) FILTER (WHERE p.is_chaarlie_recommended)::int AS recommended FROM public.products p LEFT JOIN public.product_oil_specs s ON s.product_id=p.id WHERE lower(coalesce(p.category_key,p.category,''))='oil' OR s.product_id IS NOT NULL;",
+  "identifier_query_predicate_sql": "regexp_replace(coalesce(i.normalized_identifier_value, i.identifier_value), '[^0-9]', '', 'g') = regexp_replace(r.gtin, '[^0-9]', '', 'g')",
+  "gtin_cohort": [
+    {
+      "case_id": "O01",
+      "gtin": "858511001500",
+      "matched_product_id": null
+    },
+    {
+      "case_id": "O03",
+      "gtin": "3474636695324",
+      "matched_product_id": null
+    },
+    {
+      "case_id": "O04",
+      "gtin": "3830066651079",
+      "matched_product_id": null
+    },
+    {
+      "case_id": "O06",
+      "gtin": "4063528078520",
+      "matched_product_id": "27a2dd61-6e54-4746-8e24-a698dbafbf91"
+    },
+    {
+      "case_id": "O07",
+      "gtin": "0850045076085",
+      "matched_product_id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12"
+    },
+    {
+      "case_id": "O08",
+      "gtin": "3574661563398",
+      "matched_product_id": "2858a8b6-018b-4949-ae58-eedc348d20b4"
+    },
+    {
+      "case_id": "O20",
+      "gtin": "4067971053929",
+      "matched_product_id": null
+    },
+    {
+      "case_id": "H01",
+      "gtin": "3282770049275",
+      "matched_product_id": null
+    },
+    {
+      "case_id": "H05",
+      "gtin": "840035204499",
+      "matched_product_id": null
+    }
+  ],
+  "unverified_name_reconciliation_leads": [
+    {
+      "case_id": "O09",
+      "catalog_product_id": "5767f7a6-757c-40fa-b990-8e0a1abaea17",
+      "note": "NUXE original selected30ml vs catalog100ml; formula/variant notconfirmed"
+    },
+    {
+      "case_id": "T02",
+      "catalog_product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+      "note": "OGX Argan weightlessdryoil USmaker4floz vs catalog118ml; no researchidentifier"
+    },
+    {
+      "case_id": "T04",
+      "catalog_product_id": "6c51a883-85ae-4778-bb17-2f1318e3c969",
+      "note": "Weleda IntensivpflegendesHaar\u00f6l vs Haar\u00f6lRosmarin; namelineage/formulanotconfirmed"
+    }
+  ]
+}

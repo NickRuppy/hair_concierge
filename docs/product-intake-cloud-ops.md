@@ -190,7 +190,12 @@ The [continuation checklist](../plans/product-intake-cloud-research/continuation
 is current. The next local safety increment introduces independent outbox
 observation and [bounded research cycles](../plans/product-intake-cloud-research/s3-review-cycles.md),
 including migration `20261016052958_product_intake_review_cycles.sql`.
-**That new migration is not applied and that worker code is not deployed.**
+The Shampoo integration in #693 adds successor
+`20261016131141_product_intake_atomic_artifact_ids.sql` so Oil artifact IDs and
+review pointers persist in the same completion transaction. Apply the ordered
+review-cycle, Oil binding and successor migrations before releasing the combined
+worker; see the [completion record](../plans/product-intake-cloud-research/s2-completion-2026-10-16.md).
+**These changes were not applied or deployed in the completion pass.**
 Migration-before-code, reviewed head/CI and exact release guards remain mandatory;
 no automatic activation is implied. Existing resource units/caps have not changed.
 

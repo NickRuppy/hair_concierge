@@ -1,0 +1,16 @@
+{
+  "run_id": "oil-missing-direct-properties-v0.1",
+  "sealed_before_semantic_inspection": true,
+  "inputs": {
+    "method.md": "577187244a1d34caec9a9fd41cf1706eb4cb1001206894907e81ceb8885dd386",
+    "blind-packet.json": "dc011e6b1cf9bdd4139a20324bd5d66d80f3110c3d959b5fb6f0fbf5ab1cbfcd",
+    "function-dictionary.json": "e12d962914aa13175641a8893f7220f101da5503cf66bd88338b48be6a977d0f",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+  },
+  "outputs": {
+    "lane-a/blind-records.json": "77a75f666c0ca53d7a8507d1ff50bf9e91862df760e57896fc6be6e33c301d01",
+    "lane-a/blind-notes.json": "68cadcb2695d31843d05af8b14c3524eeb3d9cfa87e900e9637e6ad853844b5c",
+    "lane-b/blind-records.json": "ee7f4f997f77ddce3cffe500e545d0fad3da143bfb14f6ddc7e0831ac8954723",
+    "lane-b/blind-notes.json": "d0c8b25f2d0a47809e3f8bff077baf6d527622ab1a518f29f0a909b35879ddd3"
+  }
+}

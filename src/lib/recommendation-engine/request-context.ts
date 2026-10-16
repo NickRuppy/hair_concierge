@@ -21,6 +21,7 @@ export function emptyRecommendationRequestContext(): RecommendationRequestContex
     leaveInConditionerRelationshipRequest: null,
     leaveInRequestedFormats: [],
     oilPurpose: null,
+    oilWeightRequest: null,
     oilNoRecommendationReason: null,
     dryShampooBridgeNeedReasonCodes: [],
     dryShampooCautionReasonCodes: [],
@@ -50,7 +51,7 @@ function inferMaskIntensityRequestFromMessage(message: string): "intensive" | nu
   return null
 }
 
-function inferLeaveInWeightRequestFromMessage(message: string): "light" | null {
+function inferLightWeightRequestFromMessage(message: string): "light" | null {
   const normalized = normalizeMessage(message)
 
   if (
@@ -423,7 +424,7 @@ export function buildRecommendationRequestContext(params: {
         : null,
     leaveInSeparateHeatProtectantMentioned,
     leaveInWeightRequest: supportsLeaveInRequests
-      ? inferLeaveInWeightRequestFromMessage(message)
+      ? inferLightWeightRequestFromMessage(message)
       : null,
     leaveInConditionerRelationshipRequest: supportsLeaveInRequests
       ? inferLeaveInConditionerRelationshipRequestFromMessage(message)
@@ -432,6 +433,10 @@ export function buildRecommendationRequestContext(params: {
       ? inferLeaveInRequestedFormatsFromMessage(message)
       : [],
     oilPurpose,
+    oilWeightRequest:
+      requestedCategory === "oil" || requestedCategory === "routine"
+        ? inferLightWeightRequestFromMessage(message)
+        : null,
     oilNoRecommendationReason:
       requestedCategory === "oil" || requestedCategory === "routine"
         ? inferOilNoRecommendationReason(oilPurpose, message)

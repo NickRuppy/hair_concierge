@@ -1,0 +1,24 @@
+{
+  "run_id": "oil-exploratory-2026-10-01-round-1",
+  "status": "ready_for_blind_research",
+  "encountered_tokens": 143,
+  "unmatched_tokens": 0,
+  "records": 8,
+  "canonical_lists_unmerged": true,
+  "source_references_validated": true,
+  "manual_contract_probes": {
+    "uv_filter_and_claim": "true; other three combinations false",
+    "heat_claim_without_ingredient_mechanism": "true",
+    "fatty_alcohol_benzyl_alcohol_glycols": "excluded from drying-alcohol group",
+    "rosemary_extract_vs_essential_oil": "distinct; no extract scalp match",
+    "colorant_tail_boundary": "does not establish boundary",
+    "scalp_only_prewash": "no fibre role unless fibre directions separately exist",
+    "damp_or_dry_retained": "two fibre roles",
+    "unknown_dispenser": "allowed; no forced pour",
+    "fit_policy_gap": "all ten cells per product unknown, excluded from agreement headline"
+  },
+  "formula_product_examples_in_method": 0,
+  "worked_examples_in_lexicon": 0,
+  "cohort_example_overlap": 0,
+  "probes_limit": "Contract/identity inspection only, not executable production tests or efficacy validation."
+}

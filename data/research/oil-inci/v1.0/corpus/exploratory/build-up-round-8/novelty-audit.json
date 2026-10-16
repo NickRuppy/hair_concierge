@@ -1,0 +1,30 @@
+{
+  "compared_prior_record_instances": 82,
+  "comparison": "Ordered exact normalized primary ingredient signatures in prior source/packet records; material references are not finished formulas.",
+  "records": [
+    {
+      "neutral_id": "C01",
+      "identical_prior_declaration_paths": [],
+      "prior_material_or_marketing_exposure": "Material chemistry/references may be known; no claim of unseen chemistry or brand recognition prevention.",
+      "fresh_finished_formula": true
+    },
+    {
+      "neutral_id": "C02",
+      "identical_prior_declaration_paths": [],
+      "prior_material_or_marketing_exposure": "Material chemistry/references may be known; no claim of unseen chemistry or brand recognition prevention.",
+      "fresh_finished_formula": true
+    },
+    {
+      "neutral_id": "C03",
+      "identical_prior_declaration_paths": [],
+      "prior_material_or_marketing_exposure": "Material chemistry/references may be known; no claim of unseen chemistry or brand recognition prevention.",
+      "fresh_finished_formula": true
+    },
+    {
+      "neutral_id": "C04",
+      "identical_prior_declaration_paths": [],
+      "prior_material_or_marketing_exposure": "Material chemistry/references may be known; no claim of unseen chemistry or brand recognition prevention.",
+      "fresh_finished_formula": true
+    }
+  ]
+}

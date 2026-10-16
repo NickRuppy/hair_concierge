@@ -45,7 +45,7 @@ import type {
 import type { ProductBondbuilderSpecs } from "@/lib/bondbuilder/constants"
 import type { ProductDeepCleansingShampooSpecs } from "@/lib/deep-cleansing-shampoo/constants"
 import type { ProductDryShampooSpecs } from "@/lib/dry-shampoo/constants"
-import type { OilSubtype, OilUseMode } from "@/lib/oil/constants"
+import type { OilSubtype, OilUseMode, OilWeight, OilFibreRole } from "@/lib/oil/constants"
 import type { ProductPeelingSpecs } from "@/lib/peeling/constants"
 import type {
   ProductBondApplicationMode,
@@ -531,6 +531,9 @@ export interface OilMatchedProfile {
 
 export interface OilRecommendationMetadata extends BaseRecommendationMetadata {
   category: "oil"
+  product_weight?: OilWeight | null
+  product_roles?: OilFibreRole[]
+  selected_role?: OilFibreRole | null
   matched_profile: OilMatchedProfile
   matched_subtype: OilSubtype | null
   use_mode: OilUseMode | null

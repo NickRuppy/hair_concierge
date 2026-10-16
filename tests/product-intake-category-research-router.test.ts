@@ -133,13 +133,7 @@ test("oil prompt treats heat protection as a leave-on capability", () => {
   )
 })
 
-for (const category of [
-  "oil",
-  "dry_shampoo",
-  "deep_cleansing_shampoo",
-  "heat_protectant",
-  "scalp_care",
-]) {
+for (const category of ["dry_shampoo", "deep_cleansing_shampoo", "heat_protectant", "scalp_care"]) {
   test(`${category} records that an engine is unavailable without claiming a projection`, () => {
     const result = normalized(category)
     assert.equal((result.researched_payload?.final as Record<string, unknown>).engine, undefined)
@@ -345,9 +339,46 @@ test("categories without an active engine do not bind or contact the RPC", async
     },
   }
   const job = researchJob()
-  for (const category of ["oil", "unrecognized", null]) {
+  for (const category of ["dry_shampoo", "unrecognized", null]) {
     assert.equal(await bindResearchJobEngine(client, job, category), job)
   }
+})
+
+test("incoming oil jobs bind the current lean engine through the real registry", async () => {
+  const job = researchJob()
+  const calls: Array<{ name: string; args: Record<string, unknown> }> = []
+  const result = await bindResearchJobEngine(
+    {
+      async rpc(name, args) {
+        calls.push({ name, args })
+        return {
+          data: {
+            ...job,
+            engine_key: args.next_engine_key,
+            engine_version: args.next_engine_version,
+          },
+          error: null,
+        }
+      },
+    },
+    job,
+    "oil",
+  )
+  assert.deepEqual(calls, [
+    {
+      name: "product_intake_bind_research_job_engine",
+      args: {
+        target_job_id: job.id,
+        next_engine_key: "oil-standard",
+        next_engine_version: "v0.10/oil-production-adapter-v1",
+        expected_locked_by: job.locked_by,
+        expected_locked_at: job.locked_at,
+      },
+    },
+  ])
+  assert.equal(result.engine_version, "v0.10/oil-production-adapter-v1")
+  const contract = categoryApprovalContract("oil")
+  assert.ok(contract.oil_research, "the producer receives the category-owned research contract")
 })
 
 test("a missing engine-binding RPC logs infrastructure failure and continues unbound with Sentry telemetry", async (t) => {
@@ -402,6 +433,24 @@ test("a missing engine-binding RPC logs infrastructure failure and continues unb
     envelopes.length,
     2,
     "each missing RPC is captured by the initialized local transport",
+  )
+})
+
+test("a missing engine-binding RPC rejects Shampoo rather than running an unbound sealed engine", async () => {
+  await assert.rejects(
+    bindResearchJobEngine(
+      {
+        async rpc() {
+          return {
+            data: null,
+            error: { code: "PGRST202", message: "Schema cache has no matching RPC" },
+          }
+        },
+      },
+      researchJob(),
+      "shampoo",
+    ),
+    /INFRA_ENGINE_BINDING: product_intake_bind_research_job_engine unavailable/,
   )
 })
 

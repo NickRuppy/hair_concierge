@@ -1,0 +1,1769 @@
+{
+  "run_id": "oil-blend-weight-round-4",
+  "records": [
+    {
+      "neutral_id": "Q01",
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from defined_ester_emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "MACADAMIA INTEGRIFOLIA SEED OIL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from fixed_oil_carrier. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "DICAPRYLYL ETHER",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from ether_emollient, unmapped_carrier. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from defined_ester_emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from intact_botanical_fixed_oil, emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 6,
+          "canonical_name": "CORYLUS AVELLANA SEED OIL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from fixed_oil_carrier. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 7,
+          "canonical_name": "CAMELLIA OLEIFERA SEED OIL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from intact_botanical_fixed_oil, emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 8,
+          "canonical_name": "PARFUM/FRAGRANCE",
+          "role": "auxiliary",
+          "reason": "Admitted fragrance_composition function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 9,
+          "canonical_name": "CAMELLIA JAPONICA SEED OIL",
+          "role": "secondary",
+          "reason": "Possible supporting fixed_oil_carrier route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 10,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "role": "secondary",
+          "reason": "Possible supporting intact_botanical_fixed_oil, emollient route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 11,
+          "canonical_name": "BORAGO OFFICINALIS SEED OIL",
+          "role": "secondary",
+          "reason": "Possible supporting fixed_oil_carrier route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 12,
+          "canonical_name": "TOCOPHEROL",
+          "role": "auxiliary",
+          "reason": "Admitted antioxidant function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 13,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "role": "secondary",
+          "reason": "Possible supporting intact_botanical_fixed_oil, emollient route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 14,
+          "canonical_name": "TOCOPHERYL ACETATE",
+          "role": "auxiliary",
+          "reason": "Admitted antioxidant_auxiliary function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 15,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 16,
+          "canonical_name": "POLYGLYCERYL-3 DIISOSTEARATE",
+          "role": "auxiliary",
+          "reason": "Admitted emulsifier function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 17,
+          "canonical_name": "AQUA/WATER",
+          "role": "secondary",
+          "reason": "Possible supporting aqueous_vehicle route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 18,
+          "canonical_name": "ASCORBIC ACID",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 19,
+          "canonical_name": "SOLANUM LYCOPERSICUM (TOMATO) FRUIT EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 20,
+          "canonical_name": "ACETYL CEDRENE",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 21,
+          "canonical_name": "LINALYL ACETATE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 22,
+          "canonical_name": "LINALOOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 23,
+          "canonical_name": "CITRUS AURANTIUM PEEL OIL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen, essential_oil function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 24,
+          "canonical_name": "DIMETHYL PHENETHYL ACETATE",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 25,
+          "canonical_name": "LIMONENE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 26,
+          "canonical_name": "CITRONELLOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 27,
+          "canonical_name": "VANILLIN",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 28,
+          "canonical_name": "GERANIOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 29,
+          "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 30,
+          "canonical_name": "ISOEUGENYL ACETATE",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 31,
+          "canonical_name": "PINENE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        }
+      ],
+      "material_matches": [
+        {
+          "rank": 2,
+          "reference_id": "macadamia",
+          "value": "medium",
+          "confidence": "low"
+        },
+        {
+          "rank": 4,
+          "reference_id": "c8_c10_mct",
+          "value": "light",
+          "confidence": "moderate"
+        },
+        {
+          "rank": 5,
+          "reference_id": "sweet_almond",
+          "value": "light",
+          "confidence": "low"
+        },
+        {
+          "rank": 7,
+          "reference_id": "camellia_oleifera",
+          "value": "light",
+          "confidence": "low"
+        },
+        {
+          "rank": 9,
+          "reference_id": "camellia_japonica",
+          "value": "light",
+          "confidence": "low"
+        },
+        {
+          "rank": 10,
+          "reference_id": "argan",
+          "value": "medium",
+          "confidence": "low"
+        },
+        {
+          "rank": 11,
+          "reference_id": "borage",
+          "value": "light",
+          "confidence": "low"
+        },
+        {
+          "rank": 13,
+          "reference_id": "sunflower",
+          "value": "light",
+          "confidence": "low"
+        }
+      ],
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Mixed ester/ether and fixed-oil backbone: macadamia is an early carrier with a medium material tendency alongside the mobile-distribution route; retained botanical conditioning is a positive intermediate-load hypothesis."
+        ],
+        "counter_signal": [
+          "Coco-caprylate/caprate, dicaprylyl ether and MCT plus several light-prior oils support a lighter distributed film. No principal wax/gum architecture is established."
+        ],
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light"
+        ],
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B3",
+          "B4"
+        ],
+        "reason": "Medium wins narrowly because the formula is a genuine fixed-oil/emollient co-carrier system rather than an established volatile-delivery system; this is not a known oil fraction. Light is credible.",
+        "unresolved": [
+          "Hazelnut seed oil has no material-weight prior; its amount/grade and retained contribution could shift the estimate.",
+          "Relative ester/ether/oil amounts and hair residual film are unknown; neither ingredient counts nor a mobile emollient proves a low residue.",
+          "Unreviewed names retained as unresolved roles: ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT, ASCORBIC ACID, SOLANUM LYCOPERSICUM (TOMATO) FRUIT EXTRACT, ACETYL CEDRENE, DIMETHYL PHENETHYL ACETATE, VANILLIN, PELARGONIUM GRAVEOLENS FLOWER OIL, ISOEUGENYL ACETATE. No tail-position trace rule used."
+        ]
+      }
+    },
+    {
+      "neutral_id": "Q02",
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from intact_botanical_fixed_oil, emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "OLEA EUROPAEA (OLIVE) FRUIT OIL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from intact_botanical_fixed_oil, emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "CALENDULA OFFICINALIS FLOWER EXTRACT",
+          "role": "auxiliary",
+          "reason": "Admitted botanical_extract_not_fixed_oil function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ROSMARINUS OFFICINALIS LEAF EXTRACT",
+          "role": "auxiliary",
+          "reason": "Admitted botanical_extract, possible_antioxidant function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        }
+      ],
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "sunflower",
+          "value": "light",
+          "confidence": "low"
+        },
+        {
+          "rank": 2,
+          "reference_id": "olive",
+          "value": "medium",
+          "confidence": "low"
+        }
+      ],
+      "weight": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Sunflower seed oil provides the leading light tendency; olive is a co-carrier with medium tendency; the known extracts supply no affirmative rich or structured-film architecture."
+        ],
+        "counter_signal": [
+          "The olive component could produce a larger retained-coating burden; the leading declaration does not prove its share is negligible."
+        ],
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B3"
+        ],
+        "reason": "Choose the B3 light-leading botanical hypothesis with medium as the competing film interpretation; no independent hair feel measurement.",
+        "unresolved": [
+          "Sunflower/olive ratio, extraction carrier contribution and actual leave-on dose/film are undisclosed."
+        ]
+      }
+    },
+    {
+      "neutral_id": "Q03",
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "CYCLOPENTASILOXANE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from silicone_carrier, volatile_carrier. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from silicone_gum, conditioning_film. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ALCOHOL DENAT.",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from solvent_alcohol. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "PARFUM/FRAGRANCE",
+          "role": "auxiliary",
+          "reason": "Admitted fragrance_composition function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 5,
+          "canonical_name": "TOCOPHERYL ACETATE",
+          "role": "auxiliary",
+          "reason": "Admitted antioxidant_auxiliary function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 6,
+          "canonical_name": "HEXYL CINNAMAL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 7,
+          "canonical_name": "LINALOOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 8,
+          "canonical_name": "LIMONENE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 9,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL",
+          "role": "secondary",
+          "reason": "Possible supporting fixed_oil_carrier route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 10,
+          "canonical_name": "MACADAMIA TERNIFOLIA SEED OIL",
+          "role": "secondary",
+          "reason": "Possible supporting fixed_oil_carrier route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 11,
+          "canonical_name": "PERSEA GRATISSIMA (AVOCADO) OIL",
+          "role": "secondary",
+          "reason": "Possible supporting intact_botanical_fixed_oil, emollient route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 12,
+          "canonical_name": "ALPHA-ISOMETHYL IONONE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        }
+      ],
+      "material_matches": [
+        {
+          "rank": 9,
+          "reference_id": "coconut_whole",
+          "value": "rich",
+          "confidence": "low"
+        },
+        {
+          "rank": 10,
+          "reference_id": "macadamia_ternifolia",
+          "value": "medium",
+          "confidence": "low"
+        },
+        {
+          "rank": 11,
+          "reference_id": "avocado",
+          "value": "medium",
+          "confidence": "low"
+        }
+      ],
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Cyclopentasiloxane distributes the formula while dimethiconol supplies an early principal retained conditioning-film route. The carrier/film pairing positively supports intermediate residual burden."
+        ],
+        "counter_signal": [
+          "D5 and denatured alcohol give an affirmative mobile-delivery interpretation; coconut/macadamia/avocado can add retained load but their positions establish no amounts."
+        ],
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light"
+        ],
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B5",
+          "B6"
+        ],
+        "reason": "Medium narrowly wins when dimethiconol is treated as a principal retained system; light would win if its actual residue is small. Gum presence alone supplies no rich floor.",
+        "unresolved": [
+          "Dimethiconol grade/loading, solvent residue, botanical shares and dose are unknown."
+        ]
+      }
+    },
+    {
+      "neutral_id": "Q04",
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "GLYCINE SOJA (SOYBEAN) OIL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from fixed_oil_carrier. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from intact_botanical_fixed_oil, emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF OIL",
+          "role": "secondary",
+          "reason": "Possible supporting essential_oil, aromatic_auxiliary route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from intact_botanical_fixed_oil, emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 5,
+          "canonical_name": "MENTHA PIPERITA (PEPPERMINT) OIL",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 6,
+          "canonical_name": "EUCALYPTUS GLOBOLUS (EUCALYPTUS) LEAF OIL",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 7,
+          "canonical_name": "MENTHOL",
+          "role": "auxiliary",
+          "reason": "Admitted cooling_or_aromatic_auxiliary, declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 8,
+          "canonical_name": "MELALUECA ALTERNIFOLIA (TEA TREE) LEAF OIL",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 9,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL",
+          "role": "secondary",
+          "reason": "Possible supporting fixed_oil_carrier route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 10,
+          "canonical_name": "EQUISETUM ARVENSE (HORSETAIL) EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 11,
+          "canonical_name": "ALOE BARBADENSIS EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 12,
+          "canonical_name": "LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 13,
+          "canonical_name": "TRITICUM VULGARE (WHEAT) GERM OIL",
+          "role": "secondary",
+          "reason": "Possible supporting fixed_oil_carrier route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 14,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+          "role": "secondary",
+          "reason": "Possible supporting intact_botanical_fixed_oil, emollient route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 15,
+          "canonical_name": "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL",
+          "role": "secondary",
+          "reason": "Possible supporting fixed_oil_carrier route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 16,
+          "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL",
+          "role": "secondary",
+          "reason": "Possible supporting fixed_oil_carrier route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 17,
+          "canonical_name": "BENZYL NICOTINATE",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 18,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+          "role": "secondary",
+          "reason": "Possible supporting intact_botanical_fixed_oil, emollient route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 19,
+          "canonical_name": "ORYZA SATIVA (RICE) BRAN OIL",
+          "role": "secondary",
+          "reason": "Possible supporting fixed_oil_carrier route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 20,
+          "canonical_name": "TOCOPHERYL ACETATE",
+          "role": "auxiliary",
+          "reason": "Admitted antioxidant_auxiliary function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 21,
+          "canonical_name": "BIOTIN",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 22,
+          "canonical_name": "ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 23,
+          "canonical_name": "GLYCERIN",
+          "role": "secondary",
+          "reason": "Possible supporting humectant route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 24,
+          "canonical_name": "APIUM GRAVEOLENS (CELERY) SEED EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 25,
+          "canonical_name": "CHOLECALCIFEROL (VITAMIN D)",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 26,
+          "canonical_name": "ASCORBIC ACID",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 27,
+          "canonical_name": "OCIMUM",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 28,
+          "canonical_name": "BASILICUM (BASIL) OIL",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 29,
+          "canonical_name": "POGOSTEMON CABLIN (PATCHOULI) OIL",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 30,
+          "canonical_name": "SALVIA OFFICINALIS (SAGE) OIL",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 31,
+          "canonical_name": "SILICA",
+          "role": "secondary",
+          "reason": "Possible supporting particulate_auxiliary route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 32,
+          "canonical_name": "URTICA DIOICA (NETTLE) EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        }
+      ],
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "soybean",
+          "value": "light",
+          "confidence": "low"
+        },
+        {
+          "rank": 2,
+          "reference_id": "castor",
+          "value": "rich",
+          "confidence": "moderate"
+        },
+        {
+          "rank": 4,
+          "reference_id": "jojoba",
+          "value": "light",
+          "confidence": "low"
+        },
+        {
+          "rank": 9,
+          "reference_id": "coconut_whole",
+          "value": "rich",
+          "confidence": "low"
+        },
+        {
+          "rank": 13,
+          "reference_id": "wheat_germ",
+          "value": "rich",
+          "confidence": "low"
+        },
+        {
+          "rank": 14,
+          "reference_id": "safflower",
+          "value": "light",
+          "confidence": "low"
+        },
+        {
+          "rank": 15,
+          "reference_id": "evening_primrose",
+          "value": "light",
+          "confidence": "low"
+        },
+        {
+          "rank": 16,
+          "reference_id": "grapeseed",
+          "value": "light",
+          "confidence": "low"
+        },
+        {
+          "rank": 18,
+          "reference_id": "sweet_almond",
+          "value": "light",
+          "confidence": "low"
+        },
+        {
+          "rank": 19,
+          "reference_id": "rice_bran",
+          "value": "light",
+          "confidence": "low"
+        }
+      ],
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Soybean and castor participate in the early botanical backbone, with jojoba supporting distribution. The rich castor prior gives an affirmative burden contribution to an otherwise lighter carrier system."
+        ],
+        "counter_signal": [
+          "Castor plus coconut and wheat-germ oil may support richer retained feel if their contribution is large; soybean/jojoba and light supporting oils keep light plausible too."
+        ],
+        "nearest_alternative": "rich",
+        "alternatives": [
+          "rich"
+        ],
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B3",
+          "B6"
+        ],
+        "reason": "B3 medium is the positive competing-carrier hypothesis, not an average or missing-data default. Castor is not the leading fixed-oil declaration, and no principal wax structure establishes rich.",
+        "unresolved": [
+          "Castor and later fixed-oil proportions are unknown; malformed Ocimum/Basilicum and misspelled eucalyptus/tea-tree source literals have no repaired identity.",
+          "Aromatic/other unresolved preparations may affect film; no efficacy or trace assumption follows.",
+          "Unreviewed names retained as unresolved roles: MENTHA PIPERITA (PEPPERMINT) OIL, EUCALYPTUS GLOBOLUS (EUCALYPTUS) LEAF OIL, MELALUECA ALTERNIFOLIA (TEA TREE) LEAF OIL, EQUISETUM ARVENSE (HORSETAIL) EXTRACT, ALOE BARBADENSIS EXTRACT, LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL, BENZYL NICOTINATE, BIOTIN, ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT, APIUM GRAVEOLENS (CELERY) SEED EXTRACT, CHOLECALCIFEROL (VITAMIN D), ASCORBIC ACID, OCIMUM, BASILICUM (BASIL) OIL, POGOSTEMON CABLIN (PATCHOULI) OIL, SALVIA OFFICINALIS (SAGE) OIL, URTICA DIOICA (NETTLE) EXTRACT. No tail-position trace rule used."
+        ]
+      }
+    },
+    {
+      "neutral_id": "Q05",
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from silicone_carrier, conditioning_film. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISOHEXADECANE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from hydrocarbon_carrier, emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C13-14 ISOALKANE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from hydrocarbon_carrier. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "COCO-CAPRYLATE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from defined_ester_emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from silicone_carrier, emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 6,
+          "canonical_name": "BIS-AMINOPROPYL DIGLYCOL DIMALEATE",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 7,
+          "canonical_name": "PROPANEDIOL",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 8,
+          "canonical_name": "ZEA MAYS (CORN) OIL",
+          "role": "secondary",
+          "reason": "Possible supporting botanical_fixed_oil, emollient route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 9,
+          "canonical_name": "BETA-CAROTENE",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 10,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "role": "secondary",
+          "reason": "Possible supporting intact_botanical_fixed_oil, emollient route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 11,
+          "canonical_name": "PUNICA GRANATUM SEED OIL",
+          "role": "secondary",
+          "reason": "Possible supporting intact_botanical_fixed_oil, emollient route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 12,
+          "canonical_name": "AQUA",
+          "role": "secondary",
+          "reason": "Possible supporting aqueous_vehicle route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 13,
+          "canonical_name": "MORINDA CITRIFOLIA FRUIT EXTRACT",
+          "role": "auxiliary",
+          "reason": "Admitted botanical_extract function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 14,
+          "canonical_name": "TOCOPHEROL",
+          "role": "auxiliary",
+          "reason": "Admitted antioxidant function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 15,
+          "canonical_name": "PSEUDOZYMA EPICOLA/CAMELLIA SINENSIS SEED OIL FERMENT EXTRACT FILTRATE",
+          "role": "auxiliary",
+          "reason": "Admitted ferment_extract function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 16,
+          "canonical_name": "PARFUM",
+          "role": "auxiliary",
+          "reason": "Admitted fragrance_composition function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 17,
+          "canonical_name": "CITRAL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 18,
+          "canonical_name": "LINALOOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 19,
+          "canonical_name": "LIMONENE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 20,
+          "canonical_name": "CITRONELLOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 21,
+          "canonical_name": "HEXYL CINNAMAL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        }
+      ],
+      "material_matches": [
+        {
+          "rank": 8,
+          "reference_id": "corn_oil",
+          "value": "light",
+          "confidence": "low"
+        },
+        {
+          "rank": 10,
+          "reference_id": "sunflower",
+          "value": "light",
+          "confidence": "low"
+        },
+        {
+          "rank": 11,
+          "reference_id": "pomegranate_seed",
+          "value": "rich",
+          "confidence": "low"
+        }
+      ],
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Dimethicone forms the leading conditioning/carrier route with supporting phenyl trimethicone; mobile hydrocarbon/ester co-carriers give a competing distribution route. Retained conditioning film supplies a positive intermediate hypothesis."
+        ],
+        "counter_signal": [
+          "Isohexadecane, C13-14 isoalkane and coco-caprylate could support light if the silicone grade/residual film is small. The later pomegranate prior is rich but presence supplies no rich floor."
+        ],
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light"
+        ],
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B4",
+          "B5",
+          "B6"
+        ],
+        "reason": "Medium follows the principal silicone-conditioning hypothesis with strong light alternative; the named active and botanical tally do not define weight.",
+        "unresolved": [
+          "Dimethicone grade, mobile/retained amounts and actual hair film are undisclosed; unassessed active/propanediol/beta-carotene cannot be assigned harmlessness.",
+          "Unreviewed names retained as unresolved roles: BIS-AMINOPROPYL DIGLYCOL DIMALEATE, PROPANEDIOL, BETA-CAROTENE. No tail-position trace rule used."
+        ]
+      }
+    },
+    {
+      "neutral_id": "Q06",
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from silicone_carrier, conditioning_film. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from silicone_gum, conditioning_film. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ORYZA SATIVA (RICE) BRAN OIL",
+          "role": "secondary",
+          "reason": "Possible supporting fixed_oil_carrier route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "TOCOPHEROL",
+          "role": "auxiliary",
+          "reason": "Admitted antioxidant function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 5,
+          "canonical_name": "FRAGRANCE/PARFUM",
+          "role": "auxiliary",
+          "reason": "Admitted fragrance_composition function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 6,
+          "canonical_name": "CITRONELLOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 7,
+          "canonical_name": "HEXYL CINNAMAL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 8,
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 9,
+          "canonical_name": "VANILLIN",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        }
+      ],
+      "material_matches": [
+        {
+          "rank": 3,
+          "reference_id": "rice_bran",
+          "value": "light",
+          "confidence": "low"
+        }
+      ],
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Dimethicone and dimethiconol form the principal carrier/conditioning-film pairing, with rice-bran oil a supporting retained emollient. There is no affirmatively identified volatile backbone."
+        ],
+        "counter_signal": [
+          "The dimethiconol system could retain a richer coating depending on grade/loading; fluid dimethicone and light-prior rice-bran oil keep light possible at low retained burden."
+        ],
+        "nearest_alternative": "rich",
+        "alternatives": [
+          "rich"
+        ],
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B5",
+          "B6"
+        ],
+        "reason": "Medium is the positive silicone-film hypothesis; a rich principal structure is plausible but unestablished, so the gum alone does not impose rich.",
+        "unresolved": [
+          "Dimethicone viscosity/volatility, dimethiconol grade/loading, oil amount and retained hair film unknown.",
+          "Unreviewed names retained as unresolved roles: VANILLIN. No tail-position trace rule used."
+        ]
+      }
+    },
+    {
+      "neutral_id": "Q07",
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from intact_botanical_fixed_oil, emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from intact_botanical_fixed_oil, emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from intact_botanical_fixed_oil, emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF OIL",
+          "role": "secondary",
+          "reason": "Possible supporting essential_oil, aromatic_auxiliary route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 5,
+          "canonical_name": "MENTHA ARVENSIS (WILD MINT) LEAF OIL",
+          "role": "secondary",
+          "reason": "Possible supporting essential_oil, aromatic_auxiliary route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 6,
+          "canonical_name": "LAVANDULA OIL/EXTRACT",
+          "role": "secondary",
+          "reason": "Possible supporting fragrance_group, botanical_preparation_unspecified route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 7,
+          "canonical_name": "CAMPHOR",
+          "role": "auxiliary",
+          "reason": "Admitted cooling_or_aromatic_auxiliary, declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 8,
+          "canonical_name": "MENTHOL",
+          "role": "auxiliary",
+          "reason": "Admitted cooling_or_aromatic_auxiliary, declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 9,
+          "canonical_name": "TOCOPHERYL ACETATE",
+          "role": "auxiliary",
+          "reason": "Admitted antioxidant_auxiliary function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 10,
+          "canonical_name": "BETA-CARYOPHYLLENE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 11,
+          "canonical_name": "PINENE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 12,
+          "canonical_name": "TERPINEOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 13,
+          "canonical_name": "GERANYL ACETATE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 14,
+          "canonical_name": "LINALYL ACETATE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 15,
+          "canonical_name": "GERANIOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 16,
+          "canonical_name": "LIMONENE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 17,
+          "canonical_name": "LINALOOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        }
+      ],
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "sweet_almond",
+          "value": "light",
+          "confidence": "low"
+        },
+        {
+          "rank": 2,
+          "reference_id": "castor",
+          "value": "rich",
+          "confidence": "moderate"
+        },
+        {
+          "rank": 3,
+          "reference_id": "safflower",
+          "value": "light",
+          "confidence": "low"
+        }
+      ],
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Almond and safflower are light-prior fixed carriers while castor is a principal rich-prior co-carrier; retained castor burden affirmatively supports intermediate coating."
+        ],
+        "counter_signal": [
+          "A large castor contribution may support rich; if small, almond/safflower could support light. Aromatic oils are not generic fixed-oil weight priors."
+        ],
+        "nearest_alternative": "rich",
+        "alternatives": [
+          "rich"
+        ],
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B3",
+          "B6"
+        ],
+        "reason": "Medium follows B3 for competing light/rich carriers. Rich lacks a positive leading-rich or established structured-system argument; not a numerical average.",
+        "unresolved": [
+          "Carrier ratios, lavender oil/extract preparation and actual dose/film are unresolved."
+        ]
+      }
+    },
+    {
+      "neutral_id": "Q08",
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from intact_botanical_fixed_oil, emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "SESAMUM INDICUM SEED OIL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from fixed_oil_carrier. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "CANANGA ODORATA OIL/EXTRACT",
+          "role": "secondary",
+          "reason": "Possible supporting aromatic_botanical_preparation route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from intact_botanical_fixed_oil, emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 5,
+          "canonical_name": "BETA-CARYOPHYLLENE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 6,
+          "canonical_name": "ONOSMA HISPIDUM ROOT EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 7,
+          "canonical_name": "CINNAMOMUM CAMPHORA WOOD OIL (DECAMPHORISED)",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 8,
+          "canonical_name": "TOCOPHEROL",
+          "role": "auxiliary",
+          "reason": "Admitted antioxidant function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 9,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "role": "secondary",
+          "reason": "Possible supporting intact_botanical_fixed_oil, emollient route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 10,
+          "canonical_name": "EMBLICA OFFICINALIS FRUIT EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 11,
+          "canonical_name": "OCIMUM SANCTUM LEAF EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 12,
+          "canonical_name": "BACOPA MONNIERI LEAF EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 13,
+          "canonical_name": "CENTELLA ASIATICA LEAF EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 14,
+          "canonical_name": "ECLIPTA ALBA LEAF EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 15,
+          "canonical_name": "LAWSONIA INERMIS (HENNA) LEAF EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 16,
+          "canonical_name": "LIMONENE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 17,
+          "canonical_name": "BENZYL BENZOATE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 18,
+          "canonical_name": "LINALOOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 19,
+          "canonical_name": "ACACIA CONCINNA FRUIT EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 20,
+          "canonical_name": "ALOE BARBADENSIS LEAF EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 21,
+          "canonical_name": "SAPINDUS MUKOROSSI FRUIT EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 22,
+          "canonical_name": "GERANYL ACETATE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 23,
+          "canonical_name": "PINENE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 24,
+          "canonical_name": "FARNESOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 25,
+          "canonical_name": "SYMPLOCOS RACEMOSA BARK EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 26,
+          "canonical_name": "TRIGONELLA FOENUM-GRAECUM SEED EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 27,
+          "canonical_name": "WITHANIA SOMNIFERA LEAF/ROOT EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 28,
+          "canonical_name": "BENZYL SALICYLATE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 29,
+          "canonical_name": "ALPHA-TERPINENE",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 30,
+          "canonical_name": "GERANIOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 31,
+          "canonical_name": "EUGENOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 32,
+          "canonical_name": "CITRAL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 33,
+          "canonical_name": "TERPINOLENE",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        }
+      ],
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "sunflower",
+          "value": "light",
+          "confidence": "low"
+        },
+        {
+          "rank": 2,
+          "reference_id": "sesame",
+          "value": "medium",
+          "confidence": "low"
+        },
+        {
+          "rank": 4,
+          "reference_id": "sweet_almond",
+          "value": "light",
+          "confidence": "low"
+        },
+        {
+          "rank": 9,
+          "reference_id": "sunflower",
+          "value": "light",
+          "confidence": "low"
+        }
+      ],
+      "weight": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Sunflower seed oil is the leading light-prior fixed carrier, accompanied by medium sesame and light almond. The oil backbone supplies the positive light-leading botanical hypothesis."
+        ],
+        "counter_signal": [
+          "Sesame can increase retained coating, and the early Cananga preparation and multiple extracts have unresolved grades/amounts; they are not assumed trace or harmless."
+        ],
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B3"
+        ],
+        "reason": "Light narrowly wins B3. Cananga has a source-scoped aromatic preparation role rather than a fixed-oil prior; neither the unassessed extracts nor their count establishes a competing principal lipid structure.",
+        "unresolved": [
+          "Sunflower/sesame/almond proportions and extraction contributions unknown; Cananga oil versus extract is unresolved.",
+          "Many declared preparations lack reviewed functions. Their uncertainty is retained; no positive first-order structured backbone is established by the available functions.",
+          "Unreviewed names retained as unresolved roles: ONOSMA HISPIDUM ROOT EXTRACT, CINNAMOMUM CAMPHORA WOOD OIL (DECAMPHORISED), EMBLICA OFFICINALIS FRUIT EXTRACT, OCIMUM SANCTUM LEAF EXTRACT, BACOPA MONNIERI LEAF EXTRACT, CENTELLA ASIATICA LEAF EXTRACT, ECLIPTA ALBA LEAF EXTRACT, LAWSONIA INERMIS (HENNA) LEAF EXTRACT, ACACIA CONCINNA FRUIT EXTRACT, ALOE BARBADENSIS LEAF EXTRACT, SAPINDUS MUKOROSSI FRUIT EXTRACT, SYMPLOCOS RACEMOSA BARK EXTRACT, TRIGONELLA FOENUM-GRAECUM SEED EXTRACT, WITHANIA SOMNIFERA LEAF/ROOT EXTRACT, ALPHA-TERPINENE, TERPINOLENE. No tail-position trace rule used."
+        ]
+      }
+    },
+    {
+      "neutral_id": "Q09",
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from silicone_carrier, conditioning_film. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from silicone_gum, conditioning_film. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "TRISILOXANE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from silicone_carrier, volatile_carrier. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "UNDECANE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from hydrocarbon_carrier, possible_volatile_vehicle_in_reviewed_pair. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 5,
+          "canonical_name": "CAPRYLYL METHICONE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from silicone_carrier, dispersing_medium. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 6,
+          "canonical_name": "TRIDECANE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from hydrocarbon_carrier, possible_volatile_vehicle_in_reviewed_pair. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 7,
+          "canonical_name": "OCTYLDODECANOL",
+          "role": "secondary",
+          "reason": "Possible supporting emollient, solvent route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 8,
+          "canonical_name": "PHENYLPROPYLDIMETHYLSILOXYSILICATE",
+          "role": "secondary",
+          "reason": "Possible supporting conditioning_film, film_former route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 9,
+          "canonical_name": "PARFUM/FRAGRANCE",
+          "role": "auxiliary",
+          "reason": "Admitted fragrance_composition function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 10,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "role": "secondary",
+          "reason": "Possible supporting intact_botanical_fixed_oil, emollient route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 11,
+          "canonical_name": "CAPSANTHIN/CAPSORUBIN",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 12,
+          "canonical_name": "DIETHYLHEXYL SODIUM SULFOSUCCINATE",
+          "role": "auxiliary",
+          "reason": "Admitted surfactant, emulsifier, wetting_agent function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 13,
+          "canonical_name": "DIMETHICONE/VINYL DIMETHICONE CROSSPOLYMER",
+          "role": "secondary",
+          "reason": "Possible supporting silicone_elastomer, structurant route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 14,
+          "canonical_name": "ALPHA-ISOMETHYL IONONE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 15,
+          "canonical_name": "CAMPHOR",
+          "role": "auxiliary",
+          "reason": "Admitted cooling_or_aromatic_auxiliary, declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 16,
+          "canonical_name": "CARVONE",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 17,
+          "canonical_name": "EUCALYPTUS GLOBULUS OIL",
+          "role": "secondary",
+          "reason": "Possible supporting essential_oil, aromatic_auxiliary route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 18,
+          "canonical_name": "HEXAMETHYLINDANOPYRAN",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 19,
+          "canonical_name": "ISOEUGENYL ACETATE",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 20,
+          "canonical_name": "LAVANDULA (LAVENDER) OIL/EXTRACT",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 21,
+          "canonical_name": "LINALOOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 22,
+          "canonical_name": "LINALYL ACETATE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 23,
+          "canonical_name": "MENTHA VIRIDIS (SPEARMINT) LEAF OIL",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 24,
+          "canonical_name": "PINENE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 25,
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 26,
+          "canonical_name": "VANILLIN",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        }
+      ],
+      "material_matches": [
+        {
+          "rank": 10,
+          "reference_id": "argan",
+          "value": "medium",
+          "confidence": "low"
+        }
+      ],
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Dimethicone/dimethiconol form the principal conditioning system alongside mobile silicones/hydrocarbons; phenylpropyl resin and silicone crosspolymer supply additional retained-film counterweight."
+        ],
+        "counter_signal": [
+          "Trisiloxane and the undecane/tridecane route favor distribution and possible reduced residue, while resin/gum/elastomer could support rich if principal at meaningful loading."
+        ],
+        "nearest_alternative": "rich",
+        "alternatives": [
+          "rich"
+        ],
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B4",
+          "B5",
+          "B6"
+        ],
+        "reason": "Medium is the best retained-silicone/co-carrier hypothesis. Rich is a serious alternative but no grade/amount evidence makes the gum/resin structure dominant; light remains possible if mobile delivery leaves little film.",
+        "unresolved": [
+          "Silicone grades, resin/elastomer loading, volatile-pair retail equivalence and retained mass unknown; generic supplier functions do not identify grades.",
+          "Unreviewed names retained as unresolved roles: CAPSANTHIN/CAPSORUBIN, CARVONE, HEXAMETHYLINDANOPYRAN, ISOEUGENYL ACETATE, LAVANDULA (LAVENDER) OIL/EXTRACT, MENTHA VIRIDIS (SPEARMINT) LEAF OIL, VANILLIN. No tail-position trace rule used."
+        ]
+      }
+    },
+    {
+      "neutral_id": "Q10",
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "CAPRYLYL CAPRYLATE/CAPRATE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from defined_ester_emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "SQUALANE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from hydrocarbon_emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "PERSEA GRATISSIMA (AVOCADO) OIL",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from intact_botanical_fixed_oil, emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) OIL",
+          "role": "secondary",
+          "reason": "Possible supporting botanical_oil_plant_part_unspecified, emollient route; relative involvement is a hypothesis, not a trace or concentration claim."
+        },
+        {
+          "rank": 5,
+          "canonical_name": "C13-15 ALKANE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from hydrocarbon_carrier, emollient. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 6,
+          "canonical_name": "UNDECANE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from hydrocarbon_carrier, possible_volatile_vehicle_in_reviewed_pair. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 7,
+          "canonical_name": "BENZYL ALCOHOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 8,
+          "canonical_name": "TRIDECANE",
+          "role": "principal",
+          "reason": "Qualitative carrier/retained-system participation inferred from hydrocarbon_carrier, possible_volatile_vehicle_in_reviewed_pair. Relative share unknown; whole-formula argument recorded below."
+        },
+        {
+          "rank": 9,
+          "canonical_name": "CASTOR ISOSTEARATE SUCCINATE",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 10,
+          "canonical_name": "PROPANEDIOL",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 11,
+          "canonical_name": "SH-OLIGOPEPTIDE-78",
+          "role": "unresolved",
+          "reason": "Frozen lexicon leaves identity/function or preparation unassessed. No weight, amount or harmlessness inherited."
+        },
+        {
+          "rank": 12,
+          "canonical_name": "FRAGRANCE (PARFUM)",
+          "role": "auxiliary",
+          "reason": "Admitted fragrance_composition function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 13,
+          "canonical_name": "TOCOPHEROL",
+          "role": "auxiliary",
+          "reason": "Admitted antioxidant function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 14,
+          "canonical_name": "CINNAMAL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 15,
+          "canonical_name": "HEXYL CINNAMAL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 16,
+          "canonical_name": "LIMONENE",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        },
+        {
+          "rank": 17,
+          "canonical_name": "LINALOOL",
+          "role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function is ancillary to the hypothesized carrier system. No small amount or harmlessness inferred."
+        }
+      ],
+      "material_matches": [
+        {
+          "rank": 3,
+          "reference_id": "avocado",
+          "value": "medium",
+          "confidence": "low"
+        }
+      ],
+      "weight": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Caprylyl caprylate/caprate plus squalane and alkane carriers supply an affirmative fluid/distribution architecture. Avocado is a retained medium-prior counterweight, with no confirmed principal wax/gum route."
+        ],
+        "counter_signal": [
+          "Avocado and the unspecified sunflower declaration can retain coating; castor-isostearate-succinate may add structural burden but is an unassessed derivative, not intact castor."
+        ],
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B3",
+          "B4",
+          "B6"
+        ],
+        "reason": "Light narrowly wins the mobile-emollient architecture. No evaporation rate or low retained mass is claimed; the unassessed derivative could justify medium after formulation evidence.",
+        "unresolved": [
+          "Avocado fraction and sunflower plant part unknown; no seed-oil prior inherited. Modified castor function/loading and peptide/propanediol roles are unassessed; their apparent secondary involvement is a hypothesis.",
+          "Unreviewed names retained as unresolved roles: CASTOR ISOSTEARATE SUCCINATE, PROPANEDIOL, SH-OLIGOPEPTIDE-78. No tail-position trace rule used."
+        ]
+      }
+    }
+  ],
+  "read_scope": {
+    "source_access_disclosed": true,
+    "written_before_lanes": true,
+    "disclosure": "Root prepared sources/policy/cohort and knows earlier human adjudications; not a blind lane. These judgments are recorded before opening either lane output."
+  }
+}

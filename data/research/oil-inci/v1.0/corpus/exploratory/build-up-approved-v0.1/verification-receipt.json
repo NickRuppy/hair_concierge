@@ -1,0 +1,39 @@
+{
+  "status": "passed_local_artifact_verification",
+  "decisions": [
+    "OE46",
+    "OE47",
+    "OE48",
+    "OE49"
+  ],
+  "counts": {
+    "accepted_cells": 4,
+    "low": 1,
+    "elevated": 3,
+    "unknown": 0
+  },
+  "checks": {
+    "exact_decision_identity_and_source_bindings": "passed",
+    "unique_complete_four_case_coverage": "passed",
+    "estimate_confidence_and_alternatives": "passed",
+    "source_and_method_hashes": "passed",
+    "CSV_JSON_consistency": "passed",
+    "frozen_unknowns_preserved": "passed",
+    "preserved_prior_files": 318,
+    "local_links_checked": 79
+  },
+  "files_sha256": {
+    "docs/research/oil-inci/README.md": "4da4df38297caaecd5a17036bb6c4fd285b96d5e23375c364e22d1a776c8313a",
+    "plans/oil-inci/phase1-decision-coverage.md": "f812c61398f99199dbed241c1041a1f87b5ad614c9f829d3316853994de1fe65",
+    "plans/oil-inci/research/build-up-approved-overview-2026-10-05.md": "092a9e6833d97622fa66f800963b6123036e6117174d6d574273614d0598493d",
+    "plans/oil-inci/research/aroma-zone-oe49-build-up-decision-2026-10-05.json": "599d5a5702250c9f3cef823f6b7c1e471800b82e4ff683ff5548ea644edbd9ff",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-approved-v0.1/approved-build-up-overlay.json": "65b782ffba154c6ef0a96504f78e1d82a07394c46b33b8b53b93335824aa9b50",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-approved-v0.1/approved-build-up-sheet.csv": "f86a7fbfe2cb9f10c369e1ea2d7b6584aa994dad8b1a92b57805ddc193a0b361"
+  },
+  "limitations": [
+    "All four are low-confidence estimates, not measured accumulation.",
+    "Frozen original unknowns and repeatability metrics remain unchanged.",
+    "Use and thickness caveats remain separate; no additional automatic thickness penalty.",
+    "Generalization to new formulas and intake readiness are not established."
+  ]
+}

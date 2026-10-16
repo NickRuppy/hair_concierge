@@ -1,0 +1,35 @@
+{
+  "status": "passed",
+  "checks": "Frozen source/input/lane integrity, complete binary metadata, independent-read attestations, metrics and CSV parity; not measured accuracy",
+  "primary_ranks": 84,
+  "exact_dictionary_names": 64,
+  "historical_files_preserved": 365,
+  "mutation_controls_rejected": [
+    "unknown_output",
+    "missing_rank",
+    "wrong_evidence_name",
+    "changed_input"
+  ],
+  "metrics": {
+    "case_count": 4,
+    "assessment_count": 8,
+    "binary_completion_count": 8,
+    "value_agreement_count": 4,
+    "value_agreement_denominator": 4,
+    "classes_by_lane": {
+      "a": {
+        "low": 2,
+        "elevated": 2
+      },
+      "b": {
+        "low": 2,
+        "elevated": 2
+      }
+    }
+  },
+  "recognized_formulas": {
+    "a": [],
+    "b": []
+  },
+  "command": "python3 plans/oil-inci/verify-build-up-round-8.py"
+}

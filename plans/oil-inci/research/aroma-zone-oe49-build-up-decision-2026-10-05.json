@@ -1,0 +1,179 @@
+{
+  "decision_id": "OE49",
+  "date": "2026-10-05",
+  "status": "human_accepted_product_specific_estimate",
+  "authorization": "Nick yes elevated to Aroma-Zone, explicitly estimated with low confidence.",
+  "neutral_id": "D06",
+  "identity": {
+    "brand": "Aroma-Zone",
+    "product": "Haircare Oil With 7 Precious Oils",
+    "size_ml": 250,
+    "market": "FR"
+  },
+  "source_id": "D06-maker",
+  "source_url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil",
+  "raw_inci": "Ricinus communis seed oil* (organic Ricin carrier oil), Olea europaea fruit oil* (organic Olive carrier oil), Cocos nucifera oil* (organic Coconut carrier oil), Persea gratissima oil* (organic Avocado carrier oil), Brassica nigra seed oil* (organic Mustard carrier oil), Simmondsia chinensis seed oil* (organic Jojoba plant oil), Brassica oleracea italica seed oil* (organic Broccoli plant oil), Emblica officinalis fruit powder* (organic Amla powder), Tocopherol (vitamin E), Helianthus annuus seed oil (Sunflower plant oil, tocopherol carrier oil)",
+  "source_hashes": {
+    "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/working-records-v0.1.1.json": "841f5489e92a07a49e36cd5a8197deb70ee149bb491ebf713af8304fc72694bd",
+    "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.4.md": "36d95689a7007185ee09e8a1853089ac69ab80552be6bcd6430dbfc0b2fcb9b5"
+  },
+  "original_property": {
+    "value": "unknown",
+    "estimate": false,
+    "confidence": "low",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "RICINUS COMMUNIS SEED OIL"
+      },
+      {
+        "rank": 2,
+        "canonical_name": "OLEA EUROPAEA FRUIT OIL"
+      },
+      {
+        "rank": 3,
+        "canonical_name": "COCOS NUCIFERA OIL"
+      },
+      {
+        "rank": 4,
+        "canonical_name": "PERSEA GRATISSIMA OIL"
+      },
+      {
+        "rank": 5,
+        "canonical_name": "BRASSICA NIGRA SEED OIL"
+      },
+      {
+        "rank": 6,
+        "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+      },
+      {
+        "rank": 7,
+        "canonical_name": "BRASSICA OLERACEA ITALICA SEED OIL"
+      },
+      {
+        "rank": 8,
+        "canonical_name": "EMBLICA OFFICINALIS FRUIT POWDER"
+      },
+      {
+        "rank": 10,
+        "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+      }
+    ],
+    "counter_signal": [
+      "Jojoba is an intact emollient rather than an admitted structurant; no explicit gum or resin is present."
+    ],
+    "nearest_alternative": "elevated",
+    "reason": "The full system is a residual fixed-oil blend with a later unassessed powder. Elevated is plausible for a rich residual coating, but neither the oil names nor jojoba wax-ester chemistry establishes substantial gum/wax structuring. Low also lacks affirmative weak-film evidence across the complete system.",
+    "unresolved": [
+      "Whole-blend persistent coating behavior and Emblica powder contribution remain unestablished."
+    ]
+  },
+  "approved_property": {
+    "value": "elevated",
+    "estimate": true,
+    "confidence": "low",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "RICINUS COMMUNIS SEED OIL"
+      },
+      {
+        "rank": 2,
+        "canonical_name": "OLEA EUROPAEA FRUIT OIL"
+      },
+      {
+        "rank": 3,
+        "canonical_name": "COCOS NUCIFERA OIL"
+      },
+      {
+        "rank": 4,
+        "canonical_name": "PERSEA GRATISSIMA OIL"
+      },
+      {
+        "rank": 5,
+        "canonical_name": "BRASSICA NIGRA SEED OIL"
+      },
+      {
+        "rank": 6,
+        "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+      },
+      {
+        "rank": 7,
+        "canonical_name": "BRASSICA OLERACEA ITALICA SEED OIL"
+      },
+      {
+        "rank": 8,
+        "canonical_name": "EMBLICA OFFICINALIS FRUIT POWDER"
+      },
+      {
+        "rank": 10,
+        "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+      }
+    ],
+    "counter_signal": [
+      "Jojoba is an intact emollient rather than an admitted structurant; no explicit gum or resin is present.",
+      "Exact proportions, ordinary-dose residual coating and post-shampoo retention are unmeasured; jojoba/broccoli spreading and coconut redistribution remain competing considerations.",
+      "Amla powder contribution is unassessed; its presence is not used to force the classification."
+    ],
+    "nearest_alternative": "unknown",
+    "reason": "OE49 human-approved practical elevated residual-film estimate for the exact castor/olive/coconut-led fixed-oil blend. The whole retained conditioning backbone favors a substantial coating hypothesis. This is not measured repeated shampoo-cycle accumulation and is not inferred from rich weight, a single oil name or jojoba wax-ester chemistry alone.",
+    "unresolved": [
+      "Whole-blend persistent coating behavior and Emblica powder contribution remain unestablished."
+    ]
+  },
+  "application_scenarios": [
+    {
+      "source_id": "D06-maker",
+      "direction_id": "D06-direction-1",
+      "supported_roles": [
+        "scalp_application"
+      ],
+      "site": [
+        "scalp"
+      ],
+      "stage": "before_wash",
+      "dose": "unspecified",
+      "contact_time": "10–15 minutes",
+      "removal": "shampoo",
+      "restrictions": "unestablished"
+    },
+    {
+      "source_id": "D06-maker",
+      "direction_id": "D06-direction-2",
+      "supported_roles": [
+        "pre_wash_fibre_treatment"
+      ],
+      "site": [
+        "hair"
+      ],
+      "stage": "dry_or_damp_before_wash",
+      "dose": "1–3 tablespoons",
+      "contact_time": "1–3 hours or overnight",
+      "removal": "shampoo",
+      "restrictions": "unestablished"
+    },
+    {
+      "source_id": "D06-maker",
+      "direction_id": "D06-direction-3",
+      "supported_roles": [
+        "dry_finish"
+      ],
+      "site": [
+        "ends"
+      ],
+      "stage": "dry_finish",
+      "dose": "a dab",
+      "contact_time": "unspecified",
+      "removal": "leave_on",
+      "restrictions": "unestablished"
+    }
+  ],
+  "unchanged": [
+    "Every historical trial record, lane judgment, metric, seal and receipt",
+    "Weight, other direct properties and fit policies",
+    "Exact pre-wash/scalp/retained-ends instructions",
+    "General build-up mechanism; no automatic ingredient-presence mapping"
+  ],
+  "next_case": null
+}

@@ -1,0 +1,5 @@
+{
+  "stage2-packet.json": "95e097a338e49fbc168e82ce31be40c7b20f1dd1448f0ca3e66907484a8ffc4c",
+  "derivation-v0.2/blind-seal.json": "43fd1b95faa2c41b21d8d40cc3992cb2585465717c3b7f0fef1111ecf1b56f6d",
+  "read_scope": "Own corrected sealed blind record + staged sourcepacket + frozen method/dictionary only; never peer."
+}

@@ -1,0 +1,55 @@
+{
+  "status": "passed",
+  "scope": "artifact invariants; no scientific accuracy assertion",
+  "reference_materials": 25,
+  "source_records": 26,
+  "reviewed_aliases": 38,
+  "old_fixed_oil_identities": 15,
+  "historical_files_unchanged": 28,
+  "sealed_input_files": 6,
+  "material_cases": 8,
+  "synthetic_probes": 6,
+  "mode": "inputs_and_sealed_lanes",
+  "lane_records_verified": 28,
+  "negative_controls": [
+    {
+      "case": "duplicate_alias",
+      "status": "rejected",
+      "reason": "Duplicate alias: SIMMONDSIA CHINENSIS SEED OIL"
+    },
+    {
+      "case": "changed_sealed_method",
+      "status": "rejected",
+      "reason": "Sealed input changed: method.md"
+    },
+    {
+      "case": "derivative_false_match",
+      "status": "rejected",
+      "reason": "Output material coverage"
+    },
+    {
+      "case": "material_confidence_inflation",
+      "status": "rejected",
+      "reason": "Pure-material confidence inflation"
+    }
+  ],
+  "commands": [
+    "python3 plans/oil-inci/verify-natural-weight-artifacts.py",
+    "Main temporary-copy negative-control harness (four artifact contract violations)"
+  ],
+  "limits": "Validates structure, exact matches and preservation, not class scientific accuracy. Original files were untouched by negative controls.",
+  "final_checks": {
+    "git_diff_check": "passed",
+    "current_artifact_links_and_whitespace": "passed; frozen doc-relative method navigation documented in run README; round-1 trailing whitespace preserved",
+    "real_repo_ci_path_scope": {
+      "chat_eval": false,
+      "retrieval_eval": false,
+      "playwright_smoke": false,
+      "security_scan": false,
+      "personal_plan_journey": false,
+      "full_ci": false
+    },
+    "runtime_tests": "not required/run for research artifacts",
+    "generic_personal_skill_changed_checker": "unavailable in this repo; module-not-found reported and no pass claimed"
+  }
+}
