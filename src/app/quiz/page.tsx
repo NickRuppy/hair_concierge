@@ -125,12 +125,9 @@ export default function QuizPage() {
             latestState.funnelPackageKey,
           )
           seedLegacyQuizBrowserHistoryToDepth(Math.max(0, restoredPosition - 1))
-          useQuizStore.setState({
+          useQuizStore.getState().initializeMigration({
             step: migrationState.step,
             answers: migrationState.answers,
-            leadCaptureSubStep: "name",
-            lead: { name: "", email: "", marketingConsent: false },
-            leadId: null,
           })
         }
         setSafeDraftStatus("ready")
@@ -141,14 +138,7 @@ export default function QuizPage() {
       if (returnIntent) {
         // A return link never resumes an unrelated local draft behind the modal.
         // Leave that draft in storage until the visitor explicitly chooses Edit.
-        useQuizStore.setState({
-          step: 2,
-          answers: {},
-          leadCaptureSubStep: "name",
-          leadCaptureMode: "regular",
-          lead: { name: "", email: "", marketingConsent: false },
-          leadId: null,
-        })
+        useQuizStore.getState().initializeReturn()
         if (returnIntent === "ready") {
           let status: string = "unavailable"
           try {

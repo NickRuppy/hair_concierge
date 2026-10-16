@@ -14,6 +14,7 @@ import { InfoTip } from "@/components/ui/info-tip"
 import { INFO_TIPS } from "@/lib/help/info-tips"
 import { getLegacyQuizOptionLayout, getLegacyQuizOptionVisual } from "./legacy-quiz-visuals"
 import { QuizMobileBottomAction, QuizMobileBottomClearance } from "./quiz-mobile-bottom-action"
+import { useQuizDelayedAction } from "./use-quiz-delayed-action"
 import { useQuizBrowserBack } from "./quiz-browser-history"
 import {
   useQuizFunnelPackageKey,
@@ -38,7 +39,7 @@ interface QuizQuestionProps {
 }
 
 export function QuizQuestion({ question }: QuizQuestionProps) {
-  const { answers, setAnswer, goNext } = useQuizStore()
+  const { answers, setAnswer, goNext, commitAnswersAndAdvance } = useQuizStore()
   const requestBack = useQuizBrowserBack()
   const funnelPackageKey = useQuizFunnelPackageKey()
   const scannerFunnelRefinementEnabled = useScannerFunnelRefinementEnabled()
@@ -54,19 +55,15 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
         ? currentValue
         : "",
   )
-  const [advancing, setAdvancing] = useState(false)
+  const { pending: advancing, schedule } = useQuizDelayedAction()
 
   const handleSingleSelect = useCallback(
     (value: string) => {
-      if (advancing) return
+      if (!schedule(goNext, AUTO_ADVANCE_MS)) return
       setLocalSelection(value)
       setAnswer(answerKey, value)
-      setAdvancing(true)
-      setTimeout(() => {
-        goNext()
-      }, AUTO_ADVANCE_MS)
     },
-    [answerKey, setAnswer, goNext, advancing],
+    [answerKey, setAnswer, goNext, schedule],
   )
 
   const handleMultiSelect = useCallback(
@@ -87,8 +84,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
   )
 
   const handleMultiContinue = () => {
-    setAnswer(answerKey, localSelection as string[])
-    goNext()
+    commitAnswersAndAdvance({ [answerKey]: localSelection as string[] })
   }
 
   const isSelected = (value: string) => {
