@@ -1,0 +1,365 @@
+{
+  "receipts": [
+    {
+      "neutral_id": "R01",
+      "rank": 5,
+      "raw_token": "ZEA MAYS GERM OIL / CORN GERM OIL",
+      "canonical_name": "ZEA MAYS GERM OIL",
+      "kind": "source_translation_label",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://www.kerastase.de/produktlinien/produktart/ole-seren/nach-haartyp-filtern/widerspenstiges-haar/l-huile-originale-nachfullbar/KER_00303.html"
+    },
+    {
+      "neutral_id": "R01",
+      "rank": 19,
+      "raw_token": "PARFUM / FRAGRANCE",
+      "canonical_name": "PARFUM",
+      "kind": "source_translation_label",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://www.kerastase.de/produktlinien/produktart/ole-seren/nach-haartyp-filtern/widerspenstiges-haar/l-huile-originale-nachfullbar/KER_00303.html"
+    },
+    {
+      "neutral_id": "R03",
+      "rank": 17,
+      "raw_token": "LINALOOL.",
+      "canonical_name": "LINALOOL",
+      "kind": "terminal_punctuation_removal",
+      "authority_url": "https://www.notino.de/k18/molecular-repair-hair-oil-pflegendes-trockenoel-fuer-beschaedigtes-und-bruechiges-haar/p-16220382/",
+      "limit": "Explicit terminal list punctuation only; unchanged prior formula names."
+    },
+    {
+      "neutral_id": "R07",
+      "rank": 12,
+      "raw_token": "Alpha-Isomethyl Ionone.",
+      "canonical_name": "ALPHA-ISOMETHYL IONONE",
+      "kind": "terminal_punctuation_removal",
+      "authority_url": "https://www.wella.com/professional/de-DE/products/haarpflege/oil-reflections/oil-reflections-luminous-smoothing-oil",
+      "limit": "Explicit terminal list punctuation only; unchanged prior formula names."
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 3,
+      "raw_token": "BRASSICA OLERACEA ITALICA (BROCCOLI) SEED OIL*",
+      "canonical_name": "BRASSICA OLERACEA ITALICA (BROCCOLI) SEED OIL",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 7,
+      "raw_token": "PARFUM (FRAGRANCE)**",
+      "canonical_name": "PARFUM (FRAGRANCE)",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 9,
+      "raw_token": "CITRUS AURANTIUM PEEL OIL**",
+      "canonical_name": "CITRUS AURANTIUM PEEL OIL",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 10,
+      "raw_token": "LIMONENE**",
+      "canonical_name": "LIMONENE",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 12,
+      "raw_token": "ECLIPTA ALBA LEAF EXTRACT*",
+      "canonical_name": "ECLIPTA ALBA LEAF EXTRACT",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 14,
+      "raw_token": "CENTELLA ASIATICA LEAF EXTRACT*",
+      "canonical_name": "CENTELLA ASIATICA LEAF EXTRACT",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 15,
+      "raw_token": "LAVANDULA OIL/ EXTRACT**",
+      "canonical_name": "LAVANDULA OIL/ EXTRACT",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 16,
+      "raw_token": "EUCALYPTUS GLOBULUS OIL**",
+      "canonical_name": "EUCALYPTUS GLOBULUS OIL",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 17,
+      "raw_token": "AZADIRACHTA INDICA LEAF EXTRACT*",
+      "canonical_name": "AZADIRACHTA INDICA LEAF EXTRACT",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 18,
+      "raw_token": "EMBLICA OFFICINALIS FRUIT EXTRACT*",
+      "canonical_name": "EMBLICA OFFICINALIS FRUIT EXTRACT",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 19,
+      "raw_token": "LAWSONIA INERMIS (HENNA) LEAF EXTRACT*",
+      "canonical_name": "LAWSONIA INERMIS (HENNA) LEAF EXTRACT",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 20,
+      "raw_token": "PINENE**",
+      "canonical_name": "PINENE",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 21,
+      "raw_token": "LINALOOL**",
+      "canonical_name": "LINALOOL",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 22,
+      "raw_token": "CAMPHOR**",
+      "canonical_name": "CAMPHOR",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 23,
+      "raw_token": "LINALYL ACETATE**",
+      "canonical_name": "LINALYL ACETATE",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 24,
+      "raw_token": "BETA-CARYOPHYLLENE**",
+      "canonical_name": "BETA-CARYOPHYLLENE",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 25,
+      "raw_token": "EUGENIA CARYOPHYLLUS (CLOVE) OIL**",
+      "canonical_name": "EUGENIA CARYOPHYLLUS (CLOVE) OIL",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 26,
+      "raw_token": "TERPINEOL**",
+      "canonical_name": "TERPINEOL",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 27,
+      "raw_token": "EUGENOL**",
+      "canonical_name": "EUGENOL",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 28,
+      "raw_token": "MENTHOL**",
+      "canonical_name": "MENTHOL",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 29,
+      "raw_token": "VANILLIN***",
+      "canonical_name": "VANILLIN",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 30,
+      "raw_token": "CITRAL**",
+      "canonical_name": "CITRAL",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 31,
+      "raw_token": "TERPINOLENE**",
+      "canonical_name": "TERPINOLENE",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R04",
+      "rank": 32,
+      "raw_token": "SANTALUM ALBUM (SANDALWOOD) OIL**",
+      "canonical_name": "SANTALUM ALBUM (SANDALWOOD) OIL",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://khadi.de/products/haare-haaroel-color-care"
+    },
+    {
+      "neutral_id": "R05",
+      "rank": 1,
+      "raw_token": "Ricinus communis seed oil* (organic Ricin carrier oil)",
+      "canonical_name": "RICINUS COMMUNIS SEED OIL",
+      "kind": "source_explanatory_annotation",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil"
+    },
+    {
+      "neutral_id": "R05",
+      "rank": 2,
+      "raw_token": "Olea europaea fruit oil* (organic Olive carrier oil)",
+      "canonical_name": "OLEA EUROPAEA FRUIT OIL",
+      "kind": "source_explanatory_annotation",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil"
+    },
+    {
+      "neutral_id": "R05",
+      "rank": 3,
+      "raw_token": "Cocos nucifera oil* (organic Coconut carrier oil)",
+      "canonical_name": "COCOS NUCIFERA OIL",
+      "kind": "source_explanatory_annotation",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil"
+    },
+    {
+      "neutral_id": "R05",
+      "rank": 4,
+      "raw_token": "Persea gratissima oil* (organic Avocado carrier oil)",
+      "canonical_name": "PERSEA GRATISSIMA OIL",
+      "kind": "source_explanatory_annotation",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil"
+    },
+    {
+      "neutral_id": "R05",
+      "rank": 5,
+      "raw_token": "Brassica nigra seed oil* (organic Mustard carrier oil)",
+      "canonical_name": "BRASSICA NIGRA SEED OIL",
+      "kind": "source_explanatory_annotation",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil"
+    },
+    {
+      "neutral_id": "R05",
+      "rank": 6,
+      "raw_token": "Simmondsia chinensis seed oil* (organic Jojoba plant oil)",
+      "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+      "kind": "source_explanatory_annotation",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil"
+    },
+    {
+      "neutral_id": "R05",
+      "rank": 7,
+      "raw_token": "Brassica oleracea italica seed oil* (organic Broccoli plant oil)",
+      "canonical_name": "BRASSICA OLERACEA ITALICA SEED OIL",
+      "kind": "source_explanatory_annotation",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil"
+    },
+    {
+      "neutral_id": "R05",
+      "rank": 8,
+      "raw_token": "Emblica officinalis fruit powder* (organic Amla powder)",
+      "canonical_name": "EMBLICA OFFICINALIS FRUIT POWDER",
+      "kind": "source_explanatory_annotation",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil"
+    },
+    {
+      "neutral_id": "R05",
+      "rank": 9,
+      "raw_token": "Tocopherol (vitamin E)",
+      "canonical_name": "TOCOPHEROL",
+      "kind": "source_explanatory_annotation",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil"
+    },
+    {
+      "neutral_id": "R05",
+      "rank": 10,
+      "raw_token": "Helianthus annuus seed oil (Sunflower plant oil, tocopherol carrier oil)",
+      "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+      "kind": "source_explanatory_annotation",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil"
+    },
+    {
+      "neutral_id": "R06",
+      "rank": 2,
+      "raw_token": "Argania Spinosa (Argan) Kernel Oil*",
+      "canonical_name": "ARGANIA SPINOSA (ARGAN) KERNEL OIL",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://www.evolvebeauty.com/products/weightless-hair-serum"
+    },
+    {
+      "neutral_id": "R06",
+      "rank": 3,
+      "raw_token": "Adansonia Digitata (Baobab) Seed Oil*",
+      "canonical_name": "ADANSONIA DIGITATA (BAOBAB) SEED OIL",
+      "kind": "source_footnote_removal",
+      "limit": "Display-only removal of this exact maker annotation/footnote/translation. No plant-part or derivative inference.",
+      "authority_url": "https://www.evolvebeauty.com/products/weightless-hair-serum"
+    }
+  ],
+  "limits": "Source-specific display changes only; no generic botanical part, parenthetical or chemical repair."
+}

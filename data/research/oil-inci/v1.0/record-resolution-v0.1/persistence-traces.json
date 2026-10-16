@@ -1,0 +1,237 @@
+{
+  "version": "oil-record-resolution-persistence-traces-v0.1",
+  "run_id": "oil-record-resolution-v0.1",
+  "records": [
+    {
+      "case_id": "O04",
+      "product_key": "oil-persistence-04",
+      "trace": {
+        "case_id": "O04",
+        "persistence_potential": "moderate",
+        "reason": "The complete declaration is intact coconut oil: retained application supports an ordinary lipid conditioning coat, with no declared gum, adherent polymer or combined structuring route. That positive lipid-coating reading supports moderate without importing penetration or washout assumptions.",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "COCOS NUCIFERA FRUIT OIL"
+          }
+        ],
+        "considered_ranks": [
+          1
+        ]
+      }
+    },
+    {
+      "case_id": "O18",
+      "product_key": "oil-persistence-18",
+      "trace": {
+        "case_id": "O18",
+        "persistence_potential": "moderate",
+        "reason": "The exact intact oils, including fluid jojoba, provide a retained mixed-lipid coat. The amla fruit powder has no assessed film function and tocopherol is an antioxidant, so neither substantiates a cohesive conditioning network; ordinary lipid retention is the best whole-declaration reading.",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "RICINUS COMMUNIS SEED OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "OLEA EUROPAEA FRUIT OIL"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "COCOS NUCIFERA OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "PERSEA GRATISSIMA OIL"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "BRASSICA NIGRA SEED OIL"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "BRASSICA OLERACEA ITALICA SEED OIL"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "EMBLICA OFFICINALIS FRUIT POWDER"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "TOCOPHEROL"
+          },
+          {
+            "rank": 10,
+            "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+          }
+        ],
+        "considered_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    },
+    {
+      "case_id": "O19",
+      "product_key": "oil-persistence-19",
+      "trace": {
+        "case_id": "O19",
+        "persistence_potential": "moderate",
+        "reason": "Isoamyl laurate with argan, baobab and coconut oils supports an ordinary retained emollient layer. The fragrance, flower extract and exact aromatic preparations do not establish a gum/adherent conditioning route; their unassessed contributions remain unquantified rather than being used to erase or promote the lipid coat.",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ISOAMYL LAURATE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "ADANSONIA DIGITATA (BAOBAB) SEED OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "COCOS NUCIFERA OIL"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "PARFUM (NATURALLY DERIVED FRAGRANCE)"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "GARDENIA TAHITENSIS FLOWER EXTRACT"
+          },
+          {
+            "rank": 14,
+            "canonical_name": "VANILLIN"
+          },
+          {
+            "rank": 15,
+            "canonical_name": "CITRUS AURANTIUM PEEL OIL"
+          },
+          {
+            "rank": 16,
+            "canonical_name": "CITRUS AURANTIUM BERGAMIA PEEL OIL"
+          },
+          {
+            "rank": 17,
+            "canonical_name": "CITRUS LIMON PEEL OIL"
+          },
+          {
+            "rank": 18,
+            "canonical_name": "MENTHA PIPERITA OIL"
+          },
+          {
+            "rank": 19,
+            "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL"
+          },
+          {
+            "rank": 20,
+            "canonical_name": "POGOSTEMON CABLIN OIL"
+          },
+          {
+            "rank": 21,
+            "canonical_name": "GERANYL ACETATE"
+          }
+        ],
+        "considered_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      }
+    },
+    {
+      "case_id": "H04",
+      "product_key": "oil-holdout-h04",
+      "trace": {
+        "case_id": "H04",
+        "reason": "Within the already admitted retained-fibre context, the recognized Mauritia fixed oil and the oil-declared preparation system favor ordinary retained lipid conditioning over either a dispersible remainder or a demonstrated cohesive polymer/structured-film architecture. This commitment makes an explicit preparation assumption; unresolved identities/functions are not treated as negligible and the weight reference does not set persistence.",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "CALENDULA OFFICINALIS FLOWER OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ALOE BARBADENSIS LEAF OIL"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "COCOS NUCIFERA (COCONUT) FRUIT OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "OENOCARPUS BATAUA (RAHUA UNGURAHUA) OIL"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "MAURITIA FLEXUOSA FRUIT OIL"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "PLUKENETIA VOLUBILIS (SACHA INCHI) SEED OIL"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "AROMA"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "GARDENIA JASMINOIDES (GARDENIA ENFLEURAGE) OIL"
+          }
+        ],
+        "considered_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+        "tipping_assumption": "Assume the unresolved oil preparations act collectively as ordinary lipid preparations in this retained application, rather than as a strongly structured adherent system or predominantly dispersible vehicle. This is the weakest-supported commitment and requires later preparation evidence, without silently rewriting the frozen value."
+      }
+    }
+  ]
+}

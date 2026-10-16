@@ -1,0 +1,394 @@
+{
+  "run_id": "oil-targeted-source-group-a",
+  "captured_at": "2026-10-12",
+  "root_verification": "Root directly read each maker product page and complete formula/directions; preserves worker handback without labels.",
+  "candidate_attempts": [
+    {
+      "slot": "T01",
+      "candidate_order": 1,
+      "outcome": "source_complete_pending_identity_review",
+      "candidate": "Feuchtigkeitsspendendes Sonnenschutz-Haar-Öl"
+    },
+    {
+      "slot": "T02",
+      "candidate_order": 1,
+      "outcome": "source_complete_pending_identity_review",
+      "candidate": "Argan Oil of Morocco Weightless Healing Dry Oil"
+    },
+    {
+      "slot": "T06",
+      "candidate_order": 1,
+      "outcome": "source_complete_pending_identity_review",
+      "candidate": "Solaire Schützendes Sommeröl"
+    }
+  ],
+  "records": [
+    {
+      "case_id": "T01",
+      "source_key": "T01",
+      "registered_slot": "T01",
+      "identity": {
+        "brand": "NUXE",
+        "product": "Feuchtigkeitsspendendes Sonnenschutz-Haar-Öl",
+        "market": "DE maker",
+        "size": "100 ml",
+        "identifier_if_verified": null
+      },
+      "source_binding": {
+        "primary_url": "https://de.nuxe.com/products/feuchtigkeitsspendendes-sonnenschutz-haar-l",
+        "reviewed_at": "2026-10-12",
+        "source_type": "maker product page",
+        "exact_identity_basis": "Current exact named market maker page and size; no batch verification."
+      },
+      "raw_inci": "AQUA/WATER, DICAPRYLYL CARBONATE, ALCOHOL, DIBUTYL ADIPATE, DICAPRYLYL ETHER, BRASSICA CAMPESTRIS (RAPESEED) SEED OIL, COCO-CAPRYLATE/CAPRATE, ETHYLHEXYL TRIAZONE, DIETHYLAMINO HYDROXYBENZOYL HEXYL BENZOATE, PARFUM/FRAGRANCE, SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL, SODIUM CHLORIDE, COCOS NUCIFERA (COCONUT) OIL, PANTHENOL, FRUCTOOLIGOSACCHARIDES, TOCOPHEROL, INULIN, CITRIC ACID, PANTOLACTONE, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, CITRUS AURANTIUM PEEL OIL, LINALYL ACETATE, LIMONENE, LINALOOL, CITRONELLOL, DIMETHYL PHENETHYL ACETATE, GERANIOL, PELARGONIUM GRAVEOLENS FLOWER OIL, ISOEUGENYL ACETATE",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "AQUA/WATER"
+        },
+        {
+          "rank": 2,
+          "raw_name": "DICAPRYLYL CARBONATE"
+        },
+        {
+          "rank": 3,
+          "raw_name": "ALCOHOL"
+        },
+        {
+          "rank": 4,
+          "raw_name": "DIBUTYL ADIPATE"
+        },
+        {
+          "rank": 5,
+          "raw_name": "DICAPRYLYL ETHER"
+        },
+        {
+          "rank": 6,
+          "raw_name": "BRASSICA CAMPESTRIS (RAPESEED) SEED OIL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "COCO-CAPRYLATE/CAPRATE"
+        },
+        {
+          "rank": 8,
+          "raw_name": "ETHYLHEXYL TRIAZONE"
+        },
+        {
+          "rank": 9,
+          "raw_name": "DIETHYLAMINO HYDROXYBENZOYL HEXYL BENZOATE"
+        },
+        {
+          "rank": 10,
+          "raw_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 11,
+          "raw_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+        },
+        {
+          "rank": 12,
+          "raw_name": "SODIUM CHLORIDE"
+        },
+        {
+          "rank": 13,
+          "raw_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 14,
+          "raw_name": "PANTHENOL"
+        },
+        {
+          "rank": 15,
+          "raw_name": "FRUCTOOLIGOSACCHARIDES"
+        },
+        {
+          "rank": 16,
+          "raw_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 17,
+          "raw_name": "INULIN"
+        },
+        {
+          "rank": 18,
+          "raw_name": "CITRIC ACID"
+        },
+        {
+          "rank": 19,
+          "raw_name": "PANTOLACTONE"
+        },
+        {
+          "rank": 20,
+          "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 21,
+          "raw_name": "CITRUS AURANTIUM PEEL OIL"
+        },
+        {
+          "rank": 22,
+          "raw_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 23,
+          "raw_name": "LIMONENE"
+        },
+        {
+          "rank": 24,
+          "raw_name": "LINALOOL"
+        },
+        {
+          "rank": 25,
+          "raw_name": "CITRONELLOL"
+        },
+        {
+          "rank": 26,
+          "raw_name": "DIMETHYL PHENETHYL ACETATE"
+        },
+        {
+          "rank": 27,
+          "raw_name": "GERANIOL"
+        },
+        {
+          "rank": 28,
+          "raw_name": "PELARGONIUM GRAVEOLENS FLOWER OIL"
+        },
+        {
+          "rank": 29,
+          "raw_name": "ISOEUGENYL ACETATE"
+        }
+      ],
+      "retained_hair_fibre_directions": {
+        "paraphrase": "Shake before use; spray from approximately 20 cm onto dry or damp hair; before/while swimming and sun exposure; reapply every two hours and after swimming. Not face/body sun protection."
+      },
+      "package_mechanism": {
+        "observed": "spray",
+        "basis": "Maker text explicitly describes spray/misting."
+      },
+      "named_oil_marketing_names": [
+        {
+          "name": "Bio-Kokosnussöl"
+        },
+        {
+          "name": "Jojobaöl"
+        }
+      ],
+      "claim_evidence": {
+        "heat": {
+          "accepted_explicit": false,
+          "negative_basis": "No explicit heat protection claim in reviewed maker description, benefits or directions."
+        },
+        "hair_uv": {
+          "accepted_explicit": true,
+          "basis": "Explicit protection of hair from UV; UV filters also declared."
+        }
+      },
+      "source_limits": [
+        "Current online formula only; packaging may differ.",
+        "N4803/B is formula code, excluded from ingredients."
+      ],
+      "oil_category_evidence": "Maker names hair oil, with retained hair-fibre use."
+    },
+    {
+      "case_id": "T02",
+      "source_key": "T02",
+      "registered_slot": "T02",
+      "identity": {
+        "brand": "OGX",
+        "product": "Argan Oil of Morocco Weightless Healing Dry Oil",
+        "market": "US maker",
+        "size": "4 fl oz",
+        "identifier_if_verified": null
+      },
+      "source_binding": {
+        "primary_url": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-weightless-healing-dry-oil?phrase=2024",
+        "reviewed_at": "2026-10-12",
+        "source_type": "maker product page",
+        "exact_identity_basis": "Current exact named market maker page and size; no batch verification."
+      },
+      "raw_inci": "Dimethicone, Isododecane, C12-15 Alkyl Benzoate, Argania Kernel Oil, Phenyl Trimethicone, Fragrance (Parfum)",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Dimethicone"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Isododecane"
+        },
+        {
+          "rank": 3,
+          "raw_name": "C12-15 Alkyl Benzoate"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Argania Kernel Oil"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Phenyl Trimethicone"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Fragrance (Parfum)"
+        }
+      ],
+      "retained_hair_fibre_directions": {
+        "paraphrase": "Finish style by misting all over for shine/frizz control; retained by styling context. No explicit damp/dry stage."
+      },
+      "package_mechanism": {
+        "observed": "spray",
+        "basis": "Maker text explicitly describes spray/misting."
+      },
+      "named_oil_marketing_names": [
+        {
+          "name": "Moroccan argan oil"
+        }
+      ],
+      "claim_evidence": {
+        "heat": {
+          "accepted_explicit": false,
+          "negative_basis": "No explicit heat protection claim in reviewed maker description, benefits or directions."
+        },
+        "hair_uv": {
+          "accepted_explicit": false,
+          "basis": "No explicit hair UV claim in reviewed maker description, benefits or directions."
+        }
+      },
+      "source_limits": [
+        "Current online formula only; packaging may differ.",
+        "Different Arabia OGX nine-item formula excluded; Argania Kernel Oil literal species-incomplete token preserved."
+      ],
+      "oil_category_evidence": "Maker names hair oil, with retained hair-fibre use."
+    },
+    {
+      "case_id": "T06",
+      "source_key": "T06",
+      "registered_slot": "T06",
+      "identity": {
+        "brand": "René Furterer",
+        "product": "Solaire Schützendes Sommeröl",
+        "market": "DE-CH maker",
+        "size": "100 ml",
+        "identifier_if_verified": null
+      },
+      "source_binding": {
+        "primary_url": "https://www.renefurterer.com/de-ch/p/solaire-solaire-schuetzendes-sommeroel-3282770038453-e9ccef5d",
+        "reviewed_at": "2026-10-12",
+        "source_type": "maker product page",
+        "exact_identity_basis": "Current exact named market maker page and size; no batch verification."
+      },
+      "raw_inci": "ISODODECANE, ALCOHOL DENAT., C12-15 ALKYL BENZOATE, HEXYLENE GLYCOL, ETHYLHEXYL METHOXYCINNAMATE, QUATERNIUM-95, SESAMUM INDICUM (SESAME) SEED OIL (SESAMUM INDICUM SEED OIL), FRAGRANCE (PARFUM), RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL), TOCOPHERYL ACETATE, AMYL SALICYLATE, BENZYL SALICYLATE, BHT, CANANGA ODORATA FLOWER OIL (CANANGA ODORATA OIL/EXTRACT), GERANYL ACETATE, PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE, PROPANEDIOL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL, VANILLIN",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "ISODODECANE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "ALCOHOL DENAT."
+        },
+        {
+          "rank": 3,
+          "raw_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "HEXYLENE GLYCOL"
+        },
+        {
+          "rank": 5,
+          "raw_name": "ETHYLHEXYL METHOXYCINNAMATE"
+        },
+        {
+          "rank": 6,
+          "raw_name": "QUATERNIUM-95"
+        },
+        {
+          "rank": 7,
+          "raw_name": "SESAMUM INDICUM (SESAME) SEED OIL (SESAMUM INDICUM SEED OIL)"
+        },
+        {
+          "rank": 8,
+          "raw_name": "FRAGRANCE (PARFUM)"
+        },
+        {
+          "rank": 9,
+          "raw_name": "RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL)"
+        },
+        {
+          "rank": 10,
+          "raw_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 11,
+          "raw_name": "AMYL SALICYLATE"
+        },
+        {
+          "rank": 12,
+          "raw_name": "BENZYL SALICYLATE"
+        },
+        {
+          "rank": 13,
+          "raw_name": "BHT"
+        },
+        {
+          "rank": 14,
+          "raw_name": "CANANGA ODORATA FLOWER OIL (CANANGA ODORATA OIL/EXTRACT)"
+        },
+        {
+          "rank": 15,
+          "raw_name": "GERANYL ACETATE"
+        },
+        {
+          "rank": 16,
+          "raw_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE"
+        },
+        {
+          "rank": 17,
+          "raw_name": "PROPANEDIOL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 19,
+          "raw_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL"
+        },
+        {
+          "rank": 20,
+          "raw_name": "VANILLIN"
+        }
+      ],
+      "retained_hair_fibre_directions": {
+        "paraphrase": "Sun-exposed hair; product may remain in hair. Dose, wet/dry stage and duration unestablished."
+      },
+      "package_mechanism": {
+        "observed": "spray",
+        "basis": "Maker text explicitly describes spray/misting."
+      },
+      "named_oil_marketing_names": [
+        {
+          "name": "Sesamöl"
+        }
+      ],
+      "claim_evidence": {
+        "heat": {
+          "accepted_explicit": false,
+          "negative_basis": "No explicit heat protection claim in reviewed maker description, benefits or directions."
+        },
+        "hair_uv": {
+          "accepted_explicit": true,
+          "basis": "Explicit protection of hair from UV; UV filters also declared."
+        }
+      },
+      "source_limits": [
+        "Current online formula only; packaging may differ.",
+        "KPF marketing index is not SPF or measured normal-dose protection."
+      ],
+      "oil_category_evidence": "Maker names hair oil, with retained hair-fibre use."
+    }
+  ]
+}

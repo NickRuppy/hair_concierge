@@ -1,0 +1,120 @@
+{
+  "lane_id": "a",
+  "files_read": [
+    "stage2-packet.json",
+    "derivation-v0.2/lane-a/blind-records.json",
+    "derivation-v0.2/method.md",
+    "derivation-v0.2/function-dictionary.json"
+  ],
+  "input_hashes": {
+    "stage2-packet.json": "95e097a338e49fbc168e82ce31be40c7b20f1dd1448f0ca3e66907484a8ffc4c",
+    "derivation-v0.2/lane-a/blind-records.json": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+    "derivation-v0.2/method.md": "c142a41df6dae960b6758d5d31922db7c4253b13e816a2fb323a4861162a5aff",
+    "derivation-v0.2/function-dictionary.json": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf"
+  },
+  "completed_ids": [
+    "O09",
+    "O10",
+    "O11",
+    "O12",
+    "O13",
+    "O14",
+    "O16",
+    "O17",
+    "O20",
+    "O21",
+    "O22",
+    "O23",
+    "O24",
+    "O25",
+    "O26",
+    "O27",
+    "O28"
+  ],
+  "blind_preserved": {
+    "attestation": "Sealed blind document consumed read-only and preserved exactly in memory; no formula field is emitted or changed by these source-only records. Only the two assigned Stage 2 output paths are written.",
+    "path": "derivation-v0.2/lane-a/blind-records.json",
+    "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+    "formula_fields_changed": 0
+  },
+  "recognized_formulas": [
+    {
+      "case_id": "O09",
+      "disclosure": "Prior blind-stage commercial formula familiarity was disclosed. The authorized Stage 2 packet now reveals identity; this is a development replay, not unseen classification."
+    },
+    {
+      "case_id": "O11",
+      "disclosure": "Prior blind-stage commercial formula familiarity was disclosed. The authorized Stage 2 packet now reveals identity; no identity lookup or formula revision followed."
+    }
+  ],
+  "access_incidents": [],
+  "issues": [
+    {
+      "case_id": "O09",
+      "field": "named_oils.nuxe_tsubaki",
+      "reason": "Japanese camellia named Tsubaki; exact species correspondence needs independent maker identity binding for final prominence. Candidate correspondence retained from root supplement, not an established species alias."
+    },
+    {
+      "case_id": "O09",
+      "field": "named_oils.nuxe_camellia",
+      "reason": "Maker separately names Tsubaki/Kamelie; correspondence remains explicit mapping limit. Candidate correspondence retained from root supplement, not an established species alias."
+    },
+    {
+      "case_id": "O09",
+      "field": "dispenser",
+      "reason": "The outlet or operating mechanism is not established for this exact selected package; no alternative mechanism is ranked from a hidden outlet."
+    },
+    {
+      "case_id": "O11",
+      "field": "named_oils.rosemary_mint",
+      "reason": "Confirmed matched ingredients are auxiliary, but no qualified auxiliary suffix covers them. The trace rule therefore does not apply, and no affirmative principal/secondary role supports leading or supporting."
+    },
+    {
+      "case_id": "O11",
+      "field": "dispenser",
+      "reason": "The outlet or operating mechanism is not established for this exact selected package; no alternative mechanism is ranked from a hidden outlet."
+    },
+    {
+      "case_id": "O14",
+      "field": "dispenser",
+      "reason": "The outlet or operating mechanism is not established for this exact selected package; no alternative mechanism is ranked from a hidden outlet."
+    },
+    {
+      "case_id": "O16",
+      "field": "named_oils.rosemary_oil",
+      "reason": "Confirmed matched ingredients are auxiliary, but no qualified auxiliary suffix covers them. The trace rule therefore does not apply, and no affirmative principal/secondary role supports leading or supporting."
+    },
+    {
+      "case_id": "O16",
+      "field": "named_oils.mint_oil",
+      "reason": "Confirmed matched ingredients are auxiliary, but no qualified auxiliary suffix covers them. The trace rule therefore does not apply, and no affirmative principal/secondary role supports leading or supporting."
+    },
+    {
+      "case_id": "O20",
+      "field": "named_oils.rose_oil",
+      "reason": "The confirmed hero maps to multiple ingredients with conflicting or unresolved sealed roles (secondary, unresolved). The combined hero cannot receive one prominence value without revising formula truth."
+    },
+    {
+      "case_id": "O24",
+      "field": "dispenser",
+      "reason": "The outlet or operating mechanism is not established for this exact selected package; no alternative mechanism is ranked from a hidden outlet."
+    },
+    {
+      "case_id": "O25",
+      "field": "named_oils.roucou_oil",
+      "reason": "Maker identifies Achiote seed-derived Roucou oil, but INCI declares BIXA ORELLANA SEED EXTRACT. Oil/extract equivalence not established; do not substitute MAURITIA FLEXUOSA FRUIT OIL."
+    }
+  ],
+  "limitations": [
+    "Only the four declared files were read. All 17 source records, global source concerns and 34 coherent directions were reviewed. The unchanged method and complete corrected dictionary retain the hashes already reviewed in the preceding blind stage; no referenced URL, image, source-staging file, corpus file or peer output was opened.",
+    "The predeclared heroes were preserved exactly, including reviewed empty arrays. Non-oil promotional features were not converted into oil heroes. Candidate identity matches appear only as evidence with matched_ranks empty until the maker-name/material correspondence is established; unknown is not absent.",
+    "Prominence consumes the sealed principal/secondary/auxiliary/unresolved ledger. Auxiliary roles outside a qualified suffix stay unknown. Combined Rose oil is unknown because its mapped ranks have secondary and unresolved roles. Trace estimates retain both independent suffix markers in property evidence and reasoning.",
+    "O20 pump classification uses the packet’s accepted exact-GTIN secondary explicit mechanism evidence, with moderate confidence and its primary-visual limitation retained. O09/O11/O14/O24 selected-package mechanisms remain unknown.",
+    "Heat follows accepted exact-product maker/pack claims alone. UV requires accepted hair-UV claim AND an exact recognized filter. O17/O21 accepted UV claims lack recognized filters; O25/O26 filter presence lacks accepted positive claims. These are evidence-gate booleans, not measured efficacy.",
+    "All 34 directions are copied without mixing doses or stages. O27 retains all five source routes, including overnight next-day washing and a distinct scalp-only instruction with unestablished removal. O22 dry-ends use establishes dry_finish only, without invented damp/general retained permission.",
+    "Current selected direction arrays govern; historical selected-context summaries and excluded conditioner-mixture tips are not promoted into additional directions. Historical fallback scenarios O12/O14 retain their own explicit source IDs. O10 dry finishing does not inherit the towel-dried 1–3-pump dose.",
+    "Source packet identity/formula admission is accepted within its published market/size scope; no physical batch, clinical efficacy, new alias, fit, persistence or other formula conclusion is added. Scalar use_evidence confidence refers to source-supported role classification; unestablished dose/time/removal fields remain explicit.",
+    "O13 general source cautions about temporary tint, eyes and children remain source-packet limitations; the scenario restriction text is preserved exactly rather than silently rewriting the supplied directions.",
+    "Original and corrected blind judgments remain development evidence with disclosed prior-work familiarity; source reveal cannot upgrade that evidence to unseen validation."
+  ]
+}

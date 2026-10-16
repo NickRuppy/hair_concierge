@@ -1,0 +1,512 @@
+{
+  "run_id": "oil-full-profile-holdout-v0.2",
+  "records": [
+    {
+      "case_id": "H01",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "ISODODECANE",
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "DIISOPROPYL ADIPATE",
+          "canonical_name": "DIISOPROPYL ADIPATE"
+        },
+        {
+          "rank": 3,
+          "raw_name": "ISODECYL NEOPENTANOATE",
+          "canonical_name": "ISODECYL NEOPENTANOATE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "DICAPRYLYL CARBONATE",
+          "canonical_name": "DICAPRYLYL CARBONATE"
+        },
+        {
+          "rank": 5,
+          "raw_name": "COCO-CAPRYLATE/CAPRATE",
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE"
+        },
+        {
+          "rank": 6,
+          "raw_name": "C12-15 ALKYL BENZOATE",
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 7,
+          "raw_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL (CARTHAMUS TINCTORIUS SEED OIL)",
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 8,
+          "raw_name": "PERSEA GRATISSIMA (AVOCADO) OIL (PERSEA GRATISSIMA OIL)",
+          "canonical_name": "PERSEA GRATISSIMA (AVOCADO) OIL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL (PRUNUS AMYGDALUS DULCIS OIL)",
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 10,
+          "raw_name": "RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL)",
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+        },
+        {
+          "rank": 11,
+          "raw_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL (SIMMONDSIA CHINENSIS SEED OIL)",
+          "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+        },
+        {
+          "rank": 12,
+          "raw_name": "BHT",
+          "canonical_name": "BHT"
+        },
+        {
+          "rank": 13,
+          "raw_name": "FRAGRANCE (PARFUM)",
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        },
+        {
+          "rank": 14,
+          "raw_name": "GERANIOL",
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 15,
+          "raw_name": "GERANYL ACETATE",
+          "canonical_name": "GERANYL ACETATE"
+        },
+        {
+          "rank": 16,
+          "raw_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL (HELIANTHUS ANNUUS SEED OIL)",
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 17,
+          "raw_name": "HEXADECANOLACTONE",
+          "canonical_name": "HEXADECANOLACTONE"
+        },
+        {
+          "rank": 18,
+          "raw_name": "HEXAMETHYLINDANOPYRAN",
+          "canonical_name": "HEXAMETHYLINDANOPYRAN"
+        },
+        {
+          "rank": 19,
+          "raw_name": "ISOEUGENYL ACETATE",
+          "canonical_name": "ISOEUGENYL ACETATE"
+        },
+        {
+          "rank": 20,
+          "raw_name": "LINALYL ACETATE",
+          "canonical_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 21,
+          "raw_name": "POGOSTEMON CABLIN OIL (POGOSTEMON CABLIN LEAF OIL)",
+          "canonical_name": "POGOSTEMON CABLIN OIL"
+        },
+        {
+          "rank": 22,
+          "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 23,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL"
+        }
+      ],
+      "contextual_declarations": [],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment"
+    },
+    {
+      "case_id": "H02",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "DIMETHICONE",
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "DIMETHICONOL",
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "raw_name": "ALCOHOL DENAT.",
+          "canonical_name": "ALCOHOL DENAT."
+        },
+        {
+          "rank": 4,
+          "raw_name": "PARFUM/FRAGRANCE",
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 5,
+          "raw_name": "TOCOPHERYL ACETATE",
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 6,
+          "raw_name": "GLYCERYL OLEATE",
+          "canonical_name": "GLYCERYL OLEATE"
+        },
+        {
+          "rank": 7,
+          "raw_name": "MALIC ACID",
+          "canonical_name": "MALIC ACID"
+        },
+        {
+          "rank": 8,
+          "raw_name": "LIMONENE",
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 9,
+          "raw_name": "LINALOOL",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 10,
+          "raw_name": "OLEIC ACID",
+          "canonical_name": "OLEIC ACID"
+        },
+        {
+          "rank": 11,
+          "raw_name": "SQUALANE",
+          "canonical_name": "SQUALANE"
+        },
+        {
+          "rank": 12,
+          "raw_name": "LECITHIN",
+          "canonical_name": "LECITHIN"
+        },
+        {
+          "rank": 13,
+          "raw_name": "ASCORBYL PALMITATE",
+          "canonical_name": "ASCORBYL PALMITATE"
+        },
+        {
+          "rank": 14,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 15,
+          "raw_name": "HYDROGENATED PALM GLYCERIDES CITRATE",
+          "canonical_name": "HYDROGENATED PALM GLYCERIDES CITRATE"
+        }
+      ],
+      "contextual_declarations": [],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment"
+    },
+    {
+      "case_id": "H03",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "SQUALANE",
+          "canonical_name": "SQUALANE"
+        }
+      ],
+      "contextual_declarations": [],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment"
+    },
+    {
+      "case_id": "H04",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "ORGANIC CALENDULA OFFICINALIS FLOWER OIL",
+          "canonical_name": "CALENDULA OFFICINALIS FLOWER OIL"
+        },
+        {
+          "rank": 2,
+          "raw_name": "ORGANIC DECOLORIZED ALOE BARBADENSIS LEAF OIL",
+          "canonical_name": "ALOE BARBADENSIS LEAF OIL"
+        },
+        {
+          "rank": 3,
+          "raw_name": "ORGANIC COCOS NUCIFERA (COCONUT) FRUIT OIL",
+          "canonical_name": "COCOS NUCIFERA (COCONUT) FRUIT OIL"
+        },
+        {
+          "rank": 4,
+          "raw_name": "ORGANIC ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+        },
+        {
+          "rank": 5,
+          "raw_name": "OENOCARPUS BATAUA (RAHUA UNGURAHUA) OIL",
+          "canonical_name": "OENOCARPUS BATAUA (RAHUA UNGURAHUA) OIL"
+        },
+        {
+          "rank": 6,
+          "raw_name": "MAURITIA FLEXUOSA (MORETE) FRUIT OIL",
+          "canonical_name": "MAURITIA FLEXUOSA FRUIT OIL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "PLUKENETIA VOLUBILIS (SACHA INCHI) SEED OIL",
+          "canonical_name": "PLUKENETIA VOLUBILIS (SACHA INCHI) SEED OIL"
+        },
+        {
+          "rank": 8,
+          "raw_name": "AROMA",
+          "canonical_name": "AROMA"
+        },
+        {
+          "rank": 9,
+          "raw_name": "GARDENIA JASMINOIDES (GARDENIA ENFLEURAGE) OIL",
+          "canonical_name": "GARDENIA JASMINOIDES (GARDENIA ENFLEURAGE) OIL"
+        }
+      ],
+      "contextual_declarations": [],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment"
+    },
+    {
+      "case_id": "H05",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "ISODODECANE",
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "COCONUT ALKANES",
+          "canonical_name": "COCONUT ALKANES"
+        },
+        {
+          "rank": 3,
+          "raw_name": "DIMETHICONE",
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+          "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE"
+        },
+        {
+          "rank": 5,
+          "raw_name": "CRAMBE ABYSSINICA SEED OIL",
+          "canonical_name": "CRAMBE ABYSSINICA SEED OIL"
+        },
+        {
+          "rank": 6,
+          "raw_name": "COCO-CAPRYLATE/CAPRATE",
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE"
+        },
+        {
+          "rank": 7,
+          "raw_name": "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL",
+          "canonical_name": "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL"
+        },
+        {
+          "rank": 8,
+          "raw_name": "BUTYROSPERMUM PARKII (SHEA) BUTTER",
+          "canonical_name": "BUTYROSPERMUM PARKII BUTTER"
+        },
+        {
+          "rank": 9,
+          "raw_name": "ARGANIA SPINOSA KERNEL OIL",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 10,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 11,
+          "raw_name": "PARFUM/FRAGRANCE",
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 12,
+          "raw_name": "ORBIGNYA SPECIOSA KERNEL OIL",
+          "canonical_name": "ORBIGNYA SPECIOSA KERNEL OIL"
+        },
+        {
+          "rank": 13,
+          "raw_name": "POLYSILICONE-15",
+          "canonical_name": "POLYSILICONE-15"
+        },
+        {
+          "rank": 14,
+          "raw_name": "ASTROCARYUM MURUMURU SEED BUTTER",
+          "canonical_name": "ASTROCARYUM MURUMURU SEED BUTTER"
+        },
+        {
+          "rank": 15,
+          "raw_name": "CITRUS LIMON (LEMON) PEEL OIL",
+          "canonical_name": "CITRUS LIMON PEEL OIL"
+        },
+        {
+          "rank": 16,
+          "raw_name": "SANTALUM ALBUM (SANDALWOOD) WOOD EXTRACT",
+          "canonical_name": "SANTALUM ALBUM (SANDALWOOD) WOOD EXTRACT"
+        },
+        {
+          "rank": 17,
+          "raw_name": "OLEA EUROPAEA (OLIVE) FRUIT OIL",
+          "canonical_name": "OLEA EUROPAEA FRUIT OIL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "CITRULLUS LANATUS (WATERMELON) SEED OIL",
+          "canonical_name": "CITRULLUS LANATUS SEED OIL"
+        },
+        {
+          "rank": 19,
+          "raw_name": "RIBES NIGRUM (BLACK CURRANT) SEED OIL",
+          "canonical_name": "RIBES NIGRUM SEED OIL"
+        },
+        {
+          "rank": 20,
+          "raw_name": "JASMINUM OFFICINALE (JASMINE) OIL",
+          "canonical_name": "JASMINUM OFFICINALE (JASMINE) OIL"
+        },
+        {
+          "rank": 21,
+          "raw_name": "LEONTOPODIUM ALPINUM FLOWER/LEAF EXTRACT",
+          "canonical_name": "LEONTOPODIUM ALPINUM FLOWER/LEAF EXTRACT"
+        },
+        {
+          "rank": 22,
+          "raw_name": "LITCHI CHINENSIS FRUIT EXTRACT",
+          "canonical_name": "LITCHI CHINENSIS FRUIT EXTRACT"
+        },
+        {
+          "rank": 23,
+          "raw_name": "TOCOPHERYL ACETATE",
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 24,
+          "raw_name": "HEXYL CINNAMAL",
+          "canonical_name": "HEXYL CINNAMAL"
+        },
+        {
+          "rank": 25,
+          "raw_name": "LIMONENE",
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 26,
+          "raw_name": "LINALOOL",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 27,
+          "raw_name": "CITRAL",
+          "canonical_name": "CITRAL"
+        },
+        {
+          "rank": 28,
+          "raw_name": "HEXAMETHYLINDANOPYRAN",
+          "canonical_name": "HEXAMETHYLINDANOPYRAN"
+        },
+        {
+          "rank": 29,
+          "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 30,
+          "raw_name": "CITRUS AURANTIUM BERGAMIA (BERGAMOT) PEEL OIL",
+          "canonical_name": "CITRUS AURANTIUM BERGAMIA PEEL OIL"
+        }
+      ],
+      "contextual_declarations": [],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment"
+    },
+    {
+      "case_id": "H06",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "CYCLOPENTASILOXANE",
+          "canonical_name": "CYCLOPENTASILOXANE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "DIMETHICONOL",
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "raw_name": "DIMETHICONE",
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "DIMETHICONE/VINYL DIMETHICONE CROSSPOLYMER",
+          "canonical_name": "DIMETHICONE/VINYL DIMETHICONE CROSSPOLYMER"
+        },
+        {
+          "rank": 5,
+          "raw_name": "PARFUM/FRAGRANCE",
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 6,
+          "raw_name": "TOCOPHERYL ACETATE",
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 7,
+          "raw_name": "HEXYL CINNAMAL",
+          "canonical_name": "HEXYL CINNAMAL"
+        },
+        {
+          "rank": 8,
+          "raw_name": "LINALOOL",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "ALPHA-ISOMETHYL IONONE",
+          "canonical_name": "ALPHA-ISOMETHYL IONONE"
+        },
+        {
+          "rank": 10,
+          "raw_name": "COUMARIN",
+          "canonical_name": "COUMARIN"
+        },
+        {
+          "rank": 11,
+          "raw_name": "CAMELLIA OLEIFERA SEED OIL",
+          "canonical_name": "CAMELLIA OLEIFERA SEED OIL"
+        },
+        {
+          "rank": 12,
+          "raw_name": "LIMONENE",
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 13,
+          "raw_name": "CITRONELLOL",
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 14,
+          "raw_name": "FARNESOL",
+          "canonical_name": "FARNESOL"
+        },
+        {
+          "rank": 15,
+          "raw_name": "GERANIOL",
+          "canonical_name": "GERANIOL"
+        }
+      ],
+      "contextual_declarations": [],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment"
+    }
+  ]
+}

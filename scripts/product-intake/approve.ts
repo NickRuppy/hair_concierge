@@ -49,6 +49,15 @@ export async function approveSubmissionById(params: {
     return null
   }
 
+  if (submission.category === "oil") {
+    const { error } = await supabase.rpc("product_intake_oil_publication_preflight", {
+      p_submission_id: submission.id,
+      p_final_payload: validation.normalizedPayload.final,
+      p_spec_operations: validation.targetSpecOperations,
+    })
+    if (error) throw error
+  }
+
   const reviewedAt = new Date().toISOString()
   const dryRunPayload = {
     submission_id: submission.id,

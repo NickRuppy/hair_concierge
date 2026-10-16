@@ -1,0 +1,14 @@
+{
+  "inputs": {
+    "method.md": "d3574b9b59b9214ea2c47827e361707b8b69b003b586e1244e1ba8c0df48a726",
+    "blind-packet.json": "fe8f733abba22ae94767c6afee84fa0d416324d4233e89961da80d9bfbe2e9bb",
+    "function-dictionary.json": "4cb416b844706777e191a6b262dcb61b04498b222e30f1289cc07d16a1e224ad",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+  },
+  "case_ids": [
+    "T02"
+  ],
+  "frozen_before_labels": true,
+  "source_packet_sha256": "5b27d15d1537553c059149643645d3c5bb41e4b3707bdc3025049a3df072bdf1",
+  "reason": "Remove formula-role hint from exact ingredient note. Roles/functions/flags/priors unchanged; two fresh assessors see no previous decisions."
+}

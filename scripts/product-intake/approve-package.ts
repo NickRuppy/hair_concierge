@@ -1,3 +1,8 @@
+import {
+  extractOilPropertyScope,
+  oilReviewFingerprint,
+} from "../../packages/product-intake-core/src/oil-review-binding"
+import { validateProductIntakeApprovalPayload } from "@/lib/product-intake/category-validators"
 import { basename, resolve } from "node:path"
 import { readFile, realpath } from "node:fs/promises"
 import { isDeepStrictEqual } from "node:util"
@@ -242,6 +247,46 @@ export async function approveResearchPackage(params: {
   const pack = await readResearchPackage(params.packageDir)
   const supabase = deps.createSupabaseClient()
   const submission = await deps.loadSubmissionById(supabase, pack.submissionId)
+  async function verifyOilPackage() {
+    if (submission.category !== "oil") return
+    const incoming = researchedPayloadWithFinalImageMetadata(pack)
+    const current = submission.researched_payload as Record<string, unknown> | null
+    if (!current || typeof current !== "object" || Array.isArray(current))
+      throw new Error(
+        "Oil current payload is missing; export the current intake before publication",
+      )
+    const incomingBinding = (incoming.draft as Record<string, unknown> | undefined)
+      ?.oil_research_binding
+    const currentBinding = (current.draft as Record<string, unknown> | undefined)
+      ?.oil_research_binding
+    if (
+      !incomingBinding ||
+      typeof incomingBinding !== "object" ||
+      Array.isArray(incomingBinding) ||
+      !currentBinding ||
+      typeof currentBinding !== "object" ||
+      Array.isArray(currentBinding)
+    )
+      throw new Error("Oil current or package research binding is missing")
+    if (
+      oilReviewFingerprint(extractOilPropertyScope(incoming.final)) !==
+        oilReviewFingerprint(extractOilPropertyScope(current.final)) ||
+      oilReviewFingerprint(incomingBinding) !== oilReviewFingerprint(currentBinding)
+    ) {
+      throw new Error(
+        "Oil package is stale; rework and review the current intake before publication",
+      )
+    }
+    const validation = validateProductIntakeApprovalPayload(incoming)
+    if (!validation.ok) throw new Error("Oil package validation failed")
+    const { error } = await supabase.rpc("product_intake_oil_publication_preflight", {
+      p_submission_id: submission.id,
+      p_final_payload: validation.normalizedPayload.final,
+      p_spec_operations: validation.targetSpecOperations,
+    })
+    if (error) throw error
+  }
+
   const dryRun = buildApprovePackageDryRun({
     pack,
     submission,
@@ -250,6 +295,7 @@ export async function approveResearchPackage(params: {
   })
 
   if (!params.apply) {
+    await verifyOilPackage()
     return {
       ...dryRun,
       mode: "dry_run" as const,
@@ -314,6 +360,7 @@ export async function approveResearchPackage(params: {
     throw new Error(dryRun.image_finalization.reason)
   }
 
+  await verifyOilPackage()
   const authority = await loadReviewAuthorityPreflight(supabase, pack.submissionId)
   if (authority.publication) throw new Error("review_already_published_with_another_package")
   const decision = dryRun.image_finalization.decision

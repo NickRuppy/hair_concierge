@@ -1,0 +1,878 @@
+{
+  "scope": "Exact names and generic functions; not_assessed is never negligible. Source-specific botanical synonyms are reviewed only for this batch; no grade or finished-product transfer.",
+  "entries": [
+    {
+      "canonical_name": "CYCLOPENTASILOXANE",
+      "roles": [
+        "silicone_carrier",
+        "volatile_carrier"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN001",
+        "FN052"
+      ]
+    },
+    {
+      "canonical_name": "DIMETHICONOL",
+      "roles": [
+        "silicone_gum",
+        "conditioning_film"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN002"
+      ]
+    },
+    {
+      "canonical_name": "ISODODECANE",
+      "roles": [
+        "hydrocarbon_carrier",
+        "emollient"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN003"
+      ]
+    },
+    {
+      "canonical_name": "PARFUM",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN004"
+      ]
+    },
+    {
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN005",
+        "FN028",
+        "FN055",
+        "FN090"
+      ]
+    },
+    {
+      "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+      "roles": [
+        "recognized_uv_filter"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN006"
+      ]
+    },
+    {
+      "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN007"
+      ]
+    },
+    {
+      "canonical_name": "HEXYL CINNAMAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN008"
+      ]
+    },
+    {
+      "canonical_name": "HEXAMETHYLINDANOPYRAN",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN009"
+      ]
+    },
+    {
+      "canonical_name": "ACETYL CEDRENE",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN010"
+      ]
+    },
+    {
+      "canonical_name": "VANILLIN",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN011"
+      ]
+    },
+    {
+      "canonical_name": "LINALYL ACETATE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN012"
+      ]
+    },
+    {
+      "canonical_name": "COUMARIN",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN013"
+      ]
+    },
+    {
+      "canonical_name": "CITRONELLOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN014",
+        "FN043"
+      ]
+    },
+    {
+      "canonical_name": "LINALOOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN015",
+        "FN046",
+        "FN084",
+        "FN096"
+      ]
+    },
+    {
+      "canonical_name": "LIMONENE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN016",
+        "FN044"
+      ]
+    },
+    {
+      "canonical_name": "FUSANUS SPICATUS WOOD OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness.",
+      "source_ids": [
+        "FN017"
+      ]
+    },
+    {
+      "canonical_name": "CITRUS LIMON PEEL OIL",
+      "roles": [
+        "aromatic_auxiliary"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN018"
+      ]
+    },
+    {
+      "canonical_name": "PINENE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN019"
+      ]
+    },
+    {
+      "canonical_name": "SANTALOL",
+      "roles": [
+        "fragrance"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. Exact SANTALOL entry used; no separate ALPHA-SANTALOL alias inference.",
+      "source_ids": [
+        "FN020"
+      ]
+    },
+    {
+      "canonical_name": "CINNAMOMUM ZEYLANICUM BARK OIL",
+      "roles": [
+        "fragrance",
+        "tonic"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. Tonic is retained only as the database cosmetic function. No hair benefit, fixed-oil identity, emollient role or botanical prior inferred.",
+      "source_ids": [
+        "FN021"
+      ]
+    },
+    {
+      "canonical_name": "LAVANDULA OIL/EXTRACT",
+      "roles": [
+        "fragrance_group",
+        "botanical_preparation_unspecified"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN022"
+      ]
+    },
+    {
+      "canonical_name": "EUGENOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN023",
+        "FN051",
+        "FN097"
+      ]
+    },
+    {
+      "canonical_name": "FARNESOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN024",
+        "FN049"
+      ]
+    },
+    {
+      "canonical_name": "GERANIOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN025",
+        "FN045",
+        "FN099"
+      ]
+    },
+    {
+      "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN026"
+      ]
+    },
+    {
+      "canonical_name": "ROSA CANINA FRUIT OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN027",
+        "FN061"
+      ]
+    },
+    {
+      "canonical_name": "HIPPOPHAE RHAMNOIDES SEED OIL",
+      "roles": [
+        "skin_protecting"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN029"
+      ]
+    },
+    {
+      "canonical_name": "ROSA DAMASCENA FLOWER OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN030"
+      ]
+    },
+    {
+      "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+      "roles": [
+        "aromatic_auxiliary"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN031"
+      ]
+    },
+    {
+      "canonical_name": "CITRUS SINENSIS (SWEET ORANGE) PEEL OIL EXPRESSED",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions. The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role.",
+      "source_ids": [
+        "FN032"
+      ]
+    },
+    {
+      "canonical_name": "CANANGA ODORATA FLOWER OIL",
+      "roles": [
+        "essential_oil",
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN033"
+      ]
+    },
+    {
+      "canonical_name": "POGOSTEMON CABLIN (PATCHOULI) LEAF OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions. The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role.",
+      "source_ids": [
+        "FN034"
+      ]
+    },
+    {
+      "canonical_name": "LYCIUM BARBARUM FRUIT EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN035"
+      ]
+    },
+    {
+      "canonical_name": "STYRAX TONKINENSIS RESIN EXTRACT",
+      "roles": [
+        "fragrance",
+        "skin_conditioning"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN036"
+      ]
+    },
+    {
+      "canonical_name": "ROSMARINUS OFFICINALIS EXTRACT",
+      "roles": [
+        "antimicrobial",
+        "refreshing",
+        "tonic"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN037"
+      ]
+    },
+    {
+      "canonical_name": "CEDRUS ATLANTICA (CEDAR) BARK OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions. The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role.",
+      "source_ids": [
+        "FN038"
+      ]
+    },
+    {
+      "canonical_name": "CITRUS AURANTIUM (ORANGE) FLOWER OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions. The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role.",
+      "source_ids": [
+        "FN039"
+      ]
+    },
+    {
+      "canonical_name": "ANTHEMIS NOBILIS (CHAMOMILE) FLOWER OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions. The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role.",
+      "source_ids": [
+        "FN040"
+      ]
+    },
+    {
+      "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN041"
+      ]
+    },
+    {
+      "canonical_name": "TOCOPHEROL",
+      "roles": [
+        "antioxidant"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN042",
+        "FN093"
+      ]
+    },
+    {
+      "canonical_name": "BENZYL BENZOATE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN047",
+        "FN095"
+      ]
+    },
+    {
+      "canonical_name": "CITRAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN048"
+      ]
+    },
+    {
+      "canonical_name": "BENZYL SALICYLATE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN050"
+      ]
+    },
+    {
+      "canonical_name": "DIMETHICONE",
+      "roles": [
+        "silicone_carrier",
+        "conditioning_film"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN053"
+      ]
+    },
+    {
+      "canonical_name": "C12-15 ALKYL BENZOATE",
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN054"
+      ]
+    },
+    {
+      "canonical_name": "KERATIN",
+      "roles": [
+        "hair_conditioning",
+        "skin_conditioning"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. Film forming is not assigned from the broader keratin family or from the Hydrolyzed Keratin entry.",
+      "source_ids": [
+        "FN056"
+      ]
+    },
+    {
+      "canonical_name": "HYDROLYZED KERATIN",
+      "roles": [
+        "antistatic",
+        "film_forming",
+        "hair_conditioning",
+        "humectant",
+        "skin_conditioning"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. This exact ingredient entry lists film forming; that role is not propagated to the other keratin names.",
+      "source_ids": [
+        "FN057"
+      ]
+    },
+    {
+      "canonical_name": "HYDROLYZED KERATIN PG-PROPYL METHYLSILANEDIOL",
+      "roles": [
+        "hair_conditioning",
+        "skin_conditioning"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. No generic-film or silicone-family direction is inferred merely from the name.",
+      "source_ids": [
+        "FN058"
+      ]
+    },
+    {
+      "canonical_name": "COCODIMONIUM HYDROXYPROPYL HYDROLYZED KERATIN",
+      "roles": [
+        "antistatic",
+        "hair_conditioning",
+        "skin_conditioning"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. Exact entry; no synonym expansion to hydrolyzed hair keratin or another quaternized protein.",
+      "source_ids": [
+        "FN059"
+      ]
+    },
+    {
+      "canonical_name": "LAURDIMONIUM HYDROXYPROPYL HYDROLYZED KERATIN",
+      "roles": [
+        "antistatic",
+        "hair_conditioning",
+        "skin_conditioning"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. ",
+      "source_ids": [
+        "FN060"
+      ]
+    },
+    {
+      "canonical_name": "PHOSPHATIDYLCHOLINE",
+      "roles": [
+        "fragrance_functional",
+        "skin_conditioning",
+        "surfactant_emulsifying"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. No hair-conditioning, antistatic, liposome-delivery or repair role is assigned from a different source or family description.",
+      "source_ids": [
+        "FN062"
+      ]
+    },
+    {
+      "canonical_name": "SCHINZIOPHYTON RAUTANENII KERNEL OIL",
+      "roles": [
+        "supplier_conditioning",
+        "supplier_moisturizing"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. Supplier describes its Caribpure material. Only generic conditioning/moisturizing descriptors are retained; protective claims are not translated to a product property. No hair-specific mechanism or emollient weight/grade is assigned; no new pure-oil prior.",
+      "source_ids": [
+        "FN063"
+      ]
+    },
+    {
+      "canonical_name": "ALEURITES MOLUCCANUS SEED OIL",
+      "roles": [
+        "intact_fixed_botanical_oil"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN064"
+      ]
+    },
+    {
+      "canonical_name": "PSIDIUM GUAJAVA FRUIT EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness.",
+      "source_ids": [
+        "FN065"
+      ]
+    },
+    {
+      "canonical_name": "ALOE BARBADENSIS LEAF JUICE",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness.",
+      "source_ids": [
+        "FN066"
+      ]
+    },
+    {
+      "canonical_name": "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL",
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN067"
+      ]
+    },
+    {
+      "canonical_name": "TOCOPHERYL ACETATE",
+      "roles": [
+        "antioxidant_auxiliary"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN068"
+      ]
+    },
+    {
+      "canonical_name": "GLYCOLIPIDS",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness.",
+      "source_ids": [
+        "FN069"
+      ]
+    },
+    {
+      "canonical_name": "AQUA",
+      "roles": [
+        "aqueous_vehicle"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN070"
+      ]
+    },
+    {
+      "canonical_name": "HYDROGENATED CASTOR OIL/SEBACIC ACID COPOLYMER",
+      "roles": [
+        "hair_conditioning",
+        "skin_conditioning",
+        "skin_conditioning_emollient"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. Skin-emollient wording is retained as skin-specific. Film forming is not assigned just because this is a copolymer. Not the separate CAPRATE/CAPRYLATE entry.",
+      "source_ids": [
+        "FN071"
+      ]
+    },
+    {
+      "canonical_name": "ARGININE HCL",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness.",
+      "source_ids": [
+        "FN072"
+      ]
+    },
+    {
+      "canonical_name": "GLYCERIN",
+      "roles": [
+        "humectant"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN073"
+      ]
+    },
+    {
+      "canonical_name": "THIOCTIC ACID",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness.",
+      "source_ids": [
+        "FN074"
+      ]
+    },
+    {
+      "canonical_name": "BUTYL METHOXYDIBENZOYLMETHANE",
+      "roles": [
+        "recognized_uv_filter"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN075"
+      ]
+    },
+    {
+      "canonical_name": "POLYQUATERNIUM-55",
+      "roles": [
+        "film_forming",
+        "foam_stabilizing"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Exact ingredient identity and generic cosmetic function only. No amount, supplier-grade identity in finished product, deposition, retention, penetration, film thickness, repair, persistence, blend-weight or user-fit inference. Source is Styleze W20: finished-product grade is unknown. No heat resistance, adhesion, hold, film mechanics, concentration or measured persistence is transferred.",
+      "source_ids": [
+        "FN076"
+      ]
+    },
+    {
+      "canonical_name": "SODIUM HYALURONATE",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness.",
+      "source_ids": [
+        "FN077"
+      ]
+    },
+    {
+      "canonical_name": "ALLANTOIN",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness.",
+      "source_ids": [
+        "FN078"
+      ]
+    },
+    {
+      "canonical_name": "SODIUM ASCORBYL PHOSPHATE",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness.",
+      "source_ids": [
+        "FN079"
+      ]
+    },
+    {
+      "canonical_name": "BENZOIC ACID",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness.",
+      "source_ids": [
+        "FN080"
+      ]
+    },
+    {
+      "canonical_name": "PHENOXYETHANOL",
+      "roles": [
+        "preservative"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN081"
+      ]
+    },
+    {
+      "canonical_name": "POTASSIUM SORBATE",
+      "roles": [
+        "preservative"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN082"
+      ]
+    },
+    {
+      "canonical_name": "HYDROXYCITRONELLAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN083"
+      ]
+    },
+    {
+      "canonical_name": "FRAGRANCE/PARFUM",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+      "source_ids": [
+        "FN085"
+      ]
+    },
+    {
+      "canonical_name": "SESAMUM INDICUM SEED OIL",
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN086"
+      ]
+    },
+    {
+      "canonical_name": "COCOS NUCIFERA OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN087"
+      ]
+    },
+    {
+      "canonical_name": "PERSEA GRATISSIMA OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN088"
+      ]
+    },
+    {
+      "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN089"
+      ]
+    },
+    {
+      "canonical_name": "BRAHMI HERPESTIS (BRAHMI) FRUIT EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions. Do not equate Brahmi Herpestis to Bacopa, Herpestis monnieri or another species/name; source typo remains unresolved.",
+      "source_ids": [
+        "FN091"
+      ]
+    },
+    {
+      "canonical_name": "JASMINUM OFFICINALE (JASMIN ABSOLUTE) OIL",
+      "roles": [
+        "fragrance",
+        "moisturising",
+        "skin_conditioning",
+        "soothing"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN092"
+      ]
+    },
+    {
+      "canonical_name": "AZADIRACHTA INDICA (NEEM) OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions. The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role.",
+      "source_ids": [
+        "FN094"
+      ]
+    },
+    {
+      "canonical_name": "BENZYL ALCOHOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+      "source_ids": [
+        "FN098"
+      ]
+    }
+  ]
+}

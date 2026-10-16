@@ -1,0 +1,268 @@
+{
+  "version": "round1-roles-subset-for-weight-v0.2",
+  "source": "round-1/ingredient-lexicon.json; unchanged generic role evidence",
+  "entries": [
+    {
+      "canonical_name": "CYCLOPENTASILOXANE",
+      "aliases": [],
+      "roles": [
+        "silicone_carrier",
+        "volatile_carrier"
+      ],
+      "flags": [
+        "silicones"
+      ],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.dow.com/documents/27/27-1/27-1304-01-dow-hair-and-skin-care.pdf?iframe=true",
+          "title": "Dow Hair and Skin Care Selection Guide",
+          "claim_supported": "Exact silicone identity and material family."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Volatile D5; no blend-residue inference."
+    },
+    {
+      "canonical_name": "DIMETHICONE",
+      "aliases": [],
+      "roles": [
+        "silicone_carrier",
+        "conditioning_film"
+      ],
+      "flags": [
+        "silicones"
+      ],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.dow.com/documents/27/27-1/27-1304-01-dow-hair-and-skin-care.pdf?iframe=true",
+          "title": "Dow Hair and Skin Care Selection Guide",
+          "claim_supported": "Exact silicone identity and material family."
+        }
+      ],
+      "exclusions": [
+        "SILICA",
+        "HYDRATED SILICA",
+        "SILICON"
+      ],
+      "validation_status": "admitted",
+      "notes": "Grade controls viscosity and volatility; INCI does not establish either. Historical silicone penetration observations do not transfer to an unspecified grade."
+    },
+    {
+      "canonical_name": "DIMETHICONOL",
+      "aliases": [],
+      "roles": [
+        "silicone_gum",
+        "conditioning_film"
+      ],
+      "flags": [
+        "silicones"
+      ],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.dow.com/documents/27/27-1/27-1304-01-dow-hair-and-skin-care.pdf?iframe=true",
+          "title": "Dow Hair and Skin Care Selection Guide",
+          "claim_supported": "Exact silicone identity and material family."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Gum/residual-film signal; finished load and durability require architecture and grade."
+    },
+    {
+      "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+      "aliases": [],
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://media.knowde.com/image/upload/v1714650619/production/Collateral/573244/Cetiol_LC_Technical_Data_Sheet.pdf",
+          "title": "BASF Cetiol LC Technical Information, supplier-authored PDF hosted by Knowde",
+          "claim_supported": "Exact INCI and caprylic/capric acid ester of C12-18 fatty alcohols; indexed primary PDF text accessed."
+        }
+      ],
+      "exclusions": [
+        "COCOS NUCIFERA OIL"
+      ],
+      "validation_status": "admitted",
+      "notes": "Processed emollient, not intact feedstock oil. Spreading or skin penetration evidence is not hair penetration or evaporation evidence."
+    },
+    {
+      "canonical_name": "AQUA",
+      "aliases": [
+        "WATER",
+        "EAU",
+        "AQUA/WATER/EAU",
+        "AQUA / WATER / EAU",
+        "AQUA/WATER",
+        "AQUA / WATER",
+        "AQUA [WATER]",
+        "WATER/AQUA/EAU"
+      ],
+      "roles": [
+        "aqueous_vehicle"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://laws-lois.justice.gc.ca/eng/regulations/c.r.c.%2C_c._869/fulltext.html",
+          "title": "Canadian Cosmetic Regulations, schedule of equivalent names",
+          "claim_supported": "Aqua / Water / Eau label equivalents."
+        },
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 2112, PDF page 74",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://laws-lois.justice.gc.ca/eng/regulations/c.r.c.%2C_c._869/fulltext.html",
+          "title": "Canadian Cosmetic Regulations, equivalent-name schedule",
+          "claim_supported": "Aqua, Water and Eau identify water."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Explicit bilingual wrappers only. Water presence does not establish water leadership, continuity or lightness."
+    },
+    {
+      "canonical_name": "GLYCERIN",
+      "aliases": [],
+      "roles": [
+        "humectant"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://ec.europa.eu/health/archive/ph_risk/committees/sccp/documents/out123cm_en.pdf",
+          "title": "Commission ingredient inventory, 2000; historical identity evidence",
+          "claim_supported": "Historical exact identity/function row."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping."
+    },
+    {
+      "canonical_name": "TOCOPHEROL",
+      "aliases": [],
+      "roles": [
+        "antioxidant"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://ec.europa.eu/health/archive/ph_risk/committees/sccp/documents/out123cm_en.pdf",
+          "title": "Commission ingredient inventory, 2000; historical identity evidence",
+          "claim_supported": "Historical exact identity/function row."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping."
+    },
+    {
+      "canonical_name": "SODIUM BENZOATE",
+      "aliases": [],
+      "roles": [
+        "preservative"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://ec.europa.eu/health/archive/ph_risk/committees/sccp/documents/out123cm_en.pdf",
+          "title": "Commission ingredient inventory, 2000; historical identity evidence",
+          "claim_supported": "Historical exact identity/function row."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping."
+    },
+    {
+      "canonical_name": "PEG-40 HYDROGENATED CASTOR OIL",
+      "aliases": [],
+      "roles": [
+        "solubilizer",
+        "surfactant"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://ec.europa.eu/health/archive/ph_risk/committees/sccp/documents/out123cm_en.pdf",
+          "title": "Commission ingredient inventory, 2000; historical identity evidence",
+          "claim_supported": "Historical exact identity/function row."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping."
+    },
+    {
+      "canonical_name": "PARFUM",
+      "aliases": [
+        "FRAGRANCE",
+        "FRAGRANCE (PARFUM)",
+        "PARFUM [FRAGRANCE]",
+        "PARFUM/FRAGRANCE",
+        "PARFUM / FRAGRANCE"
+      ],
+      "roles": [
+        "fragrance_composition"
+      ],
+      "flags": [
+        "fragrance"
+      ],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Article 19 fragrance-composition declaration."
+        },
+        {
+          "url": "https://www.hallstarbeauty.com/formula/lift-me-gel-cream-2/",
+          "title": "Hallstar illustrative Lift Me Gel Cream formulation",
+          "claim_supported": "Supplier uses Fragrance (Parfum) label wrapper."
+        },
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 19071, PDF page 560",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.hallstarbeauty.com/formula/lift-me-gel-cream-2/",
+          "title": "Hallstar illustrative formulation",
+          "claim_supported": "Fragrance (Parfum) equivalence; wrapper punctuation does not introduce a new chemical identity."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Mixture composition unspecified; not automatically volatile or negligible."
+    }
+  ],
+  "unresolved_names": [
+    "COFFEA ARABICA SEED OIL"
+  ],
+  "limits": "Roles are material clues, not concentration or finished performance. Missing reviewed roles cannot become zero load."
+}

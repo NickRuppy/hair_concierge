@@ -1,0 +1,283 @@
+{
+  "scope": "Exact generic function supplement only. Primary source technical roles are not class predictions, quantitative contribution or finished-product measured persistence. Root merges prior dictionary exact-name entries.",
+  "captured_at": "2026-10-15T06:47:06Z",
+  "sources": [
+    {
+      "source_id": "PSB-F01",
+      "url": "https://www.ioioleo.de/personal-care/product/softisan-100/",
+      "title": "IOI Oleo SOFTISAN100",
+      "excerpt": "Hydrogenated Coco-Glycerides: Emollient; Film-Forming; Viscosity Increasing.",
+      "limits": "Primary current ingredient maker. Grade example only; no proof of grade in finished product."
+    },
+    {
+      "source_id": "PSB-F02",
+      "url": "https://www.cargill.com/personal-care/product-guide/emulsifiers",
+      "title": "Cargill Topcithin Care P IP",
+      "excerpt": "INCI: Lecithin. Topcithin Care P IP is an emulsion stabilizer.",
+      "limits": "Primary current ingredient maker. No transfer of skin affinity, lipid-barrier or grade specifics."
+    },
+    {
+      "source_id": "PSB-F03",
+      "url": "https://care360.basf.com/global/de/Product-Finder/30527896",
+      "title": "BASF Eutanol G",
+      "excerpt": "Produkt-INCI: Octyldodecanol. Medium spreading emollient.",
+      "limits": "Primary current ingredient maker. Spreading is not measured hair persistence."
+    },
+    {
+      "source_id": "PSB-F04",
+      "url": "https://care360.basf.com/global/de/Product-Finder/30528720",
+      "title": "BASF Isopropyl Palmitate",
+      "excerpt": "Produkt-INCI: Isopropyl Palmitate. Fast spreading emollient.",
+      "limits": "Primary current ingredient maker. Spreading is not measured hair persistence."
+    },
+    {
+      "source_id": "PSB-F05",
+      "url": "https://www.hallstarbeauty.com/formula/glow-up-effect/",
+      "title": "Hallstar Glow Up Effect formulation",
+      "excerpt": "Coco-Caprylate/Caprate: Emollient.",
+      "limits": "Primary current formulator. Generic function only, no transfer of formulation dose."
+    },
+    {
+      "source_id": "PSB-F06",
+      "url": "https://www.oand3.com/product/peanut-oil-cold-pressed-organic/",
+      "title": "O&3 Peanut Oil Cold Pressed Organic",
+      "excerpt": "INCI Listing Arachis Hypogaea Oil. Hair care products as an emollient.",
+      "limits": "Primary supplier. Exact INCI matches; coldpressed/organic batch is not established for finished product. Skinfeel excluded."
+    },
+    {
+      "source_id": "PSB-F07",
+      "url": "https://www.oand3.com/product/wheatgerm-oil-refined/",
+      "title": "O&3 Wheatgerm Oil Refined",
+      "excerpt": "INCI Listing Triticum Vulgare Germ Oil. Emollient.",
+      "limits": "Primary supplier search-rendered page. Direct re-open403; search capture explicit exact INCI/function. No skinfeel transfer."
+    },
+    {
+      "source_id": "PSB-F08",
+      "url": "https://ec.europa.eu/health/archive/ph_risk/committees/sccp/documents/out123cm_en.pdf",
+      "title": "European Commission archived first update EU inventory2000",
+      "excerpt": "Alcohol: Ethanol; solvent. Ethylhexyl Palmitate: emollient.",
+      "limits": "Historical technical ingredient-function evidence, not current EU compliance status. Exact entries only."
+    },
+    {
+      "source_id": "PSB-F09",
+      "url": "https://ec.europa.eu/health/archive/ph_risk/committees/sccp/documents/out123cm_en.pdf",
+      "title": "European Commission archived first update EU inventory2000",
+      "excerpt": "Melia Azadirachta Leaf Extract: skin conditioning. Helianthus Annuus Seed Extract: skin conditioning.",
+      "limits": "Historical technical function evidence, not current EU compliance status. Does not establish lipid quantity, extract solvent or hairfilm."
+    },
+    {
+      "source_id": "PSB-F10",
+      "url": "https://webprod.hc-sc.gc.ca/nhpid-bdipsn/ingredReq?id=16817",
+      "title": "Health Canada NHPID C13-15 Alkane",
+      "excerpt": "C13-15 Alkane. Non-medicinal purposes: Solvent.",
+      "limits": "Primary regulator technical identity/function, not EU authorization or specific grade/volatility."
+    },
+    {
+      "source_id": "PSB-F11",
+      "url": "https://www.florihana.com/en/module/axproductattachments/export?file=FLE004FT.pdf&reference=FLE004&type=Fiche+technique",
+      "title": "Florihana organic angelica root TDS2023",
+      "excerpt": "ANGELICA ARCHANGELICA ROOT OIL. Essential oil obtained by water steam distillation from roots.",
+      "limits": "Primary distiller exact rootoil; generic preparation type only. Organic origin and composition not transferred."
+    },
+    {
+      "source_id": "PSB-F12",
+      "url": "https://webprod.hc-sc.gc.ca/nhpid-bdipsn/ingredReq?id=18144",
+      "title": "Health Canada Pelargonium Graveolens Leaf Oil",
+      "excerpt": "Pelargonium Graveolens Leaf Oil. Oil, Essential (water steam distillation). Fragrance Ingredient.",
+      "limits": "Primary regulator exact preparation/function, not EU approval or particular grade."
+    },
+    {
+      "source_id": "PSB-F13",
+      "url": "https://fraterworks.com/products/angelica-seed-oil",
+      "title": "Fraterworks Angelica Seed Oil",
+      "excerpt": "INCI Name ANGELICA ARCHANGELICA SEED OIL. Odour Family Aromatic.",
+      "limits": "Primary fragrance supplier demonstrates aromatic product variant, not proof of L’Occitane grade. Supplier odour longevity is not haircoating persistence."
+    },
+    {
+      "source_id": "PSB-F14",
+      "url": "https://www.oand3.com/product/angelica-seed-oil-cold-pressed/",
+      "title": "O&3 Angelica Seed Oil Cold Pressed",
+      "excerpt": "INCI Listing Angelica Archangelica Seed Oil. Manufacturing Method Cold Pressed.",
+      "limits": "Primary supplier uses same exact INCI for coldpressed description, so declaration alone cannot select this grade or inferred triglyceride profile."
+    }
+  ],
+  "entries": [
+    {
+      "canonical_name": "HYDROGENATED COCO-GLYCERIDES",
+      "roles": [
+        "emollient",
+        "film_forming_capability",
+        "viscosity_increasing"
+      ],
+      "source_ids": [
+        "PSB-F01"
+      ],
+      "limits": "Film-forming is an affirmative generic capability supported by an exact-INCI grade. Neither persistence class nor structural dominance is implied. Grade, quantity and coating performance in finished product undisclosed; do not call it intact coconut oil."
+    },
+    {
+      "canonical_name": "LECITHIN",
+      "roles": [
+        "emulsion_stabilizer"
+      ],
+      "source_ids": [
+        "PSB-F02"
+      ],
+      "limits": "No lysolecithin substitution. Generic stability function alone does not prove cohesive hairfilm or rinsability."
+    },
+    {
+      "canonical_name": "OCTYLDODECANOL",
+      "roles": [
+        "emollient"
+      ],
+      "source_ids": [
+        "PSB-F03"
+      ],
+      "limits": "No drying-alcohol role; no spreading-to-persistence mapping."
+    },
+    {
+      "canonical_name": "ISOPROPYL PALMITATE",
+      "roles": [
+        "emollient"
+      ],
+      "source_ids": [
+        "PSB-F04"
+      ],
+      "limits": "No spreading-to-persistence mapping."
+    },
+    {
+      "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+      "roles": [
+        "emollient"
+      ],
+      "source_ids": [
+        "PSB-F05"
+      ],
+      "limits": "Exact slash-containing mixed ester; no intact-coconut-oil prior transfer."
+    },
+    {
+      "canonical_name": "ARACHIS HYPOGAEA OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_ids": [
+        "PSB-F06"
+      ],
+      "limits": "No grade/coldpressed identity transfer."
+    },
+    {
+      "canonical_name": "TRITICUM VULGARE GERM OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_ids": [
+        "PSB-F07"
+      ],
+      "limits": "Exact germ oil; no protein role or skinfeel transfer."
+    },
+    {
+      "canonical_name": "ALCOHOL",
+      "roles": [
+        "solvent"
+      ],
+      "source_ids": [
+        "PSB-F08"
+      ],
+      "limits": "Exact ingredient is Alcohol, no denaturant assumption. No percentage, retained amount or negligible-remainder inference."
+    },
+    {
+      "canonical_name": "ETHYLHEXYL PALMITATE",
+      "roles": [
+        "emollient"
+      ],
+      "source_ids": [
+        "PSB-F08"
+      ],
+      "limits": "Historical generic role only; grade undisclosed."
+    },
+    {
+      "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+      "roles": [
+        "botanical_leaf_extract",
+        "skin_conditioning"
+      ],
+      "source_ids": [
+        "PSB-F09"
+      ],
+      "limits": "Extract, not neem fixed oil. No carrier/oil quantity or hairfilm inferred."
+    },
+    {
+      "canonical_name": "HELIANTHUS ANNUUS SEED EXTRACT",
+      "roles": [
+        "botanical_seed_extract",
+        "skin_conditioning"
+      ],
+      "source_ids": [
+        "PSB-F09"
+      ],
+      "limits": "Extract, not sunflower fixed oil, wax or ceramide identity. No hairfilm inferred."
+    },
+    {
+      "canonical_name": "C13-15 ALKANE",
+      "roles": [
+        "hydrocarbon_carrier",
+        "solvent"
+      ],
+      "source_ids": [
+        "PSB-F10"
+      ],
+      "limits": "No synonym to hemisqualane or assumption of sugarcane origin, particular volatility, dose or finishedproduct remainder."
+    },
+    {
+      "canonical_name": "ANGELICA ARCHANGELICA ROOT OIL",
+      "roles": [
+        "essential_oil",
+        "aromatic_auxiliary"
+      ],
+      "source_ids": [
+        "PSB-F11"
+      ],
+      "limits": "Exact root essential oil documented by supplier. No grade, contribution, retained remainder or medicinal claim inferred."
+    },
+    {
+      "canonical_name": "PELARGONIUM GRAVEOLENS LEAF OIL",
+      "roles": [
+        "essential_oil",
+        "aromatic_auxiliary"
+      ],
+      "source_ids": [
+        "PSB-F12"
+      ],
+      "limits": "Exact leaf essential oil preparation/function; do not substitute floweroil or intactfixedoil."
+    },
+    {
+      "canonical_name": "ANGELICA ARCHANGELICA SEED OIL",
+      "roles": [
+        "aromatic_capability",
+        "preparation_not_resolved"
+      ],
+      "source_ids": [
+        "PSB-F13",
+        "PSB-F14"
+      ],
+      "limits": "Exact-INCI suppliers describe aromatic oil and coldpressed oil. No particular extraction/grade or intact fixed-oil prior admitted. Fragrance longevity not hair persistence."
+    }
+  ],
+  "unresolved_exact_function_names": [
+    "CHAMOMILLA RECUTITA FLOWER EXTRACT",
+    "DAUCUS CAROTA SATIVA (CARROT) ROOT EXTRACT",
+    "CAMPHOR",
+    "BETA-CARYOPHYLLENE",
+    "TERPINEOL",
+    "ALPHA-TERPINENE",
+    "CITRUS AURANTIUM DULCIS (ORANGE) PEEL OIL"
+  ],
+  "unresolved_handling": "Use exact preexisting source dictionary if available. Otherwise preserve not_assessed as a non-negligible unreviewed ingredient clue. Do not borrow related part/form functions, silently discard or assign persistence class from name. Formula disclosure remains admitted independently from material function gaps.",
+  "not_admitted_evidence": [
+    "Archived inventory lists Chamomilla Recutita Extract and Daucus Carota Extract, but these were not joined to current exact flower/root extract declarations.",
+    "L’Occitane sunflower-extract marketing refers to ceramides; no disclosed ceramide ingredient or concentration admitted.",
+    "No skin sensory-weight inference admitted.",
+    "Angelica seed oil suppliers disclose varying preparations under same exact INCI. No coldpressed-vs-aromatic grade chosen for finished product."
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "version": "oil-intake-integration-planning-receipt-v0.2",
+  "date": "2026-10-13",
+  "branch": "codex/oil-intake-bridge-v1",
+  "base": "81201a9e4e577ce03730809cc367ab21b10ce091",
+  "scope": "planning only; no implementation/runtime changes",
+  "planning_fingerprint": "078fa3fad57a88e67d4032b631e9f681ae24c53315bbe79930ffdf66f537cfa2",
+  "files": {
+    ".gitignore": "3959eb09d40d6db580e453e81786c95feb49c8054fa36251e0498dc3b430500b",
+    "plans/oil-inci/catalog-overlap-audit-2026-10-13.json": "fdd42147ae36f112b98d1503acfa97bb6ec56c1edc1199388eb50b661bdf757b",
+    "plans/oil-inci/intake-integration-lab-dependency-2026-10-13.json": "d37f74d7d55a8c41c3e3779c18e7f04c7c6949d7ea7194493a146ba412392995",
+    "plans/oil-inci/intake-integration-lab-reference-v0.1.png": "9cb5449e9a73e697ee836867202b51f5ebadf7f166a1b74d48d3294f9a37be1d",
+    "plans/oil-inci/intake-integration-lab-review-v0.1.md": "30e0f7cf86e881d268f3c465123bf6bf3795ea6f9d0b30b18a240bd3ab8fbb50",
+    "plans/oil-inci/intake-integration-plan-2026-10-13.md": "c4266585bfd5e75b8961b9cb78fefbd169d302ff49875bb1fae24a1f02255598",
+    "plans/oil-inci/intake-integration-review-preview-v0.1-conflict.png": "f4042ed0859c4ca13e864f4488c596e5d166ce9827c7f55e476e1350387efffa",
+    "plans/oil-inci/intake-integration-review-preview-v0.1.html": "7bc91f0ae1613259c98f63f55804593406b164fbef37b71fde5888995ba3a3df",
+    "plans/oil-inci/intake-integration-review-preview-v0.1.md": "11a3d2926ee8c490982147d6bd9c312ded40fb342d22f6c84e8b3677f7b14f21",
+    "plans/oil-inci/intake-integration-review-preview-v0.1.png": "92fef60d94dcbcdcad67bf7c13ac60b183afd6c87d026df10688bc82b1b6fec5",
+    "plans/oil-inci/intake-publication-lineage-evidence-2026-10-13.json": "2f2bb4287734a71c43c56b9b2ccabe2f2f094b246d1e464c9b41fd977cae1b02",
+    "plans/oil-inci/reviews/intake-integration-plan-review-2026-10-13.md": "b0526550e93b12506d979fd4302e23935c4826853b30e08ebb5ef24ccb821b78"
+  },
+  "excluded_self": "plans/oil-inci/intake-integration-planning-receipt-2026-10-13.json",
+  "decision_coverage": "confirmed",
+  "original_request": "plan intake integration; keep matching tags manual; use subagents; give product-count overview",
+  "matching_decision": "Draft suggestions; I approve or correct them (Recommended)",
+  "evidence_review": "Existing selected Research Lab interaction reused by precise correction; oil-specific actual browser proof remains implementation gate",
+  "implementation_authorized": false,
+  "catalog_impact": {
+    "automatic_additions": 0,
+    "automatic_updates": 0,
+    "live_oil_cohort": 54,
+    "with_specs": 52,
+    "research_profiles": 37,
+    "barcode_matched_identities": 3,
+    "unlinked_profiles": 34,
+    "unverified_name_leads_within_unlinked": 3
+  },
+  "counterpart_review": {
+    "model": "Claude Opus",
+    "effort": "high",
+    "read_only_terminal": true,
+    "completed": true,
+    "initial_verdict": "Revise and re-present; do not rerun counterpart lane",
+    "reconciled": true,
+    "ledger": "plans/oil-inci/reviews/intake-integration-plan-review-2026-10-13.md",
+    "owner_decision_required_by_review": false,
+    "technical_rulings": "R1-R4,R6-R10accepted;R5actualcategoryexclusionverified;R11smallcomparison-snapshottechnicaldefault documented, no owner-productdecision",
+    "delta": {
+      "model": "Claude Opus",
+      "effort": "high",
+      "read_only_terminal": true,
+      "tools_and_mcp_disabled": true,
+      "exit_code": 0,
+      "packet_bytes": 97922,
+      "verdict": "Sound direction; revise six technical text details before implementation; no product fork",
+      "reconciled": true,
+      "ledger_ids": "D1-D6,T1-T5",
+      "root_followup": "M1 local receipt revocation/import recovery; added after captured packet, locally reviewed"
+    }
+  },
+  "verification": {
+    "read_only_live_catalog_audit": true,
+    "read_only_publication_entry_and_legacy_definition_inspection": true,
+    "json_key_order_probe": {
+      "original_passed": true,
+      "reordered_passed": false,
+      "sole_failure": "Original record digest mismatch",
+      "actual_jsonb_roundtrip": "required implementation check, not run"
+    },
+    "browser_mockup": {
+      "chrome_desktop_rendered": true,
+      "draft_approved_rework_conflict_states_checked": true,
+      "iab_connection_failed": true,
+      "actual_app_or_narrow_check": "required implementation checks, not run"
+    },
+    "diff_check": true,
+    "prior895file_snapshot": "unchanged except planning screenshot gitignore exceptions; no engine/data changes",
+    "code_or_engine_rule_changes": 0,
+    "production_writes": 0,
+    "lab_read_only_mapping": true,
+    "lab_dependency": "16 task-owned source/test/docs files; untracked implementation in canonical-compare-lab, not merged/main/task checkout",
+    "lab_reference": "exact copied existing Mask screenshot; visually inspected; no fresh browser or oil UI proof"
+  },
+  "implementation_gates": [
+    "Fresh-main integration preserving dirty task work",
+    "Reconcile exact shared-Lab dependency; no blind worktree copy",
+    "Fresh producer and distinct method",
+    "Lossless storage plus actual local JSONB roundtrip",
+    "Source/identity/INCI and persistence-loop binding",
+    "Oil-native review, manual matching and stable bundle/receipt binding",
+    "Current local decision lock, idempotent import and uncertain handoff recovery",
+    "Atomic import/completion/publication and real two-session checks",
+    "Actual oil Lab wide/narrow browser and integrated verification/whole-delta review"
+  ],
+  "disposition": {
+    "commit_intended": "Selected plan, Lab dependency/journey/reference, catalog/publication evidence, concise review ledger and receipt",
+    "archive": "Prior cockpit HTML/PNG/notes retained in place with explicit superseded status; never approved",
+    "discard": "Transient counterpart fixed packet/output after reconciliation"
+  },
+  "next_recommended_action": "Implement the selected Lab-based oil intake connection after implementation authorization; publication/activation remain separate",
+  "previous_planning_fingerprint": "adf8b8b92a39a20c6308437da52c34f5eeafa1d4d3776553c5ca1166553d7b39",
+  "selected_review_surface": "/labs/research?category=oil",
+  "latest_user_correction": "Could you take our review lab instead? I think that would be a bit simpler."
+}

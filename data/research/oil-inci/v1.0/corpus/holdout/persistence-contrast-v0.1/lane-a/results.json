@@ -1,0 +1,1960 @@
+{
+  "policy_version": "oil-persistence-boundaries-v0.1",
+  "records": [
+    {
+      "neutral_id": "PC01",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE",
+          "dictionary_roles": [
+            "silicone_carrier",
+            "conditioning_film"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Silicone distribution and conditioning-film component complements the gum; the high reading does not require this dimethicone to have a particular viscosity or volatility.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Previously reviewed exact material functions copied; no weight, penetration or product build-up answer is included. Grade/dose/residual load remain unestablished.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+              "The INCI spans different grades, including low-viscosity volatile fluids and high-molecular-weight conditioning material. The finished-product grade is undisclosed; do not assume universal nonvolatility, gum structure or substantial residue."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 2,
+          "raw_name": "Dimethiconol",
+          "canonical_name": "DIMETHICONOL",
+          "dictionary_roles": [
+            "silicone_gum",
+            "conditioning_film"
+          ],
+          "formula_role": "principal",
+          "role_reason": "The admitted silicone-gum and conditioning-film functions provide the cohesive-film route in a system containing complementary silicone and emollient fluids.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Gum/residual-film signal; finished load and durability require architecture and grade.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 3,
+          "raw_name": "Undecane",
+          "canonical_name": "UNDECANE",
+          "dictionary_roles": [
+            "hydrocarbon_carrier",
+            "possible_volatile_vehicle_in_reviewed_pair"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Hydrocarbon distribution component considered together with tridecane; possible vehicle volatility cannot erase the gum-conditioning route.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 4,
+          "raw_name": "Dicaprylyl Ether",
+          "canonical_name": "DICAPRYLYL ETHER",
+          "dictionary_roles": [
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Emollient fluid contributes to the conditioning remainder alongside the silicone pair and fixed oils; emollience does not establish low persistence.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Emollience does not itself prove low persistence.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 5,
+          "raw_name": "Tridecane",
+          "canonical_name": "TRIDECANE",
+          "dictionary_roles": [
+            "hydrocarbon_carrier",
+            "possible_volatile_vehicle_in_reviewed_pair"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Hydrocarbon distribution component considered with undecane; no evaporation fraction or negligible remainder is assumed.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 6,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Exact intact fixed oil supplies complementary emollient conditioning; its contribution is not translated into a separate film mechanism or quantity.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 7,
+          "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Exact intact fixed oil complements the retained emollient system without determining cohesion by itself.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 8,
+          "raw_name": "Tocopherol",
+          "canonical_name": "TOCOPHEROL",
+          "dictionary_roles": [
+            "antioxidant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Antioxidant function supports the formulation; it is not affirmative evidence of a cohesive conditioning film.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 9,
+          "raw_name": "Parfum (Fragrance)",
+          "canonical_name": "PARFUM",
+          "dictionary_roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Fragrance composition is considered as an unspecified mixture; its remainder is neither assumed absent nor used as conditioning-film evidence.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Mixture composition unspecified; not automatically volatile or negligible.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 10,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is included without inferring conditioning-film mechanics or amount.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 11,
+          "raw_name": "Anise Alcohol",
+          "canonical_name": "ANISE ALCOHOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact declared fragrance constituent is not interpreted as a solvent-alcohol system or as a conditioning-film mechanism.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 12,
+          "raw_name": "Linalyl Acetate",
+          "canonical_name": "LINALYL ACETATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent contributes an exposure/function entry, without an admitted coherent-film route.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 13,
+          "raw_name": "Trisiloxane",
+          "canonical_name": "TRISILOXANE",
+          "dictionary_roles": [
+            "silicone_carrier",
+            "volatile_carrier"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Admitted silicone and volatile-carrier functions support distribution; the identity does not establish finished evaporation or cancel retained conditioners.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Carrier identity does not establish finished evaporation.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 14,
+          "raw_name": "Disiloxane",
+          "canonical_name": "DISILOXANE",
+          "dictionary_roles": [
+            "silicone_carrier",
+            "volatile_carrier"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Admitted silicone and volatile-carrier functions are assessed as distribution rather than proof of low persistence.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 15,
+          "raw_name": "CI 40800 (Beta-Carotene)",
+          "canonical_name": "CI 40800",
+          "dictionary_roles": [
+            "colourant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact colourant function is retained in the ledger without adding a conditioning or structural role.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        }
+      ],
+      "persistence_potential": "high",
+      "reason": "The complete system combines a silicone-gum conditioning-film route with complementary silicone distribution/conditioning, an emollient ether and intact fixed-oil conditioners. That integrated gum-and-fluid coating is the stronger reading than either a mainly mobile remainder or an ordinary fluid coat; the vehicle components do not cancel it.",
+      "evidence": [
+        {
+          "rank": 1,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Dimethiconol",
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Undecane",
+          "canonical_name": "UNDECANE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Dicaprylyl Ether",
+          "canonical_name": "DICAPRYLYL ETHER"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Tridecane",
+          "canonical_name": "TRIDECANE"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Parfum (Fragrance)",
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Trisiloxane",
+          "canonical_name": "TRISILOXANE"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Disiloxane",
+          "canonical_name": "DISILOXANE"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "neighbor_comparison": {
+        "low": "Possible volatile carriers at ranks 3/5 and admitted volatile silicone carriers at 13/14 support a vehicle reading, but neither their evaporation nor dimethicone grade establishes a mainly mobile conditioning remainder. The gum route is complementary to emollient conditioning and remains functionally meaningful in the selected reading.",
+        "moderate": "A fluid silicone/lipid coat is plausible if dimethiconol mainly modifies the fluid system without organizing its retained film. The admitted gum plus conditioning-film functions, embedded in compatible distribution and emollient functions, make a more cohesive coating the better whole-system reading.",
+        "high": "Selected: dimethiconol supplies an affirmative gum-film route, while dimethicone, dicaprylyl ether and the fixed oils supply complementary carrier/conditioning functions. This is an architectural interpretation, not a conclusion from rank 2, silicone count, a specified dimethicone grade or a presumed amount."
+      },
+      "tipping_assumption": "Dimethiconol functions as an organizing component of the retained conditioning coating in this gum-and-fluid system, rather than only changing product texture. No concentration or exact grade is assigned; that functional interpretation is what tips the whole-system reading to high.",
+      "research_context": {
+        "application_context": "Retained leave-on hair-fibre application; small amount on towel-dried or dry hair; style as usual. No scalp or shampoo-removal assessment.",
+        "contextual_declarations": [],
+        "dose_handling": "Source-stated qualitative amounts or units remain unchanged and are not used as a standalone class or converted to absolute amounts."
+      }
+    },
+    {
+      "neutral_id": "PC02",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "ISODODECANE",
+          "canonical_name": "ISODODECANE",
+          "dictionary_roles": [
+            "hydrocarbon_carrier",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Hydrocarbon carrier and emollient are part of the distribution/emollient system; no volatility beyond the admitted functions is needed for the decision.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 2,
+          "raw_name": "AQUA / WATER",
+          "canonical_name": "AQUA",
+          "dictionary_roles": [
+            "aqueous_vehicle"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Aqueous vehicle carries a distributed conditioning system; water presence does not decide what the complete system leaves on the fibre.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Water vehicle does not decide residual architecture.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 3,
+          "raw_name": "DIPROPYLENE GLYCOL",
+          "canonical_name": "DIPROPYLENE GLYCOL",
+          "dictionary_roles": [
+            "cosolvent"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Cosolvent supports the mixed vehicle; it does not establish a dispersible final conditioning coat.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 4,
+          "raw_name": "DIMETHICONE",
+          "canonical_name": "DIMETHICONE",
+          "dictionary_roles": [
+            "silicone_carrier",
+            "conditioning_film"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Silicone-carrier and conditioning-film functions complement dimethiconol; no particular dimethicone grade or universal nonvolatility is assumed.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Previously reviewed exact material functions copied; no weight, penetration or product build-up answer is included. Grade/dose/residual load remain unestablished.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+              "The INCI spans different grades, including low-viscosity volatile fluids and high-molecular-weight conditioning material. The finished-product grade is undisclosed; do not assume universal nonvolatility, gum structure or substantial residue."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 5,
+          "raw_name": "ALCOHOL DENAT.",
+          "canonical_name": "ALCOHOL DENAT.",
+          "dictionary_roles": [
+            "solvent_alcohol"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Solvent-alcohol function is part of delivery; it does not cancel the gum or other hair conditioners.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 6,
+          "raw_name": "DIMETHICONOL",
+          "canonical_name": "DIMETHICONOL",
+          "dictionary_roles": [
+            "silicone_gum",
+            "conditioning_film"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Silicone-gum and conditioning-film functions provide a cohesive retained-film route, interpreted jointly with the other hair-conditioning components.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Gum/residual-film signal; finished load and durability require architecture and grade.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 7,
+          "raw_name": "GLYCERIN",
+          "canonical_name": "GLYCERIN",
+          "dictionary_roles": [
+            "humectant"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Humectant supplies a distinct retained-system function; it is neither converted to an adhesive-film role nor used to dissolve away the silicone film.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 8,
+          "raw_name": "PEG-14 DIMETHICONE",
+          "canonical_name": "PEG-14 DIMETHICONE",
+          "dictionary_roles": [
+            "hair_conditioning",
+            "skin_conditioning",
+            "plasticizing_agent_for_hair_setting_polymers"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Hair-conditioning and admitted plasticizing capability complement the gum/polymer conditioning architecture; actual plasticization or a particular polymer interaction is not asserted.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 9,
+          "raw_name": "HYDROXYETHYL UREA",
+          "canonical_name": "HYDROXYETHYL UREA",
+          "dictionary_roles": [
+            "humectant"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Humectant function contributes to the mixed conditioning remainder without establishing cohesive-film mechanics.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 10,
+          "raw_name": "PHENOXYETHANOL",
+          "canonical_name": "PHENOXYETHANOL",
+          "dictionary_roles": [
+            "preservative"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Preservative function is considered without inferring a concentration boundary from its position.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 11,
+          "raw_name": "PEG-60 HYDROGENATED CASTOR OIL",
+          "canonical_name": "PEG-60 HYDROGENATED CASTOR OIL",
+          "dictionary_roles": [
+            "nonionic_solubilizer",
+            "emulsifying_auxiliary"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Exact nonionic solubilizer and emulsifying functions explain distribution; this modified ingredient is not treated as intact castor oil or as proof of low persistence.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 12,
+          "raw_name": "LIMONENE",
+          "canonical_name": "LIMONENE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent has no admitted conditioning-film mechanics.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 13,
+          "raw_name": "POLYACRYLAMIDE",
+          "canonical_name": "POLYACRYLAMIDE",
+          "dictionary_roles": [
+            "rheology_polymer"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Rheology polymer is interpreted with C13-14 isoparaffin and laureth-7 as a texture/delivery system, not added as independent evidence of a persistent hair film.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 14,
+          "raw_name": "C13-14 ISOPARAFFIN",
+          "canonical_name": "C13-14 ISOPARAFFIN",
+          "dictionary_roles": [
+            "hydrocarbon_carrier",
+            "rheology_system_component"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Hydrocarbon carrier and rheology-system component support the texture/delivery reading alongside polyacrylamide and laureth-7.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 15,
+          "raw_name": "PROPYLENE GLYCOL",
+          "canonical_name": "PROPYLENE GLYCOL",
+          "dictionary_roles": [
+            "humectant",
+            "solvent"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Humectant and solvent functions contribute to the water-associated remainder without deciding the complete film architecture.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Water-associated auxiliary; whole residual system decides.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 16,
+          "raw_name": "HEXYL CINNAMAL",
+          "canonical_name": "HEXYL CINNAMAL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is included without a conditioning-film inference.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 17,
+          "raw_name": "LINALOOL",
+          "canonical_name": "LINALOOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is included without a conditioning-film inference.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 18,
+          "raw_name": "LAURETH-7",
+          "canonical_name": "LAURETH-7",
+          "dictionary_roles": [
+            "emulsifying_auxiliary",
+            "rheology_system_component"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Emulsifying auxiliary and rheology-system component support distribution; neither hair-film cohesion nor final rinsability follows from this function.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 19,
+          "raw_name": "CARAMEL",
+          "canonical_name": "CARAMEL",
+          "dictionary_roles": [
+            "colourant",
+            "fragrance"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Admitted colourant and fragrance functions are considered without adding a hair-coating mechanism.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 20,
+          "raw_name": "CITRAL",
+          "canonical_name": "CITRAL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is included without a conditioning-film inference.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 21,
+          "raw_name": "GLYCINE",
+          "canonical_name": "GLYCINE",
+          "dictionary_roles": [
+            "buffering",
+            "skin_conditioning"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Buffering and skin-conditioning functions are retained exactly; no hair-conditioning or cohesive-film function is substituted.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 22,
+          "raw_name": "GERANIOL",
+          "canonical_name": "GERANIOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is included without a conditioning-film inference.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 23,
+          "raw_name": "COUMARIN",
+          "canonical_name": "COUMARIN",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is included without a conditioning-film inference.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 24,
+          "raw_name": "CI 19140 / YELLOW 5",
+          "canonical_name": "CI 19140",
+          "dictionary_roles": [
+            "colourant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Colourant function supplies no affirmative conditioning-film mechanics.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 25,
+          "raw_name": "POLYQUATERNIUM-7",
+          "canonical_name": "POLYQUATERNIUM-7",
+          "dictionary_roles": [
+            "conditioning_polymer_for_hair"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Admitted hair-conditioning polymer supports a retained conditioning system alongside the silicone gum; its rank does not make its contribution negligible, and no specific adsorption or dose is claimed.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 26,
+          "raw_name": "CI 15985 / YELLOW 6",
+          "canonical_name": "CI 15985",
+          "dictionary_roles": [
+            "colourant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Colourant function supplies no affirmative conditioning-film mechanics.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 27,
+          "raw_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+          "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+          "dictionary_roles": [
+            "antioxidant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Antioxidant function is considered without inventing a structural conditioning-film role.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 28,
+          "raw_name": "SODIUM BENZOATE",
+          "canonical_name": "SODIUM BENZOATE",
+          "dictionary_roles": [
+            "preservative"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Preservative function is considered without any quantitative inference.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 29,
+          "raw_name": "PARFUM / FRAGRANCE",
+          "canonical_name": "PARFUM",
+          "dictionary_roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Fragrance mixture remains compositionally unspecified; it is not assumed to evaporate completely or to be negligible.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Mixture composition unspecified; not automatically volatile or negligible.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        }
+      ],
+      "persistence_potential": "high",
+      "reason": "A mixed vehicle delivers an integrated conditioning system containing silicone gum/film, silicone conditioning, a modified silicone hair conditioner and a hair-conditioning polymer. The affirmative gum route reinforced by complementary conditioning functions makes a cohesive retained coating the best reading despite the aqueous, humectant and solubilizing components.",
+      "evidence": [
+        {
+          "rank": 1,
+          "raw_name": "ISODODECANE",
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "AQUA / WATER",
+          "canonical_name": "AQUA"
+        },
+        {
+          "rank": 3,
+          "raw_name": "DIPROPYLENE GLYCOL",
+          "canonical_name": "DIPROPYLENE GLYCOL"
+        },
+        {
+          "rank": 4,
+          "raw_name": "DIMETHICONE",
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 5,
+          "raw_name": "ALCOHOL DENAT.",
+          "canonical_name": "ALCOHOL DENAT."
+        },
+        {
+          "rank": 6,
+          "raw_name": "DIMETHICONOL",
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "GLYCERIN",
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 8,
+          "raw_name": "PEG-14 DIMETHICONE",
+          "canonical_name": "PEG-14 DIMETHICONE"
+        },
+        {
+          "rank": 9,
+          "raw_name": "HYDROXYETHYL UREA",
+          "canonical_name": "HYDROXYETHYL UREA"
+        },
+        {
+          "rank": 11,
+          "raw_name": "PEG-60 HYDROGENATED CASTOR OIL",
+          "canonical_name": "PEG-60 HYDROGENATED CASTOR OIL"
+        },
+        {
+          "rank": 13,
+          "raw_name": "POLYACRYLAMIDE",
+          "canonical_name": "POLYACRYLAMIDE"
+        },
+        {
+          "rank": 14,
+          "raw_name": "C13-14 ISOPARAFFIN",
+          "canonical_name": "C13-14 ISOPARAFFIN"
+        },
+        {
+          "rank": 15,
+          "raw_name": "PROPYLENE GLYCOL",
+          "canonical_name": "PROPYLENE GLYCOL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "LAURETH-7",
+          "canonical_name": "LAURETH-7"
+        },
+        {
+          "rank": 25,
+          "raw_name": "POLYQUATERNIUM-7",
+          "canonical_name": "POLYQUATERNIUM-7"
+        },
+        {
+          "rank": 29,
+          "raw_name": "PARFUM / FRAGRANCE",
+          "canonical_name": "PARFUM"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29
+      ],
+      "neighbor_comparison": {
+        "low": "Water, cosolvents, humectants and emulsifying/solubilizing functions provide the strongest dispersible-system alternative. Those functions describe delivery and part of the remainder; they do not establish that the gum and other hair conditioners leave only a mainly mobile coating.",
+        "moderate": "An ordinary distributed conditioning coat is plausible if the silicone gum does little to organize the final coating and the additional hair conditioners remain functionally separate. The joint silicone-gum/conditioning-film route and complementary hair-conditioning functions give the cohesive reading the stronger affirmative basis. Polyacrylamide is kept in the rheology lane, so its mere polymer identity does not decide this comparison.",
+        "high": "Selected: dimethiconol and dimethicone provide a gum/conditioning-film route, with PEG-14 dimethicone and polyquaternium-7 adding complementary hair-conditioning functions. PEG-14 dimethicone has admitted plasticizing capability but actual plasticization is not asserted. Polyquaternium-7 is not discounted because of rank, and neither an adhesive property nor a quantity is invented. The polyacrylamide/isoparaffin/laureth-7 system is interpreted as formulation rheology/delivery rather than extra hair-film proof."
+      },
+      "tipping_assumption": "The gum-containing silicone conditioning system remains functionally substantive after distribution and contributes an organized retained coating together with the other hair conditioners. I choose that interpretation over a merely fluid emulsion residue; it does not depend on an inferred dose, a special dimethicone grade, or assuming the rheology polymer is a hair-film former.",
+      "research_context": {
+        "application_context": "Retained leave-on hair-fibre application; 1–2 pumps warmed in palms, applied from mid-lengths to ends on dry or towel-dried hair; do not rinse, then blow-dry or air-dry. No scalp or shampoo-removal assessment.",
+        "contextual_declarations": [],
+        "dose_handling": "Source-stated qualitative amounts or units remain unchanged and are not used as a standalone class or converted to absolute amounts."
+      }
+    },
+    {
+      "neutral_id": "PC03",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "Arachis Hypogaea Oil",
+          "canonical_name": "ARACHIS HYPOGAEA OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Exact intact fixed oil supplies a positive fluid emollient-coat route together with the germ and sunflower oils; no grade is assigned.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "No grade/coldpressed identity transfer."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 2,
+          "raw_name": "Melia Azadirachta Leaf Extract",
+          "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+          "dictionary_roles": [
+            "botanical_extract",
+            "botanical_leaf_extract",
+            "skin_conditioning"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Leaf-extract and skin-conditioning functions are considered separately from the fixed-oil system; this is not neem fixed oil and does not supply an admitted hair-film mechanism.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Extract, not neem fixed oil. No carrier/oil quantity or hairfilm inferred."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 3,
+          "raw_name": "Triticum Vulgare Germ Oil",
+          "canonical_name": "TRITICUM VULGARE GERM OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Exact germ oil contributes fluid emollient conditioning alongside the other fixed oils; no protein role is inferred.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact germ oil; no protein role or skinfeel transfer."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 4,
+          "raw_name": "Chamomilla Recutita Flower Extract",
+          "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "Exact function is unassessed. This remains a live contribution gap, not a negligible ingredient or an invented structural-film component.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact function not assessed. Contribution is not assumed negligible; do not infer a film, preparation or persistence class from the name."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 5,
+          "raw_name": "Lecithin",
+          "canonical_name": "LECITHIN",
+          "dictionary_roles": [
+            "emulsion_stabilizer"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Emulsion-stabilizing function can organize the formulation but does not establish a particularly cohesive hair film or make the retained oils readily dispersible.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "No lysolecithin substitution. Generic stability function alone does not prove cohesive hairfilm or rinsability."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 6,
+          "raw_name": "Alcohol",
+          "canonical_name": "ALCOHOL",
+          "dictionary_roles": [
+            "solvent"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Exact Alcohol has an admitted solvent function only; no denaturant, percentage, or eliminated remainder is inferred.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact ingredient is Alcohol, no denaturant assumption. No percentage, retained amount or negligible-remainder inference."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 7,
+          "raw_name": "Parfum*",
+          "canonical_name": "PARFUM",
+          "dictionary_roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Fragrance composition is considered as unspecified; the asterisk describes natural-essential-oil constituents and is not an extra ingredient.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Mixture composition unspecified; not automatically volatile or negligible.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 8,
+          "raw_name": "Helianthus Annuus Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Exact intact fixed oil completes the positive fluid lipid-conditioning reading; no separate quantity or cohesion mechanism is assigned.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 9,
+          "raw_name": "Lavandula Oil/Extract",
+          "canonical_name": "LAVANDULA OIL/EXTRACT",
+          "dictionary_roles": [
+            "fragrance_group",
+            "botanical_preparation_unspecified"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "Fragrance-group function is admitted but botanical preparation remains unspecified; neither fixed-oil identity nor a negligible remainder is assumed.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 10,
+          "raw_name": "Pinene*",
+          "canonical_name": "PINENE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is assessed at its supplied rank, without counting the asterisk as another ingredient.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 11,
+          "raw_name": "Camphor*",
+          "canonical_name": "CAMPHOR",
+          "dictionary_roles": [
+            "cooling_or_aromatic_auxiliary",
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Cooling/aromatic and declared fragrance functions are retained; no hair-film role is supplied.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 12,
+          "raw_name": "Linalool*",
+          "canonical_name": "LINALOOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is assessed without a conditioning-film inference or extra count for the asterisk.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 13,
+          "raw_name": "Beta-Caryophyllene*",
+          "canonical_name": "BETA-CARYOPHYLLENE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is assessed without a conditioning-film inference or extra count for the asterisk.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 14,
+          "raw_name": "Limonene*",
+          "canonical_name": "LIMONENE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is assessed without a conditioning-film inference or extra count for the asterisk.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 15,
+          "raw_name": "Terpineol*",
+          "canonical_name": "TERPINEOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is assessed without a conditioning-film inference or extra count for the asterisk.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Fragrance exposure independent of perfuming intent; outside agreed closed scalp-active botanical group. Citrus group does not identify the particular bitter/sweet orange oil."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 16,
+          "raw_name": "Linalyl Acetate*",
+          "canonical_name": "LINALYL ACETATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is assessed without a conditioning-film inference or extra count for the asterisk.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 17,
+          "raw_name": "Citronellol*",
+          "canonical_name": "CITRONELLOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is assessed without a conditioning-film inference or extra count for the asterisk.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 18,
+          "raw_name": "Citral*",
+          "canonical_name": "CITRAL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is assessed without a conditioning-film inference or extra count for the asterisk.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 19,
+          "raw_name": "Alpha-Terpinene*",
+          "canonical_name": "ALPHA-TERPINENE",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "Exact function is not assessed; its contribution stays unresolved and is not treated as absent, fragrance by assumption, or a hidden film former.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        }
+      ],
+      "persistence_potential": "moderate",
+      "reason": "The exact fixed-oil emollients positively support an ordinary retained fluid lipid coat. Lecithin supplies formulation stabilization, while the admitted extract/aromatic functions do not establish a particularly cohesive hair-film route. Unassessed functions remain explicit gaps; moderate follows the positive fluid-coat architecture rather than those gaps.",
+      "evidence": [
+        {
+          "rank": 1,
+          "raw_name": "Arachis Hypogaea Oil",
+          "canonical_name": "ARACHIS HYPOGAEA OIL"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Melia Azadirachta Leaf Extract",
+          "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Triticum Vulgare Germ Oil",
+          "canonical_name": "TRITICUM VULGARE GERM OIL"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Chamomilla Recutita Flower Extract",
+          "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Lecithin",
+          "canonical_name": "LECITHIN"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Alcohol",
+          "canonical_name": "ALCOHOL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Parfum*",
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Helianthus Annuus Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Lavandula Oil/Extract",
+          "canonical_name": "LAVANDULA OIL/EXTRACT"
+        },
+        {
+          "rank": 19,
+          "raw_name": "Alpha-Terpinene*",
+          "canonical_name": "ALPHA-TERPINENE"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "neighbor_comparison": {
+        "low": "The very-small-amount instruction, solvent and aromatic components offer a sparse/mobile-coat alternative, but dose wording cannot decide persistence and the exact fixed-oil emollients supply positive retained fluid-conditioning support. No admitted mechanism establishes a mainly dispersible remainder.",
+        "moderate": "Selected: arachis, exact germ oil and sunflower fixed oil form a coherent interpretation as fluid emollient conditioning in the admitted retained use. This relies on their functions within this complete system, not a default for natural formulas or a presumed majority.",
+        "high": "Lecithin stabilization could invite a structured-lipid reading, but its admitted function does not establish a cohesive hair film. Neem leaf extract is not neem fixed oil. Chamomilla function, Lavandula preparation and alpha-terpinene function remain unresolved contributions rather than being set to zero; none supplies an admitted positive whole-film cohesion mechanism that outweighs the fluid lipid-coat reading."
+      },
+      "tipping_assumption": "The fixed-oil conditioning system remains an ordinary fluid coating, with lecithin stabilizing the formulation rather than organizing a particularly persistent hair film. The unresolved extract/preparation functions may contribute meaningfully, but I do not invent a coherent-film or dispersibility mechanism for them. This positive fluid-coat reading tips the decision to moderate.",
+      "research_context": {
+        "application_context": "Retained leave-on hair-fibre application; very small amount on damp or dry ends after washing; do not rinse. No scalp or shampoo-removal assessment.",
+        "contextual_declarations": [
+          "Asterisks identify constituents from natural essential oils; not extra ingredients."
+        ],
+        "dose_handling": "Source-stated qualitative amounts or units remain unchanged and are not used as a standalone class or converted to absolute amounts."
+      }
+    },
+    {
+      "neutral_id": "PC04",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "ISOPROPYL PALMITATE",
+          "canonical_name": "ISOPROPYL PALMITATE",
+          "dictionary_roles": [
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Admitted emollience contributes to the fluid conditioning system; no spreading-to-persistence shortcut is used.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "No spreading-to-persistence mapping."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 2,
+          "raw_name": "COCO-CAPRYLATE/CAPRATE",
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+          "dictionary_roles": [
+            "defined_ester_emollient",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Exact mixed-ester emollient contributes fluid conditioning; intact coconut-oil mechanisms are not transferred.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact slash-containing mixed ester; no intact-coconut-oil prior transfer."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 3,
+          "raw_name": "C13-15 ALKANE",
+          "canonical_name": "C13-15 ALKANE",
+          "dictionary_roles": [
+            "hydrocarbon_carrier",
+            "emollient",
+            "solvent"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Hydrocarbon carrier, solvent and emollient functions support distribution plus fluid conditioning; no particular volatility or named commercial identity is assumed.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "No synonym to hemisqualane or assumption of sugarcane origin, particular volatility, dose or finishedproduct remainder."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 4,
+          "raw_name": "ETHYLHEXYL PALMITATE",
+          "canonical_name": "ETHYLHEXYL PALMITATE",
+          "dictionary_roles": [
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Emollient function complements the other conditioning fluids without supplying a demonstrated structural-film mechanism.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Historical generic role only; grade undisclosed."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 5,
+          "raw_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Exact intact fixed oil supports the fluid lipid-coat interpretation alongside the ester/emollient system.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 6,
+          "raw_name": "OCTYLDODECANOL",
+          "canonical_name": "OCTYLDODECANOL",
+          "dictionary_roles": [
+            "emollient",
+            "solvent"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Emollient and solvent functions contribute fluid conditioning/distribution; this is not interpreted as a drying alcohol.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "No drying-alcohol role; no spreading-to-persistence mapping."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 7,
+          "raw_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED EXTRACT",
+          "canonical_name": "HELIANTHUS ANNUUS SEED EXTRACT",
+          "dictionary_roles": [
+            "botanical_seed_extract",
+            "skin_conditioning"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Exact seed extract has botanical and skin-conditioning functions; it is not sunflower fixed oil, wax or a ceramide identity.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Extract, not sunflower fixed oil, wax or ceramide identity. No hairfilm inferred."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 8,
+          "raw_name": "DAUCUS CAROTA SATIVA (CARROT) ROOT EXTRACT",
+          "canonical_name": "DAUCUS CAROTA SATIVA (CARROT) ROOT EXTRACT",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "Exact function is unassessed; the extract remains a contribution gap rather than a negligible material or an inferred film former.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact function not assessed. Contribution is not assumed negligible; do not infer a film, preparation or persistence class from the name."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 9,
+          "raw_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+          "canonical_name": "RICINUS COMMUNIS SEED OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Exact intact fixed oil contributes emollient conditioning; no stickiness, grade or special persistent-film mechanism is imported.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 10,
+          "raw_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Exact intact fixed oil supports the ordinary fluid lipid-conditioning remainder.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 11,
+          "raw_name": "CITRUS AURANTIUM DULCIS (ORANGE) PEEL OIL",
+          "canonical_name": "CITRUS AURANTIUM DULCIS PEEL OIL",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "Exact function is unassessed; no essential-oil preparation, volatility, retained amount or conditioning-film role is inferred from the name.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact function not assessed. Contribution is not assumed negligible; do not infer a film, preparation or persistence class from the name."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 12,
+          "raw_name": "PELARGONIUM GRAVEOLENS LEAF OIL",
+          "canonical_name": "PELARGONIUM GRAVEOLENS LEAF OIL",
+          "dictionary_roles": [
+            "essential_oil",
+            "aromatic_auxiliary"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact leaf essential-oil and aromatic functions are considered without substituting a flower oil or fixed oil.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact leaf essential oil preparation/function; do not substitute floweroil or intactfixedoil."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 13,
+          "raw_name": "LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL",
+          "canonical_name": "LAVANDULA ANGUSTIFOLIA OIL",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "Exact function is unassessed; the supplied name does not establish its retained contribution or film behavior.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 14,
+          "raw_name": "CANANGA ODORATA FLOWER OIL",
+          "canonical_name": "CANANGA ODORATA FLOWER OIL",
+          "dictionary_roles": [
+            "essential_oil",
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Admitted essential-oil and declared fragrance functions are included without treating them as fixed-oil or cohesive hair-film evidence.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 15,
+          "raw_name": "ANGELICA ARCHANGELICA SEED OIL",
+          "canonical_name": "ANGELICA ARCHANGELICA SEED OIL",
+          "dictionary_roles": [
+            "aromatic_capability",
+            "preparation_not_resolved"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "Aromatic capability is admitted, but the preparation is unresolved; no particular extraction, fixed-oil identity or retained contribution is assumed.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact-INCI suppliers describe aromatic oil and coldpressed oil. No particular extraction/grade or intact fixed-oil prior admitted. Fragrance longevity not hair persistence."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 16,
+          "raw_name": "ANGELICA ARCHANGELICA ROOT OIL",
+          "canonical_name": "ANGELICA ARCHANGELICA ROOT OIL",
+          "dictionary_roles": [
+            "essential_oil",
+            "aromatic_auxiliary"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact root essential-oil and aromatic functions are considered without a grade or retained-amount assumption.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Exact root essential oil documented by supplier. No grade, contribution, retained remainder or medicinal claim inferred."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 17,
+          "raw_name": "GLYCINE SOJA (SOYBEAN) OIL",
+          "canonical_name": "GLYCINE SOJA OIL",
+          "dictionary_roles": [
+            "fixed_oil_carrier"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Exact fixed-oil-carrier function supports the lipid vehicle; no additional hair-film mechanism is supplied.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 18,
+          "raw_name": "HYDROGENATED COCO-GLYCERIDES",
+          "canonical_name": "HYDROGENATED COCO-GLYCERIDES",
+          "dictionary_roles": [
+            "emollient",
+            "film_forming_capability",
+            "viscosity_increasing"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Affirmative film-forming capability and emollient/viscosity functions are retained as the strongest high-class challenge; this can contribute to the coating without establishing whole-film structural dominance.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Film-forming is an affirmative generic capability supported by an exact-INCI grade. Neither persistence class nor structural dominance is implied. Grade, quantity and coating performance in finished product undisclosed; do not call it intact coconut oil.",
+              "Generic exact-INCI film-forming capability is admitted; supplier grade melting range and concentration must not be transferred to this formula. It is neither intact coconut oil nor automatic high persistence."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 19,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL",
+          "dictionary_roles": [
+            "antioxidant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Antioxidant function is considered without inventing a structural conditioning-film role.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 20,
+          "raw_name": "TOCOPHERYL ACETATE",
+          "canonical_name": "TOCOPHERYL ACETATE",
+          "dictionary_roles": [
+            "antioxidant_auxiliary"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact antioxidant-auxiliary function is retained without substitution by tocopherol or a new conditioning-film mechanism.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 21,
+          "raw_name": "PARFUM/FRAGRANCE",
+          "canonical_name": "PARFUM",
+          "dictionary_roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Fragrance composition stays unspecified; its retained contribution is not assumed absent or negligible.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Mixture composition unspecified; not automatically volatile or negligible.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 22,
+          "raw_name": "BENZYL BENZOATE",
+          "canonical_name": "BENZYL BENZOATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is included without a conditioning-film inference.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 23,
+          "raw_name": "LIMONENE",
+          "canonical_name": "LIMONENE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is included without a conditioning-film inference.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 24,
+          "raw_name": "LINALOOL",
+          "canonical_name": "LINALOOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is included without a conditioning-film inference.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 25,
+          "raw_name": "CITRONELLOL",
+          "canonical_name": "CITRONELLOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is included without a conditioning-film inference.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        },
+        {
+          "rank": 26,
+          "raw_name": "GERANIOL",
+          "canonical_name": "GERANIOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Declared fragrance constituent is included without a conditioning-film inference.",
+          "ambiguity": {
+            "dictionary_limits": [
+              "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+              "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+            ],
+            "formula_specific": "Formula role is an interpretive function, not a concentration or rank-derived dominance claim. Exact grade, quantity and finished coating contribution are not established."
+          }
+        }
+      ],
+      "persistence_potential": "moderate",
+      "reason": "The complete emollient/solvent, ester and fixed-oil system most plausibly leaves an ordinary retained fluid conditioning coat. Hydrogenated coco-glycerides provide real film-forming and structuring capability, but the stronger whole-system reading is a contribution within that fluid coat rather than a particularly cohesive or structured film.",
+      "evidence": [
+        {
+          "rank": 1,
+          "raw_name": "ISOPROPYL PALMITATE",
+          "canonical_name": "ISOPROPYL PALMITATE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "COCO-CAPRYLATE/CAPRATE",
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE"
+        },
+        {
+          "rank": 3,
+          "raw_name": "C13-15 ALKANE",
+          "canonical_name": "C13-15 ALKANE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "ETHYLHEXYL PALMITATE",
+          "canonical_name": "ETHYLHEXYL PALMITATE"
+        },
+        {
+          "rank": 5,
+          "raw_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL"
+        },
+        {
+          "rank": 6,
+          "raw_name": "OCTYLDODECANOL",
+          "canonical_name": "OCTYLDODECANOL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED EXTRACT",
+          "canonical_name": "HELIANTHUS ANNUUS SEED EXTRACT"
+        },
+        {
+          "rank": 8,
+          "raw_name": "DAUCUS CAROTA SATIVA (CARROT) ROOT EXTRACT",
+          "canonical_name": "DAUCUS CAROTA SATIVA (CARROT) ROOT EXTRACT"
+        },
+        {
+          "rank": 9,
+          "raw_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+          "canonical_name": "RICINUS COMMUNIS SEED OIL"
+        },
+        {
+          "rank": 10,
+          "raw_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 11,
+          "raw_name": "CITRUS AURANTIUM DULCIS (ORANGE) PEEL OIL",
+          "canonical_name": "CITRUS AURANTIUM DULCIS PEEL OIL"
+        },
+        {
+          "rank": 13,
+          "raw_name": "LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL",
+          "canonical_name": "LAVANDULA ANGUSTIFOLIA OIL"
+        },
+        {
+          "rank": 15,
+          "raw_name": "ANGELICA ARCHANGELICA SEED OIL",
+          "canonical_name": "ANGELICA ARCHANGELICA SEED OIL"
+        },
+        {
+          "rank": 17,
+          "raw_name": "GLYCINE SOJA (SOYBEAN) OIL",
+          "canonical_name": "GLYCINE SOJA OIL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "HYDROGENATED COCO-GLYCERIDES",
+          "canonical_name": "HYDROGENATED COCO-GLYCERIDES"
+        },
+        {
+          "rank": 21,
+          "raw_name": "PARFUM/FRAGRANCE",
+          "canonical_name": "PARFUM"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ],
+      "neighbor_comparison": {
+        "low": "The ester/hydrocarbon/solvent functions offer a mobile-conditioning interpretation, but spreading or carrier identity is not persistence evidence. No particular C13-15 alkane volatility is admitted. The complementary emollient and fixed-oil functions, with affirmative coco-glyceride film capability, favor a retained fluid coat over a mainly dispersible remainder.",
+        "moderate": "Selected: the esters, hydrocarbon emollient/solvent, octyldodecanol and exact fixed oils together support ordinary retained fluid conditioning. The coco-glyceride film-forming/viscosity contribution is included in that architecture rather than dismissed. Neither the number of oils nor an inferred quantity decides the class.",
+        "high": "Hydrogenated coco-glycerides are an affirmative film-forming and viscosity-increasing component, so high is a real competing interpretation if they organize the retained emollient mixture into a particularly structured film. The supplied generic capability does not establish that structural role in this whole formula. I judge a fluid conditioning system with a structuring contribution stronger than an organized persistent network, without using rank 18 to assume a small amount. Castor oil has admitted emollient functions only; sunflower seed extract is not a wax or ceramide. Unassessed carrot, orange and lavender functions and unresolved angelica-seed preparation remain live gaps, not negligible inputs or invented structural agents."
+      },
+      "tipping_assumption": "Hydrogenated coco-glycerides contribute film and texture within a fluid emollient/lipid coating rather than becoming the organizing mechanism of a particularly cohesive whole film. This is the specific functional assumption favoring moderate over high; no grade, melting range, concentration or low-rank insignificance is assigned. The unresolved preparations are not presumed absent.",
+      "research_context": {
+        "application_context": "Retained leave-on hair-fibre application; 3–4 drops warmed between hands, applied to lengths and ends of damp or dry hair. No scalp or shampoo-removal assessment; separate overnight pre-wash scenario excluded.",
+        "contextual_declarations": [],
+        "dose_handling": "Source-stated qualitative amounts or units remain unchanged and are not used as a standalone class or converted to absolute amounts."
+      }
+    }
+  ]
+}

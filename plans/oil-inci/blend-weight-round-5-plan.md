@@ -1,0 +1,64 @@
+# Oil blend-weight contrast round 5
+
+2026-10-04. Owner Codex. Worktree `codex/oil-inci`; local research only. Status: completed research execution; final scoped review/verification receipt follows.
+
+## Outcome and scope
+
+Apply the current qualitative weight policy to eight exact hair-oil formulas: six new development contrasts and two explicitly reused borderline products. Include richer botanical carrier systems and contrasting retained-film/mobile systems without assigning target classes. Deliver independent lane outputs, source-scoped working judgments, fresh/replay coverage and disagreements, a readable product sheet and an artifact-integrity receipt. Repeatability is not measured hair-weight accuracy.
+
+Freeze material reference v0.10 and blend policy v0.2 together. Other properties, user fit, runtime/database/catalog, sensory validation, general intake, publication and historical outputs are outside this weight-only round. No policy or material tendency is changed to make a class appear or force agreement.
+
+## Decision coverage — confirmed
+
+Confirmed with Nick: OE14 permits clearly marked estimates. The latest “Okay good. Let's do it.” accepts the proposed small product round including heavier blends to test light/medium/rich distinctions; record this as OE37. Source-backed lighter, medium and richer architectural contrasts are selection aims, not sensory reference targets. Existing scoped human product decisions remain developmental context outside blind inputs.
+
+Inherited from contract: exact ordered INCI and product/market/formula identity first; formula-focused independent classification; exact identities and separate plant-part/derivative handling; unknown remains available; low-confidence mixture estimates; immutable earlier records; no brand-claim or skin-feel weight inference; no concentration from rank; no accuracy claims from agreement. Current v0.10 admits the two exact shorter sunflower Oil names through a separate reviewed entry, without generic plant-part normalization. B0's old unspecified-sunflower warning does not erase that explicit lookup.
+
+Implementation defaults: six source-complete new formulas comprising two castor/richer-oil carrier contrasts, a contrasting botanical mixture, an ester/alkane mixture, and two silicone/retained-film contrasts. K18 Q10/W01 and Wella Q03 are explicit replays of frozen round 4. Own-maker DE/EU capture is preferred; another market is permitted only with a visible scope limit and no universal DE equivalence. Sources that cannot establish a complete, unconflicted selected declaration are held; backups preserve the same architectural question. Six fresh cases and two replays are the completion floor, not a silently reducible target. Exact fresh formulas are checked against all earlier oil classifications; prior market/source encounters are disclosed and do not become a clean holdout.
+
+Open consequential assumptions affecting this round: none. Undiscussed consequential assumptions affecting this handoff: none. Coverage acknowledgement: Nick's quoted request following the small contrast-round recommendation. Internal revalidation: source, review and verification findings will be reconciled before input freeze; a genuinely new product/policy choice returns only its affected work for decision. Ordinary source selection and evidence gaps do not require a new approval ceremony.
+
+## Selected source-scoped cohort
+
+| ID | Product / selected declaration | Cohort | Architectural question |
+| --- | --- | --- | --- |
+| R01 | Kérastase Elixir Ultime L’Huile Originale refillable, DE 75 ml | Fresh | Hydrocarbon plus conditioning silicone film |
+| R02 | Sunny Isle Rosemary Mint Hair and Strong Roots LITE Oil, US 2 oz | Fresh | Castor-led mixed botanical carrier |
+| R03 | K18 Molecular Repair Hair Oil, frozen DE 17-entry capture Q10/W01 | Replay | Ester/alkane backbone with botanical and derivative contributions |
+| R04 | khadi After Color Haaröl Color Protect, DE 50 ml | Fresh | Botanical-led backbone with MCT/ester counter-signal |
+| R05 | Aroma-Zone Haircare Oil With 7 Precious Oils, FR maker / English page 250 ml | Fresh | Castor/olive/coconut botanical backbone |
+| R06 | Evolve Nourishing Hair Elixir, UK 30 ml, current maker 22-entry list | Fresh | Ester-led anhydrous hair oil serum with botanical contributions |
+| R07 | Wella Oil Reflections Luminous Smoothing Oil, frozen DE Q03 capture | Replay | Volatile carrier plus retained conditioning film |
+| R08 | Schwarzkopf Oil Ultime Rose Finishing Oil, FI/EU 100 ml IDH3050393 | Fresh | Silicone-led retained film |
+
+Evolve is a concentrated anhydrous hair oil serum, applied in drops to wet/dry lengths and ends; source scope does not expand eligibility to aqueous serums or styling sprays. Product claims and these archetype labels stay outside blind inputs. Tabitha Fine & Oily is excluded because the actual maker declaration has concatenated words and an embedded erroneous split; a cleaned agent rendering was rejected rather than chemically repaired. Fushi Root Revival is excluded for conflicting own-maker declarations; Moroccanoil Light is excluded as already encountered. Older Evolve retailer lists are separate published declarations, not the selected current maker formula. Replays use the unchanged frozen captures, without claiming live pack re-verification.
+
+## Artifacts and execution
+
+New root: `data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/`. No customer surface, copy, timing or feedback changes; no mockup or separate journey sign-off applies. Operator outcome is exact formula → reviewed roles/material clues → estimated weight with competing reasons and named gaps.
+
+Root-only provenance: `source-capture.json`, `identity-map.json`, `display-receipts.json`, `role-source-ledger.json`, `preflight-receipt.json`, `historical-baseline.json`, `provenance-seal.json`. Record raw declarations and selected market/variant/size/URL, conflicts and source-scoped display changes. Preserve every raw token; case/whitespace alone is lookup normalization. Terminal punctuation, organic footnote markers, the ten exact Aroma-Zone explanatory annotations (including a comma inside the last annotation), or the two reviewed maker translation labels (`ZEA MAYS GERM OIL / CORN GERM OIL` and `PARFUM / FRAGRANCE`) require explicit narrow receipts. Other source literals remain exact and unresolved where necessary. No silent seed/parenthetical erasure.
+
+Independent read scope is exactly six files: `method.md`, `material-reference.json`, `policy.json`, `role-lexicon.json`, `blind-packet.json`, `input-manifest.json`. IDs are `R01`–`R08`. The manifest hashes the other five files; read-scope receipts hash all six. Frozen policy copies the v0.2 rules verbatim with real-product provenance omitted; a method note supplies the existing v0.10 exact-name routing clarification. The material copy is an explicit neutral projection of v0.10 identity/prior fields; it retains values, alternatives and confidence ceilings, while omitting maker/product/approval/history metadata and links. Root provenance records the projection and exact source hash. Generic ingredient roles retain reviewed functions and grade limits; unknown functions stay `not_assessed`, with no botanical repairs or inferred grade.
+
+Outputs: `lane-a/records.json`, `lane-a/notes.md`, `lane-b/records.json`, `lane-b/notes.md`, sealed `main-working.json`, `main-before-lanes-seal.json`, `comparison.json`, `adjudication.json`, `working-weights.csv`, `results-for-review.md`, `output-seal.json`, `verification-receipt.json`, `negative-control-receipt.json`. Output schema follows round 4: every ingredient receives a ranked role/reason; every exact material match is included; each weight includes estimate/confidence, positive/counter arguments, alternative, rule IDs and unresolved gaps. Root has source/selection knowledge and records its judgment before reading either lane. Never overwrite independent records during reconciliation.
+
+## Ordered work and acceptance
+
+1. Complete source preflight and one terminal read-only Claude plan review. Root owns selected cohort and file writes; two read-only source agents own disjoint botanical/ester and silicone questions. Verify all six fresh captures, eligibility, exact variant/market scope and prior-formula disjointness. Record supported review findings and reject target-class tuning. Freeze only after the planned contrast breadth is present.
+2. Build neutral inputs and source-backed exact roles. Seal inputs and historical hashes; verify `--inputs-only` before dispatch. A separate bounded worker owns only `plans/oil-inci/verify-blend-weight-round-5.py`; it may not edit shared inputs or older verifiers. Completion requires source/raw-canonical alignment, reviewed display changes, exact projection and policy equality, ingredient-role coverage, expected IDs/cohort counts and hash integrity.
+3. Dispatch two fresh judgment workers with no inherited conversation. They write only their disjoint lane directories, read exactly the six inputs, do not browse/use memory/read peers or sources, and disclose recognition or forbidden access. Root writes and seals its own full interpretation before opening lane outputs. Cognitive recognition and read-scope self-report limits remain explicit.
+4. Compare all eight outputs with six fresh/two replay denominators separately. Show substantive coverage, raw and known-only lane agreement, root differences, selected classes and gap patterns. A missing rich outcome is a finding, never a reason to retune rules or relabel cases. Human replay choices measure developmental consistency only. Reconciliation creates separate working adjudications; no general policy adoption follows from the trial.
+5. Verify complete artifacts and review the final delta. New verifier rejects false material inheritance, missing case/role/gap, confidence inflation, input/hash mutation, misreported metrics and declared forbidden access. Final review adds required provenance/historical coverage, duplicate-adjudication rejection and CSV consistency; fourteen negative controls exercise the intended guards. K18’s original root role error is separately corrected in reconciliation without rewriting the sealed original. Focused negative controls exercise real contract rejection with the intended reason; they do not test predicted weight labels. Root runs worker proof and inspects the full result. Existing frozen round-4 verification and the new historical snapshot confirm preservation.
+
+## Verification, review and stop
+
+Run `python3 plans/oil-inci/verify-blend-weight-round-5.py --inputs-only`, full verifier and `--negative-controls`; frozen round-4 verifier; `git diff --check` plus explicit new-document whitespace/local-link checks. Use the repository's changed-path gate only where its classifier identifies a relevant lane. No runtime/browser/database suite is justified by a research-only artifact change. `test-audit` governs meaningful negative controls; no production seam is introduced. New contract schema guards have one owner, the round-5 verifier.
+
+`plan-hardening-loop` supplies this plan and counterpart review, followed by `implementation-loop` for the already authorized research execution. `ready-check` and `request-code-review` cover the final in-scope delta with the same canonical content fingerprint. A whole-branch counterpart publication review is not triggered because no push is requested. The new verifier exceeds the source-line review signal, so the router adds a bounded structural-maintainability lens for that script. No runtime suite or speculative shared-framework extraction is required for local research artifacts.
+
+Retain all durable plan, evidence and run artifacts for an eventual authorized commit; discard transient complete Claude output after the reconciled review receipt is saved outside the blind read scope. No unresolved artifact disposition. Stop after the completed or honestly blocked contrast result, identified uncertainties and a concrete recommended next development step. No commit, push, PR, merge, activation or cleanup.
+
+## Internal coverage revalidation / observed outcome
+
+Original Coverage acknowledgement remains OE37, distinct from OE36. No consequential scope choice changed: six fresh complete declarations and two unchanged captures were used; Tabitha was replaced by khadi after rejecting a chemically cleaned source rendition. The material/policy rules were frozen throughout. All original arguments and root’s initial seal are retained. Working coverage is 7/8 with Evolve balanced under B7; actual lane equality is 6/8, not an accuracy score. Existing Wella/K18 approvals are preserved. Final scoped correctness/structural review and the shared content fingerprint are recorded in the completion receipt.

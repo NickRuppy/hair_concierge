@@ -1,0 +1,12 @@
+{
+  "files": {
+    "source-capture.json": "aa08e74ffe3958ea8873f7213f54c2db0dce9fa14f954692a9b23f073d192067",
+    "identity-map.json": "996a0f0e5104cef04805583a99cfa01237cde35944d055bea26fc872adf4fa74",
+    "display-receipts.json": "b79660a5aeb936fa8bc2a2167b02f8268ab84e25326174ad2c128c438631cd86",
+    "role-source-ledger.json": "e3721b8771630b0dbee6f9b63a34bb12032d2a0a4ee5de9ca432870b472f5b22",
+    "preflight-receipt.json": "83126b82ad4553141a8571389904ae31320d5b14442e6026cfcab5ca84ddc1f9",
+    "historical-baseline.json": "fa39392273e3bb1b3c7695565ac8c9abb770b3715a3cb9f369f136643647bb68",
+    "input-manifest.json": "2f419dd3fcd1446b2506b92db27dd4d4e80d71114e4eb876d1a2467ad23510e3"
+  },
+  "scope": "Selected source scope, literal/display receipts, generic-role sources, material projection and finite historical/freshness check. Not a physical-pack or sensory truth seal."
+}

@@ -227,8 +227,15 @@ test.describe.serial("@ci Profile page smoke", () => {
       .click()
     await page.getByRole("button", { name: "Trockene oder strohige Längen" }).click()
     await page.getByRole("button", { name: "Naturhaar" }).click()
+    const saveResponse = page.waitForResponse(
+      (response) =>
+        new URL(response.url()).pathname === "/api/profile/answers" &&
+        response.request().method() === "POST",
+      { timeout: 30_000 },
+    )
     await page.getByRole("button", { name: "Haar-Check speichern" }).click()
-    await expect(page.getByText("Haar-Check gespeichert").first()).toBeVisible()
+    expect((await saveResponse).status()).toBe(200)
+    await expect(page.getByText("Haar-Check gespeichert").first()).toBeVisible({ timeout: 30_000 })
     await expect(
       page.getByRole("button").filter({ hasText: "Haardichte" }).getByText("Viele Haare"),
     ).toBeVisible()

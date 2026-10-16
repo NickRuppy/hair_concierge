@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "date": "2026-10-02",
+  "scope": "artifact coherence and immutable history, not measured hair-weight accuracy",
+  "materials": 65,
+  "canonical_names_and_aliases": 104,
+  "counts": {
+    "light": 42,
+    "rich": 8,
+    "medium": 14,
+    "unknown": 1
+  },
+  "changed_existing_entries": [
+    "argan",
+    "black_seed",
+    "moringa"
+  ],
+  "other_existing_entries_unchanged": 61,
+  "added_fixed_oils": [
+    "cacay"
+  ],
+  "separate_carrier_guidance": [
+    "calendula_macerate"
+  ],
+  "confidence_counts": {
+    "low": 62,
+    "moderate": 2
+  },
+  "source_records": 83,
+  "guide_json_agreement": true,
+  "table_contiguous": true,
+  "active_consumers_synced": 4,
+  "old_observations_and_counterevidence_retained": true,
+  "historical_files_unchanged": 57,
+  "validated_hair_weight_entries": 0,
+  "new_product_calibration": false,
+  "full_list_signoff": false,
+  "reference_sha256": "3bf6a3631a407e4439032f335083d927d56d0cff5061fd4e912c6a4191f76068",
+  "guide_sha256": "95f32e9de95dbcd4c2985da8b3303539f151354bd2b6c8bf271a133460f3abeb"
+}

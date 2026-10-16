@@ -1,0 +1,28 @@
+case_id,brand,product,lane_a,lane_b,decision,policy_version,context,source_url
+O01,K18,Molecular Repair Hair Oil,moderate,moderate,moderate,oil-persistence-leave-on-v0.1,leave-on fibre,https://www.notino.de/k18/molecular-repair-hair-oil-pflegendes-trockenoel-fuer-beschaedigtes-und-bruechiges-haar/p-16220382/
+O03,Kérastase,Soleil Huile Sirène,high,high,high,oil-persistence-leave-on-v0.1,leave-on fibre,https://www.kerastase.de/alle-produkte/huile-sirene/KER_00054.html
+O04,Biopark Cosmetics,Organic Coconut Oil,moderate,moderate,moderate,oil-persistence-leave-on-v0.1,leave-on fibre,https://biopark-cosmetics.com/products/organic-coconut-oil-100ml
+O05,Living Proof,No Frizz Vanishing Oil,moderate,moderate,moderate,oil-persistence-leave-on-v0.1,leave-on fibre,https://www.livingproof.com/collections/no-frizz/products/no-frizz-vanishing-oil
+O06,NEQI,Opulent Oil Hair Serum,high,high,high,oil-persistence-leave-on-v0.1,leave-on fibre,https://neqi-hair.com/products/opulent-oil-hair-serum
+O07,OLAPLEX,No.7 Bonding Oil,moderate,moderate,moderate,oil-persistence-leave-on-v0.1,leave-on fibre,https://olaplex.de/collections/glanz-shine/products/olaplex-no-7-bonding-oil
+O08,OGX,Coconut Miracle Oil Extra Strength Penetrating Oil,high,high,high,oil-persistence-leave-on-v0.1,leave-on fibre,https://www.dm.de/p/d/2322377/ogx-haaroel-coconut-miracle-oil
+O09,NUXE,Huile Prodigieuse original,moderate,moderate,moderate,oil-persistence-leave-on-v0.1,leave-on fibre,https://de.nuxe.com/products/wichtiger-ol%C2%AE/
+O10,Wella Professionals,Oil Reflections Luminous Smoothing Oil,high,high,high,oil-persistence-leave-on-v0.1,leave-on fibre,https://www.wella.com/professional/de-DE/products/haarpflege/oil-reflections/oil-reflections-luminous-smoothing-oil
+O11,Mielle,Rosemary Mint Scalp & Hair Strengthening Oil (Original),moderate,moderate,moderate,oil-persistence-leave-on-v0.1,leave-on fibre,https://mielleorganics.com/products/rosemary-mint-oil
+O12,John Frieda,Der Bändiger – Extra Strong Serum,high,high,high,oil-persistence-leave-on-v0.1,leave-on fibre,https://www.johnfrieda.com/de-de/produkte/frizz-ease/seren/der-baendiger-extra-strong-serum/
+O13,khadi,Strong Amla Haaröl,moderate,moderate,moderate,oil-persistence-leave-on-v0.1,leave-on fibre,https://khadi.de/products/haare-haaroel-strong-amla
+O14,Moroccanoil,Behandlung Original,high,high,high,oil-persistence-leave-on-v0.1,leave-on fibre,https://de.moroccanoil.com/products/moroccanoil-treatment-original
+O15,Kérastase,Elixir Ultime L’Huile Originale Nachfüllbar,high,high,high,oil-persistence-leave-on-v0.1,leave-on fibre,https://www.kerastase.de/produktlinien/produktart/ole-seren/nach-haartyp-filtern/widerspenstiges-haar/l-huile-originale-nachfullbar/KER_00303.html
+O16,Sunny Isle,Rosemary Mint Hair and Strong Roots LITE Oil,moderate,moderate,moderate,oil-persistence-leave-on-v0.1,leave-on fibre,https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz
+O17,khadi,After Color Haaröl Color Protect,moderate,moderate,moderate,oil-persistence-leave-on-v0.1,leave-on fibre,https://khadi.de/products/haare-haaroel-color-care
+O18,Aroma-Zone,Haircare Oil With 7 Precious Oils,moderate,moderate,moderate,oil-persistence-leave-on-v0.1,leave-on fibre,https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil
+O19,Evolve Organic Beauty,Nourishing Hair Elixir – Dry Hair Serum,moderate,moderate,moderate,oil-persistence-leave-on-v0.1,leave-on fibre,https://www.evolvebeauty.com/products/weightless-hair-serum
+O20,Schwarzkopf Professional,Oil Ultime Rose Finishing Oil,high,high,high,oil-persistence-leave-on-v0.1,leave-on fibre,https://shop.schwarzkopf-professional.fi/en/products/central-pdp.html/3050393.html?replacesProduct=null
+O21,JVN,Complete Nourishing Shine Drops,moderate,moderate,moderate,oil-persistence-leave-on-v0.1,leave-on fibre,https://jvnhair.com/collections/shop-all/products/complete-nourishing-shine-drops
+O22,Biopark Cosmetics,Jojoba Oil Organic,moderate,moderate,moderate,oil-persistence-leave-on-v0.1,leave-on fibre,https://biopark-cosmetics.com/products/jojoba-oil-30ml
+O23,Bumble and bumble,Hairdresser’s Invisible Oil Frizz Reducing Hair Oil,high,high,high,oil-persistence-leave-on-v0.1,leave-on fibre,https://m.bumbleandbumble.com/product/19060/23196/style/oils/hairdressers-invisible-oil-frizz-reducing-hair-oil
+O24,Color Wow,Pop & Lock High Gloss Finish,high,high,high,oil-persistence-leave-on-v0.1,leave-on fibre,https://colorwowhair.com/products/pop-and-lock-frizzy-control-serum?variant=41342159159488
+O25,Davines,OI Oil,high,high,high,oil-persistence-leave-on-v0.1,leave-on fibre,https://us.davines.com/products/oi-oil
+O26,Verb,Ghost Oil,high,high,high,oil-persistence-leave-on-v0.1,leave-on fibre,https://www.verbproducts.com/products/ghost-oil
+O27,Aveda,Nutriplenish Multi-Use Hair Oil,moderate,moderate,moderate,oil-persistence-leave-on-v0.1,leave-on fibre,https://www.aveda.com/product/17753/71181/hair-care/hair-and-scalp-oils/nutriplenishtm-multi-use-hair-oil?size=1_fl_oz/30_ml
+O28,The Ordinary,100% Cold-Pressed Virgin Marula Oil,moderate,moderate,moderate,oil-persistence-leave-on-v0.1,leave-on fibre,https://theordinary.com/en-us/100-cold-pressed-virgin-marula-face-oil-100389.html

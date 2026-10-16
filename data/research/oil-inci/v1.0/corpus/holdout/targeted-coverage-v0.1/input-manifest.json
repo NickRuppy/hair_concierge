@@ -1,0 +1,37 @@
+{
+  "run_id": "oil-targeted-coverage-v0.1",
+  "frozen_before_label_dispatch": true,
+  "inputs": {
+    "method.md": "d3574b9b59b9214ea2c47827e361707b8b69b003b586e1244e1ba8c0df48a726",
+    "blind-packet.json": "e6c0e101c6adb066179a4a0076b53f224d795a3c021105831843d1f65b1fe241",
+    "function-dictionary.json": "b8db54b6dfc6534b9fe2c4e4be2009c2ded2cfb8b0c0439617194009e64f6a69",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+  },
+  "sources": {
+    "source-packet.json": "38278813aadcbbfe316a774d381e2a59b4e82ce866406b830c8b80e55f808c92",
+    "cohort-manifest.json": "6e5df694c815d14819c01b010146118f95eb3b6f0a5b292b32c890d59c1121cb",
+    "normalization-receipt.json": "a49edd40c0963c647679acfa9d1cd0b784da63077ee56e675bfa76fc29cb18e3",
+    "function-source-registry.json": "bf8c83ba2a96af66eca79ec9b0ee1f6f617420ebd37838e1d220b2b0279dc5ef",
+    "formula-overlap-audit-v0.2.json": "64e0aeee27ec3cf167952be29c148ea72cdf7609ff87ec61920d9d6d981abbff",
+    "dictionary-root-review.json": "e7b2b444411cf843b1df0e4609fe05726c1cfbce55847670c1dc9dad238a7cdf",
+    "dependency-manifest.json": "b1f831ca3ee31adaec2df9913f0ce5455f71928b3c0ff4452f13cd966591681c",
+    "selection-registration.json": "5b83fb15956c6c23003f89ad0a44468aee93bae8088fd86389df771c40f2abaf",
+    "source-staging/group-a.json": "22b8b662d2c45c124052f0f31403b74ef7e5cc7777d0350bf66c7b5a7b6203ad",
+    "source-staging/group-b.json": "a285248055e12b7974fcc8cd32e925d7d8c083bb4b0211f11d4ac683e5d1be33"
+  },
+  "case_ids": [
+    "T01",
+    "T02",
+    "T04",
+    "T06"
+  ],
+  "ingredient_ranks": 64,
+  "acceptance": {
+    "formula_fields_min_exact_matches": 4,
+    "denominator": 4,
+    "threshold": 0.8,
+    "flags_and_claim_gates_min_exact_matches": 4,
+    "unknown_persistence": 0,
+    "meaning": "Diagnostics only, no sensory or intake unlock."
+  }
+}

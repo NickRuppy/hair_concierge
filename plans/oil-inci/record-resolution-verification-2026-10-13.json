@@ -1,0 +1,157 @@
+{
+  "branch": "codex/oil-intake-bridge-v1",
+  "base": "81201a9e4e577ce03730809cc367ab21b10ce091",
+  "canonical_content_fingerprint": "ec31947cab2f88bcee4228690a2a8ab41eb90f1c64e19e5624c171f2e84fcbad",
+  "decision_coverage": {
+    "status": "confirmed",
+    "original_acknowledgement": "resolve those four records; use subagents; H04 Use provisional medium (recommended)",
+    "internal_revalidation": "Exactly three technical source/representation fixes and one exact-product owner estimate. Preserve source directions, non-weight classifications, existing thickness table, scalar persistence, manual matching and inactive routing. No additional consequential choices."
+  },
+  "outcome": {
+    "records": 37,
+    "property_projection_ready": 37,
+    "needs_research": 0,
+    "corrected": 4,
+    "unchanged_byte_exact": 33,
+    "owner_provisional_weight": 1,
+    "h04_weight": "medium",
+    "all_four_persistence": "moderate"
+  },
+  "checks": {
+    "integrated_tests": {
+      "passed": 83,
+      "failed": 0,
+      "command": "node --import ./tests/server-only-register.cjs --import tsx --test tests/oil-*.test.ts tests/product-intake-category-research-router.test.ts"
+    },
+    "independent_successor_verifier": {
+      "ok": true,
+      "command": "npm run research:oil:verify-resolved-records -- data/research/oil-inci/v1.0/record-resolution-v0.1",
+      "after_rationale_guard": true
+    },
+    "historical_default_verifier": {
+      "records": 37,
+      "ready": 33,
+      "refused": 4,
+      "unchanged": true
+    },
+    "immutable_historical_files": {
+      "matched": 82,
+      "scope": "old replay v0.1/v0.2 plus exporter/default verifier"
+    },
+    "transferred_research": {
+      "matched": 721,
+      "original_routing_bytes_snapshotted": true
+    },
+    "authority_reference_hashes": {
+      "matched": 46
+    },
+    "corrected_cli_roundtrips": {
+      "passed": 4,
+      "unchanged_research_payload": true,
+      "weights": {
+        "O04": "rich",
+        "O18": "rich",
+        "O19": "light",
+        "H04": "medium"
+      },
+      "largest_envelope_bytes": 322572,
+      "limit_bytes": 1048576
+    },
+    "typecheck": {
+      "exit_code": 0
+    },
+    "lint": {
+      "exit_code": 0,
+      "errors": 0,
+      "unchanged_warnings": 17
+    },
+    "focused_lint_including_ignored_scripts": {
+      "exit_code": 0
+    },
+    "build": {
+      "exit_code": 0,
+      "static_pages": 226,
+      "scope_note": "Successful full build before final offline-verifier-only equality guard; final delta typechecked and regression-tested. Runtime sources unchanged."
+    },
+    "diff_check": {
+      "exit_code": 0
+    },
+    "rebuild_determinism": {
+      "passed": true,
+      "populated_target_refused": true
+    },
+    "negative_controls": {
+      "semantic_rehash_tampering": true,
+      "source_direction_drift": true,
+      "persistence_drift": true,
+      "fit_drift": true,
+      "predecessor_byte_tamper": true,
+      "missing_dependencies": true,
+      "path_symlink_hash_boundaries": true,
+      "frozen_input_tamper_in_isolated_root": true
+    },
+    "published_receipt_matches_expected_report": true,
+    "changed_authority_receipts_no_stale_keys": true
+  },
+  "red_proof": {
+    "root": "Initial callable integration failed expected37 readiness: H04 authority pointer mismatch produced36ready/1refused; resolved exact pointers before publication. Trace-wrapper/raw authority mismatch independently rejected before correction.",
+    "tests": "Behavioral assertions on actual builder/verifier; no missing-import or syntax failures counted.",
+    "rationale_binding": "Complete isolated frozen dependency-closure fixture: unapproved H04 reason was accepted before guard (Missing expected exception), then reason/counter_signal/unresolved all refused after exact owner-receipt equality checks."
+  },
+  "counterpart_review": {
+    "plan": "Claude Opus/high approve with required changes; applicable findings reconciled before implementation",
+    "code_packet_fingerprint": "8f09aa2fde6d8cbcf64238778bf923be3980028235fa7aac6d39a2fe86229ca9",
+    "code": "Completed Claude Opus/high fixed-packet read-only terminal review, exit0: no blocking correctness/data-integrity findings and no material structural impairment.",
+    "single_external_lane_per_pass": true,
+    "reviewed_packet_files": {
+      "scripts/research/oil-inci/resolve-records.ts": "e957391f8429b3ca96ef4c8f1c5a8f35c52ccd3423534c2663e69006ed86a4fe",
+      "scripts/research/oil-inci/verify-resolved-records.ts": "06a3978d5f82bcf9a9aef25715d5d88339ed8315ed9a4f464bc5c240051742fc",
+      "tests/oil-record-resolution.test.ts": "df6a06922225062273d5cc05d8a1414d78f410dcd8376422d12ab8b87f7813f6",
+      "tests/oil-record-resolution-verifier.test.ts": "380f5f3f2b275afcd9eecd6d351bc9f65433b9a758d502f5c79e617b583158c7",
+      "src/lib/oil-research/contracts.ts": "3c4c59e06af2f5532312bd5b0eed1ca8ce7b0179f2e7d2e48639505d385c9a5a",
+      "src/lib/oil-research/registry.ts": "6a316a02d774fc0fd9875daf25a593718242fc71843139892022a9867ea6a425",
+      "scripts/research/oil-inci/artifact-io.ts": "7767801182949c5d64d077b55c27a50fdaf7ff0fc5ead46059efd82ab5bf2d87",
+      "src/lib/oil-research/production-adapter.ts": "6cc5d52c0c122e357ba505bd5df5da6efef2d64db3d172bb16c249fef62af252",
+      "plans/oil-inci/resolve-four-records-plan-2026-10-13.md": "81b1522a02f2c87dc45ce945a82c896ef107602484b0bbf11a54e76cc4b0c9c8",
+      "plans/oil-inci/research/record-resolution-2026-10-13/resolution-authorities-input.json": "6a9255853f3b5f26ab52b55e222d8c6fa2142079441fbe539c6e2d3ddda16069",
+      "data/research/oil-inci/v1.0/record-resolution-v0.1/manifest.json": "5a1df886eb2a4d82ff19ce747f95170256b1ac608ef4326fba3a62f955130ee8",
+      "data/research/oil-inci/v1.0/record-resolution-v0.1/verification.json": "58f1cf607154e30af00cc04fb698e3ee5abf8c5d4b20613fe57e3f4f26d22d60",
+      "docs/product-intake-oil-production-adapter.md": "8bca769999da1c675bb4b9c58eb640aa5b8005e931b88b42c7363474098bfd3a"
+    },
+    "rulings": "Supported explanation-binding gap reproduced and fixed. Nonblocking positional-argument/duplication/redundant-I/O/counting/inventory/future-predecessor/cosmetic suggestions retained as bounded maintainability notes, not activation or reclassification decisions.",
+    "local_delta_review": {
+      "changed_packet_paths": [
+        "scripts/research/oil-inci/verify-resolved-records.ts",
+        "tests/oil-record-resolution-verifier.test.ts"
+      ],
+      "correctness": "Three explanation fields bound to hash-verified owner receipt; RED reproduced, 83tests/typecheck/focusedlint and37ready verifier pass",
+      "structural": "Local equality guard and isolated complete fixture; no architecture/dataflow/activation changes; reuse counterpart structural conclusion"
+    }
+  },
+  "artifact_disposition": {
+    "commit_intended": "all in-scope manifest files and generated receipts; no commit authorized",
+    "discard": "transient terminal and Claude packets/events after concise receipts",
+    "archive": "none"
+  },
+  "skipped_checks": {
+    "browser": "no changed or activated UI",
+    "database": "no DB/schema/production writes",
+    "chat_evaluation": "no changed chat/router/routines runtime"
+  },
+  "limits": [
+    "H04 is provisional owner judgment for the exact declared formula; leading carriers remain undisclosed, rich alternative retained",
+    "Projection replay does not establish sensory/classification accuracy or method lock",
+    "Zero actual low-persistence product coverage remains",
+    "Manual matching, oil worker activation, catalog/publication and production unchanged",
+    "Task base is five commits behind recorded origin/main; fresh-main integration required before future publication"
+  ],
+  "root_checkout": {
+    "branch": "main",
+    "clean": true,
+    "matches_recorded_origin_main": true
+  },
+  "publication": "No commit, push, PR, activation or production write",
+  "pending_verification": [],
+  "readiness": "Verified review-ready for four-record source-preserving local resolution",
+  "completed_local_date": "2026-10-13"
+}

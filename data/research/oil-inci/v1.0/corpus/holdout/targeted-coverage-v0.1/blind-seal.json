@@ -1,0 +1,12 @@
+{
+  "stage": "blind",
+  "both_outputs_sealed_before_root_semantic_read_or_source_reveal": true,
+  "outputs": {
+    "lane-a/blind-records.json": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+    "lane-a/persistence-research-trace.json": "d247b19a0b68a0ecf9fe1302799d8ca8cd15b27e27fab420f12de9dbc464b8c1",
+    "lane-a/blind-notes.json": "038ffd1e9258f79aa0a64ca9a89169b018aa6ce19882a9f35dff040e29caa743",
+    "lane-b/blind-records.json": "fdc3564af4c8d2bd72931276fe975ca665acde7feca3f884a781e7d7181a08d7",
+    "lane-b/persistence-research-trace.json": "371f40f3e03cb33ae403523ff4a5483e109f9186d5bbbe5f48ce5b47163ea9ab",
+    "lane-b/blind-notes.json": "c0c7b5e61df6a90e0d4226086b2369a0ba34b6e7631a3b7f93e160583239d5e1"
+  }
+}

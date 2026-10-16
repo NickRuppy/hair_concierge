@@ -1,0 +1,228 @@
+{
+  "version": "oil-adapter-replay-v0.2",
+  "inventory": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/combined-profile-inventory.json",
+  "files": [
+    {
+      "product_key": "oil-persistence-01",
+      "path": "envelopes/oil-persistence-01.json",
+      "sha256": "b3f67d99ebdc959ea236e1901572dae8c4862eab0b235e84bbf9f4a9242fdd93",
+      "bytes": 155728
+    },
+    {
+      "product_key": "oil-persistence-03",
+      "path": "envelopes/oil-persistence-03.json",
+      "sha256": "646cbc6ee81b4dbd74783e4b2e71bd89c7f6ced9d939e0612300861b891892d3",
+      "bytes": 134191
+    },
+    {
+      "product_key": "oil-persistence-04",
+      "path": "envelopes/oil-persistence-04.json",
+      "sha256": "be4d0cf3ab751128c4dcc83c55ad39fface9ee618bbfa148f145a0d16c073cdb",
+      "bytes": 112035
+    },
+    {
+      "product_key": "oil-persistence-05",
+      "path": "envelopes/oil-persistence-05.json",
+      "sha256": "674f061d63e83499aec043daafdcbb2ab9b645443e70b2c5f907b48ae6d7b8da",
+      "bytes": 185782
+    },
+    {
+      "product_key": "oil-persistence-06",
+      "path": "envelopes/oil-persistence-06.json",
+      "sha256": "52e1c291a5f81ca305301457869caac643aff747992fc66b36df1bca5ff310c5",
+      "bytes": 166869
+    },
+    {
+      "product_key": "oil-persistence-07",
+      "path": "envelopes/oil-persistence-07.json",
+      "sha256": "56c7d8d7ba69b7a353d79397bbdf826b38079efc39f9e0462acded408fbd5e33",
+      "bytes": 158518
+    },
+    {
+      "product_key": "oil-persistence-08",
+      "path": "envelopes/oil-persistence-08.json",
+      "sha256": "9d49e28f1f4cbeb42548c896e70f4d40902e81a29747dbd82bd106e85b361fb2",
+      "bytes": 155381
+    },
+    {
+      "product_key": "oil-persistence-09",
+      "path": "envelopes/oil-persistence-09.json",
+      "sha256": "5a56aedc0352cc64b40b752ce200be1dbf940fe410a74bd263e04130a4ad2b36",
+      "bytes": 180514
+    },
+    {
+      "product_key": "oil-persistence-10",
+      "path": "envelopes/oil-persistence-10.json",
+      "sha256": "df0a196cd951565e116ae7180bda0f5780babb6d4414f215ef781d9bcfcd21a7",
+      "bytes": 131717
+    },
+    {
+      "product_key": "oil-persistence-11",
+      "path": "envelopes/oil-persistence-11.json",
+      "sha256": "f59034202659797aaef9f411b320fa24f4854515112c63b3377c003078581880",
+      "bytes": 187433
+    },
+    {
+      "product_key": "oil-persistence-12",
+      "path": "envelopes/oil-persistence-12.json",
+      "sha256": "b34954250f580a65e919d8c425627c4d044ee041c18e58f6232828857fabcaf2",
+      "bytes": 121738
+    },
+    {
+      "product_key": "oil-persistence-13",
+      "path": "envelopes/oil-persistence-13.json",
+      "sha256": "645a7112f60f900a60a6a13d9d36d85e64ae39b9432410c5274a81b592c1737e",
+      "bytes": 182250
+    },
+    {
+      "product_key": "oil-persistence-14",
+      "path": "envelopes/oil-persistence-14.json",
+      "sha256": "3af2eba21382aceb2cef2622271154ac6a8dadea183c51222b62a559b3a1b2f7",
+      "bytes": 160899
+    },
+    {
+      "product_key": "oil-persistence-15",
+      "path": "envelopes/oil-persistence-15.json",
+      "sha256": "2b8ce7ea0d62df81387e4adbc2bafaba5d0c1708920058e1553db4acb1306b58",
+      "bytes": 156060
+    },
+    {
+      "product_key": "oil-persistence-16",
+      "path": "envelopes/oil-persistence-16.json",
+      "sha256": "0cf7c9ba252ea17223f72ce65492447ec6d453cb69a78eb321007dbf19a7db22",
+      "bytes": 212242
+    },
+    {
+      "product_key": "oil-persistence-17",
+      "path": "envelopes/oil-persistence-17.json",
+      "sha256": "5f1cd5edd4395b58a44826bdc8df088a7591b505951ab28dfcb23e9eec03493a",
+      "bytes": 192399
+    },
+    {
+      "product_key": "oil-persistence-18",
+      "path": "envelopes/oil-persistence-18.json",
+      "sha256": "7c998b6ecc08d1a692aa7ef4da9b4bcd9faa1e379ab3a548ca21c62460985922",
+      "bytes": 152687
+    },
+    {
+      "product_key": "oil-persistence-19",
+      "path": "envelopes/oil-persistence-19.json",
+      "sha256": "a04ac8ce44f40fff3924428395465f7dab4c8628935f489fd23327a712839d1d",
+      "bytes": 149673
+    },
+    {
+      "product_key": "oil-persistence-20",
+      "path": "envelopes/oil-persistence-20.json",
+      "sha256": "c0dcbd8eaf4f27108da03442dd9983c92d1b4ab862550e84256965fc7545a9e9",
+      "bytes": 147683
+    },
+    {
+      "product_key": "oil-persistence-21",
+      "path": "envelopes/oil-persistence-21.json",
+      "sha256": "cc30035c73a996eb5c23e6636c96c73eca4e1bb29a21528c829b7943d1261645",
+      "bytes": 145938
+    },
+    {
+      "product_key": "oil-persistence-22",
+      "path": "envelopes/oil-persistence-22.json",
+      "sha256": "d5c295ac73bd76fa112c13b547b4effd32d497258248d8fdcf9339dac647db1d",
+      "bytes": 108532
+    },
+    {
+      "product_key": "oil-persistence-23",
+      "path": "envelopes/oil-persistence-23.json",
+      "sha256": "3321904ec4141573c0721ece696e5ba49c6d7335ece6800ffd77677d38bab217",
+      "bytes": 177202
+    },
+    {
+      "product_key": "oil-persistence-24",
+      "path": "envelopes/oil-persistence-24.json",
+      "sha256": "319757677a418316b9b6f16c03e55563743b86f570c702654eace23b58fdcc44",
+      "bytes": 140449
+    },
+    {
+      "product_key": "oil-persistence-25",
+      "path": "envelopes/oil-persistence-25.json",
+      "sha256": "c57733bd25903ca6cddcfb6d0f1d9de190cd74623b8c40b5d58080900b6fdcff",
+      "bytes": 159216
+    },
+    {
+      "product_key": "oil-persistence-26",
+      "path": "envelopes/oil-persistence-26.json",
+      "sha256": "fe7dafa8d848e90997a8813f4e9f7fcc4cae31d59fcc582a2cfbc8f513a29024",
+      "bytes": 180128
+    },
+    {
+      "product_key": "oil-persistence-27",
+      "path": "envelopes/oil-persistence-27.json",
+      "sha256": "939593a6a2e61681828e6749bab11c17ba882b652db4645eb1907ce68793c08a",
+      "bytes": 193347
+    },
+    {
+      "product_key": "oil-persistence-28",
+      "path": "envelopes/oil-persistence-28.json",
+      "sha256": "681e38626ec3960a4a5db8262bafafc88d48355502f6f0edc0fb1cec63cc9f86",
+      "bytes": 92541
+    },
+    {
+      "product_key": "oil-holdout-h01",
+      "path": "envelopes/oil-holdout-h01.json",
+      "sha256": "d125adfd96d6e1b450bc68cd47a61172cecbbedac13e19703dbcd512772f4e56",
+      "bytes": 150258
+    },
+    {
+      "product_key": "oil-holdout-h02",
+      "path": "envelopes/oil-holdout-h02.json",
+      "sha256": "5812dbc1cefec488c3ad698b506fd3adec8a0fcf4eb36d9d39ae3e9a36253b31",
+      "bytes": 118367
+    },
+    {
+      "product_key": "oil-holdout-h03",
+      "path": "envelopes/oil-holdout-h03.json",
+      "sha256": "28872ddf062a020bfe2a6583a497f9662c9eaca586b82e1cd7500ba2b7dea423",
+      "bytes": 83469
+    },
+    {
+      "product_key": "oil-holdout-h04",
+      "path": "envelopes/oil-holdout-h04.json",
+      "sha256": "f35d5fcc8a2cceed7b38b341b240fd423b9c62f07abe6d8ee14ddb4c61f199f8",
+      "bytes": 115482
+    },
+    {
+      "product_key": "oil-holdout-h05",
+      "path": "envelopes/oil-holdout-h05.json",
+      "sha256": "5c2acfecc266564a2c434d4b408b204901978e88940d91226ded4b8732be9676",
+      "bytes": 164513
+    },
+    {
+      "product_key": "oil-holdout-h06",
+      "path": "envelopes/oil-holdout-h06.json",
+      "sha256": "b5aaba0d9a3428c6ac0cef3bc87d524d464335d0e254e632cc97a61272105277",
+      "bytes": 121442
+    },
+    {
+      "product_key": "oil-targeted-t01",
+      "path": "envelopes/oil-targeted-t01.json",
+      "sha256": "df91c4142290c320f3f5159506c268a8c4e4214e10fdbb8794b2e67f225dcc6c",
+      "bytes": 148385
+    },
+    {
+      "product_key": "oil-targeted-t02",
+      "path": "envelopes/oil-targeted-t02.json",
+      "sha256": "79ae4a519ab926cedd52d31401e6d2cdfaa811be72a269d84d0725c2ca1f7829",
+      "bytes": 92463
+    },
+    {
+      "product_key": "oil-targeted-t04",
+      "path": "envelopes/oil-targeted-t04.json",
+      "sha256": "40eb56b6163c8119da025d12cac436a9c18db103783ad2339cfcea928140f618",
+      "bytes": 117999
+    },
+    {
+      "product_key": "oil-targeted-t06",
+      "path": "envelopes/oil-targeted-t06.json",
+      "sha256": "5b521d924d051099ce59e969e56c7587c90b36771da8a1d86a798cec6c6ee4b1",
+      "bytes": 119938
+    }
+  ]
+}

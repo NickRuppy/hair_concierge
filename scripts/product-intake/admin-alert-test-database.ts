@@ -18,6 +18,7 @@ const MIGRATIONS = [
   "20261007062729_product_intake_stage_artifact_kinds.sql",
   "20261015200636_product_intake_admin_notifications.sql",
   "20261016052958_product_intake_review_cycles.sql",
+  "20261016131141_product_intake_atomic_artifact_ids.sql",
 ] as const
 
 const PREREQUISITES = `

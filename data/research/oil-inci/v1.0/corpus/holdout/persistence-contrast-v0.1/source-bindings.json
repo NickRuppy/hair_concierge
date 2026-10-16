@@ -1,0 +1,106 @@
+{
+  "records": [
+    {
+      "neutral_id": "PC01",
+      "source_key": "PA01",
+      "identity": {
+        "brand": "Schwarzkopf Professional Oil Ultime",
+        "product_name": "Argan Finishing Oil",
+        "market": "DE",
+        "size_ml": 100,
+        "gtin": "4067971053844",
+        "producer_product_id": "3050391"
+      },
+      "raw_inci": "Dimethicone, Dimethiconol, Undecane, Dicaprylyl Ether, Tridecane, Argania Spinosa Kernel Oil, Helianthus Annuus (Sunflower) Seed Oil, Tocopherol, Parfum (Fragrance), Linalool, Anise Alcohol, Linalyl Acetate, Trisiloxane, Disiloxane, CI 40800 (Beta-Carotene)",
+      "source_url": "https://www.schwarzkopf-professional.com/de/de/pflege/oil-ultime/argan-finishing-oil.html",
+      "source_id": "PA01-F01",
+      "direction_id": "PA01-D01",
+      "selected_direction": "Eine kleine Menge in das handtuchtrockene oder trockene Haar einarbeiten. Wie gewünscht stylen.",
+      "admitted_neutral_context": "Retained leave-on hair-fibre conditioning; damp or dry hair. No scalp or shampoo-removal assessment.",
+      "limits": [
+        "Public German producer declaration, not a photographed current batch. Formula is bound to DE page and matching German maker-shop identity only.",
+        "Source says towel-dried/dry hair without explicit lengths/ends restriction; declaration labels hair treatment leave-on. No scalp-only or pre-wash inference."
+      ],
+      "formula_conflicts": [
+        "DE maker and DE maker shop agree on this 15-ingredient declaration. A separately encountered NL/Greek maker version omits Linalyl Acetate; no EU-wide formula equivalence is asserted."
+      ]
+    },
+    {
+      "neutral_id": "PC02",
+      "source_key": "PA02",
+      "identity": {
+        "brand": "L’Oréal Professionnel",
+        "product_name": "Metal Detox Beschermende geconcentreerde olie",
+        "market": "NL",
+        "size_ml": 50,
+        "gtin": "3474637090609"
+      },
+      "raw_inci": "ISODODECANE • AQUA / WATER • DIPROPYLENE GLYCOL • DIMETHICONE • ALCOHOL DENAT. • DIMETHICONOL • GLYCERIN • PEG-14 DIMETHICONE • HYDROXYETHYL UREA • PHENOXYETHANOL • PEG-60 HYDROGENATED CASTOR OIL • LIMONENE • POLYACRYLAMIDE • C13-14 ISOPARAFFIN • PROPYLENE GLYCOL • HEXYL CINNAMAL • LINALOOL • LAURETH-7 • CARAMEL • CITRAL • GLYCINE • GERANIOL • COUMARIN • CI 19140 / YELLOW 5 • POLYQUATERNIUM-7 • CI 15985 / YELLOW 6 • PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE • SODIUM BENZOATE • PARFUM / FRAGRANCE",
+      "source_url": "https://www.lorealprofessionnel.nl/haarverzorging/metal-detox/oil-metal-detox-oil",
+      "source_id": "PA02-F01",
+      "direction_id": "PA02-D01",
+      "selected_direction": "verdeel gelijkmatig van de halflengten tot de punten. Niet uitspoelen.",
+      "admitted_neutral_context": "Retained leave-on hair-fibre conditioning; damp or dry hair. No scalp or shampoo-removal assessment.",
+      "limits": [
+        "Primary current Netherlands producer page, not a photographed batch. Suitable EU source identity; not a proven German package.",
+        "Producer headline claims are captured only for identity/use; not persistence evidence. 10% Glicoamine text nearby is technology marketing and must not be translated into ingredient concentration."
+      ],
+      "formula_conflicts": [
+        "German maker product named Metal DX exists but exposes no complete INCI in retrieved page; do not join DE identity or infer same formula from that page.",
+        "NL declaration includes AQUA / WATER, not US/UK EAU wording; NL source is independently complete and primary. No cross-market equality needed."
+      ]
+    },
+    {
+      "neutral_id": "PC03",
+      "source_key": "PSB01",
+      "identity": {
+        "brand": "Dr. Hauschka",
+        "product": "Haaröl",
+        "market": "DE",
+        "size_ml": 75,
+        "gtin": null,
+        "producer_url": "https://www.drhauschka.de/haarpflege/haaroel/"
+      },
+      "raw_inci": "Arachis Hypogaea Oil, Melia Azadirachta Leaf Extract, Triticum Vulgare Germ Oil, Chamomilla Recutita Flower Extract, Lecithin, Alcohol, Parfum*, Helianthus Annuus Seed Oil, Lavandula Oil/Extract, Pinene*, Camphor*, Linalool*, Beta-Caryophyllene*, Limonene*, Terpineol*, Linalyl Acetate*, Citronellol*, Citral*, Alpha-Terpinene*.",
+      "source_url": "https://www.drhauschka.de/haarpflege/haaroel/",
+      "source_id": "PSB-S01",
+      "direction_id": "PSB-S01",
+      "selected_direction": "Nach der Haarwäsche: Zur Pflege der Haarspitzen sehr wenig Haaröl in die Spitzen geben (in leicht feuchtes oder trockenes Haar), nicht auswaschen. Wir empfehlen, das Haaröl einmal pro Woche anzuwenden, bei Bedarf auch öfter.",
+      "admitted_neutral_context": "Retained leave-on hair-fibre conditioning; very small amount on damp or dry ends after washing. No scalp or shampoo-removal assessment.",
+      "limits": [
+        "GTIN not captured; page identity and 75 ml size only.",
+        "Use scope is postwash small-dose ends only. Prewash/scalp passages deliberately excluded from application assessment.",
+        "Producer descriptive copy mentions rosemary, but current ordered INCI declares Lavandula Oil/Extract and does not list rosemary oil. Preserve declaration; do not insert or substitute rosemary.",
+        "Lavandula Oil/Extract is generic exact source wording; species, plant part and extract carrier unresolved.",
+        "Asterisks retained in raw string and are footnote markers, not separate ingredients."
+      ],
+      "formula_conflicts": []
+    },
+    {
+      "neutral_id": "PC04",
+      "source_key": "PSB02",
+      "identity": {
+        "brand": "L’Occitane en Provence",
+        "product": "Huile Cheveux Réparation Intense",
+        "market": "FR",
+        "size_ml": 50,
+        "gtin": null,
+        "sku": "11HI050G24",
+        "producer_url": "https://fr.loccitane.com/huile-cheveux-reparation-intense-11HI050G24.html"
+      },
+      "raw_inci": "ISOPROPYL PALMITATE - COCO-CAPRYLATE/CAPRATE - C13-15 ALKANE - ETHYLHEXYL PALMITATE - PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL - OCTYLDODECANOL - HELIANTHUS ANNUUS (SUNFLOWER) SEED EXTRACT - DAUCUS CAROTA SATIVA (CARROT) ROOT EXTRACT - RICINUS COMMUNIS (CASTOR) SEED OIL - HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL - CITRUS AURANTIUM DULCIS (ORANGE) PEEL OIL - PELARGONIUM GRAVEOLENS LEAF OIL - LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL - CANANGA ODORATA FLOWER OIL - ANGELICA ARCHANGELICA SEED OIL - ANGELICA ARCHANGELICA ROOT OIL - GLYCINE SOJA (SOYBEAN) OIL - HYDROGENATED COCO-GLYCERIDES - TOCOPHEROL - TOCOPHERYL ACETATE - PARFUM/FRAGRANCE - BENZYL BENZOATE - LIMONENE - LINALOOL - CITRONELLOL - GERANIOL",
+      "source_url": "https://fr.loccitane.com/huile-cheveux-reparation-intense-11HI050G24.html",
+      "source_id": "PSB-S02",
+      "direction_id": "PSB-S02",
+      "selected_direction": "Huile seule, cheveux humides ou secs : Chauffez 3 - 4 gouttes entre vos mains. Appliquez sur les longueurs et les pointes.",
+      "admitted_neutral_context": "Retained leave-on hair-fibre conditioning; damp or dry hair. No scalp or shampoo-removal assessment.",
+      "limits": [
+        "GTIN not captured. Exact URL SKU and 50 ml current selected size; 100 ml alternate is not assumed package-identical.",
+        "Same directions section separately permits a generous overnight use followed by washing. The initial 3-4 drops damp/dry branch is the retained styling application selected; exclude overnight prewash branch.",
+        "No repair/bond or thermoprotection claim evidence supplied to formula classifier.",
+        "Hyphens around ingredients are source separators; the internal hyphen in C13-15 is part of the exact ingredient name."
+      ],
+      "formula_conflicts": []
+    }
+  ]
+}

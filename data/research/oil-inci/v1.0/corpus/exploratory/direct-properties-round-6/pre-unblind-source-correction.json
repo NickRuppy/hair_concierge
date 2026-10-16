@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-05",
+  "stage": "before unblind authorization; blind inputs unchanged",
+  "parent_source_sha256": "792a3f2aa22ea36cb92e0c7e62bc4e89f560d571ff3650c632000b3421bae98f",
+  "corrections": [
+    "Restored Elixir maker French camellia and marula hero identities omitted in initial source projection; wild camellia remains explicitly unresolved source wording",
+    "Expanded Aroma-Zone seven named oils into seven distinct hero identities rather than collective prominence; Amla mapping stays qualified"
+  ],
+  "reason": "Faithful source projection; no classifier answer, weight or new policy"
+}

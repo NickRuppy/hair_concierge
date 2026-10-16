@@ -1,0 +1,28 @@
+{
+  "source_url": "https://www.paulmitchell.com/products/styling-treatment-oil.js",
+  "access_date": "2026-10-14",
+  "title": "Styling Treatment Oil",
+  "variants": [
+    {
+      "id": 44145512218668,
+      "title": "0.85 fl. oz.",
+      "sku": "ATO-025",
+      "barcode": "9531134116",
+      "available": true
+    },
+    {
+      "id": 44145512251436,
+      "title": "3.4 fl. oz.",
+      "sku": "ATO-100",
+      "barcode": "9531134123",
+      "available": true
+    },
+    {
+      "id": 44145512284204,
+      "title": "5.1 fl. oz.",
+      "sku": "ATO-150",
+      "barcode": "9531134130",
+      "available": true
+    }
+  ]
+}

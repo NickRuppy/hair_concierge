@@ -1,0 +1,666 @@
+{
+  "lane": "b",
+  "records": [
+    {
+      "neutral_id": "N01",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "canonical_name": "HYDROGENATED FARNESENE",
+          "roles": [
+            "hydrocarbon_emollient",
+            "solvent_carrier"
+          ]
+        },
+        {
+          "rank": 2,
+          "canonical_name": "SQUALANE",
+          "roles": [
+            "hydrocarbon_emollient"
+          ]
+        },
+        {
+          "rank": 3,
+          "canonical_name": "JOJOBA ESTERS",
+          "roles": [
+            "jojoba_derived_ester_emollient",
+            "grade_dependent_wax"
+          ]
+        },
+        {
+          "rank": 4,
+          "canonical_name": "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ]
+        },
+        {
+          "rank": 5,
+          "canonical_name": "MEADOWFOAM ESTOLIDE",
+          "roles": [
+            "derived_emollient"
+          ]
+        },
+        {
+          "rank": 6,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ]
+        },
+        {
+          "rank": 7,
+          "canonical_name": "HIBISCUS SABDARIFFA FLOWER EXTRACT",
+          "roles": [
+            "botanical_extract"
+          ]
+        },
+        {
+          "rank": 8,
+          "canonical_name": "ECLIPTA PROSTRATA EXTRACT",
+          "roles": [
+            "botanical_extract"
+          ]
+        },
+        {
+          "rank": 9,
+          "canonical_name": "MORINGA OLEIFERA SEED OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ]
+        },
+        {
+          "rank": 10,
+          "canonical_name": "TOCOPHEROL",
+          "roles": [
+            "antioxidant"
+          ]
+        },
+        {
+          "rank": 11,
+          "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+          "roles": [
+            "botanical_extract"
+          ]
+        },
+        {
+          "rank": 12,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+          "roles": [
+            "botanical_extract",
+            "possible_antioxidant"
+          ]
+        },
+        {
+          "rank": 13,
+          "canonical_name": "FRAGRANCE/PARFUM",
+          "roles": [
+            "fragrance"
+          ]
+        }
+      ],
+      "architecture": "Hydrogenated farnesene and squalane provide a hydrocarbon emollient/carrier backbone, accompanied by jojoba-derived esters, whole meadowfoam/sunflower/moringa oils and a distinct meadowfoam estolide derivative. Jojoba esters could contribute either fluid emollience or wax structure depending on grade; the declaration does not resolve that central residual-architecture distinction. Extracts and antioxidant/fragrance declarations add no admitted decisive conditioning-film evidence.",
+      "build_up_potential": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "HYDROGENATED FARNESENE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "SQUALANE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "JOJOBA ESTERS"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "MEADOWFOAM ESTOLIDE"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "MORINGA OLEIFERA SEED OIL"
+          }
+        ],
+        "counter_signal": [
+          "HYDROGENATED FARNESENE at rank 1 has admitted solvent/carrier and emollient roles, and SQUALANE at rank 2 is an emollient: a mobile-emollient interpretation is plausible, but neither entry establishes weak finished hair-film potential.",
+          "JOJOBA ESTERS at rank 3 admits a grade-dependent wax role; a structured retained contribution remains plausible, but a hard-wax grade cannot be selected from the INCI.",
+          "The whole botanical oils and botanical extracts do not supply affirmative substantial-film support merely through their presence or number."
+        ],
+        "nearest_alternative": "low",
+        "reason": "Unknown under B0/B4 because the unresolved jojoba-ester grade and meadowfoam-estolide derivative contribution prevent distinguishing a coherent weak-film mobile system from a more structured retained coating. Low is the nearest candidate given the declared carrier/emollient backbone, but B3 requires affirmative weak-film support for the complete retained system, which this packet does not provide. Elevated also lacks an established substantial wax/gum/polymer architecture.",
+        "unresolved": [
+          "The liquid, paste or hard-wax grade of JOJOBA ESTERS is not established and is decisive for the competing residual architectures.",
+          "MEADOWFOAM ESTOLIDE grade and hair-film contribution are unspecified.",
+          "The combined botanical-oil and derivative system lacks admitted evidence of weak versus substantial persistent conditioning film.",
+          "Extract preparations/carriers and fragrance composition do not establish their residual contributions."
+        ]
+      },
+      "issues": [
+        "Ranks are ingredient order only; no percentage, top-N threshold or antioxidant-derived concentration boundary was used.",
+        "The sugarcane/hemisqualane footnote does not replace the exact HYDROGENATED FARNESENE identity or establish volatility.",
+        "The fragrance constituent sublist is contextual only; it creates no primary ingredient ranks or parent fragrance percentage. Its missing first separator is retained without chemical repair.",
+        "Contextual declaration retained separately from primary ranks: {\"type\": \"supplier_footnotes\", \"raw\": \"*Sugarcane Derived Hemisqualane **Fragrance/Parfum: Prenyl Acetate 2,6-Dimethylheptan-2-ol, Octanal, Hexenyl Acetate, p-Cresol, Limonene, Benzyl Alcohol, Dipropylene Glycol, 2,6-Dimethyl-7-Octen-2-ol, 2,4-Dimethyl-3-Cyclohexene Carboxaldehyde, Allyl Caproate, Methyl Benzoate, Linalool, Phenethyl Alcohol, 2,4,6-Neocyclocitral, Benzyl Acetate, Terpineol, Methylbenzyl Acetate, Decanal, Citronellol, Isoamyl Allylglycolate, Linalyl Acetate, Anethole, Hydroxycitronellal, Heliotropine, 4-Tert-Butylcyclohexyl Acetate, Methyl Anthranilate, Terpineol Acetate, Gamma-Nonalactone, Geranyl Acetate, Phenethyl Butyrate, Lauraldehyde, Jasmacyclene, Allyl 3-cyclohexylpropionate, Alpha-Ionone, Coumarin, Eugenol, Methyl Ionones, Dimethyl Phenethyl Butyrate, Tricyclodecenyl Propionate, Methylenedioxyphenyl Methylpropanal, Gamma-Undecalactone, Amyl Cinnamal, Methyldihydrojasmonate, Tetramethyl Acetyloctahydronaphthalenes, Hexyl Cinnamal, Methyl Cedryl Ketone, Phenethyl Phenyl Acetate, Isobutyl Methyl Tetrahydropyranol, Ethylene Brassylate, Cananga Odorata Flower Oil, Citrus Aurantium Dulcis (Orange) Peel Oil, Undecanal, Citrus Paradisi (Grapefruit) Peel Oil, Citrus Tangerina (Tangerine) Peel Oil\", \"parent_rank\": 13, \"ordering\": \"fragrance sublist has no primary concentration order\", \"identity_gap\": \"Missing separator in first fragrance phrase preserved; not chemically repaired.\"}"
+      ]
+    },
+    {
+      "neutral_id": "N02",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ]
+        }
+      ],
+      "architecture": "A single intact jojoba seed oil supplies the entire declared emollient architecture. The admitted wax-ester chemistry does not turn this intact botanical oil into a specified wax grade or establish either weak or substantial persistent hair-conditioning film.",
+      "build_up_potential": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+          }
+        ],
+        "counter_signal": [
+          "The exact material has an emollient role, making low a possible alternative, but generic emollience does not establish a coherent weak-film system.",
+          "Wax-ester chemistry is noted in the lexicon, but it is not affirmative evidence for a substantial conditioning wax film or an elevated class.",
+          "A one-ingredient declaration leaves no demonstrated alternative gum/polymer architecture; that absence alone cannot establish low."
+        ],
+        "nearest_alternative": "low",
+        "reason": "Unknown under B4 because the entire plant-only backbone has identity and generic emollient support but no admitted weak/substantial-film distinction. Low is the closest candidate from the available emollient evidence, yet it remains unsupported under B3; elevated would require affirmative substantial-film evidence that is also absent.",
+        "unresolved": [
+          "No admitted material-function evidence distinguishes weak from substantial persistent hair film for this exact intact oil under comparable small applications.",
+          "The declaration provides no finished-formula deposition or durability evidence; organic provenance does not resolve that gap."
+        ]
+      },
+      "issues": [
+        "Intact botanical identity is preserved; the oil is not recast as JOJOBA ESTERS or a hard wax.",
+        "Organic production is descriptive context, not an independently ranked ingredient or a build-up signal.",
+        "Contextual declaration retained separately from primary ranks: {\"type\": \"organic_annotation\", \"raw\": \"from organic production.\", \"separator\": \", \", \"ordering\": \"descriptive annotation, not another ingredient\"}"
+      ]
+    },
+    {
+      "neutral_id": "N03",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE",
+          "roles": [
+            "silicone_carrier",
+            "conditioning_film"
+          ]
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISODODECANE",
+          "roles": [
+            "hydrocarbon_carrier",
+            "emollient"
+          ]
+        },
+        {
+          "rank": 3,
+          "canonical_name": "HYDROGENATED ETHYLHEXYL OLIVATE",
+          "roles": [
+            "derived_ester_emollient"
+          ]
+        },
+        {
+          "rank": 4,
+          "canonical_name": "DIMETHICONOL",
+          "roles": [
+            "silicone_gum",
+            "conditioning_film"
+          ]
+        },
+        {
+          "rank": 5,
+          "canonical_name": "VITIS VINIFERA (GRAPE) SEED EXTRACT",
+          "roles": [
+            "botanical_extract"
+          ]
+        },
+        {
+          "rank": 6,
+          "canonical_name": "GARDENIA TAITENSIS FLOWER EXTRACT",
+          "roles": [
+            "botanical_extract"
+          ]
+        },
+        {
+          "rank": 7,
+          "canonical_name": "BIS-CETEARYL AMODIMETHICONE",
+          "roles": [
+            "silicone_conditioning_polymer",
+            "conditioning_film"
+          ]
+        },
+        {
+          "rank": 8,
+          "canonical_name": "MACADAMIA TERNIFOLIA SEED OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ]
+        },
+        {
+          "rank": 9,
+          "canonical_name": "HYDROGENATED OLIVE OIL UNSAPONIFIABLES",
+          "roles": [
+            "derived_emollient",
+            "hair_conditioning"
+          ]
+        },
+        {
+          "rank": 10,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ]
+        },
+        {
+          "rank": 11,
+          "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ]
+        },
+        {
+          "rank": 12,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ]
+        },
+        {
+          "rank": 13,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ]
+        },
+        {
+          "rank": 14,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ]
+        },
+        {
+          "rank": 15,
+          "canonical_name": "BUTYL METHOXYDIBENZOYLMETHANE",
+          "roles": [
+            "recognized_uv_filter"
+          ]
+        },
+        {
+          "rank": 16,
+          "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+          "roles": [
+            "recognized_uv_filter"
+          ]
+        },
+        {
+          "rank": 17,
+          "canonical_name": "ETHYLHEXYL SALICYLATE",
+          "roles": [
+            "recognized_uv_filter"
+          ]
+        },
+        {
+          "rank": 18,
+          "canonical_name": "SQUALANE",
+          "roles": [
+            "hydrocarbon_emollient"
+          ]
+        },
+        {
+          "rank": 19,
+          "canonical_name": "LINALOOL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ]
+        },
+        {
+          "rank": 20,
+          "canonical_name": "HEXYL CINNAMAL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ]
+        },
+        {
+          "rank": 21,
+          "canonical_name": "HYDROXYCITRONELLAL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ]
+        },
+        {
+          "rank": 22,
+          "canonical_name": "LIMONENE",
+          "roles": [
+            "declared_fragrance_allergen"
+          ]
+        },
+        {
+          "rank": 23,
+          "canonical_name": "FRAGRANCE (PARFUM)",
+          "roles": [
+            "fragrance_composition"
+          ]
+        },
+        {
+          "rank": 24,
+          "canonical_name": "TOCOPHEROL",
+          "roles": [
+            "antioxidant"
+          ]
+        }
+      ],
+      "architecture": "A dimethicone conditioning/carrier backbone is paired with an isododecane carrier and a derived ester emollient, with dimethiconol gum and a distinct amino-functional silicone conditioning polymer forming a coherent retained conditioning system. The botanical oils and modified olive fraction supplement emollience but do not independently determine the class. Extract, fragrance, antioxidant and optical-filter entries do not establish additional persistent conditioning-film load.",
+      "build_up_potential": {
+        "value": "elevated",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "HYDROGENATED ETHYLHEXYL OLIVATE"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "DIMETHICONOL"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "BIS-CETEARYL AMODIMETHICONE"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "HYDROGENATED OLIVE OIL UNSAPONIFIABLES"
+          }
+        ],
+        "counter_signal": [
+          "ISODODECANE at rank 2 and HYDROGENATED ETHYLHEXYL OLIVATE at rank 3 support a carrier/emollient component; their presence does not negate the admitted conditioning gum/polymer system, and the retail isododecane evaporation profile is unestablished.",
+          "DIMETHICONE grade is unspecified; its viscosity or volatility cannot be inferred, and its name alone would not justify elevated.",
+          "DIMETHICONOL and BIS-CETEARYL AMODIMETHICONE have no supplied finished concentration, grade-specific deposition or measured persistence. Their ranks establish order, not a substantial percentage.",
+          "The botanical oils and HYDROGENATED OLIVE OIL UNSAPONIFIABLES offer generic emollient/conditioning roles, not independently established substantial persistent film."
+        ],
+        "nearest_alternative": "unknown",
+        "reason": "Elevated is a provisional B2 estimate from the coherent combination of an explicitly conditioning dimethicone backbone, dimethiconol gum and a separate amino-functional conditioning polymer. This is affirmative architecture-level support for a substantial retained conditioning film rather than reliance on a solitary late gum or oil count. The unresolved dimethicone grade does not supply the sole decisive signal: two additional materials have explicit gum/polymer conditioning-film roles. Unknown remains the nearest alternative if the actual gum/polymer load proves secondary; no measured accumulation or washout conclusion follows.",
+        "unresolved": [
+          "Finished gum/polymer loads, their supplied grades and interactions are unknown.",
+          "DIMETHICONE viscosity/volatility and the retail ISODODECANE evaporation profile are unestablished.",
+          "Architecture supports only a low-confidence relative-film estimate; deposition, durability and repeated-wash accumulation are unmeasured.",
+          "Extract preparations and the individual residual contributions of emollients, fragrance and optical-filter ingredients are not established."
+        ]
+      },
+      "issues": [
+        "No percentage or 1% boundary was inferred from ingredient order.",
+        "No build-up class was transferred from silicone origin, botanical-oil count, coconut presence, material weight or penetration.",
+        "Optical-filter entries do not imply protection, efficacy or manufacturer claims."
+      ]
+    },
+    {
+      "neutral_id": "N04",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "canonical_name": "PROPYLENE GLYCOL",
+          "roles": [
+            "humectant",
+            "solvent"
+          ]
+        },
+        {
+          "rank": 2,
+          "canonical_name": "AQUA/WATER",
+          "roles": [
+            "aqueous_vehicle"
+          ]
+        },
+        {
+          "rank": 3,
+          "canonical_name": "CYCLOPENTASILOXANE",
+          "roles": [
+            "silicone_carrier",
+            "volatile_carrier"
+          ]
+        },
+        {
+          "rank": 4,
+          "canonical_name": "HEXYLENE GLYCOL",
+          "roles": [
+            "solvent",
+            "emulsifying_auxiliary"
+          ]
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE",
+          "roles": [
+            "silicone_carrier",
+            "conditioning_film"
+          ]
+        },
+        {
+          "rank": 6,
+          "canonical_name": "DIMETHICONOL",
+          "roles": [
+            "silicone_gum",
+            "conditioning_film"
+          ]
+        },
+        {
+          "rank": 7,
+          "canonical_name": "PHENOXYETHANOL",
+          "roles": [
+            "preservative"
+          ]
+        },
+        {
+          "rank": 8,
+          "canonical_name": "CAPRYLYL GLYCOL",
+          "roles": [
+            "multifunctional_diol",
+            "not_assessed"
+          ]
+        },
+        {
+          "rank": 9,
+          "canonical_name": "POLYACRYLAMIDE",
+          "roles": [
+            "rheology_polymer"
+          ]
+        },
+        {
+          "rank": 10,
+          "canonical_name": "C13-14 ISOPARAFFIN",
+          "roles": [
+            "hydrocarbon_carrier",
+            "rheology_system_component"
+          ]
+        },
+        {
+          "rank": 11,
+          "canonical_name": "MICA",
+          "roles": [
+            "unreviewed_function"
+          ]
+        },
+        {
+          "rank": 12,
+          "canonical_name": "PARFUM/FRAGRANCE",
+          "roles": [
+            "fragrance_composition"
+          ]
+        },
+        {
+          "rank": 13,
+          "canonical_name": "ETHYLHEXYL SALICYLATE",
+          "roles": [
+            "recognized_uv_filter"
+          ]
+        },
+        {
+          "rank": 14,
+          "canonical_name": "LAURETH-7",
+          "roles": [
+            "emulsifying_auxiliary",
+            "rheology_system_component"
+          ]
+        },
+        {
+          "rank": 15,
+          "canonical_name": "TITANIUM DIOXIDE (CI 77891)",
+          "roles": [
+            "unreviewed_function"
+          ]
+        },
+        {
+          "rank": 16,
+          "canonical_name": "BUTYLENE GLYCOL",
+          "roles": [
+            "unreviewed_function"
+          ]
+        },
+        {
+          "rank": 17,
+          "canonical_name": "LINALOOL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ]
+        },
+        {
+          "rank": 18,
+          "canonical_name": "HEXYL CINNAMAL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ]
+        },
+        {
+          "rank": 19,
+          "canonical_name": "CITRONELLOL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ]
+        }
+      ],
+      "architecture": "An in-scope aqueous/glycol oil-serum declaration contains an explicit volatile silicone carrier plus phenyl trimethicone conditioning silicone and dimethiconol gum. The polyacrylamide/C13-14 isoparaffin/Laureth-7 combination supports aqueous rheology/stabilization, not an additional demonstrated hair-conditioning polymer film. The silicone pair supplies a credible retained-film rival to a lower-load solvent/vehicle system, but its substantial versus secondary contribution is unresolved. The leading ingredients do not establish phase continuity or percentages.",
+      "build_up_potential": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "PROPYLENE GLYCOL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "AQUA/WATER"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "CYCLOPENTASILOXANE"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "HEXYLENE GLYCOL"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "PHENYL TRIMETHICONE"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "DIMETHICONOL"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "CAPRYLYL GLYCOL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "POLYACRYLAMIDE"
+          },
+          {
+            "rank": 10,
+            "canonical_name": "C13-14 ISOPARAFFIN"
+          },
+          {
+            "rank": 11,
+            "canonical_name": "MICA"
+          },
+          {
+            "rank": 14,
+            "canonical_name": "LAURETH-7"
+          },
+          {
+            "rank": 15,
+            "canonical_name": "TITANIUM DIOXIDE (CI 77891)"
+          },
+          {
+            "rank": 16,
+            "canonical_name": "BUTYLENE GLYCOL"
+          }
+        ],
+        "counter_signal": [
+          "PHENYL TRIMETHICONE at rank 5 and DIMETHICONOL at rank 6 affirm a conditioning-film/gum component, so the aqueous vehicle and volatile CYCLOPENTASILOXANE cannot establish low.",
+          "PROPYLENE GLYCOL, AQUA/WATER and HEXYLENE GLYCOL provide solvent/vehicle functions; the declaration does not show whether the retained silicone conditioning film is substantial or secondary to that system.",
+          "POLYACRYLAMIDE at rank 9 is admitted as rheology polymer in the declared triad, not as hair-conditioning film; counting it as a second substantial conditioning polymer would overstate the elevated evidence.",
+          "MICA, TITANIUM DIOXIDE (CI 77891) and BUTYLENE GLYCOL have unreviewed functions in this closed lexicon. They cannot be asserted to provide film, easy washout or negligible residue."
+        ],
+        "nearest_alternative": "elevated",
+        "reason": "Unknown under B4: the explicit phenyl-trimethicone/dimethiconol system makes elevated the closest alternative, but the frozen evidence does not resolve whether it constitutes a substantial retained conditioning architecture in this aqueous/glycol system. The rheology triad cannot supply the missing substantive-film support, and the complete retained system includes unreviewed functions. Low fails because a conditioning gum/film rival is present; elevated is not forced from that gum alone or from the word polymer.",
+        "unresolved": [
+          "PHENYL TRIMETHICONE and DIMETHICONOL grades and finished loads are unestablished; whether their residual conditioning architecture is substantial or secondary is decisive.",
+          "No quantitative phase balance, continuity or finished retained-film evidence is provided.",
+          "MICA at rank 11, TITANIUM DIOXIDE (CI 77891) at rank 15 and BUTYLENE GLYCOL at rank 16 lack reviewed functions. Their residual contributions are unresolved completeness gaps, not affirmative film evidence; their absence from the lexicon is not the sole reason for unknown.",
+          "CAPRYLYL GLYCOL at rank 8 has an unassessed multifunctional contribution.",
+          "Exact rheology-system supplier grade and dose are not established, and the triad does not prove cleansing or washout."
+        ]
+      },
+      "issues": [
+        "Eligibility is accepted; leading water/glycols do not exclude this oil-labelled serum.",
+        "No preservative rank was used as a percentage boundary.",
+        "No exact supplier rheology grade, unreviewed ingredient function or washout behavior was inferred.",
+        "The formula code is contextual only and creates no ingredient rank.",
+        "Contextual declaration retained separately from primary ranks: {\"type\": \"formula_code\", \"raw\": \"F#500-2\", \"ordering\": \"not an ingredient\"}"
+      ]
+    }
+  ]
+}

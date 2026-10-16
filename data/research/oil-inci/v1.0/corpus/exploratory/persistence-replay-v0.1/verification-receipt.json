@@ -1,0 +1,46 @@
+{
+  "status": "passed",
+  "run_id": "oil-persistence-leave-on-replay-v0.1",
+  "policy_version": "oil-persistence-leave-on-v0.1",
+  "cases": 27,
+  "pre_wash_only_excluded": [
+    "O02"
+  ],
+  "primary_ranks": 540,
+  "dictionary_identities": 269,
+  "historical_files_preserved": 428,
+  "committed_values": {
+    "high": 12,
+    "low": 0,
+    "moderate": 15
+  },
+  "lane_value_agreement": {
+    "count": 27,
+    "denominator": 27,
+    "meaning": "repeatability only, not measured accuracy"
+  },
+  "negative_controls_rejected": [
+    "unknown_class",
+    "dropped_case",
+    "broken_evidence",
+    "confidence_field"
+  ],
+  "recognized_formulas": {
+    "a": [
+      "O01: Spontaneous familiarity with the distinctive peptide-containing formula pattern; no identity lookup or prior persistence answer used.",
+      "O07: Spontaneous familiarity with the distinctive small-molecule-containing formula pattern; no identity lookup or prior persistence answer used.",
+      "O11: Spontaneous familiarity with the botanical-oil declaration pattern; no identity lookup or prior persistence answer used."
+    ],
+    "b": [
+      {
+        "case_id": "O01",
+        "recognition": "Partial familiarity from the distinctive peptide declaration triggered an unverified product association. No identity was checked and no prior product label or persistence value was used."
+      },
+      {
+        "case_id": "O07",
+        "recognition": "Partial familiarity from the distinctive dimaleate declaration triggered an unverified product association. No identity was checked and no prior product label or persistence value was used."
+      }
+    ]
+  },
+  "limits": "Published exact declarations, committed qualitative leave-on estimates; no post-shampoo, physical batch, measured persistence/accumulation, holdout or production validation."
+}

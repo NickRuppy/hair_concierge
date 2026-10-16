@@ -3037,15 +3037,23 @@ test("selectProducts asks for oil purpose when a product pick lacks inferred pur
   ])
 })
 
-test("projectSelectedProducts exposes oil claims, caveats, and lean comparison facts", () => {
+test("projectSelectedProducts projects canonical oil weight and supported roles without subtype claims", () => {
   const result = projectSelectedProducts(
     [
-      createOilMatchedProduct("dry-oil", 0.94),
+      createOilMatchedProduct("dry-oil", 0.94, {
+        product_weight: "light",
+        product_roles: ["dry_finish", "pre_wash_fibre_treatment"],
+        selected_role: "dry_finish",
+      }),
       createOilMatchedProduct("styling-oil", 0.82, {
         matched_subtype: "styling-oel",
-        use_mode: "styling_finish",
-        purpose_fit: "bridge",
-        tradeoffs: ["Passt nur über die angrenzende Finish-Rolle, nicht exakt."],
+        product_weight: "medium",
+        product_roles: ["dry_finish"],
+        selected_role: "dry_finish",
+        use_mode: "light_finish",
+        fit_status: "supportive",
+        purpose_fit: "exact",
+        tradeoffs: ["Die mittlere Textur kann bei feinem Haar reichhaltiger wirken."],
       }),
     ],
     {
@@ -3067,22 +3075,67 @@ test("projectSelectedProducts exposes oil claims, caveats, and lean comparison f
   )
 
   assert.equal(result.decision, "recommended")
-  assert.deepEqual(
-    result.products[0].supported_claims.map((claim) => claim.field),
-    ["oil_purpose", "oil_subtype", "fit_status"],
+  assert.deepEqual(result.products[0].supported_claims, [
+    {
+      field: "oil_purpose",
+      value: "light_finish",
+      evidence: "category_decision",
+      label: "Öl-Zweck: Leichtes Finish",
+    },
+    {
+      field: "weight",
+      value: "light",
+      evidence: "product_spec",
+      label: "Gewicht: Leicht",
+    },
+    {
+      field: "oil_role",
+      value: "dry_finish",
+      evidence: "product_spec",
+      label: "Rolle: Finish im trockenen Haar",
+    },
+    {
+      field: "oil_role",
+      value: "pre_wash_fibre_treatment",
+      evidence: "product_spec",
+      label: "Rolle: Pflege vor dem Waschen",
+    },
+    {
+      field: "fit_status",
+      value: "ideal",
+      evidence: "category_decision",
+      label: "Fit: Idealer Treffer",
+    },
+  ])
+  assert.match(result.products[0].fit_reason, /Gewicht: Leicht/)
+  assert.match(result.products[0].fit_reason, /Rolle: Finish im trockenen Haar/)
+  assert.deepEqual(result.comparison_facts?.["dry-oil"], [
+    "Gewicht: Leicht",
+    "Rolle: Finish im trockenen Haar",
+  ])
+  assert.deepEqual(result.comparison_facts?.["styling-oil"], [
+    "Gewicht: Mittel",
+    "Rolle: Finish im trockenen Haar",
+  ])
+  assert.equal(
+    result.products
+      .flatMap((product) => product.supported_claims)
+      .some((claim) => claim.field === "oil_subtype"),
+    false,
   )
-  assert.match(result.products[0].fit_reason, /Leichtes Finish/)
-  assert.deepEqual(result.comparison_facts, {
-    "dry-oil": ["Öl-Zweck: Leichtes Finish", "Subtyp: Trocken-Öl"],
-    "styling-oil": ["Öl-Zweck: Styling-Finish", "Subtyp: Styling-Öl"],
-  })
+  assert.equal(
+    Object.values(result.comparison_facts ?? {})
+      .flat()
+      .some((fact) => fact.startsWith("Subtyp:")),
+    false,
+  )
   assert.equal(
     result.unsupported_requested_signals[0]?.user_message,
     "Wünsche wie silikonfrei, kokosfrei, proteinfrei oder ölfrei sind in dieser Öl-Auswahl noch nicht sicher geprüft. Ich bewerte die Optionen deshalb nach Öl-Zweck, Haardicke, Anwendung und Fit.",
   )
 })
 
-test("projectSelectedProducts does not compare oil subtype against missing metadata", () => {
+test("projectSelectedProducts does not infer oil facts from legacy purpose or subtype metadata", () => {
   const result = projectSelectedProducts(
     [
       createOilMatchedProduct("dry-oil", 0.94),
@@ -3102,8 +3155,14 @@ test("projectSelectedProducts does not compare oil subtype against missing metad
     }),
   )
 
-  assert.deepEqual(result.comparison_facts?.["dry-oil"], ["Öl-Zweck: Leichtes Finish"])
-  assert.deepEqual(result.comparison_facts?.["generic-finish"], ["Öl-Zweck: Styling-Finish"])
+  assert.deepEqual(result.comparison_facts?.["dry-oil"], [])
+  assert.deepEqual(result.comparison_facts?.["generic-finish"], [])
+  assert.equal(
+    result.products
+      .flatMap((product) => product.supported_claims)
+      .some((claim) => claim.field === "oil_subtype"),
+    false,
+  )
 })
 
 test("selectProducts carries unsupported ingredient caveats for live oil requests", async () => {

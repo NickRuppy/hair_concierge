@@ -1,0 +1,11 @@
+{
+  "lane": "a",
+  "read_files": [
+    "method.md",
+    "blind-packet.json",
+    "blind-lexicon.json"
+  ],
+  "independence_attestation": "For this blind classification I read only the three listed run files. I did not browse, inspect source identities or URLs, consult prior runs or accepted labels, access peer output, explore the repository, read other paths, or dispatch another agent. Judgments use the complete literal declarations and the frozen lexicon and method only. File-writing code reread the permitted packet and lexicon solely to copy ranks, canonical names, exact roles and contextual declarations. No product identity was recognized or used. These are provisional formula research judgments, not sensory validation or manufacturer claims.",
+  "recognition": [],
+  "incidents": []
+}

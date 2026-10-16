@@ -1,0 +1,9 @@
+{
+  "input_manifest_sha256": "8174f6966b6979c33e9e6e614f86d2eefdddebfa834ee6b0573aa4d7c1bb7824",
+  "patch_seal_sha256": "bec39c076fd656d6db3caa24a44767680c6f2f55ce65dcdbee16a813e2011ae5",
+  "outputs": {
+    "lane-a/blind-records.json": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+    "lane-b/blind-records.json": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92"
+  },
+  "derived_by": "Deterministic top-level patch application to own sealed predecessor; no inferred changes."
+}

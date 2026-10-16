@@ -1,0 +1,165 @@
+{
+  "case_id": "O04",
+  "product_key": "oil-persistence-04",
+  "status": "resolved_existing_evidence",
+  "owner_decision_needed": false,
+  "scope": "Technical representation and missing source-registry entry only; successor artifacts only. No reclassification.",
+  "canonical_name": "COCOS NUCIFERA FRUIT OIL",
+  "raw_inci_unchanged": "Cocos Nucifera Fruit Oil",
+  "raw_sha256_unchanged": "12d315272564ff15869bd669ab67e3c97ee7009e31089e76838a510a166cd70a",
+  "new_ordered_formula_digest": "f7663ebfb74d2629fb0f1974eecdd202a3d7f737ae0ecc042157d35376c4410a",
+  "identity": {
+    "brand": "Biopark Cosmetics",
+    "product": "Organic Coconut Oil",
+    "size_ml": 100,
+    "market": "DE",
+    "gtin_if_verified": "3830066651079",
+    "gtin_source_id": "E01-retailer-de",
+    "selection_note": "Authorized cosmetic replacement for the original dmBio food-oil slot; original selection history remains in preflight."
+  },
+  "identity_resolution": {
+    "source_registry_id": "E01-retailer-de",
+    "original_source": {
+      "id": "E01-retailer-de",
+      "url": "https://www.ecco-verde.de/biopark-cosmetics/coconut-oil",
+      "source_author": "Ecco Verde / niceshops GmbH",
+      "host_role": "retailer",
+      "tier": "exact_local_retailer",
+      "accessed_at": "2026-10-01",
+      "notes": "DE 100 ml pack, EAN 3830066651079, article BPC-BIOP071. Manufacturer listed as Zin d.o.o.; that listing does not make all retailer prose manufacturer-authored."
+    },
+    "evidence_path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/source-packet.json",
+    "record_key": "records[slot=E01].sources[id=E01-retailer-de]",
+    "source_json_pointer": "/records/0/sources/1",
+    "identity_json_pointer": "/records/0/identity",
+    "url_matches_existing_D02_retailer": true,
+    "why_missing": "Later packet changed source IDs to D02-* while inherited identity retained E01-retailer-de; original frozen source is available, not new evidence or invented authority.",
+    "admission_scope": "Identity/GTIN corroboration only. Adding original ID does not add supported uses or authorize retailer directions as maker directions."
+  },
+  "proposed_current_view_patches": [
+    {
+      "path": "/formula/ingredients/0/canonical_name",
+      "from": "COCOS NUCIFERA OIL",
+      "to": "COCOS NUCIFERA FRUIT OIL",
+      "reason": "Preserve exact source declaration, admitted separate identity and rank 1 without a global alias."
+    },
+    {
+      "path": "/formula/normalization_receipt/0/canonical_name",
+      "from": "COCOS NUCIFERA OIL",
+      "to": "COCOS NUCIFERA FRUIT OIL",
+      "reason": "Preserve exact source declaration, admitted separate identity and rank 1 without a global alias."
+    },
+    {
+      "path": "/profile/formula/ingredients/0/canonical_name",
+      "from": "COCOS NUCIFERA OIL",
+      "to": "COCOS NUCIFERA FRUIT OIL",
+      "reason": "Preserve exact source declaration, admitted separate identity and rank 1 without a global alias."
+    },
+    {
+      "path": "/profile/penetration_potential/evidence/0/canonical_name",
+      "from": "COCOS NUCIFERA OIL",
+      "to": "COCOS NUCIFERA FRUIT OIL",
+      "reason": "Preserve exact source declaration, admitted separate identity and rank 1 without a global alias."
+    },
+    {
+      "path": "/persistence_trace/evidence/0/canonical_name",
+      "from": "COCOS NUCIFERA OIL",
+      "to": "COCOS NUCIFERA FRUIT OIL",
+      "reason": "Preserve exact source declaration, admitted separate identity and rank 1 without a global alias."
+    }
+  ],
+  "already_correct_current_fields": [
+    "/profile/ingredient_ledger/0/canonical_name",
+    "/profile/base/evidence/0/canonical_name",
+    "/profile/named_oils/0/prominence/evidence/0/canonical_name"
+  ],
+  "archival_fields_to_preserve": [
+    "/provenance/original_record",
+    "/provenance/original_record_sha256",
+    "/persistence_trace/original",
+    "/scenario_fit/*/original",
+    "all predecessor files"
+  ],
+  "dependent_receipts": [
+    "Recompute current formula normalized_sha256 using ordered rank/canonical pair digest; raw digest stays unchanged.",
+    "Record formula normalization correction in successor receipt with predecessor hash and explicit from/to; preserve literal old mapping in predecessor provenance.",
+    "Current profile formula and rank-backed evidence use Fruit Oil; original record stays intact under predecessor provenance.",
+    "Current trace evidence uses Fruit Oil; original trace evidence remains old OIL with explicit successor evidence mapping receipt.",
+    "No scenario_fit semantic change: all three rows retain source/direction, supported role, weight rich/low, thickness/texture/damage, alternative medium and weight authority. Record exact formula scope update adjacent to fit receipt if required.",
+    "Add frozen round-1/source-packet.json dependency and E01-retailer-de source entry, preserving exact original source object and source ID. Do not replace identity source ID with convenient D02-retailer."
+  ],
+  "unchanged_decisions": {
+    "weight": {
+      "value": "rich",
+      "estimate": true,
+      "confidence": "low",
+      "evidence": [
+        {
+          "source_ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-working-records-v0.1.1.json",
+          "record_key": "F04"
+        }
+      ],
+      "counter_signal": "Estimate is not measured efficacy or amount.",
+      "nearest_alternative": "medium",
+      "reason": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+      "unresolved": "Quantities/grades/sensory performance unverified."
+    },
+    "persistence_potential": "moderate",
+    "persistence_reason": "The complete declaration is intact coconut oil: retained application supports an ordinary lipid conditioning coat, with no declared gum, adherent polymer or combined structuring route. That positive lipid-coating reading supports moderate without importing penetration or washout assumptions.",
+    "scenario_fit_count": 3
+  },
+  "evidence": [
+    {
+      "path": "data/research/oil-inci/v1.0/adapter-replay-v0.2/envelopes/oil-persistence-04.json",
+      "record_key": "research_id=oil:oil-persistence-04",
+      "sha256": "be4d0cf3ab751128c4dcc83c55ad39fface9ee618bbfa148f145a0d16c073cdb"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/source-packet.json",
+      "record_key": "records[slot=E01].sources[id=E01-retailer-de]",
+      "sha256": "7a29772235f3bb1b07a042c367e49955208aa56778d02f4eab76cc510c44f40b"
+    },
+    {
+      "path": "plans/oil-inci/capture/round-1/botanical-water.json",
+      "record_key": "records[slot=E01]",
+      "sha256": "7dee7d733aad927390311c58028f944f31eac891e263c5d81baa0ba876485b48"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+      "record_key": "entries[canonical_name=COCOS NUCIFERA FRUIT OIL]",
+      "sha256": "7840fe6645b08ab24248463f7cc6abf575fe081c8775ff607dfba7e7298c88ca"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+      "record_key": "entries[id=coconut_fruit_oil_declaration]",
+      "sha256": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50"
+    },
+    {
+      "path": "plans/oil-inci/research/profile-completion-evidence-v0.1/evidence.json",
+      "record_key": "findings[id=D02-penetration]",
+      "sha256": "1c8f8286bf426df7b95a988a7fb819c669e20b6433550c8ce189e6df326e6cac"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+      "record_key": "records[case_id=O04]",
+      "sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/working-records-v0.1.1.json",
+      "record_key": "records[neutral_id=D02]",
+      "sha256": "841f5489e92a07a49e36cd5a8197deb70ee149bb491ebf713af8304fc72694bd"
+    }
+  ],
+  "rejected_alternatives": [
+    "Converting ledger back to generic COCOS NUCIFERA OIL would discard explicitly preserved Fruit Oil identity and conflict with current exact dictionary/reference.",
+    "Blanket Fruit Oil-to-Oil alias is not authorized by OE35 or exact-product penetration bridge.",
+    "Removing the old GTIN citation or replacing it with an arbitrary existing source would hide recoverable original provenance."
+  ],
+  "verification": [
+    "Matched original GTIN, brand, product, size and market against envelope identity.",
+    "Verified exact source ID exists in original frozen packet and same retailer URL is already in D02 packet.",
+    "Verified existing separate exact identity dictionary entry and rich/low material reference; no new hair-science judgment required.",
+    "Enumerated all canonical strings outside provenance to produce bounded current-field map.",
+    "No predecessor files modified; no network research needed to resolve historical evidence."
+  ]
+}

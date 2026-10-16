@@ -1,0 +1,5 @@
+case_id,brand,product,base,weight,penetration_potential,persistence_potential,dispenser,heat,uv,supported_uses,unknown_fields
+T01,NUXE,Feuchtigkeitsspendendes Sonnenschutz-Haar-Öl,water_based,light,surface_led,moderate,spray,False,True,leave_on_fibre_conditioning|dry_finish,
+T02,OGX,Argan Oil of Morocco Weightless Healing Dry Oil,silicone_led,medium,surface_led,moderate,spray,False,False,leave_on_fibre_conditioning,hero:T02-hero-1
+T04,Weleda,Intensiv pflegendes Haaröl,unknown,medium,unknown,moderate,unknown,False,False,leave_on_fibre_conditioning|dry_finish|scalp_application,base|penetration_potential|dispenser|hero:T04-hero-1
+T06,René Furterer,Solaire Schützendes Sommeröl,ester_alkane_led,light,surface_led,moderate,spray,False,True,leave_on_fibre_conditioning,

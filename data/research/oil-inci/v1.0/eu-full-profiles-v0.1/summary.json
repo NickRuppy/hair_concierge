@@ -1,0 +1,61 @@
+{
+  "scope": "Four local European research candidates; pending human property/matching approval; no Intake handoff or catalog publication.",
+  "records": [
+    {
+      "neutral_id": "PC01",
+      "product": "Argan Finishing Oil",
+      "market": "DE",
+      "size_ml": 100,
+      "weight": "medium",
+      "base": "silicone_led",
+      "persistence": "high",
+      "dispenser": "unknown",
+      "penetration": "surface_led",
+      "heat": true,
+      "uv": false,
+      "packageFingerprint": "e652277e4756ae516ccfbff0270c07314ac09f31d36d24ae85205bab7ce437c7"
+    },
+    {
+      "neutral_id": "PC02",
+      "product": "Metal Detox Beschermende geconcentreerde olie",
+      "market": "NL",
+      "size_ml": 50,
+      "weight": "medium",
+      "base": "hybrid",
+      "persistence": "high",
+      "dispenser": "pump",
+      "penetration": "surface_led",
+      "heat": true,
+      "uv": false,
+      "packageFingerprint": "d04a912a621d439787b65760ff7405fef5a1be00e476ba997d86391aaa5e692e"
+    },
+    {
+      "neutral_id": "PC03",
+      "product": "Haaröl",
+      "market": "DE",
+      "size_ml": 75,
+      "weight": "medium",
+      "base": "plant_oil_blend",
+      "persistence": "moderate",
+      "dispenser": "pump",
+      "penetration": "unknown",
+      "heat": false,
+      "uv": false,
+      "packageFingerprint": "31cb2f09b84cd03f144949324707de0a28a6c696dc736b8733396be91a866460"
+    },
+    {
+      "neutral_id": "PC04",
+      "product": "Huile Cheveux Réparation Intense",
+      "market": "FR",
+      "size_ml": 50,
+      "weight": "light",
+      "base": "ester_alkane_led",
+      "persistence": "moderate",
+      "dispenser": "dropper",
+      "penetration": "surface_led",
+      "heat": false,
+      "uv": false,
+      "packageFingerprint": "717219ddfd7f7bb13a1c78d3ef74f3dbb52609b312a07e5dfd29d8709fe6b16d"
+    }
+  ]
+}

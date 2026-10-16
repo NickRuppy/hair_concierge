@@ -363,8 +363,9 @@ BEGIN
  UPDATE public.products SET suitable_thicknesses=ARRAY(
   SELECT DISTINCT thickness FROM (
    SELECT jsonb_array_elements_text(COALESCE(supplied_final#>'{product,suitable_thicknesses}','[]'::jsonb)) thickness
+   -- Oil's product thicknesses and eligibility rows were reviewed separately in the Lab.
    UNION ALL SELECT row->>'thickness' FROM jsonb_array_elements(p_request->'spec_operations') operation,
-    jsonb_array_elements(operation->'rows') row
+    jsonb_array_elements(operation->'rows') row WHERE s.category<>'oil'
   ) AS approved_values WHERE thickness IN ('fine','normal','coarse') ORDER BY thickness
  ) WHERE id=(result->>'product_id')::uuid;
  IF p_request->'owner_default'='true'::jsonb AND EXISTS(SELECT 1 FROM public.products WHERE id=(result->>'product_id')::uuid AND cardinality(suitable_thicknesses)>0)

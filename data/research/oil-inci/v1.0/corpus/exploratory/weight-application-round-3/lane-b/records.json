@@ -1,0 +1,1066 @@
+{
+  "run_id": "oil-weight-application-round-3",
+  "method_revision": "weight-v0.7",
+  "lane_id": "b",
+  "files_read": [
+    "method.md",
+    "material-reference.json",
+    "role-lexicon.json",
+    "blind-packet.json",
+    "input-manifest.json"
+  ],
+  "records": [
+    {
+      "neutral_id": "W01",
+      "input_kind": "product_formula",
+      "material_matches": [
+        {
+          "rank": 3,
+          "reference_id": "avocado",
+          "prior": {
+            "value": "medium",
+            "estimate": true,
+            "confidence": "low",
+            "nearest_alternative": "light",
+            "alternatives": [
+              "light",
+              "rich"
+            ],
+            "reason": "Room-temperature pulp-oil rheology provides a positive more-viscous signal than the jojoba/MCT anchors, supporting medium as a rough distribution/coating tendency. This replaces the skin-sensory rationale; refining and dose can change the result.",
+            "evidence_ids": [
+              "HW013"
+            ],
+            "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+          },
+          "formula_role": "principal",
+          "reason": "Exact canonical name or explicitly admitted alias match in oil-natural-weight-v0.7. Identified intact avocado oil is a carrier component in this mixed backbone, with a medium/low prior; its rank does not establish its proportion."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "CAPRYLYL CAPRYLATE/CAPRATE",
+          "role": "principal",
+          "reason": "Defined ester emollient forms part of the mixed emollient carrier; the lexicon supplies no hair-weight class."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "SQUALANE",
+          "role": "principal",
+          "reason": "Hydrocarbon emollient participates in the carrier alongside the ester and botanical oils; no botanical-oil or grade inference."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "PERSEA GRATISSIMA (AVOCADO) OIL",
+          "role": "principal",
+          "reason": "Identified intact avocado oil is a carrier component in this mixed backbone, with a medium/low prior; its rank does not establish its proportion."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) OIL",
+          "role": "principal",
+          "reason": "Declared botanical emollient participates in the mixed backbone, but the plant part is unspecified and no seed-oil prior can be transferred."
+        },
+        {
+          "rank": 5,
+          "canonical_name": "C13-15 ALKANE",
+          "role": "secondary",
+          "reason": "Hydrocarbon carrier supplements the ester/squalane/botanical system; retail grade and evaporation behavior are not supplied."
+        },
+        {
+          "rank": 6,
+          "canonical_name": "UNDECANE",
+          "role": "secondary",
+          "reason": "Hydrocarbon vehicle alongside Tridecane; the reviewed pair supports a possible volatile contribution but does not establish this formula evaporation rate."
+        },
+        {
+          "rank": 7,
+          "canonical_name": "BENZYL ALCOHOL",
+          "role": "auxiliary",
+          "reason": "Declared fragrance-allergen identity in a broader carrier system; no drying-alcohol, negligible-dose or evaporation assumption."
+        },
+        {
+          "rank": 8,
+          "canonical_name": "TRIDECANE",
+          "role": "secondary",
+          "reason": "Hydrocarbon vehicle alongside Undecane; exact pair presence is acknowledged without transferring a supplier grade or rate."
+        },
+        {
+          "rank": 9,
+          "canonical_name": "CASTOR ISOSTEARATE SUCCINATE",
+          "role": "unresolved",
+          "reason": "Exact modified castor derivative; the admitted evidence leaves its film/conditioning function unassessed. It is not intact castor and receives no castor prior."
+        },
+        {
+          "rank": 10,
+          "canonical_name": "PROPANEDIOL",
+          "role": "unresolved",
+          "reason": "Exact identity admitted, but generic function is not assessed in this frozen lexicon; no carrier/film effect is silently assigned."
+        },
+        {
+          "rank": 11,
+          "canonical_name": "SH-OLIGOPEPTIDE-78",
+          "role": "unresolved",
+          "reason": "Peptide identity is admitted but its weight-relevant function is unassessed; later position does not prove negligible influence."
+        },
+        {
+          "rank": 12,
+          "canonical_name": "FRAGRANCE (PARFUM)",
+          "role": "auxiliary",
+          "reason": "Fragrance composition alongside an identifiable emollient backbone; mixture composition and amount are unknown."
+        },
+        {
+          "rank": 13,
+          "canonical_name": "TOCOPHEROL",
+          "role": "auxiliary",
+          "reason": "Recognized antioxidant within the emollient formula; this role does not imply a concentration threshold."
+        },
+        {
+          "rank": 14,
+          "canonical_name": "CINNAMAL",
+          "role": "auxiliary",
+          "reason": "Declared fragrance-allergen identity; not a matched fixed oil or evidence of the carrier weight."
+        },
+        {
+          "rank": 15,
+          "canonical_name": "HEXYL CINNAMAL",
+          "role": "auxiliary",
+          "reason": "Declared fragrance-allergen identity; not a matched fixed oil or evidence of the carrier weight."
+        },
+        {
+          "rank": 16,
+          "canonical_name": "LIMONENE",
+          "role": "auxiliary",
+          "reason": "Declared fragrance-allergen identity; not a matched fixed oil or evidence of the carrier weight."
+        },
+        {
+          "rank": 17,
+          "canonical_name": "LINALOOL",
+          "role": "auxiliary",
+          "reason": "Declared fragrance-allergen identity; not a matched fixed oil or evidence of the carrier weight."
+        }
+      ],
+      "weight": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "evidence": [
+          "The complete declaration contains an ester/squalane/botanical carrier plus multiple hydrocarbons and a modified castor derivative.",
+          "Avocado is the only exact admitted fixed-oil reference match: medium/low, with light and rich alternatives.",
+          "Undecane and Tridecane form a potentially volatile pair, but the frozen evidence does not establish the retail grade or evaporation profile."
+        ],
+        "counter_signal": [
+          "A lighter interpretation is plausible if the ester/hydrocarbon system spreads readily and the possible volatile pair reduces retained carrier; no measured hair class or rate is supplied.",
+          "A heavier interpretation is plausible from the botanical residual contribution and an impactful derivative film; the derivative film behavior is specifically unassessed, so it cannot be called rich castor.",
+          "Medium avocado cannot establish a positive intermediate finished-formula class when the other principal emollients and derivative remain uncalibrated."
+        ],
+        "nearest_alternative": null,
+        "reason": "No class wins on the permitted evidence. Competing carrier and residual-film interpretations remain unresolved; medium would be a missing-data fallback.",
+        "unresolved": [
+          "Weight-relevant film/conditioning evidence for Castor Isostearate Succinate is absent.",
+          "Unspecified Helianthus Annuus Oil has no exact seed-oil reference match or admitted material-weight prior.",
+          "Principal emollient proportions, retail grades and residual behavior are absent; ranks do not resolve them.",
+          "Propanediol and peptide weight-relevant functions remain unassessed in the frozen role evidence."
+        ]
+      },
+      "completion_status": "weight_only_blocked",
+      "issues": [
+        "Weight-relevant film/conditioning evidence for Castor Isostearate Succinate is absent.",
+        "Unspecified Helianthus Annuus Oil has no exact seed-oil reference match or admitted material-weight prior.",
+        "Principal emollient proportions, retail grades and residual behavior are absent; ranks do not resolve them.",
+        "Propanediol and peptide weight-relevant functions remain unassessed in the frozen role evidence."
+      ]
+    },
+    {
+      "neutral_id": "W02",
+      "input_kind": "product_formula",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "jojoba",
+          "prior": {
+            "value": "light",
+            "estimate": true,
+            "confidence": "low",
+            "nearest_alternative": "medium",
+            "alternatives": [
+              "medium"
+            ],
+            "reason": "Liquid wax that remains fluid; 40-cps technical reference supports light at modest dose, not a transfer from its low-greasy skin claim.",
+            "evidence_ids": [
+              "HW001",
+              "HW002"
+            ],
+            "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+          },
+          "formula_role": "principal",
+          "reason": "Exact canonical name or explicitly admitted alias match in oil-natural-weight-v0.7. The sole declared ingredient is an exactly admitted intact material and constitutes the entire declared carrier. The material prior supplies a working estimate only; no grade is inferred."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL",
+          "role": "principal",
+          "reason": "The sole declared ingredient is an exactly admitted intact material and constitutes the entire declared carrier. The material prior supplies a working estimate only; no grade is inferred."
+        }
+      ],
+      "weight": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Sole declared carrier exactly matches SIMMONDSIA CHINENSIS SEED OIL.",
+          "Technical hair-formulation review reports jojoba about 40 cps and identifies it as liquid wax. No source measures hair weight."
+        ],
+        "counter_signal": [
+          "Medium is the admitted nearest alternative because liquid-wax flow is not a calibrated hair endpoint and grade/dose/distribution can change coated feel.",
+          "Rich has no affirmative support in this sole-material input; absence of dilution alone does not supply a rich prior."
+        ],
+        "nearest_alternative": "medium",
+        "reason": "The sole carrier exactly matches the light/low jojoba prior. With no competing ingredient, light is the warranted working estimate under the frozen method, retaining medium as the nearest alternative.",
+        "unresolved": [
+          "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class.",
+          "No retail grade, applied dose, hair condition or measured finished-formula weight is established by this INCI."
+        ]
+      },
+      "completion_status": "weight_only_complete",
+      "issues": [
+        "Working estimate only; not measured hair weight, user fit or production readiness."
+      ]
+    },
+    {
+      "neutral_id": "W03",
+      "input_kind": "product_formula",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "moringa",
+          "prior": {
+            "value": "medium",
+            "estimate": true,
+            "confidence": "low",
+            "nearest_alternative": "light",
+            "alternatives": [
+              "light"
+            ],
+            "reason": "Nick approved the supplied hairdresser sheet as a practical hair-weight anchor: this oil sits in its middle band. Use medium/low as the working hair-weight estimate; the earlier physical flow observations remain counterevidence for light. The sheet ordering was explicitly described as heaviness on hair, not merely a fit label.",
+            "evidence_ids": [
+              "SHEET20261002",
+              "HW025",
+              "HW026",
+              "HW027"
+            ],
+            "unresolved": "No equal-dose comparative hair-weight protocol or independently verified sheet authorship is available. Grade, dose and distribution can change feel; light remains credible. No thickness eligibility follows.",
+            "counter_signal": [
+              "Two reported samples at 25 C have 47–48 cP viscosity, supporting the same light working tendency as nearby ordinary seed-oil flow observations. The 43.8–103 supplier range has no stated temperature and keeps medium credible; it does not supply a positive calibrated middle class. Pure-oil hair guidance is a separate unquantified corroborating claim, not the decisive physical measurement."
+            ]
+          },
+          "formula_role": "principal",
+          "reason": "Exact canonical name or explicitly admitted alias match in oil-natural-weight-v0.7. The sole declared ingredient is an exactly admitted intact material and constitutes the entire declared carrier. The material prior supplies a working estimate only; no grade is inferred."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "MORINGA OLEIFERA SEED OIL",
+          "role": "principal",
+          "reason": "The sole declared ingredient is an exactly admitted intact material and constitutes the entire declared carrier. The material prior supplies a working estimate only; no grade is inferred."
+        }
+      ],
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Sole declared carrier exactly matches MORINGA OLEIFERA SEED OIL.",
+          "Seed-oil study: 48 cP cold pressed and 47 cP solvent extracted at 25 C. Producer separately reports 43.8–103 mPa s with temperature unspecified.",
+          "Cliganic identifies 100% pure cold-pressed organic moringa oil and gives hair-specific no-weigh-down guidance; this is an unquantified maker claim.",
+          "User-supplied sheet places this named oil in the middle hair-weight group; Nick explicitly confirmed adopting this guidance for argan, moringa and black seed."
+        ],
+        "counter_signal": [
+          "Light is strongly credible from the reported 47–48 cP samples and the admitted low-confidence physical observations; unquantified maker guidance does not validate it.",
+          "Rich is not supported by a separate rich carrier or an admitted rich moringa prior."
+        ],
+        "nearest_alternative": "light",
+        "reason": "The sole carrier inherits the current approved medium/low practice-based moringa tendency. The positive middle-band practice anchor decides the working estimate; it is not an average or a measured hair result.",
+        "unresolved": [
+          "No equal-dose comparative hair-weight protocol or independently verified sheet authorship is available. Grade, dose and distribution can change feel; light remains credible. No thickness eligibility follows.",
+          "No retail grade, applied dose, hair condition or measured finished-formula weight is established by this INCI."
+        ]
+      },
+      "completion_status": "weight_only_complete",
+      "issues": [
+        "Working estimate only; not measured hair weight, user fit or production readiness."
+      ]
+    },
+    {
+      "neutral_id": "W04",
+      "input_kind": "product_formula",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "sunflower",
+          "prior": {
+            "value": "light",
+            "estimate": true,
+            "confidence": "low",
+            "nearest_alternative": "medium",
+            "alternatives": [
+              "medium"
+            ],
+            "reason": "Retain Nick’s approved light/low tendency. Same-method neat-oil rheology supports sunflower-like flow as a physical distribution estimate; protein-loss and skin absorption do not choose the class.",
+            "evidence_ids": [
+              "HW014"
+            ],
+            "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+          },
+          "formula_role": "principal",
+          "reason": "Exact canonical name or explicitly admitted alias match in oil-natural-weight-v0.7. Exact sunflower seed oil is one of the two identified carrier oils; light/low prior. Leading rank does not establish a decisive ratio."
+        },
+        {
+          "rank": 2,
+          "reference_id": "olive",
+          "prior": {
+            "value": "medium",
+            "estimate": true,
+            "confidence": "low",
+            "nearest_alternative": "rich",
+            "alternatives": [
+              "rich",
+              "light"
+            ],
+            "reason": "Exact refined/virgin SDSs report roughly 70 to 90 mPa s, placing olive above the light 55-60-mPa-s comparator oils but far below castor; medium is the bounded material estimate.",
+            "evidence_ids": [
+              "HW011",
+              "HW012"
+            ],
+            "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+          },
+          "formula_role": "principal",
+          "reason": "Exact canonical name or explicitly admitted alias match in oil-natural-weight-v0.7. Exact olive fruit oil is the other carrier oil, with medium/low prior; it cannot be dismissed as a trace or averaged with sunflower."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "role": "principal",
+          "reason": "Exact sunflower seed oil is one of the two identified carrier oils; light/low prior. Leading rank does not establish a decisive ratio."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "OLEA EUROPAEA (OLIVE) FRUIT OIL",
+          "role": "principal",
+          "reason": "Exact olive fruit oil is the other carrier oil, with medium/low prior; it cannot be dismissed as a trace or averaged with sunflower."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "CALENDULA OFFICINALIS FLOWER EXTRACT",
+          "role": "auxiliary",
+          "reason": "Exact flower extract is separate from the actual carrier oils. It has no standalone Calendula weight class; auxiliary describes its contextual role, not its amount."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ROSMARINUS OFFICINALIS LEAF EXTRACT",
+          "role": "auxiliary",
+          "reason": "Botanical leaf extract, not rosemary essential oil. Possible antioxidant role is grade-specific; the declared fixed oils supply the carrier context, without inferring extract amount."
+        }
+      ],
+      "weight": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "evidence": [
+          "The actual carrier is the sunflower-seed/olive-fruit oil mixture; the two extracts are distinct from the carrier oils.",
+          "Sunflower has an admitted light/low prior; olive has a positive medium/low material prior based on its bounded flow evidence."
+        ],
+        "counter_signal": [
+          "Light is plausible if sunflower controls the blend behavior, but its leading rank does not establish that outcome.",
+          "Medium is plausible if olive materially affects the residual carrier; this requires more than the presence of a medium oil.",
+          "Rich is less supported than light or medium: no principal rich prior or assessed substantial gum/resin system is supplied. Calendula presence supplies no rich class."
+        ],
+        "nearest_alternative": null,
+        "reason": "The two principal priors do not specify the mixture behavior. Neither rank dominance nor an arithmetic middle is an admissible tie-breaker, so light versus medium remains unresolved.",
+        "unresolved": [
+          "Carrier ratios or direct whole-blend flow/residue evidence are absent.",
+          "Extract preparation/grade and weight contribution are not quantified; no independent Calendula class exists."
+        ]
+      },
+      "completion_status": "weight_only_blocked",
+      "issues": [
+        "Carrier ratios or direct whole-blend flow/residue evidence are absent.",
+        "Extract preparation/grade and weight contribution are not quantified; no independent Calendula class exists."
+      ]
+    },
+    {
+      "neutral_id": "W05",
+      "input_kind": "product_formula",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "castor",
+          "prior": {
+            "value": "rich",
+            "estimate": true,
+            "confidence": "moderate",
+            "nearest_alternative": "medium",
+            "alternatives": [
+              "medium"
+            ],
+            "reason": "Very high specified dynamic viscosity makes the largest surface-film/volume-loss tendency in this subset a responsible engineering estimate at equal dose.",
+            "evidence_ids": [
+              "HW009",
+              "HW003"
+            ],
+            "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+          },
+          "formula_role": "principal",
+          "reason": "Exact canonical name or explicitly admitted alias match in oil-natural-weight-v0.7. The sole declared ingredient is an exactly admitted intact material and constitutes the entire declared carrier. The material prior supplies a working estimate only; no grade is inferred."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+          "role": "principal",
+          "reason": "The sole declared ingredient is an exactly admitted intact material and constitutes the entire declared carrier. The material prior supplies a working estimate only; no grade is inferred."
+        }
+      ],
+      "weight": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "moderate",
+        "evidence": [
+          "Sole declared carrier exactly matches RICINUS COMMUNIS SEED OIL.",
+          "Sigma's refined castor specification reports 950-1100 mPa s; the 2024 body-oil paper reports a conflicting much lower value."
+        ],
+        "counter_signal": [
+          "Medium remains credible because the frozen reference records conflicting viscosity evidence and grade/dose/distribution uncertainty.",
+          "Light lacks affirmative support in this sole-carrier declaration: no lighter carrier or dilution architecture is present."
+        ],
+        "nearest_alternative": "medium",
+        "reason": "Castor is the entire declared carrier, so its rich/moderate prior applies directly. This is the single-material rule, not a rich floor for castor-containing blends.",
+        "unresolved": [
+          "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class.",
+          "No retail grade, applied dose, hair condition or measured finished-formula weight is established by this INCI."
+        ]
+      },
+      "completion_status": "weight_only_complete",
+      "issues": [
+        "Working estimate only; not measured hair weight, user fit or production readiness."
+      ]
+    },
+    {
+      "neutral_id": "W06",
+      "input_kind": "product_formula",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "sweet_almond",
+          "prior": {
+            "value": "light",
+            "estimate": true,
+            "confidence": "low",
+            "nearest_alternative": "medium",
+            "alternatives": [
+              "medium"
+            ],
+            "reason": "The technical formulation reference places almond in the same 60–70 cP flow range as argan. Light is the shared low-confidence working tendency; medium is credible. No neat-hair comparison establishes the boundary.",
+            "evidence_ids": [
+              "HW001",
+              "HW003"
+            ],
+            "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+          },
+          "formula_role": "principal",
+          "reason": "Exact canonical name or explicitly admitted alias match in oil-natural-weight-v0.7. Sweet almond is part of the three-oil carrier, with a light/low prior. First rank does not prove that its lighter tendency controls the blend."
+        },
+        {
+          "rank": 2,
+          "reference_id": "castor",
+          "prior": {
+            "value": "rich",
+            "estimate": true,
+            "confidence": "moderate",
+            "nearest_alternative": "medium",
+            "alternatives": [
+              "medium"
+            ],
+            "reason": "Very high specified dynamic viscosity makes the largest surface-film/volume-loss tendency in this subset a responsible engineering estimate at equal dose.",
+            "evidence_ids": [
+              "HW009",
+              "HW003"
+            ],
+            "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+          },
+          "formula_role": "principal",
+          "reason": "Exact canonical name or explicitly admitted alias match in oil-natural-weight-v0.7. Intact castor forms part of the carrier alongside almond and safflower, with a rich/moderate prior. Its presence does not create a rich floor for the blend."
+        },
+        {
+          "rank": 3,
+          "reference_id": "safflower",
+          "prior": {
+            "value": "light",
+            "estimate": true,
+            "confidence": "low",
+            "nearest_alternative": "medium",
+            "alternatives": [
+              "medium"
+            ],
+            "reason": "A comparative raw-oil data table reports safflower at 55 mPa s at room temperature, below macadamia's 73 in the same table; light is a relative surface-flow estimate.",
+            "evidence_ids": [
+              "HW008"
+            ],
+            "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+          },
+          "formula_role": "principal",
+          "reason": "Exact canonical name or explicitly admitted alias match in oil-natural-weight-v0.7. Exact safflower seed oil belongs to the same carrier system, with a light/low prior. Its contribution cannot be counted as a vote against castor."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+          "role": "principal",
+          "reason": "Sweet almond is part of the three-oil carrier, with a light/low prior. First rank does not prove that its lighter tendency controls the blend."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+          "role": "principal",
+          "reason": "Intact castor forms part of the carrier alongside almond and safflower, with a rich/moderate prior. Its presence does not create a rich floor for the blend."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+          "role": "principal",
+          "reason": "Exact safflower seed oil belongs to the same carrier system, with a light/low prior. Its contribution cannot be counted as a vote against castor."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF OIL",
+          "role": "auxiliary",
+          "reason": "Recognized essential oil/aromatic auxiliary accompanying the three fixed oils; no volatility rate, percentage or efficacy inferred."
+        },
+        {
+          "rank": 5,
+          "canonical_name": "MENTHA ARVENSIS (WILD MINT) LEAF OIL",
+          "role": "auxiliary",
+          "reason": "Recognized essential oil/aromatic auxiliary accompanying the three fixed oils; preserve the exact species and plant part."
+        },
+        {
+          "rank": 6,
+          "canonical_name": "LAVANDULA OIL/EXTRACT",
+          "role": "unresolved",
+          "reason": "The admitted fragrance group leaves oil versus extract and preparation unspecified. Its carrier/weight significance is not settled by its rank."
+        },
+        {
+          "rank": 7,
+          "canonical_name": "CAMPHOR",
+          "role": "auxiliary",
+          "reason": "Recognized cooling/aromatic auxiliary; no therapeutic, concentration or evaporation conclusion."
+        },
+        {
+          "rank": 8,
+          "canonical_name": "MENTHOL",
+          "role": "auxiliary",
+          "reason": "Recognized cooling/aromatic auxiliary; no therapeutic, concentration or evaporation conclusion."
+        },
+        {
+          "rank": 9,
+          "canonical_name": "TOCOPHERYL ACETATE",
+          "role": "auxiliary",
+          "reason": "Frozen lexicon admits an antioxidant-auxiliary role, without proving preservation performance or equivalence to Tocopherol."
+        },
+        {
+          "rank": 10,
+          "canonical_name": "BETA-CARYOPHYLLENE",
+          "role": "auxiliary",
+          "reason": "Exact declared fragrance-allergen identity within the aromatic system; neither rank nor declaration supplies a percentage or a carrier-weight class."
+        },
+        {
+          "rank": 11,
+          "canonical_name": "PINENE",
+          "role": "auxiliary",
+          "reason": "Exact declared fragrance-allergen identity within the aromatic system; neither rank nor declaration supplies a percentage or a carrier-weight class."
+        },
+        {
+          "rank": 12,
+          "canonical_name": "TERPINEOL",
+          "role": "auxiliary",
+          "reason": "Exact declared fragrance-allergen identity within the aromatic system; neither rank nor declaration supplies a percentage or a carrier-weight class."
+        },
+        {
+          "rank": 13,
+          "canonical_name": "GERANYL ACETATE",
+          "role": "auxiliary",
+          "reason": "Exact declared fragrance-allergen identity within the aromatic system; neither rank nor declaration supplies a percentage or a carrier-weight class."
+        },
+        {
+          "rank": 14,
+          "canonical_name": "LINALYL ACETATE",
+          "role": "auxiliary",
+          "reason": "Exact declared fragrance-allergen identity within the aromatic system; neither rank nor declaration supplies a percentage or a carrier-weight class."
+        },
+        {
+          "rank": 15,
+          "canonical_name": "GERANIOL",
+          "role": "auxiliary",
+          "reason": "Exact declared fragrance-allergen identity within the aromatic system; neither rank nor declaration supplies a percentage or a carrier-weight class."
+        },
+        {
+          "rank": 16,
+          "canonical_name": "LIMONENE",
+          "role": "auxiliary",
+          "reason": "Exact declared fragrance-allergen identity within the aromatic system; neither rank nor declaration supplies a percentage or a carrier-weight class."
+        },
+        {
+          "rank": 17,
+          "canonical_name": "LINALOOL",
+          "role": "auxiliary",
+          "reason": "Exact declared fragrance-allergen identity within the aromatic system; neither rank nor declaration supplies a percentage or a carrier-weight class."
+        }
+      ],
+      "weight": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "evidence": [
+          "The complete fixed-oil carrier comprises light/low almond, rich/moderate castor and light/low safflower.",
+          "Essential oils, cooling/aromatic ingredients and declared allergens form an accompanying aromatic system; they do not supply fixed-oil priors.",
+          "The strongest material-level differentiator is castor viscosity, but dilution within this unknown-ratio mixture is unresolved."
+        ],
+        "counter_signal": [
+          "A lighter blend is credible when the almond/safflower portion controls flow; two light ingredients and first-position almond are not proof.",
+          "A rich blend is credible if castor strongly controls the residual carrier, but second position and a rich neat-oil prior are not sufficient.",
+          "Medium could occur for some ratios but has no affirmative whole-mixture evidence; averaging opposing priors would fabricate that support."
+        ],
+        "nearest_alternative": null,
+        "reason": "The light-versus-rich carrier competition cannot be resolved from identities and order. The formula therefore remains unknown rather than receiving an averaged medium estimate.",
+        "unresolved": [
+          "Actual carrier ratios or whole-mixture rheology/residual-film evidence are needed to distinguish the competing interpretations.",
+          "Lavandula Oil/Extract leaves preparation identity and weight significance unresolved.",
+          "No finished-formula comparative hair-weight evidence is supplied."
+        ]
+      },
+      "completion_status": "weight_only_blocked",
+      "issues": [
+        "Actual carrier ratios or whole-mixture rheology/residual-film evidence are needed to distinguish the competing interpretations.",
+        "Lavandula Oil/Extract leaves preparation identity and weight significance unresolved.",
+        "No finished-formula comparative hair-weight evidence is supplied."
+      ]
+    },
+    {
+      "neutral_id": "W07",
+      "input_kind": "product_formula",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "argan",
+          "prior": {
+            "value": "medium",
+            "estimate": true,
+            "confidence": "low",
+            "nearest_alternative": "light",
+            "alternatives": [
+              "light"
+            ],
+            "reason": "Nick approved the supplied hairdresser sheet as a practical hair-weight anchor: this oil sits in its middle band. Use medium/low as the working hair-weight estimate; the earlier physical flow observations remain counterevidence for light. The sheet ordering was explicitly described as heaviness on hair, not merely a fit label.",
+            "evidence_ids": [
+              "SHEET20261002",
+              "HW001"
+            ],
+            "unresolved": "No equal-dose comparative hair-weight protocol or independently verified sheet authorship is available. Grade, dose and distribution can change feel; light remains credible. No thickness eligibility follows.",
+            "counter_signal": [
+              "No affirmative material differentiator from almond was found: both are placed in the 60-70-cps easy-spreading range. Align argan with almond as light."
+            ]
+          },
+          "formula_role": "principal",
+          "reason": "Exact canonical name or explicitly admitted alias match in oil-natural-weight-v0.7. The sole declared ingredient is an exactly admitted intact material and constitutes the entire declared carrier. The material prior supplies a working estimate only; no grade is inferred."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "role": "principal",
+          "reason": "The sole declared ingredient is an exactly admitted intact material and constitutes the entire declared carrier. The material prior supplies a working estimate only; no grade is inferred."
+        }
+      ],
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Sole declared carrier exactly matches ARGANIA SPINOSA KERNEL OIL.",
+          "Technical formulation article places argan and almond in an approximately 60–70 cP flow range. Measurement conditions and comparative hair-weight endpoint are absent.",
+          "User-supplied sheet places this named oil in the middle hair-weight group; Nick explicitly confirmed adopting this guidance for argan, moringa and black seed."
+        ],
+        "counter_signal": [
+          "Light is credible: the admitted physical flow range overlaps almond and supplies no affirmative physical differentiator supporting a heavier class.",
+          "Rich lacks affirmative support in the sole-carrier input and is not supplied by the current material prior."
+        ],
+        "nearest_alternative": "light",
+        "reason": "The sole carrier exactly matches argan. The current approved practical middle-band anchor supplies medium/low; the physical light counter-signal remains explicit instead of restoring the superseded prior.",
+        "unresolved": [
+          "No equal-dose comparative hair-weight protocol or independently verified sheet authorship is available. Grade, dose and distribution can change feel; light remains credible. No thickness eligibility follows.",
+          "No retail grade, applied dose, hair condition or measured finished-formula weight is established by this INCI."
+        ]
+      },
+      "completion_status": "weight_only_complete",
+      "issues": [
+        "Working estimate only; not measured hair weight, user fit or production readiness."
+      ]
+    },
+    {
+      "neutral_id": "W08",
+      "input_kind": "raw_material_benchmark",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "cacay",
+          "prior": {
+            "value": "rich",
+            "estimate": true,
+            "confidence": "low",
+            "nearest_alternative": "medium",
+            "alternatives": [
+              "medium",
+              "light"
+            ],
+            "reason": "The user-supplied hairdresser sheet places Cacay in its bottom hair-weight group. Use rich/low as a provisional practice-based tendency under the approved addition; manufacturer data establish identity only.",
+            "evidence_ids": [
+              "SHEET20261002",
+              "CACAYTDS20261002"
+            ],
+            "counter_signal": [
+              "No comparative hair heaviness observation or material-flow measurement was recovered from the manufacturer TDS. The exact ordering against castor, coconut or Calendula is not established."
+            ],
+            "unresolved": "Practical sheet guidance only; no measured hair-weight class. Dose, grade and distribution may support lighter outcomes; medium and light remain alternatives."
+          },
+          "formula_role": "principal",
+          "reason": "Exact canonical name or explicitly admitted alias match in oil-natural-weight-v0.7. The sole declared ingredient is an exactly admitted intact material and constitutes the entire declared carrier. The material prior supplies a working estimate only; no grade is inferred."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "CARYODENDRON ORINOCENSE SEED OIL",
+          "role": "principal",
+          "reason": "The sole declared ingredient is an exactly admitted intact material and constitutes the entire declared carrier. The material prior supplies a working estimate only; no grade is inferred."
+        }
+      ],
+      "weight": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Sole declared carrier exactly matches CARYODENDRON ORINOCENSE SEED OIL.",
+          "Cacay is placed in the bottom group of the user-supplied sheet, whose ordering Nick explicitly described as relative heaviness.",
+          "Manufacturer identifies cold-pressed Caryodendron orinocense seed oil. No hair-weight test or viscosity is specified."
+        ],
+        "counter_signal": [
+          "Medium and light remain credible because the manufacturer technical information establishes identity only and supplies neither comparative hair weight nor material-flow measurements.",
+          "No evidence establishes Cacay ordering against castor or a measured rich endpoint."
+        ],
+        "nearest_alternative": "medium",
+        "reason": "This is a raw-material benchmark, not a finished-product validation. Exact identity permits the provisional rich/low practice-based prior; its low ceiling and both lighter alternatives remain visible.",
+        "unresolved": [
+          "Practical sheet guidance only; no measured hair-weight class. Dose, grade and distribution may support lighter outcomes; medium and light remain alternatives.",
+          "No retail grade, applied dose, hair condition or measured finished-formula weight is established by this INCI."
+        ]
+      },
+      "completion_status": "weight_only_complete",
+      "issues": [
+        "Working estimate only; not measured hair weight, user fit or production readiness."
+      ]
+    },
+    {
+      "neutral_id": "W09",
+      "input_kind": "product_formula",
+      "material_matches": [
+        {
+          "rank": 8,
+          "reference_id": "corn_oil",
+          "prior": {
+            "value": "light",
+            "estimate": true,
+            "confidence": "low",
+            "nearest_alternative": "medium",
+            "alternatives": [
+              "medium"
+            ],
+            "reason": "The physical result supports light as a provisional hair-film/spreading estimate under the technical anchor. It is not a cosmetic-grade or hair measurement, so medium stays close.",
+            "evidence_ids": [
+              "HW032"
+            ],
+            "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+          },
+          "formula_role": "secondary",
+          "reason": "Exact canonical name or explicitly admitted alias match in oil-natural-weight-v0.7. Exact Corn Oil declaration contributes a botanical emollient with light/low prior alongside the established silicone/hydrocarbon/ester backbone; not a Corn Germ Oil match."
+        },
+        {
+          "rank": 10,
+          "reference_id": "sunflower",
+          "prior": {
+            "value": "light",
+            "estimate": true,
+            "confidence": "low",
+            "nearest_alternative": "medium",
+            "alternatives": [
+              "medium"
+            ],
+            "reason": "Retain Nick’s approved light/low tendency. Same-method neat-oil rheology supports sunflower-like flow as a physical distribution estimate; protein-loss and skin absorption do not choose the class.",
+            "evidence_ids": [
+              "HW014"
+            ],
+            "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+          },
+          "formula_role": "secondary",
+          "reason": "Exact canonical name or explicitly admitted alias match in oil-natural-weight-v0.7. Exact sunflower seed oil contributes a light/low botanical emollient prior, which cannot determine the mixed carrier class."
+        },
+        {
+          "rank": 11,
+          "reference_id": "pomegranate_seed",
+          "prior": {
+            "value": "rich",
+            "estimate": true,
+            "confidence": "low",
+            "nearest_alternative": "medium",
+            "alternatives": [
+              "medium"
+            ],
+            "reason": "That comparatively high measured material viscosity supports rich as a low-confidence coating/spreading estimate. Temperature, extraction/grade, and absent hair residue/volume testing keep medium plausible; no skin sensory claim decides this row.",
+            "evidence_ids": [
+              "HW030"
+            ],
+            "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+          },
+          "formula_role": "secondary",
+          "reason": "Exact canonical name or explicitly admitted alias match in oil-natural-weight-v0.7. Exact pomegranate seed oil contributes a rich/low counter-signal in the broader residual system; its later rank does not prove negligible dose or force rich."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE",
+          "role": "principal",
+          "reason": "Silicone carrier and conditioning film is a key part of the residual architecture; unspecified Dimethicone grade leaves its flow/film behavior open."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISOHEXADECANE",
+          "role": "principal",
+          "reason": "Hydrocarbon carrier/emollient participates in the mixed backbone. Its presence does not establish an evaporation profile or a light finished formula."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C13-14 ISOALKANE",
+          "role": "principal",
+          "reason": "Hydrocarbon carrier is part of the same backbone; grade-specific volatility is not available and no all-alkane shortcut applies."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "COCO-CAPRYLATE",
+          "role": "principal",
+          "reason": "Defined ester emollient participates in the mixed carrier. It is not intact coconut oil and has no admitted neat-oil weight prior."
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE",
+          "role": "principal",
+          "reason": "Distinct silicone carrier/emollient contributes to the residual system alongside Dimethicone. Neither low weight nor a heavy resin system is established by its name."
+        },
+        {
+          "rank": 6,
+          "canonical_name": "BIS-AMINOPROPYL DIGLYCOL DIMALEATE",
+          "role": "unresolved",
+          "reason": "Exact identity is admitted but weight-relevant function is not assessed. No repair or film property is imported."
+        },
+        {
+          "rank": 7,
+          "canonical_name": "PROPANEDIOL",
+          "role": "unresolved",
+          "reason": "The frozen lexicon admits identity only with function not assessed; do not infer amount or carrier behavior."
+        },
+        {
+          "rank": 8,
+          "canonical_name": "ZEA MAYS (CORN) OIL",
+          "role": "secondary",
+          "reason": "Exact Corn Oil declaration contributes a botanical emollient with light/low prior alongside the established silicone/hydrocarbon/ester backbone; not a Corn Germ Oil match."
+        },
+        {
+          "rank": 9,
+          "canonical_name": "BETA-CAROTENE",
+          "role": "unresolved",
+          "reason": "Function is not assessed in the frozen role lexicon; no assumed trace/colorant cutoff is used."
+        },
+        {
+          "rank": 10,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "role": "secondary",
+          "reason": "Exact sunflower seed oil contributes a light/low botanical emollient prior, which cannot determine the mixed carrier class."
+        },
+        {
+          "rank": 11,
+          "canonical_name": "PUNICA GRANATUM SEED OIL",
+          "role": "secondary",
+          "reason": "Exact pomegranate seed oil contributes a rich/low counter-signal in the broader residual system; its later rank does not prove negligible dose or force rich."
+        },
+        {
+          "rank": 12,
+          "canonical_name": "AQUA",
+          "role": "auxiliary",
+          "reason": "Aqueous vehicle within a declared mixed emollient system; water presence does not demonstrate water continuity or a lighter finished formula."
+        },
+        {
+          "rank": 13,
+          "canonical_name": "MORINDA CITRIFOLIA FRUIT EXTRACT",
+          "role": "auxiliary",
+          "reason": "Botanical fruit extract accompanies the carrier system; exact auxiliary function is not assessed and no constituent or fixed-oil equivalence is inferred."
+        },
+        {
+          "rank": 14,
+          "canonical_name": "TOCOPHEROL",
+          "role": "auxiliary",
+          "reason": "Recognized antioxidant; contextual auxiliary role does not establish concentration."
+        },
+        {
+          "rank": 15,
+          "canonical_name": "PSEUDOZYMA EPICOLA/CAMELLIA SINENSIS SEED OIL FERMENT EXTRACT FILTRATE",
+          "role": "auxiliary",
+          "reason": "Ferment extract preparation accompanies the carrier system; it is not intact Camellia seed oil and has no transferable Camellia oil prior."
+        },
+        {
+          "rank": 16,
+          "canonical_name": "PARFUM",
+          "role": "auxiliary",
+          "reason": "Fragrance composition within the mixed carrier formula; composition and amount are unknown."
+        },
+        {
+          "rank": 17,
+          "canonical_name": "CITRAL",
+          "role": "auxiliary",
+          "reason": "Declared fragrance-allergen identity; no carrier percentage follows."
+        },
+        {
+          "rank": 18,
+          "canonical_name": "LINALOOL",
+          "role": "auxiliary",
+          "reason": "Declared fragrance-allergen identity; no carrier percentage follows."
+        },
+        {
+          "rank": 19,
+          "canonical_name": "LIMONENE",
+          "role": "auxiliary",
+          "reason": "Declared fragrance-allergen identity; no carrier percentage follows."
+        },
+        {
+          "rank": 20,
+          "canonical_name": "CITRONELLOL",
+          "role": "auxiliary",
+          "reason": "Declared fragrance-allergen identity; no carrier percentage follows."
+        },
+        {
+          "rank": 21,
+          "canonical_name": "HEXYL CINNAMAL",
+          "role": "auxiliary",
+          "reason": "Declared fragrance-allergen identity; no carrier percentage follows."
+        }
+      ],
+      "weight": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "evidence": [
+          "The whole backbone is a mixed silicone/hydrocarbon/ester system, with Dimethicone conditioning-film evidence and a distinct Phenyl Trimethicone fluid.",
+          "Exact secondary fixed-oil matches are corn_oil light/low, sunflower light/low and pomegranate_seed rich/low; none determines the backbone class.",
+          "No exact admitted heavy gum/resin system or verified low-viscosity retail grade is supplied."
+        ],
+        "counter_signal": [
+          "A lighter interpretation is plausible from a suitably mobile hydrocarbon/ester/silicone blend, but the lexicon does not establish retail-grade mobility or evaporation.",
+          "A heavier interpretation is plausible from the Dimethicone residual film, the additional silicone and pomegranate contribution, but their impact is not quantified.",
+          "The later rich oil cannot force rich, and the light oils cannot cancel the silicone residual system. Medium is not positively supported merely because these signals coexist."
+        ],
+        "nearest_alternative": null,
+        "reason": "The relative carrier and residual-film behavior is decisive and unresolved. Neither a generic silicone class nor a count of botanical priors selects a class.",
+        "unresolved": [
+          "Dimethicone grade and whole-formula residual-film behavior are unspecified.",
+          "The proportions and grade-specific behavior of silicone, hydrocarbon and ester carriers are absent.",
+          "Weight-relevant functions of Bis-Aminopropyl Diglycol Dimaleate, Propanediol and Beta-Carotene are unassessed in this input.",
+          "No direct whole-formula hair-weight or comparable flow/residue observation resolves the lighter/heavier interpretations."
+        ]
+      },
+      "completion_status": "weight_only_blocked",
+      "issues": [
+        "Dimethicone grade and whole-formula residual-film behavior are unspecified.",
+        "The proportions and grade-specific behavior of silicone, hydrocarbon and ester carriers are absent.",
+        "Weight-relevant functions of Bis-Aminopropyl Diglycol Dimaleate, Propanediol and Beta-Carotene are unassessed in this input.",
+        "No direct whole-formula hair-weight or comparable flow/residue observation resolves the lighter/heavier interpretations."
+      ]
+    },
+    {
+      "neutral_id": "W10",
+      "input_kind": "product_formula",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "black_seed",
+          "prior": {
+            "value": "medium",
+            "estimate": true,
+            "confidence": "low",
+            "nearest_alternative": "light",
+            "alternatives": [
+              "light"
+            ],
+            "reason": "Nick approved the supplied hairdresser sheet as a practical hair-weight anchor: this oil sits in its middle band. Use medium/low as the working hair-weight estimate; the earlier physical flow observations remain counterevidence for light. The sheet ordering was explicitly described as heaviness on hair, not merely a fit label.",
+            "evidence_ids": [
+              "SHEET20261002",
+              "HW020"
+            ],
+            "unresolved": "No equal-dose comparative hair-weight protocol or independently verified sheet authorship is available. Grade, dose and distribution can change feel; light remains credible. No thickness eligibility follows.",
+            "counter_signal": [
+              "The reported 64–71 mPa s material-flow range overlaps the almond/argan reference range. Use the same light/low working tendency, with medium close; no affirmative neat-hair evidence establishes a heavier class."
+            ]
+          },
+          "formula_role": "principal",
+          "reason": "Exact canonical name or explicitly admitted alias match in oil-natural-weight-v0.7. The sole declared ingredient is an exactly admitted intact material and constitutes the entire declared carrier. The material prior supplies a working estimate only; no grade is inferred."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "NIGELLA SATIVA SEED OIL",
+          "role": "principal",
+          "reason": "The sole declared ingredient is an exactly admitted intact material and constitutes the entire declared carrier. The material prior supplies a working estimate only; no grade is inferred."
+        }
+      ],
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Sole declared carrier exactly matches NIGELLA SATIVA SEED OIL.",
+          "A physicochemical study reports cold/hot pressed Nigella sativa oils at about 64-71 mPa s; a separate source reports grade/extraction-sensitive results. No hair residue or volume endpoint was found.",
+          "User-supplied sheet places this named oil in the middle hair-weight group; Nick explicitly confirmed adopting this guidance for argan, moringa and black seed."
+        ],
+        "counter_signal": [
+          "Light is credible because the admitted material-flow range overlaps lighter comparator oils and no hair residue/volume endpoint was found.",
+          "Rich has no affirmative support in this sole-carrier declaration or the current admitted prior."
+        ],
+        "nearest_alternative": "light",
+        "reason": "The exact sole carrier takes the approved medium/low black-seed practice prior. The practical middle-band observation supplies positive intermediate evidence; physical counterevidence keeps light credible.",
+        "unresolved": [
+          "No equal-dose comparative hair-weight protocol or independently verified sheet authorship is available. Grade, dose and distribution can change feel; light remains credible. No thickness eligibility follows.",
+          "No retail grade, applied dose, hair condition or measured finished-formula weight is established by this INCI."
+        ]
+      },
+      "completion_status": "weight_only_complete",
+      "issues": [
+        "Working estimate only; not measured hair weight, user fit or production readiness."
+      ]
+    }
+  ]
+}

@@ -48,6 +48,13 @@ import {
   LEAVE_IN_PRODUCTION_ADAPTER_VERSION,
 } from "@/lib/leave-in-research/production-adapter"
 import { BOND_CURRENT_METHOD_PINS } from "@/lib/bondbuilder-research/registry"
+import {
+  applyOilResearchAdapterForWorker,
+  type OilAdmission,
+  type OilWorkerAdmissionContext,
+} from "./oil-research-adapter"
+import { OIL_RESEARCH_PROMPT_CONTRACT } from "./oil-research-prompt-contract"
+import { OIL_INTAKE_METHOD } from "@/lib/oil-research/registry"
 import { PROTOCOL_SLOT_RESEARCH_CONTRACT } from "./pipeline/protocol"
 import {
   applyShampooResearchAdapter,
@@ -108,20 +115,22 @@ export const REQUIRED_CATEGORY_SPEC_KEYS = {
 } as const
 export type CategoryContractKey = keyof typeof CATEGORY_SPEC_KEYS
 
-type AdapterInput = {
+export type CategoryResearchAdapterInput = {
   final: JsonRecord
   artifacts: { kind: string; payload: JsonRecord }[]
   expectedResearchId?: string
   expectedReviewCycleId?: string
+  oilContext?: OilWorkerAdmissionContext
 }
-type AdapterResult = {
+export type CategoryResearchAdapterResult = {
   blockers: string[]
   warnings: string[]
   downstreamDecisions?: ShampooDownstreamDecision[]
+  oilAdmission?: OilAdmission
 }
 type CategoryResearchEntryBase = {
   promptContract: () => JsonRecord
-  apply: (input: AdapterInput) => AdapterResult
+  apply: (input: CategoryResearchAdapterInput) => CategoryResearchAdapterResult
 }
 export type CategoryResearchEntry = CategoryResearchEntryBase &
   (
@@ -139,6 +148,28 @@ function unavailable(promptContract: () => JsonRecord): CategoryResearchEntry {
     promptContract,
     apply: () => ({ blockers: [], warnings: [] }),
   }
+}
+
+/** Current Oil intake engine; running-release deployment remains separate. */
+export const OIL_RESEARCH_ENGINE: CategoryResearchEntry = {
+  state: "active",
+  engineId: OIL_INTAKE_METHOD.engine_id,
+  methodology: OIL_INTAKE_METHOD.methodology_version,
+  adapter: OIL_INTAKE_METHOD.adapter_version,
+  promptContract: () => ({
+    ...oilApprovalContract(),
+    instruction:
+      "Emit exactly one property_synthesis.oil_research_draft using the current lean oil v0.10 contract. Independently research draft.oil_identity (brand, product, market, variant, package, identifier, source_ids) and draft.oil_authoritative_formula (raw_inci, ordered ingredients, source_ids, declaration_status, conflicts) from the resolved product and source declarations; never derive these context blocks from the oil envelope. Emit matching suggestions in final only for manual Lab review. The adapter owns weight, supported fibre roles and heat protection.",
+    oil_research: OIL_RESEARCH_PROMPT_CONTRACT,
+  }),
+  apply: ({ expectedResearchId, oilContext, ...input }) => {
+    if (!expectedResearchId || !oilContext)
+      return {
+        blockers: ["oil research adapter: current job, identity and formula context are required"],
+        warnings: [],
+      }
+    return applyOilResearchAdapterForWorker({ ...input, expectedResearchId, context: oilContext })
+  },
 }
 
 /** Category-owned research only; activation and versions come from server pins. */
@@ -201,14 +232,16 @@ export const CATEGORY_RESEARCH_REGISTRY: Readonly<
     promptContract: maskApprovalContract,
     apply: applyMaskResearchAdapter,
   },
-  oil: unavailable(oilApprovalContract),
+  oil: OIL_RESEARCH_ENGINE,
   dry_shampoo: unavailable(dryShampooApprovalContract),
   deep_cleansing_shampoo: unavailable(deepCleansingShampooApprovalContract),
   heat_protectant: unavailable(heatProtectantApprovalContract),
   scalp_care: unavailable(scalpCareApprovalContract),
 }
 
-function applySealedShampooResearchAdapter(input: AdapterInput): AdapterResult {
+function applySealedShampooResearchAdapter(
+  input: CategoryResearchAdapterInput,
+): CategoryResearchAdapterResult {
   const carriers = input.artifacts.filter(
     (artifact) =>
       artifact.kind === "formula" && artifact.payload.stage === SHAMPOO_STAGE_PROOF_KIND,

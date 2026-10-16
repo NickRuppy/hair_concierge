@@ -1,0 +1,27 @@
+{
+  "captured_at": "2026-10-09",
+  "records": [
+    {
+      "case_id": "O27",
+      "brand": "Aveda",
+      "product": "Nutriplenish Multi-Use Hair Oil",
+      "source_url": "https://www.aveda.com/product/17753/71181/hair-care/hair-and-scalp-oils/nutriplenishtm-multi-use-hair-oil?size=1_fl_oz/30_ml",
+      "formula_correspondence": "Current maker ILN46770 declaration matches the existing round-8 sequence; original frozen declaration retained.",
+      "directions_paraphrase": "Maker separately permits retained towel-dried hair care and dry mid-lengths/ends finishing; pre-shampoo and overnight applications are separate scenarios.",
+      "context": "retained_damp_or_dry_hair",
+      "evidence_location": "Maker USAGE: Leave-in treatment / Post-styling shine; captured via web page lines592–595.",
+      "verbatim": false
+    },
+    {
+      "case_id": "O28",
+      "brand": "The Ordinary",
+      "product": "100% Cold-Pressed Virgin Marula Oil",
+      "source_url": "https://theordinary.com/en-us/100-cold-pressed-virgin-marula-face-oil-100389.html",
+      "formula_correspondence": "Current maker single Sclerocarya Birrea Seed Oil matches frozen round-8 declaration.",
+      "directions_paraphrase": "Maker instructs working through clean damp hair daily or as needed. Face-dose instructions do not transfer to hair.",
+      "context": "retained_damp_hair",
+      "evidence_location": "Maker Hair Application, captured via web page line227.",
+      "verbatim": false
+    }
+  ]
+}

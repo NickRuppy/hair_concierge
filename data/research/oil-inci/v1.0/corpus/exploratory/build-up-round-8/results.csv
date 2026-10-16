@@ -1,0 +1,5 @@
+neutral_id,brand,product,lane_a,lane_b,recommendation,estimate,confidence,nearest_alternative,status
+C01,Davines,OI Oil,elevated,elevated,elevated,true,low,low,provisional_research_estimate_not_human_adjudicated
+C02,Verb,Ghost Oil,elevated,elevated,elevated,true,low,low,provisional_research_estimate_not_human_adjudicated
+C03,Aveda,Nutriplenish Multi-Use Hair Oil,low,low,low,true,low,elevated,provisional_research_estimate_not_human_adjudicated
+C04,The Ordinary,100% Cold-Pressed Virgin Marula Oil,low,low,low,true,low,elevated,provisional_research_estimate_not_human_adjudicated

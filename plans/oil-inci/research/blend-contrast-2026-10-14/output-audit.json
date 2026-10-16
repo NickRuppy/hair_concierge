@@ -1,0 +1,44 @@
+{
+  "audit_id": "blend-contrast-sealed-output-audit-2026-10-14",
+  "scope": "Sealed lane-output audit against frozen local inputs. No lane was edited, re-run, or sent to another reviewer; no application test, build, browser, or database action was performed.",
+  "verdict": "READY_WITH_PARENT_EXPLANATION_CORRECTION",
+  "hard_blockers": [],
+  "verified": {
+    "ledger_and_formula_binding": {
+      "lane_a":{"records":4,"ranks":99,"exact_packet_name_canonical_role_parity":true,"formula_hash_parity":true},
+      "lane_b":{"records":4,"ranks":99,"exact_packet_name_canonical_role_parity":true,"formula_hashes_bound_in_seal":true},
+      "source_and_function_binding":"Every ledger rank matches frozen raw/canonical names and exact dictionary roles. The frozen function-provenance remains the source trace; Lane B does not duplicate function_source_ids inside each ledger row."
+    },
+    "enum_and_method_binding": {
+      "weight_enums":"All eight records use valid light|medium|rich|unknown values, boolean estimate fields, low confidence, valid B0-B7 rule identifiers, and a nearest alternative.",
+      "seals":"Both seals report the five frozen input hashes, formula hashes BC01-BC04, no recognition/access/peer/browsing incidents, and their current result hashes.",
+      "unchanged_method":"Current blind-method.md, material-priors.json, neutral-packet.json and function-dictionary.json continue to equal input-manifest hashes."
+    },
+    "shortcut_audit":"No positive automatic presence, rank, oil-count, inferred-majority, or percentage-cutoff shortcut was located. Relevant output text explicitly rejects 1 percent boundaries, majority/count inferences, and quantity claims.",
+    "values_relevant_to_correction":{"BC03":{"lane_a":"medium","lane_b":"medium","nearest_alternative":"light"}}
+  },
+  "parent_explanation_correction": {
+    "status":"required_without_lane_mutation",
+    "location":"lane-b/results.json BC03 admitted_fixed_oil_inventory rank 16 and BC03 unresolved explanation",
+    "incorrect_sealed_text_effect":"It says exact OENOTHERA BIENNIS (EVENING PRIMROSE) OIL has no exact material prior and records not_available_for_exact_declaration.",
+    "frozen_evidence":"material-priors.json evening_primrose canonical OENOTHERA BIENNIS OIL lists the exact OENOTHERA BIENNIS (EVENING PRIMROSE) OIL alias with light/low prior and medium alternative.",
+    "audit_disposition":"Retain the sealed lane output unchanged. Parent adjudication should state the corrected light prior as a lighter counter-signal; it does not change either lane's established BC03 medium silicone/ester argument or final value."
+  },
+  "other_prior_and_function_check": "Alias-aware comparison of every admitted fixed-oil inventory against material-priors found no other mismatch. Keratin-film, castor/sebacic-copolymer, and Styrax function boundaries remain as frozen and are not over-transferred in the ledgers.",
+  "limits_retained": [
+    "Outputs remain low-confidence estimates, not measured sensory performance or catalog readiness.",
+    "Unknown component functions and grade/amount gaps remain stated rather than treated as negligible.",
+    "The parent correction is explanatory only and does not authorize a normative, source, or sealed-output change."
+  ],
+  "files_audited": [
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/lane-a/results.json",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/lane-a/seal.json",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/lane-b/results.json",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/lane-b/seal.json",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/neutral-packet.json",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/material-priors.json",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/blind-method.md",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/input-manifest.json"
+  ]
+}

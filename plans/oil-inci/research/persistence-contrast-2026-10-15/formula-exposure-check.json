@@ -1,0 +1,36 @@
+{
+  "prior_json_files_scanned": 625,
+  "distinct_prior_raw_formula_strings": 87,
+  "candidates": [
+    {
+      "neutral_id": "PC01",
+      "source_key": "PA01",
+      "raw_normalized_sha256": "cbf3b5b6bf80c03a833e332fbbac0a2445d98c4255d5e9799ae61801e20dcf97",
+      "literal_matches": [],
+      "named_exposure_review": "No name hits for Oil Ultime Argan in targeted source JSON corpus and research-path scan; previous Rose Finishing Oil is distinct. Parent final formula-fingerprint novelty check required."
+    },
+    {
+      "neutral_id": "PC02",
+      "source_key": "PA02",
+      "raw_normalized_sha256": "6630eb1b849b7cdc14cdda91c5320eabd370c1e958e6841b1942f08575069702",
+      "literal_matches": [],
+      "named_exposure_review": "No name hits for Metal Detox oil in targeted source JSON corpus and research-path scan. Parent final formula-fingerprint novelty check required."
+    },
+    {
+      "neutral_id": "PC03",
+      "source_key": "PSB01",
+      "raw_normalized_sha256": "ad5e859fba276a5e40765a4f0699ac67137aea407e3da27764cef629a4679dba",
+      "literal_matches": [],
+      "named_exposure_review": "Source-b recorded no prior local name/source matches; root confirmed name inventory."
+    },
+    {
+      "neutral_id": "PC04",
+      "source_key": "PSB02",
+      "raw_normalized_sha256": "9129e7d72e79eb11d77e7af3cdd316b50663d595477091a59a6d0c45d322d777",
+      "literal_matches": [],
+      "named_exposure_review": "Source-b recorded no prior local name/source matches; root confirmed name inventory."
+    }
+  ],
+  "normalization": "Case/whitespace/terminal period only; source separators and chemical aliases are not equated. Identity/family exposure reviewed separately.",
+  "limits": "Project-new exact product/formula checks do not establish model-level unfamiliarity, chemical equivalence or exhaustive market coverage. Oil Ultime Rose was previously exposed; Argan is a distinct product/formula within that familiar family."
+}

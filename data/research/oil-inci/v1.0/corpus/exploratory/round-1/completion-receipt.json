@@ -1,0 +1,198 @@
+{
+  "run_id": "oil-exploratory-2026-10-01-round-1",
+  "status": "first_round_complete_with_visible_gaps",
+  "independent_records": 16,
+  "input_records": 8,
+  "blind_stage_audit": {
+    "input_hashes_match": true,
+    "lanes": {
+      "lane-a": {
+        "records": 8,
+        "ingredient_rows": 143,
+        "errors": [],
+        "sha256": "38f6306454d8fe9b927f1a07d59c30260b70077f26af6837317ae7666ce0cd84"
+      },
+      "lane-b": {
+        "records": 8,
+        "ingredient_rows": 143,
+        "errors": [],
+        "sha256": "9a1deb80db05490a20f9199e0579aea3b19a669ab607fcf4d0e5602e4fd090ca"
+      }
+    },
+    "errors": []
+  },
+  "final_stage_audit": {
+    "lanes": {
+      "lane-a": {
+        "records": 8,
+        "blind_preserved": true,
+        "fit_cells": 80,
+        "errors": [],
+        "sha256": "b55454354feb0ed78e8347bcba5fcc4022a64d80aa8bd37b974e9ddc5c1c2d33"
+      },
+      "lane-b": {
+        "records": 8,
+        "blind_preserved": true,
+        "fit_cells": 80,
+        "errors": [],
+        "sha256": "7a4f53b15994f4427034f62817e6840943c60ccd07383c61ea71912b1f92795d"
+      }
+    },
+    "errors": []
+  },
+  "main_working_derivation": "main-working-records-v0.1.1.json",
+  "main_working_hero_rank_parity": true,
+  "independent_scores_unchanged": true,
+  "fit_policy_unknown_cells_per_lane": 80,
+  "raw_field_agreement": {
+    "raw_agreements": 116,
+    "raw_denominator": 118,
+    "substantive_agreements": 111,
+    "substantive_denominator": 112,
+    "unknown_a": 6,
+    "unknown_b": 5,
+    "mutual_unknown": 5
+  },
+  "method_id_alias_resolution": {
+    "manifest_id": "oil-exploratory-standard-0.1",
+    "lane_id": "oil-exploratory-classification-standard-v0.1",
+    "binding": "same frozen method SHA256 in both access seals; metadata aliases only"
+  },
+  "frozen_inputs_preserved": true,
+  "blind_output_files_preserved": true,
+  "source_review_limit": "Published declarations and captured/retained excerpts, not physical batch verification. Dictionary source receipts include exact official glossary page/entry/hash; all full source documents are not vendored in this repository.",
+  "files": [
+    {
+      "path": "blind-lexicon.json",
+      "sha256": "55d39f6cd2bc24237b3912abdcdd6773a805c96343f7b328df58d51132448d5b",
+      "bytes": 97524
+    },
+    {
+      "path": "blind-packet.json",
+      "sha256": "f75640af96ffa3c98cb55dc38a64a0d1e70f673e3c8adecd8b716be576cc7f10",
+      "bytes": 32596
+    },
+    {
+      "path": "blind-stage-seal.json",
+      "sha256": "f5d06234d83ddd02b4aac4bf656cb3fcf59bd88d6c5c913fa015d80f2f177bc8",
+      "bytes": 1177
+    },
+    {
+      "path": "cohort.json",
+      "sha256": "1d1026befb941a9efd667a61389aa95a2d62bca0e138bfaa90920e784e7a6ca5",
+      "bytes": 3922
+    },
+    {
+      "path": "comparison.json",
+      "sha256": "a139498aeb8d9bf3f0a2ac39ef92ecbb88b966b9ba99d5b87911481bf49509e4",
+      "bytes": 33728
+    },
+    {
+      "path": "ingredient-lexicon.json",
+      "sha256": "14fc33bc49a68433eed75f5dda15578a4223af31669555fbb95269a2c7955b73",
+      "bytes": 156269
+    },
+    {
+      "path": "input-manifest.json",
+      "sha256": "4f20a480ff5990b04626acda494efc08e9e112ac68d4ab4578318738958feac9",
+      "bytes": 4370
+    },
+    {
+      "path": "lane-a/blind-notes.md",
+      "sha256": "0d46558192ff6d85689ccd93e96f280770b2999c4d318e1d4072ad03efeab9ba",
+      "bytes": 5618
+    },
+    {
+      "path": "lane-a/blind-records.json",
+      "sha256": "38f6306454d8fe9b927f1a07d59c30260b70077f26af6837317ae7666ce0cd84",
+      "bytes": 331838
+    },
+    {
+      "path": "lane-a/final-notes.md",
+      "sha256": "108e63a555ac4799c4178bea5d4171c11901feeaf73e6a32d6739f5b38d1c824",
+      "bytes": 4575
+    },
+    {
+      "path": "lane-a/final-records.json",
+      "sha256": "b55454354feb0ed78e8347bcba5fcc4022a64d80aa8bd37b974e9ddc5c1c2d33",
+      "bytes": 437134
+    },
+    {
+      "path": "lane-b/blind-notes.md",
+      "sha256": "d9a8dd6124823e4f19e5ab7417b4421b6a4a8e7a64c3ed4a27fbcb20fdfe690a",
+      "bytes": 7089
+    },
+    {
+      "path": "lane-b/blind-records.json",
+      "sha256": "9a1deb80db05490a20f9199e0579aea3b19a669ab607fcf4d0e5602e4fd090ca",
+      "bytes": 217598
+    },
+    {
+      "path": "lane-b/final-notes.md",
+      "sha256": "2b0b4f9183acc2f23cda3d611054e1349339f2eccb6978419ed106c00dbbb7ec",
+      "bytes": 7289
+    },
+    {
+      "path": "lane-b/final-records.json",
+      "sha256": "7a4f53b15994f4427034f62817e6840943c60ccd07383c61ea71912b1f92795d",
+      "bytes": 308828
+    },
+    {
+      "path": "main-material-mappings.md",
+      "sha256": "e4d78e020f04d27b7e3cc6f2114b6fc7e956db84d5ae76d7e3c0439963e4b841",
+      "bytes": 2324
+    },
+    {
+      "path": "main-working-records-v0.1.1.json",
+      "sha256": "daf57ce6eefa7191d9be57ae9d9c5a8416b25909885ddfce9fbd56436a8862e1",
+      "bytes": 311732
+    },
+    {
+      "path": "method.md",
+      "sha256": "79f33e162ccd7d83f846ec1a03d92872074e983d0aca95c3b51d91996963f905",
+      "bytes": 12365
+    },
+    {
+      "path": "normalization-audit.json",
+      "sha256": "62dcf4f8c94ced64a4b5cc2c3365ba81439f5bd8394db41bc72a993b9b238569",
+      "bytes": 26491
+    },
+    {
+      "path": "post-seal-source-amendment-v0.1.1.json",
+      "sha256": "db41853814520e6704d17aa8a89f3639f5acbd6d92b06db7b6001afa63fd7e94",
+      "bytes": 1405
+    },
+    {
+      "path": "preflight-receipt.json",
+      "sha256": "abc2666ef7ef36c4d24b025b51a5283ce1d96a3186f0886664776223dd945488",
+      "bytes": 1111
+    },
+    {
+      "path": "results-for-review.md",
+      "sha256": "8258415d03c4ea9be72e505b9bfc2ee0e3dd97bdc241ccd2d6b8e2684c7ab400",
+      "bytes": 10307
+    },
+    {
+      "path": "scope-review-notes.md",
+      "sha256": "cce022778a8b47282444c4fc0afb96b7abd288cd6df2f70387865808c227426b",
+      "bytes": 2393
+    },
+    {
+      "path": "source-packet.json",
+      "sha256": "7a29772235f3bb1b07a042c367e49955208aa56778d02f4eab76cc510c44f40b",
+      "bytes": 59361
+    },
+    {
+      "path": "unblinded-packet.json",
+      "sha256": "f3d564584970d1d14a9288cae277a97fe3d38c6a14c316930ed61d995cf86885",
+      "bytes": 42054
+    },
+    {
+      "path": "working-property-sheet.csv",
+      "sha256": "abbdeda1efb618f7847be889e2a9aec9a22cbc6037ecc441258b88de185c436b",
+      "bytes": 2222
+    }
+  ],
+  "production_or_runtime_writes": false,
+  "commit_or_push": false
+}

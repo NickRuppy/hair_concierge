@@ -1,0 +1,44 @@
+{
+  "run_id": "oil-missing-direct-properties-v0.1",
+  "stage": "frozen_before_dispatch",
+  "read_allowlist": [
+    "method.md",
+    "blind-packet.json",
+    "function-dictionary.json",
+    "material-weight-reference.json"
+  ],
+  "inputs": {
+    "method.md": "577187244a1d34caec9a9fd41cf1706eb4cb1001206894907e81ceb8885dd386",
+    "blind-packet.json": "dc011e6b1cf9bdd4139a20324bd5d66d80f3110c3d959b5fb6f0fbf5ab1cbfcd",
+    "function-dictionary.json": "e12d962914aa13175641a8893f7220f101da5503cf66bd88338b48be6a977d0f",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+  },
+  "dependencies": {
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md": "2238a966c7cefbae48bec2df72293bef98837e29cba15c0eed9b5c2e91a281cc",
+    "docs/research/oil-inci/v1.0/04_blend-weight-policy-v0.2.md": "5db652413c5dd814f9a9488dfab6a8bedbd7dcc107a9fe002448203429db8391",
+    "docs/research/oil-inci/v1.0/03_weight-reference-v0.10.md": "dc6d7f117cae895014620ce9b3f542f5cb35c980581d0e692aa022862ede657d",
+    "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49"
+  },
+  "case_ids": [
+    "O09",
+    "O10",
+    "O11",
+    "O12",
+    "O13",
+    "O14",
+    "O16",
+    "O17",
+    "O20",
+    "O21",
+    "O22",
+    "O23",
+    "O24",
+    "O25",
+    "O26",
+    "O27",
+    "O28"
+  ],
+  "ingredient_ranks": 363,
+  "purpose": "Missing direct property supplement. Existing27 persistence scalars carried unchanged; prior19 exact weights retain authority."
+}

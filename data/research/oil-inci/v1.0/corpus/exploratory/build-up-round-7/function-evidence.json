@@ -1,0 +1,600 @@
+{
+  "entries": [
+    {
+      "source_id": "F001",
+      "canonical_name": "HYDROGENATED FARNESENE",
+      "origin": "primary supplemental evidence",
+      "urls": [
+        "https://cosmileeurope.eu/inci/detail/17814/hydrogenated-farnesene/"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F002",
+      "canonical_name": "SQUALANE",
+      "origin": "reviewed round-1 exact function entry",
+      "urls": [
+        "https://www.sophim.com/en/squalane/"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F003",
+      "canonical_name": "JOJOBA ESTERS",
+      "origin": "primary supplemental evidence",
+      "urls": [
+        "https://www.cargill.com/personal-care/emollients/esters",
+        "https://www.cargill.com/doc/1432223227839/beauty-floraesters-15-product-data-sheet.pdf",
+        "https://www.cargill.com/doc/1432224610669/beauty-floraesters-70-product-data-sheet.pdf"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F004",
+      "canonical_name": "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL",
+      "origin": "primary supplemental evidence",
+      "urls": [
+        "https://www.crodabeauty.com/en-gb/products/product/574-cropure_1_meadowfoam"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F005",
+      "canonical_name": "MEADOWFOAM ESTOLIDE",
+      "origin": "primary supplemental evidence",
+      "urls": [
+        "https://www.elementis.com/products/meadowestolide/"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F006",
+      "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://www.hallstarbeauty.com/formula/soothing-facial-oil/",
+        "https://1.oliveoiltimes.com/library/olive-oil-hair.pdf"
+      ],
+      "predecessor_refs": [
+        "ingredient-035-source-1",
+        "ingredient-035-source-2"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F007",
+      "canonical_name": "HIBISCUS SABDARIFFA FLOWER EXTRACT",
+      "origin": "primary supplemental evidence",
+      "urls": [
+        "https://cosmileeurope.eu/inci/detail/6474/hibiscus-sabdariffa-flower-extract/"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F008",
+      "canonical_name": "ECLIPTA PROSTRATA EXTRACT",
+      "origin": "primary supplemental evidence",
+      "urls": [
+        "https://cosmileeurope.eu/inci/detail/5187/eclipta-prostrata-extract/"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F009",
+      "canonical_name": "MORINGA OLEIFERA SEED OIL",
+      "origin": "reviewed round-1 exact function entry",
+      "urls": [
+        "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+        "https://www.oand3.com/product/moringa-seed-oil-cold-pressed/"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F010",
+      "canonical_name": "TOCOPHEROL",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://ec.europa.eu/health/archive/ph_risk/committees/sccp/documents/out123cm_en.pdf"
+      ],
+      "predecessor_refs": [
+        "ingredient-065-source-1"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F011",
+      "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+      "origin": "literal declaration context only",
+      "urls": [
+        "https://jvnhair.com/collections/shop-all/products/complete-nourishing-shine-drops"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F012",
+      "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+      "origin": "reviewed literal display form with source botanical extract identity",
+      "urls": [
+        "https://www.oand3.com/product/rosemary-antioxidant/"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F013",
+      "canonical_name": "FRAGRANCE/PARFUM",
+      "origin": "literal declaration context only",
+      "urls": [
+        "https://jvnhair.com/collections/shop-all/products/complete-nourishing-shine-drops"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F014",
+      "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://www.hallstarbeauty.com/product/jojoba-oil-natural-goldtm/"
+      ],
+      "predecessor_refs": [
+        "ingredient-062-source-1"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F015",
+      "canonical_name": "DIMETHICONE",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://www.dow.com/documents/27/27-1/27-1304-01-dow-hair-and-skin-care.pdf?iframe=true"
+      ],
+      "predecessor_refs": [
+        "ingredient-028-source-1"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F016",
+      "canonical_name": "ISODODECANE",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://www.dow.com/documents/27/27-2/27-2100-01-hair-cleansing-conditioning.pdf?iframe=true"
+      ],
+      "predecessor_refs": [
+        "ingredient-037-source-1"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F017",
+      "canonical_name": "HYDROGENATED ETHYLHEXYL OLIVATE",
+      "origin": "primary supplemental material function, main-session completion",
+      "urls": [
+        "https://cosmileeurope.eu/fr/inci/ingredient/6627/hydrogenated-ethylhexyl-olivate/"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F018",
+      "canonical_name": "DIMETHICONOL",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://www.dow.com/documents/27/27-1/27-1304-01-dow-hair-and-skin-care.pdf?iframe=true"
+      ],
+      "predecessor_refs": [
+        "ingredient-029-source-1"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F019",
+      "canonical_name": "VITIS VINIFERA (GRAPE) SEED EXTRACT",
+      "origin": "literal declaration context only",
+      "urls": [
+        "https://m.bumbleandbumble.com/product/19060/23196/style/oils/hairdressers-invisible-oil-frizz-reducing-hair-oil"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F020",
+      "canonical_name": "GARDENIA TAITENSIS FLOWER EXTRACT",
+      "origin": "reviewed round-1 exact function entry",
+      "urls": [
+        "https://www.boe.es/doue/2025/1175/L00001-00862.pdf"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F021",
+      "canonical_name": "BIS-CETEARYL AMODIMETHICONE",
+      "origin": "primary supplemental evidence",
+      "urls": [
+        "https://cosmileeurope.eu/inci/detail/1730/bis-cetearyl-amodimethicone"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F022",
+      "canonical_name": "MACADAMIA TERNIFOLIA SEED OIL",
+      "origin": "natural v0.10 exact material family only",
+      "urls": [
+        "https://www.mayomacs.co.za/wp-content/uploads/2026/01/2025-Product-SPEC-Macadamia-Oil-Product-Specification-Non-Food-Grade-1.pdf",
+        "https://naissance.com/products/macadamia-nut-oil"
+      ],
+      "predecessor_refs": [
+        "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F023",
+      "canonical_name": "HYDROGENATED OLIVE OIL UNSAPONIFIABLES",
+      "origin": "primary supplemental material function, main-session completion",
+      "urls": [
+        "https://cosmileeurope.eu/inci/detail/6675/hydrogenated-olive-oil-unsaponifiables/"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F024",
+      "canonical_name": "COCOS NUCIFERA (COCONUT) OIL",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://www.hallstarbeauty.com/formula/soothing-facial-oil/",
+        "https://onlinelibrary.wiley.com/doi/full/10.1111/ics.12978",
+        "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+        "https://www.interfat.com/vegetable-oils-cp-1-en"
+      ],
+      "predecessor_refs": [
+        "ingredient-026-source-1",
+        "ingredient-026-source-2",
+        "ingredient-026-source-3",
+        "ingredient-026-source-4"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F025",
+      "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL",
+      "origin": "natural v0.10 exact material family only",
+      "urls": [
+        "https://www.mdpi.com/2076-3417/14/7/2783",
+        "https://discover.univarsolutions.com/assets/files/EMEA/earthoil-Sensory-profile-guide.pdf"
+      ],
+      "predecessor_refs": [
+        "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F026",
+      "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://www.hallstarbeauty.com/webfoo/wp-content/uploads/BC_Collection_Brochure.pdf"
+      ],
+      "predecessor_refs": [
+        "ingredient-058-source-1"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F027",
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://www.hallstarbeauty.com/formula/natural-sprayable-hair-conditioner/",
+        "https://www.mdpi.com/2079-9284/11/2/64"
+      ],
+      "predecessor_refs": [
+        "ingredient-005-source-1",
+        "ingredient-005-source-2"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F028",
+      "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://www.hallstarbeauty.com/formula/lift-me-gel-cream-2/",
+        "https://onlinelibrary.wiley.com/doi/full/10.1111/ics.12978"
+      ],
+      "predecessor_refs": [
+        "ingredient-016-source-1",
+        "ingredient-016-source-2"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F029",
+      "canonical_name": "BUTYL METHOXYDIBENZOYLMETHANE",
+      "origin": "reviewed round-1 exact function entry",
+      "urls": [
+        "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F030",
+      "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+      "origin": "reviewed round-1 exact function entry",
+      "urls": [
+        "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F031",
+      "canonical_name": "ETHYLHEXYL SALICYLATE",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223"
+      ],
+      "predecessor_refs": [
+        "ingredient-031-source-1"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F032",
+      "canonical_name": "LINALOOL",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+        "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223"
+      ],
+      "predecessor_refs": [
+        "ingredient-041-source-1",
+        "ingredient-041-source-2"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F033",
+      "canonical_name": "HEXYL CINNAMAL",
+      "origin": "reviewed round-1 exact function entry",
+      "urls": [
+        "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+        "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F034",
+      "canonical_name": "HYDROXYCITRONELLAL",
+      "origin": "reviewed round-1 exact function entry",
+      "urls": [
+        "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+        "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F035",
+      "canonical_name": "LIMONENE",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+        "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223"
+      ],
+      "predecessor_refs": [
+        "ingredient-040-source-1",
+        "ingredient-040-source-2"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F036",
+      "canonical_name": "FRAGRANCE (PARFUM)",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+        "https://www.hallstarbeauty.com/formula/lift-me-gel-cream-2/",
+        "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+        "https://www.hallstarbeauty.com/formula/lift-me-gel-cream-2/"
+      ],
+      "predecessor_refs": [
+        "ingredient-049-source-1",
+        "ingredient-049-source-2",
+        "ingredient-049-source-3",
+        "ingredient-049-source-4"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F037",
+      "canonical_name": "PROPYLENE GLYCOL",
+      "origin": "reviewed round-1 exact function entry",
+      "urls": [
+        "https://ec.europa.eu/health/archive/ph_risk/committees/sccp/documents/out123cm_en.pdf"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F038",
+      "canonical_name": "AQUA/WATER",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://laws-lois.justice.gc.ca/eng/regulations/c.r.c.%2C_c._869/fulltext.html",
+        "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+        "https://laws-lois.justice.gc.ca/eng/regulations/c.r.c.%2C_c._869/fulltext.html"
+      ],
+      "predecessor_refs": [
+        "ingredient-003-source-1",
+        "ingredient-003-source-2",
+        "ingredient-003-source-3"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F039",
+      "canonical_name": "CYCLOPENTASILOXANE",
+      "origin": "reviewed round-1 exact function entry",
+      "urls": [
+        "https://www.dow.com/documents/27/27-1/27-1304-01-dow-hair-and-skin-care.pdf?iframe=true"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F040",
+      "canonical_name": "HEXYLENE GLYCOL",
+      "origin": "primary supplemental material function, main-session completion",
+      "urls": [
+        "https://cosmileeurope.eu/pl/inci/szczegoly/6450/hexylene-glycol"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F041",
+      "canonical_name": "PHENYL TRIMETHICONE",
+      "origin": "primary supplemental evidence",
+      "urls": [
+        "https://cosmileeurope.eu/inci/detail/11574/phenyl-trimethicone/"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F042",
+      "canonical_name": "PHENOXYETHANOL",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://ec.europa.eu/health/archive/ph_risk/committees/sccp/documents/out123cm_en.pdf"
+      ],
+      "predecessor_refs": [
+        "ingredient-054-source-1"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F043",
+      "canonical_name": "CAPRYLYL GLYCOL",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+        "https://www.symrise.com/newsroom/article/symrise-presents-symdiolr-68-green-a-synergistic-combination-of-green-multifunctional-cosmetic-ing/"
+      ],
+      "predecessor_refs": [
+        "ingredient-015-source-1",
+        "ingredient-015-source-2"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F044",
+      "canonical_name": "POLYACRYLAMIDE",
+      "origin": "primary supplemental material function, main-session completion",
+      "urls": [
+        "https://www.seppic.com/sites/seppic/files/2024/04/15/beauty-care-index-2024.pdf",
+        "https://www.seppic.com/pt-BR/product/sepigel-305"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F045",
+      "canonical_name": "C13-14 ISOPARAFFIN",
+      "origin": "primary supplemental material function, main-session completion",
+      "urls": [
+        "https://www.seppic.com/sites/seppic/files/2024/04/15/beauty-care-index-2024.pdf",
+        "https://www.seppic.com/pt-BR/product/sepigel-305"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F046",
+      "canonical_name": "MICA",
+      "origin": "unresolved function",
+      "urls": [
+        "https://colorwowhair.com/products/pop-and-lock-frizzy-control-serum?variant=41342159159488"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F047",
+      "canonical_name": "PARFUM/FRAGRANCE",
+      "origin": "sealed round-6 exact function entry",
+      "urls": [
+        "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+        "https://www.hallstarbeauty.com/formula/lift-me-gel-cream-2/",
+        "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+        "https://www.hallstarbeauty.com/formula/lift-me-gel-cream-2/"
+      ],
+      "predecessor_refs": [
+        "ingredient-049-source-1",
+        "ingredient-049-source-2",
+        "ingredient-049-source-3",
+        "ingredient-049-source-4"
+      ],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F048",
+      "canonical_name": "LAURETH-7",
+      "origin": "primary supplemental material function, main-session completion",
+      "urls": [
+        "https://www.seppic.com/sites/seppic/files/2024/04/15/beauty-care-index-2024.pdf",
+        "https://www.seppic.com/pt-BR/product/sepigel-305"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F049",
+      "canonical_name": "TITANIUM DIOXIDE (CI 77891)",
+      "origin": "unresolved function",
+      "urls": [
+        "https://colorwowhair.com/products/pop-and-lock-frizzy-control-serum?variant=41342159159488"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F050",
+      "canonical_name": "BUTYLENE GLYCOL",
+      "origin": "unresolved function",
+      "urls": [
+        "https://colorwowhair.com/products/pop-and-lock-frizzy-control-serum?variant=41342159159488"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    },
+    {
+      "source_id": "F051",
+      "canonical_name": "CITRONELLOL",
+      "origin": "reviewed round-1 exact function entry",
+      "urls": [
+        "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+        "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223"
+      ],
+      "predecessor_refs": [],
+      "limits": "Identity/function only, not weight or measured build-up."
+    }
+  ],
+  "source_boundary": "Supplement supplier/registry material function only. No manufacturer build-up/lightness claims, supplier skin feel, conditioner class or weight transfer."
+}

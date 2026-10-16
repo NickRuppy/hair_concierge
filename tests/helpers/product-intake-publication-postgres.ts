@@ -352,7 +352,10 @@ export async function loadPublicationTestDatabaseSql(): Promise<string> {
     "20261007062729_product_intake_stage_artifact_kinds.sql",
     "20261015200636_product_intake_admin_notifications.sql",
     "20261016052958_product_intake_review_cycles.sql",
+    "20261016055747_oil_intake_review_binding_v1_baseline.sql",
+    "20261016055758_oil_intake_review_binding_v2_successor.sql",
     "20261016104506_product_intake_review_evidence.sql",
+    "20261016131141_product_intake_atomic_artifact_ids.sql",
   ]
   for (const name of more)
     statements.push(await readFile(new URL(`supabase/migrations/${name}`, ROOT), "utf8"))
@@ -378,6 +381,12 @@ export async function loadPublicationTestDatabaseSql(): Promise<string> {
   statements.push(
     await readFile(
       new URL("supabase/migrations/20261016131659_admin_publication.sql", ROOT),
+      "utf8",
+    ),
+  )
+  statements.push(
+    await readFile(
+      new URL("supabase/migrations/20261016144220_reconcile_intake_review_handoff.sql", ROOT),
       "utf8",
     ),
   )

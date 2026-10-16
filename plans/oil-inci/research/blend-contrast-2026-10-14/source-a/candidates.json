@@ -1,0 +1,326 @@
+{
+  "receipt_id": "blend-contrast-source-a-2026-10-14",
+  "scope": "Identity, complete ordered manufacturer INCI and authoritative retained hair-fibre directions only. No weight or other classification. US declaration scopes remain US.",
+  "access_date": "2026-10-14",
+  "candidates": [
+    {
+      "candidate_id": "A01",
+      "status": "source_admitted",
+      "brand": "Sebastian Professional",
+      "exact_product_name": "Dark Oil - Smooth and Shine Styling Oil",
+      "market_scope": "US manufacturer declaration; does not establish a DE package formula",
+      "package": null,
+      "package_limitation": "No readable size, code or GTIN was present on the admitted US manufacturer product page. Do not infer 95 ml from retailer snippets. Exact source-page product identity only.",
+      "formula": {
+        "raw_inci": "Cyclopentasiloxane, Dimethiconol, Isododecane, Parfum/Fragrance, Argania Spinosa Kernel Oil, Ethylhexyl Methoxycinnamate, Tetramethyl Acetyloctahydronaphthalenes, Hexyl Cinnamal, Hexamethylindanopyran, Acetyl Cedrene, Vanillin, Linalyl Acetate, Coumarin, Citronellol, Linalool, Limonene, Fusanus Spicatus Wood Oil, Citrus Limon Peel Oil, Pinene, Santalol, Cinnamomum Zeylanicum Bark Oil, Lavandula Oil/Extract, Eugenol, Farnesol, Geraniol.",
+        "ordered_ingredients": [
+          "Cyclopentasiloxane",
+          "Dimethiconol",
+          "Isododecane",
+          "Parfum/Fragrance",
+          "Argania Spinosa Kernel Oil",
+          "Ethylhexyl Methoxycinnamate",
+          "Tetramethyl Acetyloctahydronaphthalenes",
+          "Hexyl Cinnamal",
+          "Hexamethylindanopyran",
+          "Acetyl Cedrene",
+          "Vanillin",
+          "Linalyl Acetate",
+          "Coumarin",
+          "Citronellol",
+          "Linalool",
+          "Limonene",
+          "Fusanus Spicatus Wood Oil",
+          "Citrus Limon Peel Oil",
+          "Pinene",
+          "Santalol",
+          "Cinnamomum Zeylanicum Bark Oil",
+          "Lavandula Oil/Extract",
+          "Eugenol",
+          "Farnesol",
+          "Geraniol"
+        ],
+        "raw_inci_sha256": "527d9728abeef424bb2bb280fe8db5332c8b53f0d7a2843a55393717a6dc3cae",
+        "split_rule": "comma followed by space; no split on numeric commas; only terminal sentence period removed from final ingredient array token"
+      },
+      "formula_source": {
+        "url": "https://www.sebastianprofessional.com/en-US/products/dark-oil/dark-oil-smooth-and-shine-styling-oil",
+        "publisher": "manufacturer",
+        "title": "Dark Oil - Smooth and Shine Styling Oil | Sebastian Professional US",
+        "access_date": "2026-10-14",
+        "access_method": "live web open; full-page parsed text read, not search snippet admission",
+        "web_reference": "turn634view1",
+        "location": "title line 8; Ingredients line 19; How to Use lines 32-36"
+      },
+      "directions": {
+        "verbatim_excerpt": "Apply 1–2 pumps to dry or damp hair, concentrating on mid-lengths and ends.",
+        "paraphrase_remaining": "Then style. The maker also directs reapplication on dry hair as desired.",
+        "retained_hair_fibre_evidence": "Explicit application to mid-lengths and ends, followed by styling and dry-hair reapplication; retained damp and dry hair-fibre use is stated.",
+        "source": {
+          "url": "https://www.sebastianprofessional.com/en-US/products/dark-oil/dark-oil-smooth-and-shine-styling-oil",
+          "publisher": "manufacturer",
+          "title": "Dark Oil - Smooth and Shine Styling Oil | Sebastian Professional US",
+          "access_date": "2026-10-14",
+          "access_method": "live web open; full-page parsed text read, not search snippet admission",
+          "web_reference": "turn634view1",
+          "location": "title line 8; Ingredients line 19; How to Use lines 32-36"
+        }
+      },
+      "separate_declarations": [
+        {
+          "market": "DE",
+          "type": "localized ingredient declaration; not silently mapped to INCI",
+          "formula": {
+            "raw_inci": "Cyclopentasiloxan, Dimethiconol, Isododecan, Parfum/Duftstoffe, Argania Spinosa-Kernöl, Ethylhexylmethoxycinnamat, Tetramethylacetyloctahydronaphthalen, Hexylzimt, Hexamethylindanopyran, Acetylcedren, Vanillin, Linalylacetat, Cumarin, Citronellol, Linalool, Limonen, Fusanus Spicatus-Holzöl, Zitronenschalenöl, Pinen, Santalol, Zimtbaumrindenöl, Lavendelöl/Extrakt, Eugenol, Farnesol, Geraniol.",
+            "ordered_ingredients": [
+              "Cyclopentasiloxan",
+              "Dimethiconol",
+              "Isododecan",
+              "Parfum/Duftstoffe",
+              "Argania Spinosa-Kernöl",
+              "Ethylhexylmethoxycinnamat",
+              "Tetramethylacetyloctahydronaphthalen",
+              "Hexylzimt",
+              "Hexamethylindanopyran",
+              "Acetylcedren",
+              "Vanillin",
+              "Linalylacetat",
+              "Cumarin",
+              "Citronellol",
+              "Linalool",
+              "Limonen",
+              "Fusanus Spicatus-Holzöl",
+              "Zitronenschalenöl",
+              "Pinen",
+              "Santalol",
+              "Zimtbaumrindenöl",
+              "Lavendelöl/Extrakt",
+              "Eugenol",
+              "Farnesol",
+              "Geraniol"
+            ],
+            "raw_inci_sha256": "ecb26d9e45ef98af3f45a7567978b06461376f7e490afcea4c0a92fd35a70014",
+            "split_rule": "comma followed by space; no split on numeric commas; only terminal sentence period removed from final ingredient array token"
+          },
+          "source": {
+            "url": "https://www.sebastianprofessional.com/de-DE/products/dark-oil/dark-oil-smooth-and-shine-styling-oil",
+            "publisher": "manufacturer",
+            "title": "Dark Oil - Smooth and Shine Styling Oil | Sebastian Professional DE",
+            "access_date": "2026-10-14",
+            "access_method": "live web open; full-page parsed text read, not search snippet admission",
+            "web_reference": "turn623view0",
+            "location": "Inhaltsstoffe line 18; Anwendung lines 30-32"
+          },
+          "directions_excerpt": "1–2 Pumpstöße auf trockenes oder feuchtes Haar geben, dabei den Fokus auf die Haarmitte und die Spitzen legen.",
+          "join_policy": "Keep localized DE text separate. Similar order is not evidence that a specific DE package is formula-identical to US."
+        }
+      ],
+      "novelty_name_check": "No Sebastian / Dark Oil name match in historical data/research/oil-inci or plans/oil-inci search; no matching name in exposure inventory."
+    },
+    {
+      "candidate_id": "A02",
+      "status": "source_admitted",
+      "brand": "Joico",
+      "exact_product_name": "K-PAK Color Therapy Luster Lock Glossing Oil",
+      "market_scope": "US manufacturer pro-care formula and directions; US maker guide package",
+      "package": {
+        "declared_size": "2.13 oz / 63 ml",
+        "code": null,
+        "gtin": null,
+        "source": {
+          "url": "https://www.joico.com/wp-content/uploads/2026/02/joico-care-styling-guide-2026.pdf",
+          "publisher": "manufacturer",
+          "title": "Joico Care & Styling Guide 2026",
+          "access_date": "2026-10-14",
+          "access_method": "live web open; full-page parsed text read, not search snippet admission",
+          "web_reference": "turn636view0",
+          "location": "PDF page index 8 (printed 8), lines 160-161"
+        },
+        "identity_excerpt": "K-PAK COLOR THERAPY LUSTER LOCK® GLOSSING OIL\n2.13 oz / 63 ml"
+      },
+      "formula": {
+        "raw_inci": "Cyclopentasiloxane, Dimethicone, C12-15 Alkyl Benzoate, Argania Spinosa Kernel Oil, Keratin, Hydrolyzed Keratin, Hydrolyzed Keratin PG-Propyl Methylsilanediol, Cocodimonium Hydroxypropyl Hydrolyzed Keratin, Laurdimonium Hydroxypropyl Hydrolyzed Keratin, Rosa Canina Fruit Oil, Phosphatidylcholine, Schinziophyton Rautanenii Kernel Oil, Aleurites Moluccanus Seed Oil, Psidium Guajava Fruit Extract, Aloe Barbadensis Leaf Juice, Oenothera Biennis (Evening Primrose) Oil, Tocopheryl Acetate, Glycolipids, Water/Aqua/Eau, Hydrogenated Castor Oil/Sebacic Acid Copolymer, Arginine HCl, Glycerin, Thioctic Acid, Butyl Methoxydibenzoylmethane, Polyquaternium-55, Sodium Hyaluronate, Allantoin, Sodium Ascorbyl Phosphate, Benzoic Acid, Phenoxyethanol, Potassium Sorbate, Hydroxycitronellal, Linalool, Fragrance/Parfum.",
+        "ordered_ingredients": [
+          "Cyclopentasiloxane",
+          "Dimethicone",
+          "C12-15 Alkyl Benzoate",
+          "Argania Spinosa Kernel Oil",
+          "Keratin",
+          "Hydrolyzed Keratin",
+          "Hydrolyzed Keratin PG-Propyl Methylsilanediol",
+          "Cocodimonium Hydroxypropyl Hydrolyzed Keratin",
+          "Laurdimonium Hydroxypropyl Hydrolyzed Keratin",
+          "Rosa Canina Fruit Oil",
+          "Phosphatidylcholine",
+          "Schinziophyton Rautanenii Kernel Oil",
+          "Aleurites Moluccanus Seed Oil",
+          "Psidium Guajava Fruit Extract",
+          "Aloe Barbadensis Leaf Juice",
+          "Oenothera Biennis (Evening Primrose) Oil",
+          "Tocopheryl Acetate",
+          "Glycolipids",
+          "Water/Aqua/Eau",
+          "Hydrogenated Castor Oil/Sebacic Acid Copolymer",
+          "Arginine HCl",
+          "Glycerin",
+          "Thioctic Acid",
+          "Butyl Methoxydibenzoylmethane",
+          "Polyquaternium-55",
+          "Sodium Hyaluronate",
+          "Allantoin",
+          "Sodium Ascorbyl Phosphate",
+          "Benzoic Acid",
+          "Phenoxyethanol",
+          "Potassium Sorbate",
+          "Hydroxycitronellal",
+          "Linalool",
+          "Fragrance/Parfum"
+        ],
+        "raw_inci_sha256": "7589ec1ce66e9fb8640aaa502b2d871eee869ada8dc5eea89cb4b6cb798dc31d",
+        "split_rule": "comma followed by space; no split on numeric commas; only terminal sentence period removed from final ingredient array token"
+      },
+      "formula_source": {
+        "url": "https://www.joico.com/pro-care/k-pak-color-therapy/",
+        "publisher": "manufacturer",
+        "title": "K-PAK Color Therapy | Joico",
+        "access_date": "2026-10-14",
+        "access_method": "live web open; full-page parsed text read, not search snippet admission",
+        "web_reference": "turn630view2",
+        "location": "Luster Lock Glossing Oil section lines 329-399; FULL INGREDIENTS LIST line 394"
+      },
+      "directions": {
+        "verbatim_excerpt": "Apply 1-2 pumps to dry or damp hair. Style as usual.",
+        "retained_hair_fibre_evidence": "Maker explicitly directs damp or dry hair application then styling.",
+        "source": {
+          "url": "https://www.joico.com/pro-care/k-pak-color-therapy/",
+          "publisher": "manufacturer",
+          "title": "K-PAK Color Therapy | Joico",
+          "access_date": "2026-10-14",
+          "access_method": "live web open; full-page parsed text read, not search snippet admission",
+          "web_reference": "turn630view2",
+          "location": "Luster Lock Glossing Oil section lines 329-399; FULL INGREDIENTS LIST line 394"
+        }
+      },
+      "separate_declarations": [
+        {
+          "market": "EU",
+          "exact_product_name": "JOICO K-Pak Color Therapy Luster Lock Glossing Oil 63ml",
+          "page_path_identifier": "2571547",
+          "full_inci_available": false,
+          "directions_paraphrase": "Emulsify one or two drops, apply to damp hair starting at ends; style and dry, then add a further small drop.",
+          "source": {
+            "url": "https://www.joico.eu/products/product-details.html/2571547.html",
+            "publisher": "manufacturer",
+            "title": "JOICO K-Pak Color Therapy Luster Lock Glossing Oil 63ml",
+            "access_date": "2026-10-14",
+            "access_method": "live web open; full-page parsed text read, not search snippet admission",
+            "web_reference": "turn628view1",
+            "location": "product title and Now Let’s Use It section; no full INCI on accessible page"
+          },
+          "join_policy": "Do not promote US INCI to EU formula identity. EU dosing is separately preserved; drops and pumps are not silently harmonized."
+        }
+      ],
+      "novelty_name_check": "No Joico / Luster Lock name match in historical data/research/oil-inci or plans/oil-inci search; no matching name in exposure inventory."
+    },
+    {
+      "candidate_id": "A03",
+      "status": "source_admitted",
+      "brand": "Paul Mitchell",
+      "exact_product_name": "Awapuhi Wild Ginger Styling Treatment Oil",
+      "market_scope": "US; maker explicitly scopes website ingredients to US consumers",
+      "package": {
+        "declared_size": "0.85 fl. oz.",
+        "sku": "ATO-025",
+        "upc_raw_page": "9531134116",
+        "upc_padded_from_other_web_parse": "009531134116",
+        "manufacturer_variant_id": 44145512218668,
+        "binding_source_url": "https://www.paulmitchell.com/products/styling-treatment-oil.js",
+        "binding_access_method": "live official Shopify product JSON via HTTPS, 2026-10-14; title, variants, sku, barcode read",
+        "binding_receipt": "paul-mitchell-variant-receipt.json",
+        "note": "Canonical raw barcode retained as returned by official JSON/page; padded alternate display is only separately recorded, not asserted as a distinct identifier."
+      },
+      "formula": {
+        "raw_inci": "Cyclopentasiloxane, Dimethiconol, Isoeicosane, PPG-3 Benzyl Ether Myristate, Hedychium Coronarium Root Extract, Anthemis Nobilis Flower Extract, Crambe Abyssinica Seed Oil, Hydrogenated Castor Oil/Sebacic Acid Copolymer, Pentaerythrityl Tetra-di-t-butyl Hydroxyhydrocinnamate, Butylene Glycol, Fragrance (Parfum), Terpineol, Benzyl Alcohol, Limonene, Benzyl Salicylate, Hexyl Cinnamal, Citrus Aurantium Peel Oil, Linalyl Acetate, Pinene, Linalool, Eucalyptus Globulus Oil, Eugenol, Benzyl Benzoate, Citral, Eugenia Caryophyllus Oil",
+        "ordered_ingredients": [
+          "Cyclopentasiloxane",
+          "Dimethiconol",
+          "Isoeicosane",
+          "PPG-3 Benzyl Ether Myristate",
+          "Hedychium Coronarium Root Extract",
+          "Anthemis Nobilis Flower Extract",
+          "Crambe Abyssinica Seed Oil",
+          "Hydrogenated Castor Oil/Sebacic Acid Copolymer",
+          "Pentaerythrityl Tetra-di-t-butyl Hydroxyhydrocinnamate",
+          "Butylene Glycol",
+          "Fragrance (Parfum)",
+          "Terpineol",
+          "Benzyl Alcohol",
+          "Limonene",
+          "Benzyl Salicylate",
+          "Hexyl Cinnamal",
+          "Citrus Aurantium Peel Oil",
+          "Linalyl Acetate",
+          "Pinene",
+          "Linalool",
+          "Eucalyptus Globulus Oil",
+          "Eugenol",
+          "Benzyl Benzoate",
+          "Citral",
+          "Eugenia Caryophyllus Oil"
+        ],
+        "raw_inci_sha256": "7af02d46baac96b7a79d22cfdd87baf968f93ed124d7a656c131e4d85baad43d",
+        "split_rule": "comma followed by space; no split on numeric commas; only terminal sentence period removed from final ingredient array token"
+      },
+      "formula_source": {
+        "url": "https://www.paulmitchell.com/products/styling-treatment-oil",
+        "publisher": "manufacturer",
+        "title": "Styling Treatment Oil | Awapuhi Wild Ginger | JPMS",
+        "access_date": "2026-10-14",
+        "access_method": "live web open; full-page parsed text read, not search snippet admission",
+        "web_reference": "turn634view2",
+        "location": "identity lines 195-204; SKU/UPC lines 247-249; directions line 252; ingredients line 254; US scope line 255"
+      },
+      "directions": {
+        "verbatim_excerpt": "Apply a small amount to clean, damp hair and style as usual or smooth on dry hair to eliminate frizz and add shine.",
+        "paraphrase_remaining": "The maker advises a smaller quantity for fine hair; for denser/coarser hair it directs towel-dried application followed by another application after complete drying.",
+        "retained_hair_fibre_evidence": "Maker labels the product a leave-in styling treatment oil and explicitly directs damp styling or dry finishing.",
+        "source": {
+          "url": "https://www.paulmitchell.com/products/styling-treatment-oil",
+          "publisher": "manufacturer",
+          "title": "Styling Treatment Oil | Awapuhi Wild Ginger | JPMS",
+          "access_date": "2026-10-14",
+          "access_method": "live web open; full-page parsed text read, not search snippet admission",
+          "web_reference": "turn634view2",
+          "location": "identity lines 195-204; SKU/UPC lines 247-249; directions line 252; ingredients line 254; US scope line 255"
+        }
+      },
+      "separate_declarations": [],
+      "novelty_name_check": "No Awapuhi / Styling Treatment Oil / Super Skinny name match in historical data/research/oil-inci or plans/oil-inci search; no Paul / Awapuhi matching name in exposure inventory."
+    }
+  ],
+  "excluded_or_unadmitted": [
+    {
+      "name": "Redken All Soft Argan-6 Oil",
+      "reason": "Prior name-only exposure in plans/oil-inci/research/market-survey-original.md:42; excluded to preserve project-new target selection. Official US page loaded but formula not admitted."
+    },
+    {
+      "name": "Paul Mitchell Super Skinny Serum",
+      "reason": "Investigated as an alternative only; no admission or formula retained. Replaced with explicit Styling Treatment Oil identity."
+    }
+  ],
+  "access_failures_or_gaps": [
+    {
+      "url": "https://www.joico.eu/products/product-details.html/2571547.html",
+      "result": "Primary EU page loaded, but no complete ingredient list present in accessible parsed page. US formula separately admitted and scoped."
+    },
+    {
+      "url": "https://www.sebastianprofessional.com/de-DE/products/dark-oil/dark-oil-smooth-and-shine-styling-oil",
+      "result": "DE manufacturer ingredient list is localized German material labels; preserved separately, not used as normalized canonical INCI."
+    },
+    {
+      "url": "https://de.wella.professionalstore.com/",
+      "result": "DE brand outbound store link resolved to general storefront; no exact Dark Oil package/INCI binding obtained. No identity inferred from search snippets."
+    }
+  ],
+  "bounds": "3 source-admitted candidates; stop after completed primary-source formula/direction reads and targeted package validation. No brand contact, purchase, DB/catalog writes or past labels read."
+}

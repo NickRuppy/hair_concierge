@@ -1,0 +1,32 @@
+{
+  "lane_id": "b",
+  "files_read": [
+    "stage2-packet.json",
+    "lane-b/blind-records.json",
+    "method.md",
+    "function-dictionary.json"
+  ],
+  "input_hashes": {
+    "stage2-packet.json": "2a4f18234d03bcb7bdcdc08bfe8299caff23969f28fee3312b464a1d81ca4c6e",
+    "lane-b/blind-records.json": "fdc3564af4c8d2bd72931276fe975ca665acde7feca3f884a781e7d7181a08d7",
+    "method.md": "d3574b9b59b9214ea2c47827e361707b8b69b003b586e1244e1ba8c0df48a726",
+    "function-dictionary.json": "b8db54b6dfc6534b9fe2c4e4be2009c2ded2cfb8b0c0439617194009e64f6a69"
+  },
+  "completed_ids": [
+    "T01",
+    "T02",
+    "T04",
+    "T06"
+  ],
+  "access_incidents": [],
+  "blind_preserved": true,
+  "limitations": [
+    "This controlled source stage used exactly stage2-packet.json, lane-b/blind-records.json, method.md and function-dictionary.json. The method and dictionary were already read completely during Stage 1 and their actual bytes/hashes were refreshed and unchanged for Stage 2; the source packet and sealed blind records were read completely. No other files, browsing, memory files, peer outputs or nested agents were accessed.",
+    "The supplied source packet is the sole source-reveal authority; its linked pages and source_record_ref files were not opened. Online declarations are not package/batch verification.",
+    "The sealed blind-records.json input matched SHA256 fdc3564af4c8d2bd72931276fe975ca665acde7feca3f884a781e7d7181a08d7. No blind formula fields, roles, suffixes or prior outputs were modified. Stage 2 contains only the seven requested fields plus case_id.",
+    "Exact predeclared hero mappings were retained. An absent separately declared hero has no matched ranks; generic fragrance was not expanded into undeclared species. Unresolved and auxiliary roles without a qualified suffix retain unknown prominence.",
+    "Every source direction is retained independently with exact source/direction IDs, site, stage, dose, contact time, removal, restrictions and supplied optional shake/frequency. Unknown facts remain unestablished. No implicit dry stage, invented dose, cross-scenario removal or scalp-to-fibre prewash transfer was made.",
+    "Heat uses the accepted explicit claim gate; UV uses the accepted explicit hair-UV claim and exact recognized ingredient-filter conjunction. No protection efficacy, SPF or KPF conversion follows.",
+    "All output structures, exact mappings, source references, claim gates, scenario preservation and eight-key property metadata were validated in memory before writing. No new output files were semantically reread. Source-stage processing stops here without fit overlays or further research."
+  ]
+}

@@ -1,0 +1,716 @@
+{
+  "run_id": "oil-direct-properties-round-6",
+  "entries": [
+    {
+      "neutral_id": "D01",
+      "rank": 1,
+      "raw_name": "Isoamyl Laurate",
+      "canonical_name": "ISOAMYL LAURATE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 2,
+      "raw_name": "Argania Spinosa (Argan) Kernel Oil*",
+      "canonical_name": "ARGANIA SPINOSA (ARGAN) KERNEL OIL",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 3,
+      "raw_name": "Adansonia Digitata (Baobab) Seed Oil*",
+      "canonical_name": "ADANSONIA DIGITATA (BAOBAB) SEED OIL",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 4,
+      "raw_name": "Cocos Nucifera (Coconut) Oil",
+      "canonical_name": "COCOS NUCIFERA OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 5,
+      "raw_name": "Parfum (Naturally derived Fragrance)",
+      "canonical_name": "PARFUM (NATURALLY DERIVED FRAGRANCE)",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 6,
+      "raw_name": "Gardenia Tahitensis Flower Extract",
+      "canonical_name": "GARDENIA TAHITENSIS FLOWER EXTRACT",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 7,
+      "raw_name": "Citral",
+      "canonical_name": "CITRAL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 8,
+      "raw_name": "Geraniol",
+      "canonical_name": "GERANIOL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 9,
+      "raw_name": "Limonene",
+      "canonical_name": "LIMONENE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 10,
+      "raw_name": "Linalool",
+      "canonical_name": "LINALOOL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 11,
+      "raw_name": "Beta-Caryophyllene",
+      "canonical_name": "BETA-CARYOPHYLLENE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 12,
+      "raw_name": "Linalyl Acetate",
+      "canonical_name": "LINALYL ACETATE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 13,
+      "raw_name": "Terpineol",
+      "canonical_name": "TERPINEOL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 14,
+      "raw_name": "Vanillin",
+      "canonical_name": "VANILLIN",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 15,
+      "raw_name": "Citrus Aurantium Peel Oil",
+      "canonical_name": "CITRUS AURANTIUM PEEL OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 16,
+      "raw_name": "Citrus Aurantium Bergamia Peel Oil",
+      "canonical_name": "CITRUS AURANTIUM BERGAMIA PEEL OIL",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 17,
+      "raw_name": "Citrus Limon Peel Oil",
+      "canonical_name": "CITRUS LIMON PEEL OIL",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 18,
+      "raw_name": "Mentha Piperita Oil",
+      "canonical_name": "MENTHA PIPERITA OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 19,
+      "raw_name": "Pelargonium Graveolens Flower Oil",
+      "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 20,
+      "raw_name": "Pogostemon Cablin Oil",
+      "canonical_name": "POGOSTEMON CABLIN OIL",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 21,
+      "raw_name": "Geranyl Acetate",
+      "canonical_name": "GERANYL ACETATE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D01",
+      "rank": 22,
+      "raw_name": "Pinene",
+      "canonical_name": "PINENE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D02",
+      "rank": 1,
+      "raw_name": "Cocos Nucifera Fruit Oil",
+      "canonical_name": "COCOS NUCIFERA FRUIT OIL",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 1,
+      "raw_name": "ISODODECANE",
+      "canonical_name": "ISODODECANE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 2,
+      "raw_name": "DIMETHICONE",
+      "canonical_name": "DIMETHICONE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 3,
+      "raw_name": "DIMETHICONOL",
+      "canonical_name": "DIMETHICONOL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 4,
+      "raw_name": "CAMELLIA OLEIFERA SEED OIL",
+      "canonical_name": "CAMELLIA OLEIFERA SEED OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 5,
+      "raw_name": "ZEA MAYS GERM OIL / CORN GERM OIL",
+      "canonical_name": "ZEA MAYS GERM OIL",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 6,
+      "raw_name": "ARGANIA SPINOSA KERNEL OIL",
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 7,
+      "raw_name": "SCLEROCARYA BIRREA SEED OIL",
+      "canonical_name": "SCLEROCARYA BIRREA SEED OIL",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 8,
+      "raw_name": "PENTACLETHRA MACROLOBA SEED OIL",
+      "canonical_name": "PENTACLETHRA MACROLOBA SEED OIL",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 9,
+      "raw_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+      "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 10,
+      "raw_name": "CAMELINA SATIVA SEED OIL",
+      "canonical_name": "CAMELINA SATIVA SEED OIL",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 11,
+      "raw_name": "LINALOOL",
+      "canonical_name": "LINALOOL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 12,
+      "raw_name": "ALPHA-ISOMETHYL IONONE",
+      "canonical_name": "ALPHA-ISOMETHYL IONONE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 13,
+      "raw_name": "LIMONENE",
+      "canonical_name": "LIMONENE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 14,
+      "raw_name": "COUMARIN",
+      "canonical_name": "COUMARIN",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 15,
+      "raw_name": "BENZYL ALCOHOL",
+      "canonical_name": "BENZYL ALCOHOL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 16,
+      "raw_name": "CAMELLIA JAPONICA FLOWER EXTRACT",
+      "canonical_name": "CAMELLIA JAPONICA FLOWER EXTRACT",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 17,
+      "raw_name": "PHYLLANTHUS EMBLICA FRUIT EXTRACT",
+      "canonical_name": "PHYLLANTHUS EMBLICA FRUIT EXTRACT",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 18,
+      "raw_name": "TOCOPHEROL",
+      "canonical_name": "TOCOPHEROL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D03",
+      "rank": 19,
+      "raw_name": "PARFUM / FRAGRANCE",
+      "canonical_name": "PARFUM",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 1,
+      "raw_name": "Prunus amygdalus dulcis (Sweet almond) oil",
+      "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 2,
+      "raw_name": "Ricinus communis (Castor) seed oil",
+      "canonical_name": "RICINUS COMMUNIS SEED OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 3,
+      "raw_name": "Carthamus tinctorius (Safflower) seed oil",
+      "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 4,
+      "raw_name": "Rosmarinus officinalis (Rosemary) leaf oil",
+      "canonical_name": "ROSMARINUS OFFICINALIS LEAF OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 5,
+      "raw_name": "Mentha arvensis (Wild mint) leaf oil",
+      "canonical_name": "MENTHA ARVENSIS LEAF OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 6,
+      "raw_name": "Lavandula oil/extract",
+      "canonical_name": "LAVANDULA OIL/EXTRACT",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 7,
+      "raw_name": "Camphor",
+      "canonical_name": "CAMPHOR",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 8,
+      "raw_name": "Menthol",
+      "canonical_name": "MENTHOL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 9,
+      "raw_name": "Tocopheryl acetate",
+      "canonical_name": "TOCOPHERYL ACETATE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 10,
+      "raw_name": "Beta-caryophyllene",
+      "canonical_name": "BETA-CARYOPHYLLENE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 11,
+      "raw_name": "Pinene",
+      "canonical_name": "PINENE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 12,
+      "raw_name": "Terpineol",
+      "canonical_name": "TERPINEOL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 13,
+      "raw_name": "Geranyl acetate",
+      "canonical_name": "GERANYL ACETATE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 14,
+      "raw_name": "Linalyl acetate",
+      "canonical_name": "LINALYL ACETATE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 15,
+      "raw_name": "Geraniol",
+      "canonical_name": "GERANIOL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 16,
+      "raw_name": "Limonene",
+      "canonical_name": "LIMONENE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D04",
+      "rank": 17,
+      "raw_name": "Linalool",
+      "canonical_name": "LINALOOL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 1,
+      "raw_name": "Aqua / Water",
+      "canonical_name": "AQUA",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 2,
+      "raw_name": "Isopropyl Myristate",
+      "canonical_name": "ISOPROPYL MYRISTATE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 3,
+      "raw_name": "Isododecane",
+      "canonical_name": "ISODODECANE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 4,
+      "raw_name": "Dimethicone",
+      "canonical_name": "DIMETHICONE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 5,
+      "raw_name": "Vp/Va Copolymer",
+      "canonical_name": "VP/VA COPOLYMER",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 6,
+      "raw_name": "Magnesium Sulfate",
+      "canonical_name": "MAGNESIUM SULFATE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 7,
+      "raw_name": "Phenoxyethanol",
+      "canonical_name": "PHENOXYETHANOL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 8,
+      "raw_name": "Chlorphenesin",
+      "canonical_name": "CHLORPHENESIN",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 9,
+      "raw_name": "Caprylyl Glycol",
+      "canonical_name": "CAPRYLYL GLYCOL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 10,
+      "raw_name": "Cocos Nucifera Oil / Coconut Oil",
+      "canonical_name": "COCOS NUCIFERA OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 11,
+      "raw_name": "Ethylhexyl Salicylate",
+      "canonical_name": "ETHYLHEXYL SALICYLATE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 12,
+      "raw_name": "Benzyl Alcohol",
+      "canonical_name": "BENZYL ALCOHOL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 13,
+      "raw_name": "Orbignya Oleifera Seed Oil",
+      "canonical_name": "ORBIGNYA OLEIFERA SEED OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 14,
+      "raw_name": "Tocopherol",
+      "canonical_name": "TOCOPHEROL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 15,
+      "raw_name": "Citric Acid",
+      "canonical_name": "CITRIC ACID",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 16,
+      "raw_name": "Ci 19140 / Yellow 5",
+      "canonical_name": "CI 19140",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 17,
+      "raw_name": "Ci 17200 / Red 33",
+      "canonical_name": "CI 17200",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 18,
+      "raw_name": "Sodium Hydroxide",
+      "canonical_name": "SODIUM HYDROXIDE",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D05",
+      "rank": 19,
+      "raw_name": "Parfum / Fragrance",
+      "canonical_name": "PARFUM",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D06",
+      "rank": 1,
+      "raw_name": "Ricinus communis seed oil* (organic Ricin carrier oil)",
+      "canonical_name": "RICINUS COMMUNIS SEED OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D06",
+      "rank": 2,
+      "raw_name": "Olea europaea fruit oil* (organic Olive carrier oil)",
+      "canonical_name": "OLEA EUROPAEA FRUIT OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D06",
+      "rank": 3,
+      "raw_name": "Cocos nucifera oil* (organic Coconut carrier oil)",
+      "canonical_name": "COCOS NUCIFERA OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D06",
+      "rank": 4,
+      "raw_name": "Persea gratissima oil* (organic Avocado carrier oil)",
+      "canonical_name": "PERSEA GRATISSIMA OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D06",
+      "rank": 5,
+      "raw_name": "Brassica nigra seed oil* (organic Mustard carrier oil)",
+      "canonical_name": "BRASSICA NIGRA SEED OIL",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D06",
+      "rank": 6,
+      "raw_name": "Simmondsia chinensis seed oil* (organic Jojoba plant oil)",
+      "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D06",
+      "rank": 7,
+      "raw_name": "Brassica oleracea italica seed oil* (organic Broccoli plant oil)",
+      "canonical_name": "BRASSICA OLERACEA ITALICA SEED OIL",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D06",
+      "rank": 8,
+      "raw_name": "Emblica officinalis fruit powder* (organic Amla powder)",
+      "canonical_name": "EMBLICA OFFICINALIS FRUIT POWDER",
+      "identity_basis": "new_source_scoped_literal_identity",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D06",
+      "rank": 9,
+      "raw_name": "Tocopherol (vitamin E)",
+      "canonical_name": "TOCOPHEROL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    },
+    {
+      "neutral_id": "D06",
+      "rank": 10,
+      "raw_name": "Helianthus annuus seed oil (Sunflower plant oil, tocopherol carrier oil)",
+      "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+      "identity_basis": "existing_exact_dictionary_name_or_alias",
+      "display_basis": "balanced-comma token; only already captured exact canonical display mapping retained; no broad parentheses/plant-part stripping"
+    }
+  ],
+  "raw_source_parity": true,
+  "source_scoped_display_receipts": "Exact mappings reused from frozen round1/round4/round5 ingredient lists. Aroma-Zone full balanced explanatory annotations remain raw; Elixir two slash translations retain their prior exact canonical mapping. Botanical parenthetical names use only admitted exact aliases. New source literal names remain separate; no generic substring normalizer.",
+  "prior_capture_hashes": {
+    "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-packet.json": "f75640af96ffa3c98cb55dc38a64a0d1e70f673e3c8adecd8b716be576cc7f10",
+    "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json": "a7888cb7a4ea0eeffa23010ec2a604be6daa7e618662c29e232f9311d8140297",
+    "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json": "aa08e74ffe3958ea8873f7213f54c2db0dce9fa14f954692a9b23f073d192067"
+  }
+}

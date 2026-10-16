@@ -1,0 +1,89 @@
+{
+  "status": "passed",
+  "summary": {
+    "cases": 4,
+    "ranks": 64,
+    "scenario_roles": 7,
+    "frozen_files_unchanged": 160,
+    "routing_predecessors_preserved": 2
+  },
+  "meaningful_boundary_corruptions": [
+    {
+      "mutation": "missing case",
+      "rejected_for": "case membership/order"
+    },
+    {
+      "mutation": "uncertainty wrapper",
+      "rejected_for": "persistence scalar enum"
+    },
+    {
+      "mutation": "unknown persistence",
+      "rejected_for": "persistence scalar enum"
+    },
+    {
+      "mutation": "unbound scenario",
+      "rejected_for": "unbound source"
+    },
+    {
+      "mutation": "changed ordered ingredient",
+      "rejected_for": "selected field authority parity: T01/ingredient_ledger"
+    },
+    {
+      "mutation": "selected base drift",
+      "rejected_for": "selected field authority parity: T01/base"
+    },
+    {
+      "mutation": "source stage rewrites weight",
+      "rejected_for": "Stage2 must not rewrite formula fields"
+    }
+  ],
+  "artifact_hashes": {
+    "README.md": "d6771850106b37ca535963fbfd6ca7eee08e6b2f47cfc404b0caebbadb21c9ba",
+    "blind-packet.json": "e6c0e101c6adb066179a4a0076b53f224d795a3c021105831843d1f65b1fe241",
+    "blind-seal.json": "bcf44e0787d8269fd45f6b6b8e3aaeb17e4f9220b4d648b0cc06558816022984",
+    "cohort-manifest.json": "6e5df694c815d14819c01b010146118f95eb3b6f0a5b292b32c890d59c1121cb",
+    "dependency-manifest.json": "b1f831ca3ee31adaec2df9913f0ce5455f71928b3c0ff4452f13cd966591681c",
+    "dictionary-root-review.json": "e7b2b444411cf843b1df0e4609fe05726c1cfbce55847670c1dc9dad238a7cdf",
+    "dictionary-staging/build_dictionary.py": "1f193fd3f57a2d75403e0e356c3fcf111d58b258fa2d80985235b67be29998d3",
+    "dictionary-staging/function-dictionary.json": "b8db54b6dfc6534b9fe2c4e4be2009c2ded2cfb8b0c0439617194009e64f6a69",
+    "dictionary-staging/function-source-registry.json": "bf8c83ba2a96af66eca79ec9b0ee1f6f617420ebd37838e1d220b2b0279dc5ef",
+    "dictionary-staging/normalization-mapping.json": "a49edd40c0963c647679acfa9d1cd0b784da63077ee56e675bfa76fc29cb18e3",
+    "dictionary-staging/review.md": "571b1fda55eb57e69ee299439381aa433b35bc514d83f91e1f3e3649a8d08e53",
+    "formula-overlap-audit-v0.2.json": "64e0aeee27ec3cf167952be29c148ea72cdf7609ff87ec61920d9d6d981abbff",
+    "function-dictionary.json": "b8db54b6dfc6534b9fe2c4e4be2009c2ded2cfb8b0c0439617194009e64f6a69",
+    "function-source-registry.json": "bf8c83ba2a96af66eca79ec9b0ee1f6f617420ebd37838e1d220b2b0279dc5ef",
+    "historical-routing-index-snapshot/docs/research/README.md": "b75d974f1a6d0dfac03e02c582af1f851b98b0c04d5085a590d122d1980e053f",
+    "historical-routing-index-snapshot/docs/research/oil-inci/README.md": "c9f5a370787c0477310b24f98e49244ab9b5aadfe566c78a937bd4e38eef61f3",
+    "input-manifest.json": "8337bf4408d41e3cec0d0f16dcc553ffcbedf3b795c1c3d095663f1934cd673d",
+    "integration-notes.json": "855250de619974800928a818d9b2772070ea71dd2f457a8d61ec476000f7bf65",
+    "lane-a/blind-notes.json": "038ffd1e9258f79aa0a64ca9a89169b018aa6ce19882a9f35dff040e29caa743",
+    "lane-a/blind-records.json": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+    "lane-a/persistence-research-trace.json": "d247b19a0b68a0ecf9fe1302799d8ca8cd15b27e27fab420f12de9dbc464b8c1",
+    "lane-a/stage2-notes.json": "2208c1973194cb1e4bd7a26af38015a26ef68fa8d1d43561d11dd4e29f70b8f3",
+    "lane-a/stage2-records.json": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+    "lane-b/blind-notes.json": "c0c7b5e61df6a90e0d4226086b2369a0ba34b6e7631a3b7f93e160583239d5e1",
+    "lane-b/blind-records.json": "fdc3564af4c8d2bd72931276fe975ca665acde7feca3f884a781e7d7181a08d7",
+    "lane-b/persistence-research-trace.json": "371f40f3e03cb33ae403523ff4a5483e109f9186d5bbbe5f48ce5b47163ea9ab",
+    "lane-b/stage2-notes.json": "78bc65b32a79919099231f3f6e65b69ddf252564d1362da46f5d7e9445e19ce8",
+    "lane-b/stage2-records.json": "ef14c8b6aa97953bf88b5556842f938db431ea4242b3e292e14c32e820696fc1",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7",
+    "method.md": "d3574b9b59b9214ea2c47827e361707b8b69b003b586e1244e1ba8c0df48a726",
+    "metrics.json": "08ae66757fc5d036a0e2bf2a70b8cbb31b81597f3435cdad0e0c2f05a25c506e",
+    "normalization-receipt.json": "a49edd40c0963c647679acfa9d1cd0b784da63077ee56e675bfa76fc29cb18e3",
+    "profiles.json": "df656f6fdd81132c5476fe2f550f3f294656ebed28086458d1f91c1c82f92713",
+    "projection.json": "4784c33a1b2f4309123d40c8227f0743c0f93191516c46a1a27b51d9e0bfe99f",
+    "results-for-review.md": "d15d396507b063067f085c8a644d2ff0c57de142bdf33e18abc4abd3798eae90",
+    "results.csv": "e0ada119d44b05bf8cdd40c65144428959662cb7d89f014dab032f629f696598",
+    "root-selection.json": "18d9b2d66d2d269d9f21712182c07c83aa3d3f8e4bd48b358bc900dbdeafb885",
+    "scenario-fit.json": "25699dcbb54095f80cfc241f6230769ebe03fd7ce9e96639e013c01f60b0b7c4",
+    "selection-registration.json": "5b83fb15956c6c23003f89ad0a44468aee93bae8088fd86389df771c40f2abaf",
+    "source-packet-pre-normalization.json": "6378a514e28b76497c3f8e9d7b1199f007c12295466167ddae780850d07c84e7",
+    "source-packet.json": "38278813aadcbbfe316a774d381e2a59b4e82ce866406b830c8b80e55f808c92",
+    "source-staging/group-a.json": "22b8b662d2c45c124052f0f31403b74ef7e5cc7777d0350bf66c7b5a7b6203ad",
+    "source-staging/group-b.json": "a285248055e12b7974fcc8cd32e925d7d8c083bb4b0211f11d4ac683e5d1be33",
+    "stage2-manifest.json": "fb47122c7dd4239e18f73d70a4748154ecffe889a8c7dedfafae9a8634e3ed5f",
+    "stage2-packet.json": "2a4f18234d03bcb7bdcdc08bfe8299caff23969f28fee3312b464a1d81ca4c6e",
+    "stage2-seal.json": "4d9158dd52500df547afd8dc1d22804c72c685e784a18096871a52c393e59c77"
+  },
+  "limits": "Structural, attribution, source gates and policy consistency; repeatability/coverage reported separately. No measured accuracy or intake readiness."
+}

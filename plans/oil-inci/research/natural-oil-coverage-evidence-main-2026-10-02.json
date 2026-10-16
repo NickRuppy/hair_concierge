@@ -1,0 +1,243 @@
+{
+  "ledger_id": "natural-oil-coverage-evidence-main-2026-10-02",
+  "status": "primary_evidence_and_main_adjudication",
+  "prepared_at": "2026-10-02",
+  "sources": {
+    "ORGANYBROCCOLI": {
+      "title": "Organy Global Broccoli Seed Oil",
+      "url": "https://www.organyglobal.com/en/broccoli-seed-oil/",
+      "kind": "supplier_identity_and_sensory_claim",
+      "locator": "INCI Name and product overview",
+      "access": "Public page read 2026-10-02.",
+      "supports": "Exact Brassica Oleracea Italica Seed Oil; cold-pressed fixed oil described as lightweight.",
+      "limits": "Commercial description without a disclosed sensory panel or hair-weight comparator."
+    },
+    "BOTANICBROCCOLI": {
+      "title": "Botanic Innovations Broccoli Seed Oil",
+      "url": "https://www.botanicinnovations.com/product/broccoli-seed-oil/",
+      "kind": "manufacturer_sensory_claim",
+      "locator": "Opening description; exact parenthetical INCI in supplier SDS https://www.botanicinnovations.com/wp-content/uploads/2021/07/SDS_Broccoli-Seed-Oil.pdf",
+      "access": "Public product page and indexed SDS declaration read 2026-10-02.",
+      "supports": "Cold-pressed oil described as lightweight/non-greasy; SDS names Brassica Oleracea Italica (Broccoli) Seed Oil.",
+      "limits": "General emollient/hair-use language; shine and lubrication are not a validated hair-weight measure. Other medical claims not adopted."
+    },
+    "OTAPEANUT": {
+      "title": "Ota Oil cosmetic peanut material",
+      "url": "https://ota-oil.co.jp/business/cosmetic-materials/arachis/",
+      "kind": "manufacturer_identity",
+      "locator": "INCI NAME and manufacture",
+      "access": "Public Japanese page read 2026-10-02.",
+      "supports": "Refined pressed seed oil, exact Arachis Hypogaea (Peanut) Oil; haircare application listed.",
+      "limits": "Identity corroboration only; composition/color/application do not rank weight."
+    },
+    "COSMETIPEANUT": {
+      "title": "Cosmeti Hub Peanut Oil TX 8151",
+      "url": "https://cosmetihub.com/products/peanut-oil-tx-8151",
+      "kind": "supplier_sensory_claim",
+      "locator": "Cosmetic grade carrier oil description",
+      "access": "Public page read 2026-10-02.",
+      "supports": "Supplier describes peanut carrier as light and mildly non-greasy.",
+      "limits": "Commercial general description lacks panel, dose or comparator; botanical common identity paired with Ota exact INCI. Not independently measured hair feel."
+    },
+    "VANTAGEPHARMA": {
+      "title": "Vantage Vegetable Oils for Pharmaceuticals",
+      "url": "https://www.vantagegrp.com/-/media/Vantage-Website/Documents_Products/Vantage-Pharma-Oils.pdf",
+      "kind": "manufacturer_material_guidance",
+      "locator": "PDF page 3 peanut row",
+      "access": "Public PDF text read 2026-10-02.",
+      "supports": "Refined Arachis Hypogaea Oil identified; thickening properties described.",
+      "limits": "Formulation thickening is a counter-signal, not a rich hair-weight result. Search snippet falsely associated almond lightness wording with peanut; full table checked and that association rejected."
+    },
+    "COSMILESEACOMBINED": {
+      "title": "COSMILE Europe Hippophae Rhamnoides Fruit/Seed Oil",
+      "url": "https://cosmileeurope.eu/inci/detail/27906/hippophae-rhamnoides-fruit-seed-oil/",
+      "kind": "industry_ingredient_identity",
+      "locator": "Heading, Used plant parts and Background",
+      "access": "Public page read 2026-10-02.",
+      "supports": "Exact combined fruit/seed declaration and distinguishes pulp versus seed material.",
+      "limits": "Identity only. No blend proportions or weight-class evidence. Functions and efficacy language not used as weight evidence."
+    },
+    "MAXSEASEED": {
+      "title": "Max Plant Oil Sea Buckthorn Seed Oil",
+      "url": "https://www.maxplantoil.com/sea-buckthorn-seed-oil/",
+      "kind": "manufacturer_identity",
+      "locator": "Basic Information INCI Name",
+      "access": "Public indexed primary page read 2026-10-02.",
+      "supports": "Exact Hippophae Rhamnoides Seed Oil, seed cold-pressed/CO2 grades.",
+      "limits": "Identity only; light golden refers to color. Does not support a light weight class."
+    },
+    "EDENCOCONUTEXCLUSION": {
+      "title": "Eden Botanicals Coconut Pulp CO2 Organic SDS",
+      "url": "https://docs.edenbotanicals.com/SDS/242_Coconut_Pulp_CO2_Organic_SDS.pdf",
+      "kind": "manufacturer_identity_conflict",
+      "locator": "SDS page 1 sections 1.1 and 3",
+      "access": "Public indexed primary PDF read 2026-10-02.",
+      "supports": "Section 1.1 INCI is Cocos Nucifera Fruit Extract while section 3 common chemical name uses Fruit Oil.",
+      "limits": "Demonstrates why a common chemical name cannot establish Cocos Nucifera Fruit Oil as a generic whole-coconut alias. No weight admitted for that unresolved declaration."
+    }
+  },
+  "entries": [
+    {
+      "id": "broccoli_seed",
+      "display_name": "Broccoli seed",
+      "canonical_inci": "BRASSICA OLERACEA ITALICA SEED OIL",
+      "aliases": [
+        "BRASSICA OLERACEA ITALICA (BROCCOLI) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium",
+          "unknown"
+        ],
+        "reason": "Two primary material suppliers describe light/non-greasy behavior. Supports a low-confidence light estimate; not established by fatty-acid composition or silicone-alternative claims.",
+        "evidence_ids": [
+          "ORGANYBROCCOLI",
+          "BOTANICBROCCOLI"
+        ],
+        "unresolved": "Exact commercial grade, dose and standardized comparative hair feel remain unresolved; no hair-weight validation."
+      },
+      "evidence": [
+        {
+          "source_id": "ORGANYBROCCOLI",
+          "domain": "supplier_sensory",
+          "observation": "Exact cold-pressed fixed oil described as lightweight."
+        },
+        {
+          "source_id": "BOTANICBROCCOLI",
+          "domain": "supplier_sensory",
+          "observation": "Lightweight/non-greasy commercial material descriptor."
+        }
+      ],
+      "identity_limits": "Not broccoli extract, other Brassica species, hydrogenated oil or copolymer.",
+      "validated_hair_weight": false,
+      "evidence_strength": "low"
+    },
+    {
+      "id": "peanut",
+      "display_name": "Peanut",
+      "canonical_inci": "ARACHIS HYPOGAEA OIL",
+      "aliases": [
+        "ARACHIS HYPOGAEA (PEANUT) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium",
+          "unknown"
+        ],
+        "reason": "Supplier light/non-greasy descriptor supports a weak light estimate. Refined material has thickening properties in another manufacturer's table, so medium or unknown remains plausible.",
+        "evidence_ids": [
+          "OTAPEANUT",
+          "COSMETIPEANUT",
+          "VANTAGEPHARMA"
+        ],
+        "unresolved": "Exact commercial grade, dose and standardized comparative hair feel remain unresolved; no hair-weight validation."
+      },
+      "evidence": [
+        {
+          "source_id": "OTAPEANUT",
+          "domain": "identity",
+          "observation": "Exact parenthetical cosmetic INCI and material."
+        },
+        {
+          "source_id": "COSMETIPEANUT",
+          "domain": "supplier_sensory",
+          "observation": "Light/mild non-greasy carrier description."
+        },
+        {
+          "source_id": "VANTAGEPHARMA",
+          "domain": "material_guidance",
+          "observation": "Refined material thickening properties are a counter-signal, not a hair-weight class."
+        }
+      ],
+      "identity_limits": "Do not match peanut flour, extract, hydrogenated oil or a proprietary oil blend.",
+      "validated_hair_weight": false,
+      "evidence_strength": "low"
+    },
+    {
+      "id": "sea_buckthorn_fruit_seed",
+      "display_name": "Sea buckthorn combined fruit/seed",
+      "canonical_inci": "HIPPOPHAE RHAMNOIDES FRUIT/SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "unknown",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "medium",
+          "rich"
+        ],
+        "reason": "Exact combined identity established; fruit/seed proportion and sensory burden are not. Do not inherit the richer pulp prior.",
+        "evidence_ids": [
+          "COSMILESEACOMBINED"
+        ],
+        "unresolved": "Exact commercial grade, dose and standardized comparative hair feel remain unresolved; no hair-weight validation."
+      },
+      "evidence": [
+        {
+          "source_id": "COSMILESEACOMBINED",
+          "domain": "identity",
+          "observation": "Combined plant-part declaration distinguished from separate fruit and seed oils."
+        }
+      ],
+      "identity_limits": "Separate from fruit-only, seed-only, extracts and mixtures with other carriers.",
+      "validated_hair_weight": false,
+      "evidence_strength": "identity_only_or_unresolved"
+    },
+    {
+      "id": "sea_buckthorn_seed",
+      "display_name": "Sea buckthorn seed",
+      "canonical_inci": "HIPPOPHAE RHAMNOIDES SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "unknown",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "medium",
+          "rich"
+        ],
+        "reason": "Exact seed material established but retrieved primary specifications supply no affirmative weight descriptor. Light color is not light sensory weight.",
+        "evidence_ids": [
+          "MAXSEASEED"
+        ],
+        "unresolved": "Exact commercial grade, dose and standardized comparative hair feel remain unresolved; no hair-weight validation."
+      },
+      "evidence": [
+        {
+          "source_id": "MAXSEASEED",
+          "domain": "identity",
+          "observation": "Separate seed oil exact INCI."
+        }
+      ],
+      "identity_limits": "Not fruit/pulp oil, fruit/seed combination, Kernel Extract, or CO2 extract blend unless exact INCI independently reconciled.",
+      "validated_hair_weight": false,
+      "evidence_strength": "identity_only_or_unresolved"
+    }
+  ],
+  "unresolved_declarations": [
+    {
+      "observed": "COCOS NUCIFERA FRUIT OIL",
+      "weight": "unknown",
+      "action": "Retain visible identity blocker. Do not match generic whole-coconut prior without exact-product/source reconciliation.",
+      "evidence_ids": [
+        "EDENCOCONUTEXCLUSION"
+      ]
+    }
+  ]
+}

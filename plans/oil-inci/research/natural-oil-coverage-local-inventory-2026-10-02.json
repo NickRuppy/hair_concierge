@@ -1,0 +1,149 @@
+{
+  "inventory_id": "natural-oil-coverage-local-inventory-2026-10-02",
+  "status": "local_evidence_inventory_only",
+  "prepared_at": "2026-10-02",
+  "scope": {
+    "reference": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.2.json",
+    "reference_entry_count": 25,
+    "purpose": "Compare locally preserved, explicit ingredient declarations and catalog fact-source text with the versioned intact botanical fixed-oil reference. This is not a market-completeness claim or a weight-prior recommendation.",
+    "not_evidence": [
+      "No live database or web query was performed by this inventory.",
+      "Catalog source_text is preserved commercial fact evidence supplied from a prior read-only extraction; it is not freshly verified formula authority.",
+      "The 371 catalog-product total is not formula coverage: only 94 fact-evidence rows for 85 products held stored INCI-bearing source text."
+    ]
+  },
+  "finite_source_universe": [
+    {
+      "source": "data/research/leave-in-inci/**, data/research/conditioner-inci/**, data/research/shampoo-inci/**, plans/oil-inci/capture/**",
+      "method": "Parsed 568 JSON files and inspected 535 raw_inci/rawInci fields; deduplicated repeated artifact copies by exact formula string for the counts below.",
+      "evidence_quality": "local declared-formula corpus; a record can be a calibration, blind, replay, or source capture artifact and does not itself establish current market formula status"
+    },
+    {
+      "source": "plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json",
+      "method": "94 preserved catalog fact-evidence rows, representing 85 products, searched only in source_text and inci_basis text.",
+      "evidence_quality": "untrusted stored commercial-source text; product-level, but stale/unverified here"
+    },
+    {
+      "source": "plans/oil-inci/capture/round-1/ingredient-lexicon*.json and docs/research/**",
+      "method": "Used only to distinguish an exact identity/role already recognized locally from product-declaration evidence.",
+      "evidence_quality": "lexicon or standards mention; never counted as product-formula prevalence"
+    }
+  ],
+  "covered_reference_identities": [
+    "SIMMONDSIA CHINENSIS SEED OIL",
+    "VITIS VINIFERA SEED OIL",
+    "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+    "PRUNUS AMYGDALUS DULCIS OIL",
+    "PRUNUS ARMENIACA KERNEL OIL",
+    "CARTHAMUS TINCTORIUS SEED OIL",
+    "RICINUS COMMUNIS SEED OIL",
+    "COCOS NUCIFERA OIL",
+    "ARGANIA SPINOSA KERNEL OIL",
+    "OLEA EUROPAEA FRUIT OIL",
+    "PERSEA GRATISSIMA OIL",
+    "HELIANTHUS ANNUUS SEED OIL",
+    "MACADAMIA INTEGRIFOLIA SEED OIL",
+    "CANNABIS SATIVA SEED OIL",
+    "SCLEROCARYA BIRREA SEED OIL",
+    "ADANSONIA DIGITATA SEED OIL",
+    "CAMELLIA JAPONICA SEED OIL",
+    "NIGELLA SATIVA SEED OIL",
+    "TRITICUM VULGARE GERM OIL",
+    "HIPPOPHAE RHAMNOIDES FRUIT OIL",
+    "CITRULLUS LANATUS SEED OIL",
+    "MORINGA OLEIFERA SEED OIL",
+    "ORBIGNYA OLEIFERA SEED OIL",
+    "PUNICA GRANATUM SEED OIL",
+    "CAMELLIA OLEIFERA SEED OIL"
+  ],
+  "missing_intact_fixed_oil_identities": [
+    {
+      "inci": "GLYCINE SOJA OIL",
+      "common_name": "soybean oil",
+      "priority": "high",
+      "local_declared_formula_evidence": { "unique_formula_strings": 5, "artifact_occurrences": 15, "examples": ["data/research/leave-in-inci/v1.0/calibration-envelopes/slot-04.json:32", "data/research/conditioner-inci/v1.0/calibration-pilot-formulas.json:418", "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/formula-source.json:17"] },
+      "catalog_source_text_products": 2
+    },
+    {
+      "inci": "ZEA MAYS OIL",
+      "common_name": "corn oil",
+      "priority": "high",
+      "local_declared_formula_evidence": { "unique_formula_strings": 2, "artifact_occurrences": 2, "examples": ["plans/oil-inci/capture/round-1/olaplex-k18.json:67"] },
+      "catalog_source_text_products": 1,
+      "lexicon_status": "already admitted as botanical_fixed_oil in ingredient-lexicon-supplement.json; absent only from weight reference"
+    },
+    {
+      "inci": "SALVIA HISPANICA SEED OIL",
+      "common_name": "chia seed oil",
+      "priority": "high",
+      "local_declared_formula_evidence": { "unique_formula_strings": 1, "artifact_occurrences": 6, "examples": ["data/research/leave-in-inci/v1.0/corpus/unseen-test/unseen-packet.json:506"] },
+      "catalog_source_text_products": 0
+    },
+    {
+      "inci": "GOSSYPIUM HIRSUTUM SEED OIL",
+      "common_name": "cottonseed oil",
+      "priority": "high",
+      "local_declared_formula_evidence": { "unique_formula_strings": 1, "artifact_occurrences": 4, "examples": ["data/research/shampoo-inci/holdout-v2/products/nivea-classic-care/formula-source.json:17"] },
+      "catalog_source_text_products": 0
+    },
+    {
+      "inci": "MAURITIA FLEXUOSA FRUIT OIL",
+      "common_name": "buriti oil",
+      "priority": "high",
+      "local_declared_formula_evidence": { "unique_formula_strings": 0, "artifact_occurrences": 0, "examples": [] },
+      "catalog_source_text_products": 2,
+      "catalog_examples": ["plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json:337", "plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json:1831"]
+    },
+    {
+      "inci": "BRASSICA OLERACEA ITALICA SEED OIL",
+      "common_name": "broccoli seed oil",
+      "priority": "high",
+      "local_declared_formula_evidence": { "unique_formula_strings": 0, "artifact_occurrences": 0, "examples": [] },
+      "catalog_source_text_products": 1,
+      "catalog_examples": ["plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json:472"]
+    },
+    {
+      "inci": "ARACHIS HYPOGAEA OIL",
+      "aliases_observed": ["ARACHIS HYPOGAEA (PEANUT) OIL"],
+      "common_name": "peanut oil",
+      "priority": "high",
+      "local_declared_formula_evidence": { "unique_formula_strings": 0, "artifact_occurrences": 0, "examples": [] },
+      "catalog_source_text_products": 1,
+      "catalog_examples": ["plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json:1937"]
+    },
+    {
+      "inci": "AVENA SATIVA KERNEL OIL",
+      "common_name": "oat kernel oil",
+      "priority": "medium",
+      "local_declared_formula_evidence": { "unique_formula_strings": 1, "artifact_occurrences": 1, "examples": ["data/research/conditioner-inci/v1.0/calibration-pilot-formulas.json:252"] },
+      "catalog_source_text_products": 0,
+      "caveat": "The preserved calibration formula does not expose a product identity at that record; acquire independent identity evidence before any reference admission."
+    },
+    {
+      "inci": "CANOLA OIL",
+      "common_name": "canola/rapeseed oil",
+      "priority": "medium_identity_first",
+      "local_declared_formula_evidence": { "unique_formula_strings": 2, "artifact_occurrences": 8, "examples": ["data/research/leave-in-inci/v1.0/calibration-envelopes/slot-03.json:28", "data/research/conditioner-inci/v1.0/calibration-pilot-formulas.json:501"] },
+      "catalog_source_text_products": 0,
+      "caveat": "Observed declaration is a common-name form, not a species/plant-part INCI. Do not silently create a BRASSICA NAPUS alias."
+    }
+  ],
+  "exact_identity_or_alias_gaps_not_safe_to_auto_merge": [
+    { "observed": "MACADAMIA TERNIFOLIA SEED OIL", "reference_nearest": "MACADAMIA INTEGRIFOLIA SEED OIL", "evidence": "data/research/leave-in-inci/v1.0/calibration-envelopes/slot-05.json", "reason": "different declared species" },
+    { "observed": "MACADAMIA INTEGRIFOLIA/TETRAPHYLLA SEED OIL", "reference_nearest": "MACADAMIA INTEGRIFOLIA SEED OIL", "evidence": "plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json:1502", "reason": "mixed-species declaration" },
+    { "observed": "HELIANTHUS ANNUUS HYBRID OIL", "reference_nearest": "HELIANTHUS ANNUUS SEED OIL", "evidence": "catalog source text at lines 38, 495, 1477, 1760; leave-in corpus slot-01", "reason": "hybrid form lacks the reference plant-part token" },
+    { "observed": "COCOS NUCIFERA FRUIT OIL", "reference_nearest": "COCOS NUCIFERA OIL", "evidence": "plans/oil-inci/capture/round-1/botanical-water.json", "reason": "reference itself says not to map Coconut Fruit Oil" },
+    { "observed": "HIPPOPHAE RHAMNOIDES FRUIT/SEED OIL", "reference_nearest": "HIPPOPHAE RHAMNOIDES FRUIT OIL", "evidence": "data/research/leave-in-inci/v1.0/corpus/unseen-test/unseen-packet.json", "reason": "mixed plant parts" }
+  ],
+  "excluded_or_boundary_forms": [
+    "BUTYROSPERMUM PARKII BUTTER and THEOBROMA CACAO SEED BUTTER: intact botanical butters; outside this fixed-oil reference.",
+    "BRASSICA CAMPESTRIS/ALEURITES FORDI OIL COPOLYMER, PEG-40/60 HYDROGENATED CASTOR OIL, HYDROGENATED CASTOR/COCONUT/VEGETABLE OIL, and Hydrogenated Olive Oil Unsaponifiables: modified/derivative forms.",
+    "PSEUDOZYMA EPICOLA/CAMELLIA SINENSIS SEED OIL FERMENT EXTRACT FILTRATE, OLUS OIL, and Shea Butter Ethyl Esters: ferment, mixture, or ester forms requiring a separate identity policy.",
+    "Citrus, rosemary, mint, juniper, patchouli and similar leaf/peel oils: essential/aromatic oils, excluded.",
+    "Silicones, mineral oil, squalane, and synthetic esters/carriers: excluded material families."
+  ],
+  "non_actions": [
+    "No weight prior, frozen run, matching rule, lexicon, or consumer behavior was changed.",
+    "No claim is made that the reference covers all oils in the market or all catalog products."
+  ]
+}

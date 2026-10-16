@@ -1,0 +1,56 @@
+{
+  "status": "passed",
+  "positive_shape_control": "Unmodified main record contract passes first.",
+  "scope": "In-memory independent contract checks, no sealed file mutation or classification targets.",
+  "controls": [
+    {
+      "control": "Derivative must not inherit intact castor prior",
+      "rejected_by": "False or missing exact material match",
+      "status": "passed",
+      "unrelated_seal_failure": false
+    },
+    {
+      "control": "Mixture confidence cannot be upgraded",
+      "rejected_by": "Mixture confidence ceiling",
+      "status": "passed",
+      "unrelated_seal_failure": false
+    },
+    {
+      "control": "Forbidden source/identity access cannot be declared permissible",
+      "rejected_by": "Forbidden read scope",
+      "status": "passed",
+      "unrelated_seal_failure": false
+    },
+    {
+      "control": "Unknown must retain deciding gap",
+      "rejected_by": "Missing unresolved argument/gap",
+      "status": "passed",
+      "unrelated_seal_failure": false
+    },
+    {
+      "control": "Unassessed function cannot become harmless auxiliary",
+      "rejected_by": "Unassessed role silently classified",
+      "status": "passed",
+      "unrelated_seal_failure": false
+    },
+    {
+      "control": "Every unassessed ingredient must survive into gap ledger",
+      "rejected_by": "Unassessed ingredient missing from gap ledger",
+      "status": "passed",
+      "unrelated_seal_failure": false
+    },
+    {
+      "control": "Receipt cannot convert derivative to intact oil prior",
+      "rejected_by": "Invalid display-only transformation",
+      "status": "passed",
+      "unrelated_seal_failure": false
+    },
+    {
+      "control": "Unreviewed receipt kind denied",
+      "rejected_by": "Unreviewed display receipt kind",
+      "status": "passed",
+      "unrelated_seal_failure": false
+    }
+  ],
+  "test_audit": "Owner boundary is research artifact admission; false identity, unsupported confidence, forbidden reads, missing gap and unassessed-function loss are credible failures not protected by earlier-round verifiers. No production seam."
+}

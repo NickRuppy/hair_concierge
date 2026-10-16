@@ -1,0 +1,964 @@
+{
+  "run_id": "oil-exploratory-2026-10-01-round-1",
+  "stage": "controlled_unblind",
+  "records": [
+    {
+      "neutral_id": "F01",
+      "identity": {
+        "brand": "K18",
+        "product": "Molecular Repair Hair Oil",
+        "size_ml": 30,
+        "market": "DE",
+        "gtin_if_verified": "858511001500",
+        "gtin_source_id": "k-flaconi",
+        "gtin_limit": "Also corroborated by local K18-branded shop; barcode alone does not establish formulation version."
+      },
+      "sources": [
+        {
+          "id": "k-notino",
+          "url": "https://www.notino.de/k18/molecular-repair-hair-oil-pflegendes-trockenoel-fuer-beschaedigtes-und-bruechiges-haar/p-16220382/",
+          "source_author": "Notino DE",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 ml listing, complete 17-entry declaration; page itself advises checking received packaging for changes."
+        },
+        {
+          "id": "k-flaconi",
+          "url": "https://www.flaconi.de/haare/k18/molecular-repair/k18-molecular-repair-hair-oil-haaroel.html?variant=90007597-0011676",
+          "source_author": "Flaconi DE",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 ml/EAN 858511001500. Same 17 ingredients/order as Notino ignoring capitalization. Initial direct retrieval succeeded; later reopen failed; indexed page also exposes full declaration and identifier."
+        },
+        {
+          "id": "k-uk-maker",
+          "url": "https://k18hair.co.uk/products/molecular-repair-hair-oil",
+          "source_author": "K18 Hair UK",
+          "tier": "manufacturer_other_market",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 mL manufacturer page; 17-entry declaration matches DE retailers ignoring case, with heat claim and directions. Corroboration, not proof of chemical identity or universal market/batch equivalence."
+        },
+        {
+          "id": "k-global-maker",
+          "url": "https://www.k18hair.com/products/molecular-repair-hair-oil",
+          "source_author": "K18 Hair",
+          "tier": "manufacturer_other_market",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 mL global/US page; 22-entry declaration has five extra fragrance-tail names. Retain separately; do not append to DE canonical declaration."
+        },
+        {
+          "id": "k-de-brand",
+          "url": "https://k18-hair.de/k18-hair/k18-oil/K18MolecularRepairHairOil30ml.aspx",
+          "source_author": "Kevin Murphy GmbH / K18-branded DE storefront",
+          "tier": "local_brand_site_distributor_operated",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact30ml/EAN858511001500 and local directions/heat positioning. Ingredient section contains only a dot; not admissible as formula source or as independent manufacturer attestation."
+        },
+        {
+          "id": "ec-fragrance",
+          "url": "https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-products-specific-topics/fragrance-allergens-labelling_en?prefLang=uk",
+          "source_author": "European Commission",
+          "tier": "primary_regulatory_context",
+          "accessed_at": "2026-10-01",
+          "notes": "Expanded individual fragrance disclosure can lengthen labels. General context only; does not establish the reason for this product difference."
+        }
+      ],
+      "directions": [
+        {
+          "direction_id": "F01-direction-1",
+          "verbatim": false,
+          "source_id": "k-notino",
+          "text": "Begin with 1–3 drops, increasing if needed. Apply to towel-dried damp hair before styling, or use on dry hair as the final step.",
+          "dose": "1–3 drops initially; increase if needed",
+          "contact_time": "not specified in canonical local directions",
+          "rinse_requirement": "No rinse step stated; styling/finishing instructions retain product."
+        },
+        {
+          "direction_id": "F01-maker-damp-supplement",
+          "source_id": "k-uk-maker",
+          "verbatim": false,
+          "text": "Manufacturer separately instructs application on damp hair from mid-lengths to ends, with a four-minute wait before styling for its advertised strengthening purpose. No strengthening/repair property is adopted.",
+          "site": [
+            "mid_lengths",
+            "ends"
+          ],
+          "stage": "damp_before_styling",
+          "dose": "not established in this separate excerpt",
+          "contact_time": "4 minutes before styling",
+          "removal": "retained_styling_context"
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "Pipette",
+        "source_id": "k-notino",
+        "confidence": "high",
+        "observation_basis": "Explicit exact-product local description; no physical bottle inspected."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": true,
+          "author": "K18 Hair UK",
+          "source_id": "k-uk-maker",
+          "claim_excerpt": "450°F (232°C) heat protection",
+          "verbatim": true,
+          "local_corroboration_source_ids": [
+            "k-notino",
+            "k-de-brand"
+          ],
+          "notes": "Manufacturer exact30ml with same declared17-entry sequence; accepted product claim for this scoped packet, not US/DE chemical equivalence."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "K18 Hair UK / K18 Hair",
+          "source_id": "k-uk-maker",
+          "claim_excerpt": null,
+          "review_scope": [
+            "k-uk-maker",
+            "k-global-maker",
+            "k-notino",
+            "k-de-brand"
+          ],
+          "notes": "Product descriptions, benefits, ingredient hero sections and product FAQs reviewed; no accepted hair-UV-protection claim found. Generic colour positioning is not such a claim."
+        }
+      },
+      "advertised_oils_reviewed": true,
+      "advertised_oils": [
+        {
+          "name": "Avocado oil",
+          "source_id": "k-notino",
+          "wording": "Avocadoöl",
+          "verbatim": true,
+          "hero_id": "avocado_oil",
+          "canonical_ingredient": "PERSEA GRATISSIMA OIL"
+        },
+        {
+          "name": "Sunflower oil",
+          "source_id": "k-notino",
+          "wording": "Sonnenblumenöl",
+          "verbatim": true,
+          "hero_id": "sunflower_oil",
+          "canonical_ingredient": "HELIANTHUS ANNUUS OIL"
+        }
+      ],
+      "scope": "Only this selected published declaration is classified. Alternatives outside packet remain retained; no batch assertion."
+    },
+    {
+      "neutral_id": "F02",
+      "identity": {
+        "brand": "NEQI",
+        "product": "Smooth Strength Rosemary Oil",
+        "size_ml": 75,
+        "market": "DE",
+        "gtin_if_verified": "4063528086280",
+        "gtin_source_id": "E02-retailer-de",
+        "manufacturer_code": "NQ-HO-RO-201"
+      },
+      "sources": [
+        {
+          "id": "E02-maker-de",
+          "url": "https://neqi-hair.com/products/smooth-strength-rosemary-oil",
+          "source_author": "NEQI",
+          "host_role": "manufacturer",
+          "tier": "exact_local_manufacturer",
+          "accessed_at": "2026-10-01",
+          "notes": "German product page; exact-product description, application and full declaration reviewed. Shared range panel excluded from hero-oil evidence."
+        },
+        {
+          "id": "E02-retailer-de",
+          "url": "https://www.cosmeterie.de/neqi/smooth-strength-rosemary-oil",
+          "source_author": "Cosmeterie / niceshops GmbH",
+          "host_role": "retailer",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "75 ml, EAN 4063528086280, manufacturer code NQ-HO-RO-201. Retailer-authored page; rinse wording is not attributed to the maker."
+        },
+        {
+          "id": "E02-maker-pack-asset",
+          "url": "https://neqi-hair.com/cdn/shop/files/SS_Rosemary_Oil_4063528086280_1.png?v=1730108189&width=128",
+          "source_author": "NEQI",
+          "host_role": "manufacturer_asset",
+          "tier": "exact_local_manufacturer_pack_asset",
+          "accessed_at": "2026-10-01",
+          "notes": "Linked directly by German product page; asset filename corroborates EAN. No back-label transcription inferred."
+        },
+        {
+          "id": "E02-maker-faq-de",
+          "url": "https://neqi-hair.com/pages/faq",
+          "source_author": "NEQI",
+          "host_role": "manufacturer",
+          "tier": "local_manufacturer_exact_named_product_FAQ",
+          "accessed_at": "2026-10-01",
+          "notes": "German FAQ exact named Rosemary application paragraph specifies dropper and a broader pre-wash scenario."
+        }
+      ],
+      "directions": [
+        {
+          "direction_id": "E02-maker-product-scalp",
+          "id": "E02-maker-product-scalp",
+          "source_id": "E02-maker-de",
+          "verbatim": false,
+          "text": "Apply a small amount via hands or directly to scalp, massage, wait at least 10 minutes, then shampoo. Dry or damp application is allowed.",
+          "site": [
+            "scalp"
+          ],
+          "stage": "dry_or_damp_before_shampoo",
+          "dose": "small amount; unit unspecified",
+          "contact_time": "at least 10 minutes",
+          "removal": "shampoo",
+          "restrictions": "No overnight instruction or fibre distribution in this application paragraph."
+        },
+        {
+          "direction_id": "E02-maker-faq-before-wash",
+          "id": "E02-maker-faq-before-wash",
+          "source_id": "E02-maker-faq-de",
+          "verbatim": false,
+          "text": "Use once or twice weekly before washing. Dispense with dropper into hands or onto scalp, massage using fingers or scalp brush, distribute through lengths and ends, wait at least 10 minutes, then rinse thoroughly.",
+          "site": [
+            "scalp",
+            "lengths",
+            "ends"
+          ],
+          "stage": "before_wash; damp_or_dry_unspecified",
+          "dose": "unspecified; dropper mechanism does not establish a drop count",
+          "frequency": "1–2 times per week",
+          "contact_time": "at least 10 minutes",
+          "removal": "rinse; application explicitly before hair washing",
+          "restrictions": "Separate maker scenario; no imported shampoo-specific instruction or damp/dry statement."
+        },
+        {
+          "direction_id": "E02-retailer-scalp",
+          "id": "E02-retailer-scalp",
+          "source_id": "E02-retailer-de",
+          "verbatim": false,
+          "text": "Apply a small amount to hands or scalp, massage with fingertips, wait at least 10 minutes, then rinse well.",
+          "site": [
+            "scalp"
+          ],
+          "stage": "damp_or_dry_unspecified",
+          "dose": "small amount; unit unspecified",
+          "contact_time": "at least 10 minutes",
+          "removal": "rinse"
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "dropper",
+        "source_id": "E02-maker-faq-de",
+        "confidence": "high",
+        "evidence": "Exact named product instructions expressly identify a dropper; current pack is bound by DE retailer and maker asset identifier."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": false,
+          "author": "NEQI",
+          "source_id": "E02-maker-de",
+          "additional_reviewed_source_ids": [
+            "E02-maker-faq-de"
+          ],
+          "claim_excerpt": null,
+          "review_notes": "No exact Rosemary heat-protection declaration in reviewed product page or FAQ. Other named products' claims do not transfer."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "NEQI",
+          "source_id": "E02-maker-de",
+          "additional_reviewed_source_ids": [
+            "E02-maker-faq-de"
+          ],
+          "claim_excerpt": null,
+          "review_notes": "No exact Rosemary hair-UV declaration. Hair-perfume UV wording elsewhere in FAQ is for other products."
+        }
+      },
+      "advertised_oils_reviewed": true,
+      "advertised_oils": [
+        {
+          "name": "rosemary oil",
+          "source_id": "E02-maker-de",
+          "wording": "Named in exact-product positioning and ingredient highlights.",
+          "verbatim": false,
+          "hero_id": "rosemary_oil",
+          "canonical_ingredient": "ROSMARINUS OFFICINALIS LEAF OIL"
+        },
+        {
+          "name": "castor oil",
+          "source_id": "E02-maker-de",
+          "wording": "Named in exact-product positioning and ingredient highlights.",
+          "verbatim": false,
+          "hero_id": "castor_oil",
+          "canonical_ingredient": "RICINUS COMMUNIS SEED OIL"
+        },
+        {
+          "name": "sweet almond oil",
+          "source_id": "E02-maker-de",
+          "wording": "Named in exact-product positioning and ingredient highlights.",
+          "verbatim": false,
+          "hero_id": "sweet_almond_oil",
+          "canonical_ingredient": "PRUNUS AMYGDALUS DULCIS OIL"
+        }
+      ],
+      "scope": "Only this selected published declaration is classified. Alternatives outside packet remain retained; no batch assertion."
+    },
+    {
+      "neutral_id": "F03",
+      "identity": {
+        "brand": "Kérastase",
+        "product": "Soleil Huile Sirène",
+        "size_ml": 150,
+        "market": "DE",
+        "gtin_if_verified": "3474636695324"
+      },
+      "sources": [
+        {
+          "id": "E08-maker-DE",
+          "url": "https://www.kerastase.de/alle-produkte/huile-sirene-ol/3474636695324.html",
+          "source_author": "Kérastase DE",
+          "tier": 2,
+          "accessed_at": "2026-10-01T08:18:00Z",
+          "notes": "Complete indexed primary product body inspected: exact 150 ml identity, all 19 ingredients, formula code C227530/1, benefits, highlighted ingredients and application. Search retrieval supplies complete sections, not reconstructed snippet fragments. Direct-open metadata returned 826 lines; subsequent direct fetches timeout."
+        },
+        {
+          "id": "E08-partner-DE",
+          "url": "https://de.lorealpartnershop.com/de/soleil-huile-sir%C3%A8ne/DE3474636695324.html",
+          "source_author": "L’Oréal Partner Shop DE",
+          "tier": 2,
+          "accessed_at": "2026-10-01T08:18:00Z",
+          "notes": "Direct full body inspected: exact 150ML/article number 3474636695324; matching 19-ingredient list; Babassu oil positioning; independent shake/hand-application/no-rinse directions. The earlier incompatible FR snippet is not this valid DE page."
+        }
+      ],
+      "directions": [
+        {
+          "direction_id": "F03-direction-1",
+          "source_id": "E08-maker-DE",
+          "verbatim": false,
+          "text": "Vor Gebrauch gut schütteln. Ins feuchte oder trockene Haar sprühen, vor allem auf die Spitzen. Anschließend an der Luft trocknen lassen.",
+          "stage": "damp_or_dry",
+          "site": "hair_with_focus_on_ends",
+          "dose": "not_stated",
+          "contact_time": "not_stated",
+          "rinse": "not_stated; air_dry_after_application explicitly directed",
+          "shake": "shake_well"
+        },
+        {
+          "direction_id": "F03-direction-2",
+          "source_id": "E08-partner-DE",
+          "verbatim": false,
+          "text": "Die zwei Phasen durch gründliches Schütteln mischen. In die Hände sprühen, dann im Haar verteilen und im Haar belassen.",
+          "stage": "not_stated",
+          "site": "hair",
+          "dose": "not_stated",
+          "contact_time": "not_stated",
+          "rinse": "do_not_rinse",
+          "shake": "shake_well"
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "spray",
+        "source_id": "E08-maker-DE",
+        "confidence": "high",
+        "notes": "Explicit manufacturer spray direction; no count of spray actuations specified."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": false,
+          "author": "Kérastase DE",
+          "source_id": "E08-maker-DE",
+          "claim_excerpt": null,
+          "verbatim": false,
+          "review_scope": "Exact product benefits, highlighted ingredients and application reviewed; no heat-protection claim found. Generic recommendation widgets excluded."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": true,
+          "author": "Kérastase DE",
+          "source_id": "E08-maker-DE",
+          "claim_excerpt": "Bietet Sonnenschutz für das Haar. Absorbiert UV-Strahlen und minimiert ihren Effekt auf die Haarfaser.",
+          "verbatim": true,
+          "excerpt_note": "Two distinct short passages: product benefit and UV-filter key-ingredient description."
+        }
+      },
+      "advertised_oils_reviewed": true,
+      "advertised_oils": [
+        {
+          "name": "babassu oil",
+          "source_id": "E08-partner-DE",
+          "wording": "Mit Babassu-Öl angereichert",
+          "verbatim": true,
+          "hero_id": "babassu_oil",
+          "canonical_ingredient": "ORBIGNYA OLEIFERA SEED OIL"
+        }
+      ],
+      "scope": "Only this selected published declaration is classified. Alternatives outside packet remain retained; no batch assertion."
+    },
+    {
+      "neutral_id": "F04",
+      "identity": {
+        "brand": "Biopark Cosmetics",
+        "product": "Organic Coconut Oil",
+        "size_ml": 100,
+        "market": "DE",
+        "gtin_if_verified": "3830066651079",
+        "gtin_source_id": "E01-retailer-de",
+        "selection_note": "Authorized cosmetic replacement for the original dmBio food-oil slot; original selection history remains in preflight."
+      },
+      "sources": [
+        {
+          "id": "E01-maker",
+          "url": "https://biopark-cosmetics.com/products/organic-coconut-oil-100ml",
+          "source_author": "Biopark Cosmetics",
+          "host_role": "manufacturer",
+          "tier": "exact_manufacturer_international_with_DE_pack_corroboration",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 100 ml cosmetics product; composition, instructions, physical form and product-image jar identification reviewed. English page; DE corroboration is separate."
+        },
+        {
+          "id": "E01-retailer-de",
+          "url": "https://www.ecco-verde.de/biopark-cosmetics/coconut-oil",
+          "source_author": "Ecco Verde / niceshops GmbH",
+          "host_role": "retailer",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "DE 100 ml pack, EAN 3830066651079, article BPC-BIOP071. Manufacturer listed as Zin d.o.o.; that listing does not make all retailer prose manufacturer-authored."
+        }
+      ],
+      "directions": [
+        {
+          "direction_id": "E01-maker-before-wash",
+          "id": "E01-maker-before-wash",
+          "source_id": "E01-maker",
+          "verbatim": false,
+          "text": "Massage into dry hair; leave at least 30 minutes or overnight, then shampoo. Scalp massage is also instructed in this wash-out context.",
+          "site": [
+            "hair",
+            "scalp"
+          ],
+          "stage": "dry_before_wash",
+          "dose": "unspecified",
+          "contact_time": "at least 30 minutes; overnight offered",
+          "removal": "shampoo",
+          "restrictions": "Scalp instruction appears beside a dandruff claim; no dandruff efficacy property is adopted."
+        },
+        {
+          "direction_id": "E01-maker-after-wash",
+          "id": "E01-maker-after-wash",
+          "source_id": "E01-maker",
+          "verbatim": false,
+          "text": "After washing, put a small amount on the ends and retain it.",
+          "site": [
+            "ends"
+          ],
+          "stage": "after_wash; damp_or_dry_unspecified",
+          "dose": "small amount; unit unspecified",
+          "contact_time": "unspecified",
+          "removal": "no_rinse"
+        },
+        {
+          "direction_id": "E01-retailer-after-drying",
+          "id": "E01-retailer-after-drying",
+          "source_id": "E01-retailer-de",
+          "verbatim": false,
+          "text": "Following the shampooed mask and drying, massage a small amount into the ends.",
+          "site": [
+            "ends"
+          ],
+          "stage": "after_wash_and_drying",
+          "dose": "small amount; unit unspecified",
+          "contact_time": "unspecified",
+          "removal": "retained_by_context"
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "other",
+        "mechanism_detail": "Jar with removable lid; contents accessed directly through jar opening.",
+        "source_id": "E01-retailer-de",
+        "corroborating_source_id": "E01-maker",
+        "confidence": "high",
+        "evidence": "Exact retailer pack is identified as a jar; manufacturer product image alternative text also identifies a jar. No scoop, metering or pour mechanism established."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": false,
+          "author": "Biopark Cosmetics",
+          "source_id": "E01-maker",
+          "claim_excerpt": null,
+          "review_notes": "Product description and instructions contain no explicit hair heat-protection claim."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "Biopark Cosmetics",
+          "source_id": "E01-maker",
+          "claim_excerpt": null,
+          "review_notes": "Maker discusses skin care after sun exposure, not hair UV protection. Retailer sun-protection taxonomy is not manufacturer claim evidence."
+        }
+      },
+      "advertised_oils_reviewed": true,
+      "advertised_oils": [
+        {
+          "name": "coconut oil",
+          "source_id": "E01-maker",
+          "wording": "The exact product is presented as organic coconut oil.",
+          "verbatim": false,
+          "hero_id": "coconut_oil",
+          "canonical_ingredient": "COCOS NUCIFERA OIL"
+        }
+      ],
+      "scope": "Only this selected published declaration is classified. Alternatives outside packet remain retained; no batch assertion."
+    },
+    {
+      "neutral_id": "F05",
+      "identity": {
+        "brand": "Living Proof",
+        "product": "No Frizz Vanishing Oil",
+        "size_ml": 50,
+        "market": "DE",
+        "gtin_if_verified": "840216931084"
+      },
+      "sources": [
+        {
+          "id": "E05-cosmeterie",
+          "url": "https://www.cosmeterie.de/living-proof/no-frizz-vanishing-oil",
+          "source_author": "Cosmeterie DE",
+          "tier": 3,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Exact 50 ml/EAN 840216931084 and maker code LIP-NF-ST-106; canonical complete local ordered list, including printed spelling."
+        },
+        {
+          "id": "E05-maker",
+          "url": "https://www.livingproof.com/collections/no-frizz/products/no-frizz-vanishing-oil",
+          "source_author": "Living Proof",
+          "tier": 4,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Global exact named product 1.7 oz; ordered main formula converges with local listing after explicit spelling/format aliases. FAQ reviewed separately. Additional fragrance disclosure is separate from main INCI."
+        },
+        {
+          "id": "E05-niche",
+          "url": "https://www.niche-beauty.com/de-de/produkte/living-proof-no-frizz-vanishing-oil/887-033",
+          "source_author": "Niche Beauty DE",
+          "tier": 3,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Exact named 50 ml product positioning names five oils; used for advertised oils, not claim authority."
+        },
+        {
+          "id": "E05-pack",
+          "url": "https://media.niche-beauty.com/images/generated/det/40/15/living-proof-no-frizz-vanishing-oil.jpg",
+          "source_author": "Living Proof package reproduced by Niche Beauty DE",
+          "tier": 1,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Visually inspected 50 ml/1.7 fl oz front pack with pipette bulb; source page binds exact named 50 ml product."
+        }
+      ],
+      "directions": [
+        {
+          "direction_id": "F05-direction-1",
+          "source_id": "E05-cosmeterie",
+          "verbatim": false,
+          "text": "Mit wenig Öl auf feuchtem oder trockenem Haar beginnen; bei Bedarf erneut anwenden. Bei feinem Haar sparsam an den Spitzen, bei kräftigerem Haar auch in den Längen verteilen. Täglich nach Bedarf.",
+          "stage": "damp_or_dry",
+          "site": "lengths_and_ends",
+          "dose": "small amount; no numerical dose in local directions",
+          "contact_time": "not_stated",
+          "rinse": "not_stated",
+          "shake": "not_stated"
+        },
+        {
+          "direction_id": "F05-direction-2",
+          "source_id": "E05-maker",
+          "verbatim": false,
+          "text": "Der Hersteller nennt ein bis zwei Tropfen als Anfangsmenge, verteilt im abgeteilten feuchten oder trockenen Haar; Wiederholung nach Bedarf. Anwendung auch nach Hitzestyling beschrieben.",
+          "stage": "damp_or_dry; separate explicit after_heat_styling option",
+          "site": "hair_sections",
+          "dose": "1–2 drops initially",
+          "contact_time": "not_stated",
+          "rinse": "not_stated",
+          "shake": "not_stated"
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "pipette/dropper",
+        "source_id": "E05-pack",
+        "confidence": "high"
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": false,
+          "author": "Living Proof",
+          "source_id": "E05-maker",
+          "claim_excerpt": "No Frizz Vanishing Oil alone does not protect against heat.",
+          "verbatim": true
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "Living Proof",
+          "source_id": "E05-maker",
+          "claim_excerpt": "No, frizz Vanishing Oil does not protect against UV rays.",
+          "verbatim": true
+        }
+      },
+      "advertised_oils_reviewed": true,
+      "advertised_oils": [
+        {
+          "name": "sea buckthorn oil",
+          "source_id": "E05-niche",
+          "wording": "Sanddornöl in der hervorgehobenen Ölmischung",
+          "verbatim": false,
+          "hero_id": "sea_buckthorn_oil",
+          "canonical_ingredient": "HIPPOPHAE RHAMNOIDES FRUIT OIL"
+        },
+        {
+          "name": "jojoba oil",
+          "source_id": "E05-niche",
+          "wording": "Jojobaöl in der hervorgehobenen Ölmischung",
+          "verbatim": false,
+          "hero_id": "jojoba_oil",
+          "canonical_ingredient": "SIMMONDSIA CHINENSIS SEED OIL"
+        },
+        {
+          "name": "watermelon oil",
+          "source_id": "E05-niche",
+          "wording": "Wassermelonenöl in der hervorgehobenen Ölmischung",
+          "verbatim": false,
+          "hero_id": "watermelon_oil",
+          "canonical_ingredient": "CITRULLUS LANATUS SEED OIL"
+        },
+        {
+          "name": "babassu oil",
+          "source_id": "E05-niche",
+          "wording": "Babassuöl in der hervorgehobenen Ölmischung",
+          "verbatim": false,
+          "hero_id": "babassu_oil",
+          "canonical_ingredient": "ORBIGNYA OLEIFERA SEED OIL"
+        },
+        {
+          "name": "moringa oil",
+          "source_id": "E05-niche",
+          "wording": "Moringaöl in der hervorgehobenen Ölmischung",
+          "verbatim": false,
+          "hero_id": "moringa_oil",
+          "canonical_ingredient": "MORINGA OLEIFERA SEED OIL"
+        }
+      ],
+      "scope": "Only this selected published declaration is classified. Alternatives outside packet remain retained; no batch assertion."
+    },
+    {
+      "neutral_id": "F06",
+      "identity": {
+        "brand": "NEQI",
+        "product": "Opulent Oil Hair Serum",
+        "size_ml": 75,
+        "market": "DE",
+        "gtin_if_verified": "4063528078520",
+        "gtin_source_id": "E07-maker-pack-asset",
+        "gtin_corroborating_source_id": "E07-retailer-pl"
+      },
+      "sources": [
+        {
+          "id": "E07-maker-de",
+          "url": "https://neqi-hair.com/products/opulent-oil-hair-serum",
+          "source_author": "NEQI",
+          "host_role": "manufacturer",
+          "tier": "exact_local_manufacturer",
+          "accessed_at": "2026-10-01",
+          "notes": "German 75 ml page co-presents formula, directions and heat claim. Shared range panel is excluded from exact-product hero-oil evidence."
+        },
+        {
+          "id": "E07-maker-pack-asset",
+          "url": "https://neqi-hair.com/cdn/shop/files/Hair_Oil_4063528078520.jpg?v=1746525784&width=128",
+          "source_author": "NEQI",
+          "host_role": "manufacturer_asset",
+          "tier": "exact_local_manufacturer_pack_asset",
+          "accessed_at": "2026-10-01",
+          "notes": "Direct product-page image link contains identifier 4063528078520; identifier independently corroborated by dm Poland. Not a readable back-label capture."
+        },
+        {
+          "id": "E07-retailer-pl",
+          "url": "https://www.dm.pl/p/d/1455216/neqi-olejek-do-w-osow-opulent-oil",
+          "source_author": "dm Poland",
+          "host_role": "retailer",
+          "tier": "cross_market_retailer_conflict_only",
+          "accessed_at": "2026-10-01",
+          "notes": "75 ml, GTIN 4063528078520. Different formula retained as cross-market evidence; no DE equivalence assumed. Retailer description incorrectly also names LaQ, reducing prose reliability."
+        },
+        {
+          "id": "E07-maker-faq-de",
+          "url": "https://neqi-hair.com/pages/faq",
+          "source_author": "NEQI",
+          "host_role": "manufacturer",
+          "tier": "local_manufacturer_exact_named_product_FAQ",
+          "accessed_at": "2026-10-01",
+          "notes": "Names Opulent Oil among products with heat protection; unrelated Dry Oil and hair-perfume paragraphs are not Opulent instructions or claims."
+        }
+      ],
+      "directions": [
+        {
+          "direction_id": "E07-maker-towel-dried",
+          "id": "E07-maker-towel-dried",
+          "source_id": "E07-maker-de",
+          "verbatim": false,
+          "text": "Spread two to three pump doses between hands and work through towel-dried lengths and ends. Comb through and retain without rinsing.",
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "towel_dried",
+          "dose": "2–3 pumps",
+          "contact_time": "unspecified",
+          "removal": "no_rinse",
+          "restrictions": "No dry-hair application inferred from finish positioning."
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "pump",
+        "source_id": "E07-maker-de",
+        "confidence": "high",
+        "evidence": "Exact 75 ml instructions dose the product in pump strokes."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": true,
+          "author": "NEQI",
+          "source_id": "E07-maker-de",
+          "additional_reviewed_source_ids": [
+            "E07-maker-faq-de"
+          ],
+          "claim_excerpt": "Hitzeschutz bis 230°C",
+          "verbatim": true,
+          "review_notes": "Literal maker claim captured; temperature is source text, not a new property or independently verified performance."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "NEQI",
+          "source_id": "E07-maker-de",
+          "additional_reviewed_source_ids": [
+            "E07-maker-faq-de"
+          ],
+          "claim_excerpt": null,
+          "review_notes": "No explicit Opulent hair-UV claim in reviewed product page or FAQ. Ingredient presence and other products' claims do not supply one."
+        }
+      },
+      "advertised_oils_reviewed": true,
+      "advertised_oils": [],
+      "scope": "Only this selected published declaration is classified. Alternatives outside packet remain retained; no batch assertion."
+    },
+    {
+      "neutral_id": "F07",
+      "identity": {
+        "brand": "OLAPLEX",
+        "product": "No.7 Bonding Oil",
+        "size_ml": 30,
+        "market": "DE",
+        "gtin_if_verified": "0850045076085",
+        "gtin_source_id": "ol-apotheke",
+        "gtin_limit": "Identifier corroborates named 30ml pack, not canonical formula version; no readable batch label captured."
+      },
+      "sources": [
+        {
+          "id": "ol-zalando",
+          "url": "https://www.zalando.de/olaplex-no7-bonding-oil-haarpflege-olh34h00q-s11.html",
+          "source_author": "Zalando DE",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "DE-market listing; 30 ml pack. Canonical declaration also exposed by indexed size=75C URL. Some direct reopens redirected to en.zalando.de and failed; capture uses retrieved indexed listing, not an inspected physical pack."
+        },
+        {
+          "id": "ol-maker",
+          "url": "https://olaplex.com/products/olaplex-n-7-bonding-oil-30ml",
+          "source_author": "OLAPLEX Inc.",
+          "tier": "manufacturer_other_market",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 ml selected; global/US storefront. Entire 21-entry sequence matches canonical declaration; retained only as corroboration and exact-product manufacturer claim authority, not substituted as DE INCI."
+        },
+        {
+          "id": "ol-local-brand",
+          "url": "https://olaplex.de/collections/glanz-shine/products/olaplex-no-7-bonding-oil",
+          "source_author": "OLAPLEX DE / New Flag GmbH",
+          "tier": "local_brand_site_distributor_operated",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 ml option; shorter declaration corroborated, but Wasser/Aqua/Eau and Parfüm (Parfum) are translated tokens. Kept verbatim separately; operator verified in imprint, not misidentified as OLAPLEX Inc."
+        },
+        {
+          "id": "ol-apotheke",
+          "url": "https://www.shop-apotheke.com/beauty/upmKWKK44/olaplex-no-7-bonding-oel.htm",
+          "source_author": "Shop Apotheke DE marketplace",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 ml, EAN 0850045076085. Divergent translated declaration and UV/heat promotional image; not assigned to canonical formula version."
+        },
+        {
+          "id": "ol-old-uv",
+          "url": "https://olaplex.com/blogs/news/healthy-hair-beach-day-tips-for-every-hair-type",
+          "source_author": "OLAPLEX Inc.",
+          "tier": "manufacturer_historical_claim",
+          "accessed_at": "2026-10-01",
+          "notes": "2021 article includes No.7 UV claim; no ingredient-version binding to current shorter declaration. Excluded from current-version claim authority."
+        },
+        {
+          "id": "ol-imprint",
+          "url": "https://olaplex.de/pages/impressum",
+          "source_author": "New Flag GmbH",
+          "tier": "site_identity",
+          "accessed_at": "2026-10-01",
+          "notes": "Verifies operator of German OLAPLEX storefront."
+        }
+      ],
+      "directions": [
+        {
+          "direction_id": "F07-direction-1",
+          "verbatim": false,
+          "source_id": "ol-local-brand",
+          "text": "Remove cap, invert bottle, and tap its base to release individual drops. Apply 2–3 drops to damp or dry hair and style. The source permits daily use on wet/dry hair, before heat styling or after styling.",
+          "dose": "2–3 drops",
+          "contact_time": "not specified",
+          "rinse_requirement": "No rinse step stated; styling/finishing instructions retain product."
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "Inverted bottle dispenses metered drops when base is tapped; not a pipette or pump.",
+        "source_id": "ol-local-brand",
+        "confidence": "high",
+        "observation_basis": "Explicit dispensing instructions; no physical bottle inspected."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": true,
+          "author": "OLAPLEX Inc.",
+          "source_id": "ol-maker",
+          "claim_excerpt": "450ºF/232ºC heat protection",
+          "verbatim": true,
+          "local_corroboration_source_id": "ol-local-brand"
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "OLAPLEX Inc. / OLAPLEX DE",
+          "source_id": "ol-maker",
+          "claim_excerpt": null,
+          "review_scope": [
+            "ol-maker",
+            "ol-local-brand",
+            "ol-old-uv",
+            "ol-apotheke"
+          ],
+          "notes": "No UV claim on current matched product pages. Historical manufacturer blog is positive but cannot be bound to the selected shorter declaration; retailer UV graphic belongs to conflicting packet. positive=false means no accepted current-version claim, not no historical claim."
+        }
+      },
+      "advertised_oils_reviewed": true,
+      "advertised_oils": [
+        {
+          "name": "Sunflower seed oil",
+          "source_id": "ol-local-brand",
+          "wording": "Sonnenblumenkernöl",
+          "verbatim": true,
+          "hero_id": "sunflower_seed_oil",
+          "canonical_ingredient": "HELIANTHUS ANNUUS SEED OIL"
+        }
+      ],
+      "scope": "Only this selected published declaration is classified. Alternatives outside packet remain retained; no batch assertion."
+    },
+    {
+      "neutral_id": "F08",
+      "identity": {
+        "brand": "OGX",
+        "product": "Coconut Miracle Oil Extra Strength Penetrating Oil",
+        "size_ml": 100,
+        "market": "DE",
+        "gtin_if_verified": "3574661563398"
+      },
+      "sources": [
+        {
+          "id": "E04-dm",
+          "url": "https://www.dm.de/p/d/2322377/ogx-haaroel-coconut-miracle-oil",
+          "source_author": "dm DE",
+          "tier": 3,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Exact name, 100 ml and GTIN; canonical German retailer ingredient declaration and directions."
+        },
+        {
+          "id": "E04-pack-front",
+          "url": "https://www.rossmann.de/media-neu/179/MAM_17990661/MAM_17990661_SHOP_IMAGE_2.0.png?auto=webp&canvas=550%2C550&dpr=1&fit=bounds&format=webply&height=550&quality=85&width=550",
+          "source_author": "OGX package reproduced by Rossmann DE",
+          "tier": 1,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Opened image linked from Rossmann exact-GTIN product page; 100 ml, hinged cap seam and front positioning visually inspected."
+        },
+        {
+          "id": "E04-pack-back",
+          "url": "https://products.dm-static.com/images/f_auto%2Cq_auto%2Cc_fit%2Ch_440%2Cw_500/v1787002790/assets/pas/images/86a15b53-8ac7-4ff6-8812-99ef82a1606e/ogx-haaroel-coconut-miracle-oil",
+          "source_author": "OGX package reproduced by dm DE",
+          "tier": 1,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Back photo visually inspected; barcode 3574661563398 visible. Small-print resolution limits transcription; use dm declaration for raw INCI."
+        },
+        {
+          "id": "E04-US-blog-excluded",
+          "url": "https://www.ogxbeauty.com/blog/coconut-oil-hair-benefits-uses",
+          "source_author": "OGX US",
+          "tier": 4,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Foreign-market named-product heat and overnight wording found but excluded from exact DE facts: no established formula/package equivalence."
+        }
+      ],
+      "directions": [
+        {
+          "direction_id": "F08-direction-1",
+          "source_id": "E04-dm",
+          "verbatim": false,
+          "text": "Einige Tropfen in den Händen verteilen und ins handtuchtrockene Haar bis zu den Spitzen einarbeiten. Bei feinem Haar auf die Spitzen konzentrieren und den Ansatz auslassen.",
+          "stage": "towel_dried",
+          "site": "hair_to_ends",
+          "dose": "a few drops",
+          "contact_time": "not_stated",
+          "rinse": "not_stated",
+          "shake": "not_stated"
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "flip-top bottle; pour/drop opening",
+        "source_id": "E04-pack-front",
+        "confidence": "moderate",
+        "notes": "Hinged cap shape/seam observed on closed pack; internal outlet not visible."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": false,
+          "author": "OGX via exact DE package images",
+          "source_id": "E04-pack-back",
+          "claim_excerpt": null,
+          "verbatim": false,
+          "review_scope": "No accepted heat/UV protection claim in reviewed exact DE pack/front, back and dm product facts. Absence of accepted claim is not an efficacy assertion."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "OGX via exact DE package images",
+          "source_id": "E04-pack-back",
+          "claim_excerpt": null,
+          "verbatim": false,
+          "review_scope": "No accepted heat/UV protection claim in reviewed exact DE pack/front, back and dm product facts. Absence of accepted claim is not an efficacy assertion."
+        }
+      },
+      "advertised_oils_reviewed": true,
+      "advertised_oils": [
+        {
+          "name": "coconut oil",
+          "source_id": "E04-pack-front",
+          "wording": "coconut oil",
+          "verbatim": true,
+          "hero_id": "coconut_oil",
+          "canonical_ingredient": "COCOS NUCIFERA OIL"
+        }
+      ],
+      "scope": "Only this selected published declaration is classified. Alternatives outside packet remain retained; no batch assertion."
+    }
+  ]
+}

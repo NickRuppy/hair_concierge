@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-06",
+  "status": "main_session_reviewed_provisional_estimate_not_human_adjudication",
+  "authorization": "Nick: do it, to review Bumble and test new formulas.",
+  "neutral_id": "N03",
+  "identity": {
+    "brand": "Bumble and bumble",
+    "product": "Hairdresser\u2019s Invisible Oil Frizz Reducing Hair Oil",
+    "size": "Page options 3.4 fl oz / 0.85 fl oz; shared page declaration",
+    "market": "US maker"
+  },
+  "source_url": "https://m.bumbleandbumble.com/product/19060/23196/style/oils/hairdressers-invisible-oil-frizz-reducing-hair-oil",
+  "reviewed_property": {
+    "value": "elevated",
+    "estimate": true,
+    "confidence": "low",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "DIMETHICONE"
+      },
+      {
+        "rank": 4,
+        "canonical_name": "DIMETHICONOL"
+      },
+      {
+        "rank": 7,
+        "canonical_name": "BIS-CETEARYL AMODIMETHICONE"
+      }
+    ],
+    "counter_signal": [
+      "Dimethicone grade is unspecified and could change its individual carrier/film contribution; rank 1 is not a percentage or a viscosity measurement.",
+      "The isododecane and ester-emollient portion offers a carrier-rich competing interpretation; the lexicon does not establish the retail isododecane evaporation profile.",
+      "The actual gum/polymer doses are unknown, so their combined film could prove secondary in the finished formula.",
+      "Multiple botanical oils and coconut oil are not additional evidence for an elevated result."
+    ],
+    "nearest_alternative": "low",
+    "reason": "Main-session review under OE52 binary estimate retains elevated from the combined dimethicone/dimethiconol/bis-cetearyl-amodimethicone conditioning architecture; carrier/emollient system makes low the operational rival. No quantitative retained load or grade assumptions.",
+    "unresolved": [
+      "Exact silicone grades, blend proportions and finished deposited film load are unestablished.",
+      "The relative magnitude of the gum/polymer contribution versus carrier/emollient contribution is estimated from the complete qualitative architecture only.",
+      "Extract preparations, fragrance mixture and modified-emollient grade details remain unspecified; no new conditioning-film roles are assigned.",
+      "No repeated-wash accumulation, washout or sensory validation is supplied."
+    ]
+  },
+  "original_property": {
+    "value": "elevated",
+    "estimate": true,
+    "confidence": "low",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "DIMETHICONE"
+      },
+      {
+        "rank": 4,
+        "canonical_name": "DIMETHICONOL"
+      },
+      {
+        "rank": 7,
+        "canonical_name": "BIS-CETEARYL AMODIMETHICONE"
+      }
+    ],
+    "counter_signal": [
+      "Dimethicone grade is unspecified and could change its individual carrier/film contribution; rank 1 is not a percentage or a viscosity measurement.",
+      "The isododecane and ester-emollient portion offers a carrier-rich competing interpretation; the lexicon does not establish the retail isododecane evaporation profile.",
+      "The actual gum/polymer doses are unknown, so their combined film could prove secondary in the finished formula.",
+      "Multiple botanical oils and coconut oil are not additional evidence for an elevated result."
+    ],
+    "nearest_alternative": "unknown",
+    "reason": "B2 supports a provisional elevated estimate from the coherent combination of three independently admitted conditioning-film materials, including both a gum and a conditioning polymer, rather than an isolated late gum. No quantitative load is claimed from ranks. Dimethicone grade uncertainty is not treated as decisive here because the combined gum/polymer film signal remains without assuming a particular dimethicone grade. Unknown is the nearest alternative if finished-grade/dose evidence shows that combined signal to be secondary.",
+    "unresolved": [
+      "Exact silicone grades, blend proportions and finished deposited film load are unestablished.",
+      "The relative magnitude of the gum/polymer contribution versus carrier/emollient contribution is estimated from the complete qualitative architecture only.",
+      "Extract preparations, fragrance mixture and modified-emollient grade details remain unspecified; no new conditioning-film roles are assigned.",
+      "No repeated-wash accumulation, washout or sensory validation is supplied."
+    ]
+  },
+  "source_binding": {
+    "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/working-records.json",
+    "sha256": "2837f5e6c2c9ad31a3ae54e6a49582ae155a6abf04d5fb6d24b3ed9a53957864"
+  },
+  "live_source_check": "Current maker declaration matches 24 prior ranked names. Supplier dictionary conditioning identities remain consistent.",
+  "external_sources": [
+    "https://cosmileeurope.eu/inci/detail/1730/bis-cetearyl-amodimethicone/",
+    "https://www.dow.com/documents/27/27-1/27-1304-01-dow-hair-and-skin-care.pdf?iframe=true"
+  ],
+  "limits": "Material functions support a plausible retained coating, not comparative accumulation or exact grades. This is main-session review, not independent blind validation or human approval.",
+  "publication": "None"
+}

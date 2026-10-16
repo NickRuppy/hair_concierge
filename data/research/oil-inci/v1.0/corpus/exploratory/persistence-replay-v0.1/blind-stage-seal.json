@@ -1,0 +1,12 @@
+{
+  "run_id": "oil-persistence-leave-on-replay-v0.1",
+  "sealed_at_utc": "2026-10-09T06:14:29.458168+00:00",
+  "input_manifest_sha256": "c30bde4b44fcf6978b001063ffbe5c791abff00a020e4ceb7fe00d309d210a6e",
+  "semantic_inspection": "not_performed_before_seal",
+  "lane_output_hashes": {
+    "lane-a/records.json": "c7529e56f8395751c46436cfc94cf29343629ca4adef57b81f75d0b198649f29",
+    "lane-a/notes.json": "415aae15c2c2155f341cf35da4c8b3cacb059ffd67769c498691dc3d19da289d",
+    "lane-b/records.json": "b97eb34bbe589c6f91937016abd984aa331f3be42fb2ab3c368bf960e52983a8",
+    "lane-b/notes.json": "bc9bc5aa91b8befe2614b85fee0cfd1a2c93c3d6d69e369f30de9907c3b2416a"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "sealed_at": "2026-10-06T15:02:31.904417+00:00",
+  "status": "sealed_before_parent_output_inspection",
+  "lane_output_hashes": {
+    "lane-a/records.json": "0c4b1bfabbfabe69162c6ec9b7de277d866b7e7d765dcb9441c0ddfa7a550874",
+    "lane-a/notes.json": "18889b48b46ec951acc756e60682329655122e55a30f1e5b571c1733f0ae7821",
+    "lane-b/records.json": "45862651d442e81d863dfea5c0419f61569e8f629653fbae817f3dffd4fa3199",
+    "lane-b/notes.json": "6bb68238c4078e4a5b24a352a46baf2258cc250a053178dcd04cfc92b2cd92c2"
+  }
+}

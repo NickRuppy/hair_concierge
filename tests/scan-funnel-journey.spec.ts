@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test"
+import { acknowledgeScanWelcomeAfterCameraFallback } from "./helpers/scan-welcome"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 
 /**
@@ -272,6 +273,16 @@ test.describe.serial("@scan-funnel scan_v1 funnel journey", () => {
     // even if the run hits its ceiling.
     test.setTimeout(300_000)
     await hideCookieBanner(page)
+    // Install before the first document: the later Scanner link can navigate via SPA.
+    // Pin real camera recovery independently of runner hardware, including on reload.
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator.mediaDevices, "getUserMedia", {
+        configurable: true,
+        value: async () => {
+          throw new DOMException("Camera permission denied by browser fixture", "NotAllowedError")
+        },
+      })
+    })
     await test.step("Landing sets the scan_v1 funnel session", async () => {
       await page.goto("/lp/scan", { waitUntil: "networkidle" })
       await expect(
@@ -544,10 +555,15 @@ test.describe.serial("@scan-funnel scan_v1 funnel journey", () => {
       await expect(hint).toBeVisible({ timeout: 30_000 })
       await expect(hint).toContainText("Dein Scanner ist startklar. Dein Plan wartet daneben.")
 
-      await hint.getByRole("button", { name: "Verstanden" }).click()
-      await expect(hint).toHaveCount(0)
+      await acknowledgeScanWelcomeAfterCameraFallback(page)
 
       await page.reload({ waitUntil: "domcontentloaded" })
+      // Wait for the new client to process camera denial before checking persistence;
+      // the server snapshot alone intentionally renders no welcome hint.
+      await expect(page.locator("[data-scan-flow]")).toHaveAttribute(
+        "data-scan-camera",
+        "unavailable",
+      )
       await expect(page.locator("[data-scan-welcome-hint]")).toHaveCount(0)
     })
 

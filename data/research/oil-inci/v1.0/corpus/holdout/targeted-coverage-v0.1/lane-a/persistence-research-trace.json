@@ -1,0 +1,365 @@
+{
+  "lane_id": "a",
+  "records": [
+    {
+      "case_id": "T01",
+      "reason": "The retained ester/emollient phase together with rapeseed, jojoba and coconut supports an ordinary fluid/lipid coating. Alcohol and water do not cancel that remainder. The UV filters, humectant, antioxidants, pH clue and declared aromatics were considered without treating them as a coherent adherent conditioning film; unassessed salt, saccharides and pantolactone remain gaps. Low loses to the positive retained emollient/oil system; high lacks an affirmative whole-system cohesive route.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "AQUA/WATER"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DICAPRYLYL CARBONATE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ALCOHOL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "DIBUTYL ADIPATE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "DICAPRYLYL ETHER"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "BRASSICA CAMPESTRIS SEED OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "ETHYLHEXYL TRIAZONE"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "DIETHYLAMINO HYDROXYBENZOYL HEXYL BENZOATE"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "SODIUM CHLORIDE"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "COCOS NUCIFERA OIL"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "PANTHENOL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "FRUCTOOLIGOSACCHARIDES"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "INULIN"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "CITRIC ACID"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "PANTOLACTONE"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "CITRUS AURANTIUM PEEL OIL"
+        },
+        {
+          "rank": 22,
+          "canonical_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 25,
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 26,
+          "canonical_name": "DIMETHYL PHENETHYL ACETATE"
+        },
+        {
+          "rank": 27,
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 28,
+          "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL"
+        },
+        {
+          "rank": 29,
+          "canonical_name": "ISOEUGENYL ACETATE"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "tipping_assumption": "The known emollient and lipid remainder remains an ordinary retained coating despite its mobile distribution vehicle; unassessed functions are not silently promoted to either negligible residue or a cohesive film."
+    },
+    {
+      "case_id": "T02",
+      "reason": "The paired silicone carrier/conditioning-film route and ester support an ordinary retained conditioning coat after distribution by the hydrocarbon carrier. Low would understate the affirmative conditioning-film system. High is plausible for particular dimethicone grades, but the admitted functions do not establish a cohesive gum/adherent structured system; the species-incomplete oil declaration adds an unresolved contribution, not a borrowed material prior.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ARGANIA KERNEL OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "tipping_assumption": "Treat the unspecified silicone system as an ordinary fluid conditioning coating rather than assuming a high-cohesion grade. This judgment is not inferred from silicone presence, sensory weight or missing gum alone."
+    },
+    {
+      "case_id": "T04",
+      "reason": "The recognized fixed-oil carrier supports an ordinary retained lipid coating in the admitted fibre use. The two exact extracts have unassessed roles and are not treated as negligible auxiliaries, penetrating actives or film formers. Rosemary and declared fragrance components do not establish a cohesive conditioning network. Low lacks a positively less-retentive remainder argument; high lacks a supported structured/adherent whole-formula route.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "ARACHIS HYPOGAEA OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "TRIFOLIUM PRATENSE FLOWER EXTRACT"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "COUMARIN"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "tipping_assumption": "The positive fixed-oil conditioning route remains the best explanation of the retained remainder despite unresolved extract preparation; it is ordinary lipid coating rather than a speculative cohesive extract film."
+    },
+    {
+      "case_id": "T06",
+      "reason": "The defined ester with sesame and castor supplies a retained fluid/lipid remainder, supplemented by a cationic conditioning clue. The hydrocarbon/alcohol distribution route does not cancel it, making low less persuasive. The reviewed quaternary clue does not establish grade, molecular architecture or substantivity sufficient for high; UV-filter, solvent/emulsifying, antioxidant and aromatic contributions were considered without converting one ingredient into a cohesive conditioning-film verdict. Rank 17 remains functionally unassessed.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ALCOHOL DENAT."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "HEXYLENE GLYCOL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "QUATERNIUM-95"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "SESAMUM INDICUM SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "AMYL SALICYLATE"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "BENZYL SALICYLATE"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "BHT"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "CANANGA ODORATA FLOWER OIL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "GERANYL ACETATE"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "PROPANEDIOL"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "VANILLIN"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "tipping_assumption": "Commit to ordinary retained emollient/lipid conditioning with a secondary cationic contribution, rather than inferring a high-adherence film from Quaternium-95 alone or a low remainder from the carrier route."
+    }
+  ]
+}

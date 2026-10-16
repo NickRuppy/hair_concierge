@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto"
+import { OIL_INTAKE_METHOD } from "@/lib/oil-research/registry"
 import type { JsonRecord, ProductIntakeArtifactKind } from "@chaarlie/product-intake-core"
 
 type Artifact = { kind: ProductIntakeArtifactKind; status?: string; payload: JsonRecord }
@@ -8,6 +9,7 @@ type InciSource =
   | "bondbuilder_envelope"
   | "mask_envelope"
   | "shampoo_stages"
+  | "oil_envelope"
   | "model_formula"
   | "retailer_packet"
 export type CanonicalInci = {
@@ -20,6 +22,11 @@ export type CanonicalInci = {
 export type InciStageOptions = {
   retailerPacket?: { ingredients_text: string | null } | null
   inciRetryAttempted?: boolean
+  oilAdmission?: {
+    raw_inci: string
+    normalized_ingredients: string[]
+    normalized_sha256: string
+  } | null
 }
 
 function record(value: unknown): JsonRecord | null {
@@ -57,7 +64,19 @@ function present(raw: string, source: InciSource, formula?: JsonRecord): Canonic
 export function extractCanonicalInci(
   artifacts: readonly { kind: string; payload: JsonRecord }[],
   retailerPacket?: { ingredients_text: string | null } | null,
+  oilAdmission?: InciStageOptions["oilAdmission"],
 ): CanonicalInci {
+  // Oil never falls back to comma splitting: literal numeric commas are a
+  // valid portion of an INCI token. Only the server admission can supply it.
+  if (oilAdmission) {
+    return {
+      status: "present",
+      source: "oil_envelope",
+      raw_inci: oilAdmission.raw_inci,
+      normalized_ingredients: [...oilAdmission.normalized_ingredients],
+      fingerprint_sha256: oilAdmission.normalized_sha256,
+    }
+  }
   for (const artifact of artifacts) {
     if (artifact.kind !== "property_synthesis") continue
     for (const category of ["conditioner", "leave_in", "bondbuilder", "mask"] as const) {
@@ -96,9 +115,13 @@ export function applyInciStage(
 ): string | null {
   const draft = record(payload?.draft)
   const modelFormula = record(draft?.formula)
+  const oilEngine = engine.engineId === OIL_INTAKE_METHOD.engine_id
   const result = extractCanonicalInci(
-    [...artifacts, ...(modelFormula ? [{ kind: "formula", payload: modelFormula }] : [])],
-    options.retailerPacket,
+    oilEngine
+      ? []
+      : [...artifacts, ...(modelFormula ? [{ kind: "formula", payload: modelFormula }] : [])],
+    oilEngine ? null : options.retailerPacket,
+    options.oilAdmission,
   )
   if (payload) payload.draft = { ...draft, formula: { ...modelFormula, ...result } }
   for (let index = artifacts.length - 1; index >= 0; index--) {
@@ -108,6 +131,8 @@ export function applyInciStage(
   artifacts.push({ kind: "formula", status: result.status, payload: { stage: "inci", ...result } })
   if (!record(payload?.final) || engine.state !== "active" || result.status === "present")
     return null
+  if (oilEngine)
+    return "oil_admission_missing: current oil research did not produce server admission"
   return options.inciRetryAttempted === true
     ? `inci_unavailable: canonical INCI not found after targeted retry for ${engine.engineId}`
     : `inci_missing_first_pass: canonical INCI missing for ${engine.engineId}`

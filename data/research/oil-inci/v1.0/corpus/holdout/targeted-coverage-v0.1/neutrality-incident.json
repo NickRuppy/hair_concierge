@@ -1,0 +1,8 @@
+{
+  "identified_by": "root manual final review",
+  "affected_case": "T02",
+  "original_note": "Secondary contribution remains unresolved; review decisive-identity impact under the method.",
+  "impact": "Potential formula-role priming; original T02 not counted as clean blind calibration. Other three cases have no such note.",
+  "disposition": "Preserve original inputs/outputs and their metrics; fresh independent single-case correction-v0.2 replaces only current T02 field authorities after sealed assessments/source reveal. No previous output is fed to new assessors.",
+  "external_review": "First final read-only Claude pass timed out at900 seconds without verdict; retry narrowly after correction."
+}

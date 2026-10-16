@@ -1,0 +1,11 @@
+{
+  "in_scope_cases": 4,
+  "excluded_cases": 0,
+  "lane_agreement": 4,
+  "known_in_both": 1,
+  "known_by_lane": {
+    "a": 1,
+    "b": 1
+  },
+  "working_known": 1
+}

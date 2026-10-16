@@ -1,0 +1,2255 @@
+{
+  "entries": [
+    {
+      "canonical_name": "ADANSONIA DIGITATA (BAOBAB) SEED OIL",
+      "aliases": [],
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "validation_status": "source_scoped_function",
+      "notes": "Declared botanical carrier oil in the maker formula. Generic fixed-oil function only; spelling/plant-part differences remain unmatched unless independently present in material-reference. No hidden species weight or alias.",
+      "sources": [
+        {
+          "url": "https://www.evolvebeauty.com/products/weightless-hair-serum",
+          "claim_supported": "Maker exact botanical carrier declaration and oil use; no material-name equivalence."
+        }
+      ],
+      "provenance": "Source-scoped qualitative carrier identity only."
+    },
+    {
+      "roles": [
+        "solvent_alcohol"
+      ],
+      "validation_status": "admitted",
+      "notes": "Denaturant compositions differ; equivalence is to the denatured-ethanol flag class only, not an identical formulation.",
+      "canonical_name": "ALCOHOL DENAT.",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.fda.gov/cosmetics/cosmetics-labeling-claims/alcohol-free",
+          "title": "FDA Alcohol Free cosmetic labeling guidance",
+          "claim_supported": "Denatured ethanol and named SD Alcohol label forms."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "ALOE BARBADENSIS LEAF OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "canonical_name": "ALPHA-ISOMETHYL IONONE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Annex III named fragrance-allergen identity; amendments and retained rows."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223",
+          "title": "Regulation 1223/2009, Annex III",
+          "claim_supported": "Underlying retained fragrance-allergen identity rows; 2023 act amends or adds selected rows."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness.",
+      "canonical_name": "APIUM GRAVEOLENS (CELERY) SEED EXTRACT",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://mielleorganics.com/products/rosemary-mint-oil",
+          "claim_supported": "Literal product declaration only; generic identity/function unassessed."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "ARCTIUM LAPPA (BURDOCK ROOT) EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "canonical_name": "ARGANIA SPINOSA (ARGAN) KERNEL OIL",
+      "aliases": [],
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "validation_status": "source_scoped_function",
+      "notes": "Declared botanical carrier oil in the maker formula. Generic fixed-oil function only; spelling/plant-part differences remain unmatched unless independently present in material-reference. No hidden species weight or alias.",
+      "sources": [
+        {
+          "url": "https://www.evolvebeauty.com/products/weightless-hair-serum",
+          "claim_supported": "Maker exact botanical carrier declaration and oil use; no material-name equivalence."
+        }
+      ],
+      "provenance": "Source-scoped qualitative carrier identity only."
+    },
+    {
+      "canonical_name": "ARGANIA SPINOSA KERNEL (ARGAN) OIL",
+      "aliases": [],
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "validation_status": "source_scoped_function",
+      "notes": "Declared botanical carrier oil in the maker formula. Generic fixed-oil function only; spelling/plant-part differences remain unmatched unless independently present in material-reference. No hidden species weight or alias.",
+      "sources": [
+        {
+          "url": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+          "claim_supported": "Maker exact botanical carrier declaration and oil use; no material-name equivalence."
+        }
+      ],
+      "provenance": "Source-scoped qualitative carrier identity only."
+    },
+    {
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Direct-study candidate only: NOT in initial admitted positive-anchor set until full-method review; use unknown under that anchor policy.",
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.hallstarbeauty.com/formula/natural-sprayable-hair-conditioner/",
+          "title": "Hallstar illustrative Natural Sprayable Hair Conditioner",
+          "claim_supported": "Exact botanical fixed-oil identity and declared form."
+        },
+        {
+          "url": "https://www.mdpi.com/2079-9284/11/2/64",
+          "title": "Lourenco et al. 2024, oil penetration and hair properties; Raman study",
+          "claim_supported": "Raman study reports internal oil-associated signals; methodological admission remains pending."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "ASCORBIC ACID (VITAMIN C)",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "canonical_name": "AZADIRACHTA INDICA LEAF EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://khadi.de/products/haare-haaroel-color-care",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "canonical_name": "BENZYL ALCOHOL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Annex III named fragrance-allergen identity; amendments and retained rows."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223",
+          "title": "Regulation 1223/2009, Annex III",
+          "claim_supported": "Underlying retained fragrance-allergen identity rows; 2023 act amends or adds selected rows."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "canonical_name": "BETA-CARYOPHYLLENE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Annex III named fragrance-allergen identity; amendments and retained rows."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223",
+          "title": "Regulation 1223/2009, Annex III",
+          "claim_supported": "Underlying retained fragrance-allergen identity rows; 2023 act amends or adds selected rows."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness.",
+      "canonical_name": "BIOTIN",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://mielleorganics.com/products/rosemary-mint-oil",
+          "claim_supported": "Literal product declaration only; generic identity/function unassessed."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "BRASSICA NIGRA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "validation_status": "source_scoped_function",
+      "notes": "Declared botanical carrier oil in the maker formula. Generic fixed-oil function only; spelling/plant-part differences remain unmatched unless independently present in material-reference. No hidden species weight or alias.",
+      "sources": [
+        {
+          "url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil",
+          "claim_supported": "Maker exact botanical carrier declaration and oil use; no material-name equivalence."
+        }
+      ],
+      "provenance": "Source-scoped qualitative carrier identity only."
+    },
+    {
+      "canonical_name": "BRASSICA OLERACEA ITALICA (BROCCOLI) SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight.",
+      "sources": [
+        {
+          "path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+          "reference_id": "broccoli_seed",
+          "claim_supported": "Reviewed exact botanical oil identity; no new alias or material prior."
+        }
+      ],
+      "provenance": "Unchanged v0.10 exact identity lookup."
+    },
+    {
+      "canonical_name": "BRASSICA OLERACEA ITALICA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight.",
+      "sources": [
+        {
+          "path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+          "reference_id": "broccoli_seed",
+          "claim_supported": "Reviewed exact botanical oil identity; no new alias or material prior."
+        }
+      ],
+      "provenance": "Unchanged v0.10 exact identity lookup."
+    },
+    {
+      "roles": [
+        "hydrocarbon_carrier",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Not liquid mineral oil; feedstock and evaporation profile are not established by this INCI. Supplier blend evidence does not specify the retail grade.",
+      "canonical_name": "C13-15 ALKANE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.dow.com/documents/27/27-2/27-2100-01-hair-cleansing-conditioning.pdf?iframe=true",
+          "title": "Dow Hair Cleansing and Conditioning guide",
+          "claim_supported": "Exact hydrocarbon carrier in gum-fluid entries."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "CAMELINA SATIVA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight.",
+      "sources": [
+        {
+          "path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+          "reference_id": "camelina",
+          "claim_supported": "Reviewed exact botanical oil identity; no new alias or material prior."
+        }
+      ],
+      "provenance": "Unchanged v0.10 exact identity lookup."
+    },
+    {
+      "canonical_name": "CAMELLIA JAPONICA FLOWER EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://www.kerastase.de/produktlinien/produktart/ole-seren/nach-haartyp-filtern/widerspenstiges-haar/l-huile-originale-nachfullbar/KER_00303.html",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Initial method penetration anchor; 1 g oil/g hair, 24 h at 40 C in this study. Botanical-to-studied-material transfer and ordinary-use limits remain.",
+      "canonical_name": "CAMELLIA OLEIFERA SEED OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.hallstarbeauty.com/formula/lift-me-gel-cream-2/",
+          "title": "Hallstar illustrative Lift Me Gel Cream formulation",
+          "claim_supported": "Exact botanical fixed-oil identity and declared form."
+        },
+        {
+          "url": "https://onlinelibrary.wiley.com/doi/full/10.1111/ics.12978",
+          "title": "Marsh et al. 2024, Penetration of oils into hair, DOI 10.1111/ics.12978",
+          "claim_supported": "Direct experimental penetration evidence for tested coconut, camellia and safflower oils."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "cooling_or_aromatic_auxiliary",
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Closed watch-out grouping includes isolated molecule, without asserting botanical origin, efficacy or directions.",
+      "canonical_name": "CAMPHOR",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Exact Annex III identity: Menthol 338; Camphor 331."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223",
+          "title": "Regulation 1223/2009, Annex III",
+          "claim_supported": "Underlying retained fragrance-allergen identity rows; 2023 act amends or adds selected rows."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Processed emollient, not intact feedstock oil. Spreading or skin penetration evidence is not hair penetration or evaporation evidence.",
+      "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.hallstarbeauty.com/formula/soothing-facial-oil/",
+          "title": "Hallstar illustrative Soothing Facial Oil formulation",
+          "claim_supported": "Exact emollient identity/function."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred.",
+      "canonical_name": "CAPRYLYL CAPRYLATE/CAPRATE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 5394, PDF page 179",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.personal-care.basf.com/docs/default-source/press-center-files/personal-care-in-the-media/2021/cosmetics-toiletries_antipollution_.pdf",
+          "title": "BASF technical article, Cetiol RLF",
+          "claim_supported": "Exact emollient identity; no skin-to-hair performance transfer."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Initial method penetration anchor; 1 g oil/g hair, 24 h at 40 C in this study. Botanical-to-studied-material transfer and ordinary-use limits remain.",
+      "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.hallstarbeauty.com/formula/lift-me-gel-cream-2/",
+          "title": "Hallstar illustrative Lift Me Gel Cream formulation",
+          "claim_supported": "Exact botanical fixed-oil identity and declared form."
+        },
+        {
+          "url": "https://onlinelibrary.wiley.com/doi/full/10.1111/ics.12978",
+          "title": "Marsh et al. 2024, Penetration of oils into hair, DOI 10.1111/ics.12978",
+          "claim_supported": "Direct experimental penetration evidence for tested coconut, camellia and safflower oils."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "CASSIA AURICULATA LEAF EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://khadi.de/products/haare-haaroel-color-care",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "modified_castor_derivative",
+        "not_assessed"
+      ],
+      "validation_status": "admitted",
+      "notes": "Not intact castor seed oil; film/conditioning role needs specific technical review. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred.",
+      "canonical_name": "CASTOR ISOSTEARATE SUCCINATE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 5632, PDF page 186",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.industrialchemicals.gov.au/sites/default/files/PLC804%20Public%20Report%20PDF.pdf",
+          "title": "Australian NICNAS PLC804 public report",
+          "claim_supported": "Exact Castor Isostearate Succinate identity."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness.",
+      "canonical_name": "CENTELLA ASIATICA LEAF EXTRACT",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://khadi.de/products/haare-haaroel-strong-amla",
+          "claim_supported": "Literal product declaration only; generic identity/function unassessed."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "canonical_name": "CINNAMAL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Annex III named fragrance-allergen identity; amendments and retained rows."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223",
+          "title": "Regulation 1223/2009, Annex III",
+          "claim_supported": "Underlying retained fragrance-allergen identity rows; 2023 act amends or adds selected rows."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "canonical_name": "CITRAL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Annex III named fragrance-allergen identity; amendments and retained rows."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223",
+          "title": "Regulation 1223/2009, Annex III",
+          "claim_supported": "Underlying retained fragrance-allergen identity rows; 2023 act amends or adds selected rows."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "canonical_name": "CITRONELLOL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Annex III named fragrance-allergen identity; amendments and retained rows."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223",
+          "title": "Regulation 1223/2009, Annex III",
+          "claim_supported": "Underlying retained fragrance-allergen identity rows; 2023 act amends or adds selected rows."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "CITRUS AURANTIUM BERGAMIA PEEL OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://www.evolvebeauty.com/products/weightless-hair-serum",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen",
+        "essential_oil"
+      ],
+      "validation_status": "admitted",
+      "notes": "Fragrance exposure independent of perfuming intent; outside agreed closed scalp-active botanical group. Citrus group does not identify the particular bitter/sweet orange oil.",
+      "canonical_name": "CITRUS AURANTIUM PEEL OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 6712, PDF page 219",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2023/1545/oj/eng",
+          "title": "EU 2023/1545, Annex III",
+          "claim_supported": "Exact named fragrance-allergen or label-group identity."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "CITRUS LIMON PEEL OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://www.evolvebeauty.com/products/weightless-hair-serum",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Oil carrier role, no quantified amount/grade or finished-film implication.",
+      "canonical_name": "COCOS NUCIFERA (COCONUT) OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.cosmeticsandtoiletries.com/magazine/article/22862759/cosmetics-toiletries-magazine-choosing-the-right-plant-oil-for-hair-and-skin-benefits",
+          "claim_supported": "Exact admitted material identity; rough material prior lives separately."
+        },
+        {
+          "url": "https://patents.google.com/patent/US20020039564A1/en",
+          "claim_supported": "Exact admitted material identity; rough material prior lives separately."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "COCOS NUCIFERA OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight.",
+      "sources": [
+        {
+          "path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+          "reference_id": "coconut_whole",
+          "claim_supported": "Reviewed exact botanical oil identity; no new alias or material prior."
+        }
+      ],
+      "provenance": "Unchanged v0.10 exact identity lookup."
+    },
+    {
+      "canonical_name": "COUMARIN",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://www.kerastase.de/produktlinien/produktart/ole-seren/nach-haartyp-filtern/widerspenstiges-haar/l-huile-originale-nachfullbar/KER_00303.html",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "silicone_carrier",
+        "volatile_carrier"
+      ],
+      "validation_status": "admitted",
+      "notes": "Volatile D5; no blend-residue inference.",
+      "canonical_name": "CYCLOPENTASILOXANE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.dow.com/documents/27/27-1/27-1304-01-dow-hair-and-skin-care.pdf?iframe=true",
+          "title": "Dow Hair and Skin Care Selection Guide",
+          "claim_supported": "Exact silicone identity and material family."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "silicone_carrier",
+        "conditioning_film"
+      ],
+      "validation_status": "admitted",
+      "notes": "Grade controls viscosity and volatility; INCI does not establish either. Historical silicone penetration observations do not transfer to an unspecified grade.",
+      "canonical_name": "DIMETHICONE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.dow.com/documents/27/27-1/27-1304-01-dow-hair-and-skin-care.pdf?iframe=true",
+          "title": "Dow Hair and Skin Care Selection Guide",
+          "claim_supported": "Exact silicone identity and material family."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "silicone_gum",
+        "conditioning_film"
+      ],
+      "validation_status": "admitted",
+      "notes": "Gum/residual-film signal; finished load and durability require architecture and grade.",
+      "canonical_name": "DIMETHICONOL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.dow.com/documents/27/27-1/27-1304-01-dow-hair-and-skin-care.pdf?iframe=true",
+          "title": "Dow Hair and Skin Care Selection Guide",
+          "claim_supported": "Exact silicone identity and material family."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "DISILOXANE",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://shop.schwarzkopf-professional.fi/en/products/central-pdp.html/3050393.html?replacesProduct=null",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness.",
+      "canonical_name": "ECLIPTA ALBA LEAF EXTRACT",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://khadi.de/products/haare-haaroel-strong-amla",
+          "claim_supported": "Literal product declaration only; generic identity/function unassessed."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness.",
+      "canonical_name": "EMBLICA OFFICINALIS FRUIT EXTRACT",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://khadi.de/products/haare-haaroel-strong-amla",
+          "claim_supported": "Literal product declaration only; generic identity/function unassessed."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "EMBLICA OFFICINALIS FRUIT POWDER",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness.",
+      "canonical_name": "EQUISETUM ARVENSE (HORSETAIL) EXTRACT",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://mielleorganics.com/products/rosemary-mint-oil",
+          "claim_supported": "Literal product declaration only; generic identity/function unassessed."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "EUCALYPTUS GLOBULUS LEAF (EUCALYPTUS) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "essential_oil",
+        "aromatic_auxiliary"
+      ],
+      "validation_status": "admitted",
+      "notes": "Closed aromatic-oil watch-out; no extract/water or species-wide expansion.",
+      "canonical_name": "EUCALYPTUS GLOBULUS OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Exact essential-oil identities or stated Eucalyptus label group in Annex III."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "EUGENIA CARYOPHYLLUS (CLOVE) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://khadi.de/products/haare-haaroel-color-care",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "canonical_name": "EUGENOL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Annex III named fragrance-allergen identity; amendments and retained rows."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223",
+          "title": "Regulation 1223/2009, Annex III",
+          "claim_supported": "Underlying retained fragrance-allergen identity rows; 2023 act amends or adds selected rows."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "fragrance_composition"
+      ],
+      "validation_status": "admitted",
+      "notes": "Mixture composition unspecified; not automatically volatile or negligible.",
+      "canonical_name": "FRAGRANCE (PARFUM)",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Article 19 fragrance-composition declaration."
+        },
+        {
+          "url": "https://www.hallstarbeauty.com/formula/lift-me-gel-cream-2/",
+          "title": "Hallstar illustrative Lift Me Gel Cream formulation",
+          "claim_supported": "Supplier uses Fragrance (Parfum) label wrapper."
+        },
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 19071, PDF page 560",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.hallstarbeauty.com/formula/lift-me-gel-cream-2/",
+          "title": "Hallstar illustrative formulation",
+          "claim_supported": "Fragrance (Parfum) equivalence; wrapper punctuation does not introduce a new chemical identity."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "GARDENIA TAHITENSIS FLOWER EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://www.evolvebeauty.com/products/weightless-hair-serum",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "canonical_name": "GERANIOL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Annex III named fragrance-allergen identity; amendments and retained rows."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223",
+          "title": "Regulation 1223/2009, Annex III",
+          "claim_supported": "Underlying retained fragrance-allergen identity rows; 2023 act amends or adds selected rows."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "canonical_name": "GERANYL ACETATE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Annex III named fragrance-allergen identity; amendments and retained rows."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223",
+          "title": "Regulation 1223/2009, Annex III",
+          "claim_supported": "Underlying retained fragrance-allergen identity rows; 2023 act amends or adds selected rows."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "humectant"
+      ],
+      "validation_status": "admitted",
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+      "canonical_name": "GLYCERIN",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://ec.europa.eu/health/archive/ph_risk/committees/sccp/documents/out123cm_en.pdf",
+          "title": "Commission ingredient inventory, 2000; historical identity evidence",
+          "claim_supported": "Historical exact identity/function row."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Oil carrier role, no quantified amount/grade or finished-film implication.",
+      "canonical_name": "GLYCINE SOJA (SOYBEAN) OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.oand3.com/product/soyabean-oil-refined-organic/",
+          "claim_supported": "Exact admitted material identity; rough material prior lives separately."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "botanical_oil_plant_part_unspecified",
+        "emollient"
+      ],
+      "validation_status": "admitted_scoped_declaration",
+      "notes": "Reviewed declared botanical oil identity sufficient for closed flag exclusion/qualitative emollient role in this scoped input. Plant part unspecified; NOT a sunflower seed oil alias and no seed-oil scientific transfer. No formula percentage, efficacy, volatility or prominence follows.",
+      "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://k18hair.co.uk/products/molecular-repair-hair-oil",
+          "title": "Exact ingredient declaration and botanical-oil identity corroboration",
+          "claim_supported": "Same exact declared sunflower oil wording co-presented with ingredient identity description; no plant part or seed-oil study equivalence established."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Not in initial direct-positive anchor set; no nonpenetration claim.",
+      "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.hallstarbeauty.com/formula/soothing-facial-oil/",
+          "title": "Hallstar illustrative Soothing Facial Oil formulation",
+          "claim_supported": "Exact botanical fixed-oil identity and declared form."
+        },
+        {
+          "url": "https://1.oliveoiltimes.com/library/olive-oil-hair.pdf",
+          "title": "Keis et al. 2005, Investigation of penetration abilities of various oils into human hair fibers",
+          "claim_supported": "Surface adhesion/optics provide indirect penetration support."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "canonical_name": "HEXYL CINNAMAL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Annex III named fragrance-allergen identity; amendments and retained rows."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223",
+          "title": "Regulation 1223/2009, Annex III",
+          "claim_supported": "Underlying retained fragrance-allergen identity rows; 2023 act amends or adds selected rows."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "ISOAMYL LAURATE",
+      "aliases": [],
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "validation_status": "generic_function_reviewed",
+      "notes": "Liquid defined ester used in hair-care emollient systems. Generic ester carrier interpretation allowed; no evaporation or finished hair-weight prior. Skin absorption/sensory claims do not choose a hair class.",
+      "sources": [
+        {
+          "url": "https://www.oleon.com/products-solutions/jolee-7750",
+          "claim_supported": "Exact ester INCI, emollient function and hair-care applications."
+        },
+        {
+          "url": "https://cosmileeurope.eu/inci/detail/7358/isoamyl-laurate/",
+          "claim_supported": "Exact ester chemical identity; generic emollient role only."
+        }
+      ],
+      "provenance": "Own supplier plus primary registry checked 2026-10-04."
+    },
+    {
+      "canonical_name": "ISODODECANE",
+      "aliases": [],
+      "roles": [
+        "hydrocarbon_carrier",
+        "solvent",
+        "emollient"
+      ],
+      "validation_status": "generic_function_reviewed",
+      "notes": "Exact hydrocarbon solvent/emollient identity. No retail grade, evaporation rate, retained dose or hair-weight class established.",
+      "sources": [
+        {
+          "url": "https://cosmileeurope.eu/inci/detail/7429/isododecane/",
+          "claim_supported": "Exact chemical name and solvent/emollient functions; skin discussion excluded from hair weight."
+        }
+      ],
+      "provenance": "Primary ingredient registry checked 2026-10-04."
+    },
+    {
+      "canonical_name": "LAVANDULA LATIFOLIA (LAVENDER) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "canonical_name": "LAVANDULA OIL/ EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://khadi.de/products/haare-haaroel-color-care",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness.",
+      "canonical_name": "LAWSONIA INERMIS (HENNA) LEAF EXTRACT",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://khadi.de/products/haare-haaroel-strong-amla",
+          "claim_supported": "Literal product declaration only; generic identity/function unassessed."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "canonical_name": "LIMONENE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Annex III named fragrance-allergen identity; amendments and retained rows."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223",
+          "title": "Regulation 1223/2009, Annex III",
+          "claim_supported": "Underlying retained fragrance-allergen identity rows; 2023 act amends or adds selected rows."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "canonical_name": "LINALOOL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Annex III named fragrance-allergen identity; amendments and retained rows."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223",
+          "title": "Regulation 1223/2009, Annex III",
+          "claim_supported": "Underlying retained fragrance-allergen identity rows; 2023 act amends or adds selected rows."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "canonical_name": "LINALYL ACETATE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Annex III named fragrance-allergen identity; amendments and retained rows."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223",
+          "title": "Regulation 1223/2009, Annex III",
+          "claim_supported": "Underlying retained fragrance-allergen identity rows; 2023 act amends or adds selected rows."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Oil carrier role, no quantified amount/grade or finished-film implication.",
+      "canonical_name": "MACADAMIA TERNIFOLIA SEED OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.mayomacs.co.za/wp-content/uploads/2026/01/2025-Product-SPEC-Macadamia-Oil-Product-Specification-Non-Food-Grade-1.pdf",
+          "claim_supported": "Exact admitted material identity; rough material prior lives separately."
+        },
+        {
+          "url": "https://naissance.com/products/macadamia-nut-oil",
+          "claim_supported": "Exact admitted material identity; rough material prior lives separately."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "MELALEUCA ALTERNIFOLIA (TEA TREE) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "canonical_name": "MELIA AZADIRACHTA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://khadi.de/products/haare-haaroel-color-care",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "canonical_name": "MENTHA ARVENSIS (PEPPERMINT) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "canonical_name": "MENTHA PIPERITA OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://www.evolvebeauty.com/products/weightless-hair-serum",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "cooling_or_aromatic_auxiliary",
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Closed watch-out grouping includes isolated molecule, without asserting botanical origin, efficacy or directions.",
+      "canonical_name": "MENTHOL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Exact Annex III identity: Menthol 338; Camphor 331."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223",
+          "title": "Regulation 1223/2009, Annex III",
+          "claim_supported": "Underlying retained fragrance-allergen identity rows; 2023 act amends or adds selected rows."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "NIGELLA SATIVA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight.",
+      "sources": [
+        {
+          "path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+          "reference_id": "black_seed",
+          "claim_supported": "Reviewed exact botanical oil identity; no new alias or material prior."
+        }
+      ],
+      "provenance": "Unchanged v0.10 exact identity lookup."
+    },
+    {
+      "canonical_name": "OCIMUM BASILICUM (BASIL) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Oil carrier role, no quantified amount/grade or finished-film implication.",
+      "canonical_name": "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.ippt.pan.pl/repository/open/o10344.pdf",
+          "claim_supported": "Exact admitted material identity; rough material prior lives separately."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Not in initial direct-positive anchor set; no nonpenetration claim.",
+      "canonical_name": "OLEA EUROPAEA FRUIT OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.hallstarbeauty.com/webfoo/wp-content/uploads/MWSCC_2024_Binder_Formulations.pdf",
+          "title": "Hallstar MWSCC 2024 illustrative formulations",
+          "claim_supported": "Exact botanical fixed-oil identity and declared form."
+        },
+        {
+          "url": "https://1.oliveoiltimes.com/library/olive-oil-hair.pdf",
+          "title": "Keis et al. 2005, Investigation of penetration abilities of various oils into human hair fibers",
+          "claim_supported": "Surface adhesion/optics provide indirect penetration support."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Oil carrier role, no quantified amount/grade or finished-film implication.",
+      "canonical_name": "ORYZA SATIVA (RICE) BRAN OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.ellemental.com/rice-bran-oil",
+          "claim_supported": "Exact admitted material identity; rough material prior lives separately."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "fragrance_composition"
+      ],
+      "validation_status": "admitted",
+      "notes": "Mixture composition unspecified; not automatically volatile or negligible.",
+      "canonical_name": "PARFUM",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Article 19 fragrance-composition declaration."
+        },
+        {
+          "url": "https://www.hallstarbeauty.com/formula/lift-me-gel-cream-2/",
+          "title": "Hallstar illustrative Lift Me Gel Cream formulation",
+          "claim_supported": "Supplier uses Fragrance (Parfum) label wrapper."
+        },
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 19071, PDF page 560",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.hallstarbeauty.com/formula/lift-me-gel-cream-2/",
+          "title": "Hallstar illustrative formulation",
+          "claim_supported": "Fragrance (Parfum) equivalence; wrapper punctuation does not introduce a new chemical identity."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "PARFUM (FRAGRANCE)",
+      "aliases": [],
+      "roles": [
+        "fragrance_composition"
+      ],
+      "validation_status": "source_scoped_function",
+      "notes": "Maker literal expressly labels a fragrance composition; no amount, natural-source or volatility inference.",
+      "sources": [
+        {
+          "url": "https://khadi.de/products/haare-haaroel-color-care",
+          "claim_supported": "Exact maker fragrance-composition label."
+        },
+        {
+          "url": "https://shop.schwarzkopf-professional.fi/en/products/central-pdp.html/3050393.html?replacesProduct=null",
+          "claim_supported": "Exact maker fragrance-composition label."
+        }
+      ],
+      "provenance": "Exact selected maker declaration only."
+    },
+    {
+      "canonical_name": "PARFUM (NATURALLY DERIVED FRAGRANCE)",
+      "aliases": [],
+      "roles": [
+        "fragrance_composition"
+      ],
+      "validation_status": "source_scoped_function",
+      "notes": "Maker literal expressly labels a fragrance composition; no amount, natural-source or volatility inference.",
+      "sources": [
+        {
+          "url": "https://www.evolvebeauty.com/products/weightless-hair-serum",
+          "claim_supported": "Exact maker fragrance-composition label."
+        }
+      ],
+      "provenance": "Exact selected maker declaration only."
+    },
+    {
+      "roles": [
+        "fragrance_composition"
+      ],
+      "validation_status": "admitted",
+      "notes": "Mixture composition unspecified; not automatically volatile or negligible.",
+      "canonical_name": "PARFUM/FRAGRANCE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Article 19 fragrance-composition declaration."
+        },
+        {
+          "url": "https://www.hallstarbeauty.com/formula/lift-me-gel-cream-2/",
+          "title": "Hallstar illustrative Lift Me Gel Cream formulation",
+          "claim_supported": "Supplier uses Fragrance (Parfum) label wrapper."
+        },
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 19071, PDF page 560",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.hallstarbeauty.com/formula/lift-me-gel-cream-2/",
+          "title": "Hallstar illustrative formulation",
+          "claim_supported": "Fragrance (Parfum) equivalence; wrapper punctuation does not introduce a new chemical identity."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness.",
+      "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://de.nuxe.com/products/wichtiger-ol%C2%AE/",
+          "claim_supported": "Literal product declaration only; generic identity/function unassessed."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "PENTACLETHRA MACROLOBA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "validation_status": "source_scoped_function",
+      "notes": "Declared botanical carrier oil in the maker formula. Generic fixed-oil function only; spelling/plant-part differences remain unmatched unless independently present in material-reference. No hidden species weight or alias.",
+      "sources": [
+        {
+          "url": "https://www.kerastase.de/produktlinien/produktart/ole-seren/nach-haartyp-filtern/widerspenstiges-haar/l-huile-originale-nachfullbar/KER_00303.html",
+          "claim_supported": "Maker exact botanical carrier declaration and oil use; no material-name equivalence."
+        }
+      ],
+      "provenance": "Source-scoped qualitative carrier identity only."
+    },
+    {
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Direct-study candidate only: NOT in initial admitted positive-anchor set until full-method review; use unknown under that anchor policy.",
+      "canonical_name": "PERSEA GRATISSIMA (AVOCADO) OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.hallstarbeauty.com/product/biochemica-avocado-oil-ref/",
+          "title": "Hallstar Biochemica Avocado Oil Refined",
+          "claim_supported": "Exact botanical fixed-oil identity and declared form."
+        },
+        {
+          "url": "https://www.mdpi.com/2079-9284/11/2/64",
+          "title": "Lourenco et al. 2024, oil penetration and hair properties; Raman study",
+          "claim_supported": "Raman study reports internal oil-associated signals; methodological admission remains pending."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Direct-study candidate only: NOT in initial admitted positive-anchor set until full-method review; use unknown under that anchor policy.",
+      "canonical_name": "PERSEA GRATISSIMA OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.hallstarbeauty.com/product/biochemica-avocado-oil-ref/",
+          "title": "Hallstar Biochemica Avocado Oil Refined",
+          "claim_supported": "Exact botanical fixed-oil identity and declared form."
+        },
+        {
+          "url": "https://www.mdpi.com/2079-9284/11/2/64",
+          "title": "Lourenco et al. 2024, oil penetration and hair properties; Raman study",
+          "claim_supported": "Raman study reports internal oil-associated signals; methodological admission remains pending."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "PHYLLANTHUS EMBLICA FRUIT EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://www.kerastase.de/produktlinien/produktart/ole-seren/nach-haartyp-filtern/widerspenstiges-haar/l-huile-originale-nachfullbar/KER_00303.html",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "canonical_name": "PIMENTA OFFICINALIS (PIMENTO) LEAF OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "canonical_name": "PINENE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32023R1545",
+          "title": "Regulation 2023/1545, fragrance identity and group declarations",
+          "claim_supported": "Annex III named fragrance-allergen identity; amendments and retained rows."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009R1223",
+          "title": "Regulation 1223/2009, Annex III",
+          "claim_supported": "Underlying retained fragrance-allergen identity rows; 2023 act amends or adds selected rows."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness.",
+      "canonical_name": "POGOSTEMON CABLIN (PATCHOULI) OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://mielleorganics.com/products/rosemary-mint-oil",
+          "claim_supported": "Literal product declaration only; generic identity/function unassessed."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "POGOSTEMON CABLIN OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://www.evolvebeauty.com/products/weightless-hair-serum",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred.",
+      "canonical_name": "PROPANEDIOL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 23262, PDF page 669",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. No admitted penetration evidence in the bounded review; none means no admitted evidence, not demonstrated nonpenetration.",
+      "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.hallstarbeauty.com/webfoo/wp-content/uploads/BC_Collection_Brochure.pdf",
+          "title": "Hallstar Biochemica collection ingredient declarations",
+          "claim_supported": "Exact botanical fixed-oil identity and declared form."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "PRUNUS ARMENIACA (APRICOT) KERNEL OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight.",
+      "sources": [
+        {
+          "path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+          "reference_id": "apricot_kernel",
+          "claim_supported": "Reviewed exact botanical oil identity; no new alias or material prior."
+        }
+      ],
+      "provenance": "Unchanged v0.10 exact identity lookup."
+    },
+    {
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. No admitted penetration evidence in the bounded review; none means no admitted evidence, not demonstrated nonpenetration.",
+      "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.hallstarbeauty.com/brand/hallstar/",
+          "title": "Hallstar IPM-NF and castor derivative descriptions",
+          "claim_supported": "Exact botanical fixed-oil identity and declared form."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. No admitted penetration evidence in the bounded review; none means no admitted evidence, not demonstrated nonpenetration.",
+      "canonical_name": "RICINUS COMMUNIS SEED OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.hallstarbeauty.com/brand/hallstar/",
+          "title": "Hallstar IPM-NF and castor derivative descriptions",
+          "claim_supported": "Exact botanical fixed-oil identity and declared form."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "ROSA CANINA FRUIT OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight.",
+      "sources": [
+        {
+          "path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+          "reference_id": "rosehip_canina_fruit",
+          "claim_supported": "Reviewed exact botanical oil identity; no new alias or material prior."
+        }
+      ],
+      "provenance": "Unchanged v0.10 exact identity lookup."
+    },
+    {
+      "canonical_name": "ROSA DAMASCENA FLOWER OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://shop.schwarzkopf-professional.fi/en/products/central-pdp.html/3050393.html?replacesProduct=null",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "canonical_name": "ROSE KETONES",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://shop.schwarzkopf-professional.fi/en/products/central-pdp.html/3050393.html?replacesProduct=null",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "canonical_name": "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness.",
+      "canonical_name": "SALVIA OFFICINALIS (SAGE) OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://mielleorganics.com/products/rosemary-mint-oil",
+          "claim_supported": "Literal product declaration only; generic identity/function unassessed."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "SANTALUM ALBUM (SANDALWOOD) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://khadi.de/products/haare-haaroel-color-care",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "canonical_name": "SCLEROCARYA BIRREA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight.",
+      "sources": [
+        {
+          "path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+          "reference_id": "marula",
+          "claim_supported": "Reviewed exact botanical oil identity; no new alias or material prior."
+        }
+      ],
+      "provenance": "Unchanged v0.10 exact identity lookup."
+    },
+    {
+      "canonical_name": "SESAMUM INDICUM (SESAME) SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight.",
+      "sources": [
+        {
+          "path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+          "reference_id": "sesame",
+          "claim_supported": "Reviewed exact botanical oil identity; no new alias or material prior."
+        }
+      ],
+      "provenance": "Unchanged v0.10 exact identity lookup."
+    },
+    {
+      "roles": [
+        "peptide",
+        "not_assessed"
+      ],
+      "validation_status": "admitted",
+      "notes": "Exact identity only; no repair, penetration, film, heat or benefit claim is adopted. Modified oil polymer is not intact source oils. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred.",
+      "canonical_name": "SH-OLIGOPEPTIDE-78",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 25857, PDF page 741",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) OIL",
+      "aliases": [],
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "validation_status": "source_scoped_function",
+      "notes": "Declared botanical carrier oil in the maker formula. Generic fixed-oil function only; spelling/plant-part differences remain unmatched unless independently present in material-reference. No hidden species weight or alias.",
+      "sources": [
+        {
+          "url": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+          "claim_supported": "Maker exact botanical carrier declaration and oil use; no material-name equivalence."
+        }
+      ],
+      "provenance": "Source-scoped qualitative carrier identity only."
+    },
+    {
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. No admitted penetration evidence in the bounded review; none means no admitted evidence, not demonstrated nonpenetration. Wax-ester chemistry; retain intact-botanical identity precedence.",
+      "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.hallstarbeauty.com/product/jojoba-oil-natural-goldtm/",
+          "title": "Hallstar Biochemica Jojoba Oil Gold",
+          "claim_supported": "Exact botanical fixed-oil identity and declared form."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "hydrocarbon_emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "No plant-oil identity or feedstock follows from the name; no admitted penetration anchor.",
+      "canonical_name": "SQUALANE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.sophim.com/en/squalane/",
+          "title": "Sophim Squalane ingredient identity",
+          "claim_supported": "Hydrogenated squalene; saturated hydrocarbon."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Fragrance exposure independent of perfuming intent; outside agreed closed scalp-active botanical group. Citrus group does not identify the particular bitter/sweet orange oil.",
+      "canonical_name": "TERPINEOL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 28506, PDF page 811",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2023/1545/oj/eng",
+          "title": "EU 2023/1545, Annex III",
+          "claim_supported": "Exact named fragrance-allergen or label-group identity."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness.",
+      "canonical_name": "TERPINOLENE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://khadi.de/products/haare-haaroel-strong-amla",
+          "claim_supported": "Literal product declaration only; generic identity/function unassessed."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Fragrance exposure independent of perfuming intent; outside agreed closed scalp-active botanical group. Citrus group does not identify the particular bitter/sweet orange oil.",
+      "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 28584, PDF page 813",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2023/1545/oj/eng",
+          "title": "EU 2023/1545, Annex III",
+          "claim_supported": "Exact named fragrance-allergen or label-group identity."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "antioxidant"
+      ],
+      "validation_status": "admitted",
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+      "canonical_name": "TOCOPHEROL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://ec.europa.eu/health/archive/ph_risk/committees/sccp/documents/out123cm_en.pdf",
+          "title": "Commission ingredient inventory, 2000; historical identity evidence",
+          "claim_supported": "Historical exact identity/function row."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "antioxidant_auxiliary"
+      ],
+      "validation_status": "admitted",
+      "notes": "Historical antioxidant-function listing does not prove formula-preservation activity or equal performance to Tocopherol. Do not silently equate vitamin-E forms or grant hair UV protection.",
+      "canonical_name": "TOCOPHERYL ACETATE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://ec.europa.eu/health/archive/ph_risk/committees/sccp/documents/out123cm_en.pdf",
+          "title": "Commission ingredient inventory, 2000; historical identity evidence",
+          "claim_supported": "Historical exact identity/function row."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "hydrocarbon_carrier",
+        "possible_volatile_vehicle_in_reviewed_pair"
+      ],
+      "validation_status": "admitted",
+      "notes": "Volatility support is for the specified supplier blend; do not silently transfer its rate to another grade or formula. BASF Ultimate supports volatile Undecane/Tridecane blend; pair/grade transfer is bounded, no all-alkane inference.",
+      "canonical_name": "TRIDECANE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://care360.basf.com/global/en/Product-Finder/30597825",
+          "title": "BASF Cetiol Ultimate",
+          "claim_supported": "Exact constituents of supplier volatile emollient blend."
+        },
+        {
+          "url": "https://care360.basf.com/global/en/Product-Finder/30597825",
+          "title": "BASF Cetiol Ultimate",
+          "claim_supported": "Reviewed Undecane/Tridecane blend explicitly volatile; no retail grade or mass-share identification."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "silicone_carrier",
+        "volatile_carrier"
+      ],
+      "validation_status": "admitted",
+      "notes": "Volatility of this material does not resolve blend residue.",
+      "canonical_name": "TRISILOXANE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.dow.com/documents/27/27-1/27-1304-01-dow-hair-and-skin-care.pdf?iframe=true",
+          "title": "Dow Hair and Skin Care Selection Guide",
+          "claim_supported": "Exact silicone identity and material family."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Oil carrier role, no quantified amount/grade or finished-film implication.",
+      "canonical_name": "TRITICUM VULGARE (WHEAT) GERM OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.oand3.com/product/wheatgerm-oil-unrefined/?pdf=1",
+          "claim_supported": "Exact admitted material identity; rough material prior lives separately."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "hydrocarbon_carrier",
+        "possible_volatile_vehicle_in_reviewed_pair"
+      ],
+      "validation_status": "admitted",
+      "notes": "Volatility support is for the specified supplier blend; do not silently transfer its rate to another grade or formula. BASF Ultimate supports volatile Undecane/Tridecane blend; pair/grade transfer is bounded, no all-alkane inference.",
+      "canonical_name": "UNDECANE",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://care360.basf.com/global/en/Product-Finder/30597825",
+          "title": "BASF Cetiol Ultimate",
+          "claim_supported": "Exact constituents of supplier volatile emollient blend."
+        },
+        {
+          "url": "https://care360.basf.com/global/en/Product-Finder/30597825",
+          "title": "BASF Cetiol Ultimate",
+          "claim_supported": "Reviewed Undecane/Tridecane blend explicitly volatile; no retail grade or mass-share identification."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness.",
+      "canonical_name": "URTICA DIOICA (NETTLE) EXTRACT",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://mielleorganics.com/products/rosemary-mint-oil",
+          "claim_supported": "Literal product declaration only; generic identity/function unassessed."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness.",
+      "canonical_name": "VANILLIN",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://de.nuxe.com/products/wichtiger-ol%C2%AE/",
+          "claim_supported": "Literal product declaration only; generic identity/function unassessed."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "VITAMIN E (MIXED TOCOPHEROL) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established.",
+      "sources": [
+        {
+          "url": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+          "claim_supported": "Exact source declaration only; no generic function or chemical repair."
+        }
+      ],
+      "provenance": "No admission beyond literal source identity."
+    },
+    {
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Oil carrier role, no quantified amount/grade or finished-film implication.",
+      "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL",
+      "aliases": [],
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2076-3417/14/7/2783",
+          "claim_supported": "Exact admitted material identity; rough material prior lives separately."
+        },
+        {
+          "url": "https://discover.univarsolutions.com/assets/files/EMEA/earthoil-Sensory-profile-guide.pdf",
+          "claim_supported": "Exact admitted material identity; rough material prior lives separately."
+        }
+      ],
+      "provenance": "Existing reviewed role lexicon from frozen round 4, exact name/explicit alias function only. Material matching remains independent."
+    },
+    {
+      "canonical_name": "ZEA MAYS GERM OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight.",
+      "sources": [
+        {
+          "path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+          "reference_id": "corn_germ",
+          "claim_supported": "Reviewed exact botanical oil identity; no new alias or material prior."
+        }
+      ],
+      "provenance": "Unchanged v0.10 exact identity lookup."
+    }
+  ],
+  "limits": "Function only; no new material names, weight priors, scalp flags or concentration assumptions. Old generic roles retain their old uncertainty; exact entry-specific weights are separately matched."
+}

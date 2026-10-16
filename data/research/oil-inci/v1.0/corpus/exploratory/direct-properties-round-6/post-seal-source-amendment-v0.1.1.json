@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-05",
+  "scope": "Source-only correction; every blind input/output remains byte-identical. Original source packet and initial lane outputs are immutable.",
+  "root_fresh_source": "https://www.kerastase.de/produktlinien/produktart/ole-seren/nach-haartyp-filtern/widerspenstiges-haar/l-huile-originale-nachfullbar/KER_00303.html",
+  "source_excerpt": "Hitzeschutz bis 230\u00b0C",
+  "corrections": [
+    "D03 heat claim omitted by initial input projection: false\u2192accepted true source fact",
+    "D03 prewash oil-bath use and explicit no-scalp restriction restored from same maker page",
+    "French/wild camellia geographic names do not establish a unique scientific/form identity: source projection leaves both unresolved rather than assumes CAMELLIA OLEIFERA",
+    "Amla macerate maps to declared powder only; no castor carrier assignment inferred"
+  ],
+  "meaning": "Earlier perfect lane equality does not validate source capture. Re-derive only stage2 with corrected observations and canonical original seal; no weight/fit/policy change."
+}

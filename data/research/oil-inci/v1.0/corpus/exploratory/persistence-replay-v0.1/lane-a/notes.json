@@ -1,0 +1,61 @@
+{
+  "run_id": "oil-persistence-leave-on-replay-v0.1",
+  "lane": "a",
+  "read_inputs": [
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/method.md",
+      "sha256": "63dd577a72edbced21e8fb22c813bbaf9ca5968dff22a5a1a8c25c8683c55301"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/blind-packet.json",
+      "sha256": "336abd8b25d7d63ea7e06253ab2de4cd57fe9011f012333c352acb62a17c64f2"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+      "sha256": "5a440ee45d8ac0a1f2187fda63a8bd28c265cd9ec85060b2e3fe4b632aac70f2"
+    }
+  ],
+  "completed_ids": [
+    "O01",
+    "O03",
+    "O04",
+    "O05",
+    "O06",
+    "O07",
+    "O08",
+    "O09",
+    "O10",
+    "O11",
+    "O12",
+    "O13",
+    "O14",
+    "O15",
+    "O16",
+    "O17",
+    "O18",
+    "O19",
+    "O20",
+    "O21",
+    "O22",
+    "O23",
+    "O24",
+    "O25",
+    "O26",
+    "O27",
+    "O28"
+  ],
+  "recognized_formulas": [
+    "O01: Spontaneous familiarity with the distinctive peptide-containing formula pattern; no identity lookup or prior persistence answer used.",
+    "O07: Spontaneous familiarity with the distinctive small-molecule-containing formula pattern; no identity lookup or prior persistence answer used.",
+    "O11: Spontaneous familiarity with the botanical-oil declaration pattern; no identity lookup or prior persistence answer used."
+  ],
+  "access_incidents": [],
+  "limits": [
+    "Only method.md, blind-packet.json and function-dictionary.json in this run directory were read; linked references, repository history, memory files, peer outputs and external sources were not accessed.",
+    "All three inputs were read completely. A truncated combined display was recovered by smaller allowed-input reads of the affected cases before decisions; all 540 primary ranks were also inspected with their exact admitted functions.",
+    "These are committed qualitative whole-formula judgments for the supplied retained hair-fibre context. Exact grades, amounts and finished-film measurements are not supplied; none was inferred.",
+    "Unassessed functions were not treated as negligible and did not independently justify a cohesive-film judgment. Contextual formula codes and fragrance footnotes were kept outside primary rank coverage.",
+    "No identity inference was pursued, no prior product labels or target distribution were used, and no peer comparison or nested review occurred.",
+    "Both output objects and their serialized JSON were validated in memory before writing; assigned output files were not reread."
+  ]
+}

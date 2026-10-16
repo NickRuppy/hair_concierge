@@ -1,0 +1,20 @@
+{
+  "decision_id": "OE-H04-WEIGHT-2026-10-13",
+  "case_id": "H04",
+  "product_key": "oil-holdout-h04",
+  "product": "Rahua Legendary Amazon Oil",
+  "market": "US maker storefront, exact historical nine-ingredient declaration",
+  "decision": "medium",
+  "estimate": true,
+  "confidence": "low",
+  "nearest_alternative": "rich",
+  "scope": "Exact-product provisional owner estimate; exception to B0/B7 only for this declared formula. No general medium fallback or preparation identity/function admission.",
+  "user_acknowledgement": "Use provisional medium (recommended)",
+  "question_context": "Leading Calendula/Aloe carriers undisclosed. Medium fits the nonvolatile botanical system without an established rich backbone; rich remains plausible. Persistence stays moderate.",
+  "reason": "Owner-approved provisional medium estimate for the exact nine-ingredient H04 formula: declared nonvolatile botanical remainder without an established rich-leading/structured backbone. The underlying B0/B7 carrier gap remains unresolved; this is not a formula-rule winner.",
+  "counter_signal": "Rich remains plausible if the unresolved leading preparations carry heavier lipids. Maker lightweight positioning is weak commercial counterevidence, not material or sensory proof.",
+  "unresolved": "Calendula/Aloe and enfleurage carriers, preparation grades, quantities and measured hair-weight performance remain undisclosed.",
+  "persistence_potential_preserved": "moderate",
+  "blind_classification": false,
+  "activation": false
+}

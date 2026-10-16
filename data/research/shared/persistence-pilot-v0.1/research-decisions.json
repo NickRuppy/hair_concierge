@@ -1,0 +1,339 @@
+{
+  "run_id": "canonical-persistence-pilot-v0.1",
+  "policy_version": "shared-persistence-v0.1",
+  "owner": "main_research",
+  "decision_status": "committed_local_pilot",
+  "records": [
+    {
+      "case_id": "P01",
+      "persistence_potential": "moderate",
+      "reason": "After rinsing, the fatty-alcohol emulsion and acid-associated amidoamine route plausibly leave an ordinary conditioning residue alongside the humectant system. The tipping interpretation is removable fatty conditioner residue rather than a particularly cohesive persistent film; the declared acid does not establish finished pH, and unassessed auxiliaries are not assigned film or removal functions.",
+      "evidence": [
+        {
+          "rank": 2,
+          "canonical_name": "CETEARYL ALCOHOL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "STEARAMIDOPROPYL DIMETHYLAMINE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "LACTIC ACID"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "case_id": "P02",
+      "persistence_potential": "high",
+      "reason": "The rinsed fatty-alcohol, monomeric-quat and emollient system provides a conditioning residue in which the cationic guar is read as an integrated adherent conditioning-film component. That polymer-supported coating, rather than ordinary lipid residue alone, tips the judgment; humectancy does not cancel it, and neither polymer rank nor its presence alone establishes the result.",
+      "evidence": [
+        {
+          "rank": 2,
+          "canonical_name": "CETYL ALCOHOL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "CETRIMONIUM CHLORIDE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "DICAPRYLYL ETHER"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "ISOPROPYL PALMITATE"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "PANTHENOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "case_id": "P03",
+      "persistence_potential": "low",
+      "reason": "The retained humectant/solvent system with monomeric cetrimonium conditioning is better read as a dispersible remainder than a cohesive persistent coating. The tipping judgment is that this deposition route lacks an admitted supporting lipid, gum or conditioning-polymer architecture here; inulin and the other unassessed auxiliaries are assigned neither film formation nor negligible residue.",
+      "evidence": [
+        {
+          "rank": 2,
+          "canonical_name": "BETAINE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "PROPYLENE GLYCOL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "CETRIMONIUM CHLORIDE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "INULIN"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "PANTHENOL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "HYDROXYACETOPHENONE"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "1,2-HEXANEDIOL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "CAPRYLYL GLYCOL"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ]
+    },
+    {
+      "case_id": "P04",
+      "persistence_potential": "high",
+      "reason": "In retained use, the silicone fluids and kernel-oil emollient support a conditioning remainder with a coherent gum and cationic-polymer film route. Dimethiconol and Polyquaternium-16 functioning within that complete system tip the judgment beyond an ordinary fluid coating; the silicone emulsifier is not treated as gum, and hydrolyzed keratin or unassessed auxiliaries do not independently establish durability.",
+      "evidence": [
+        {
+          "rank": 2,
+          "canonical_name": "TRISILOXANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "PRUNUS ARMENIACA KERNEL OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "HYDROLYZED KERATIN"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "HYDROLYZED PEARL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "POLYQUATERNIUM-16"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "CETYL PEG/PPG-10/1 DIMETHICONE"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "CETRIMONIUM CHLORIDE"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ]
+    },
+    {
+      "case_id": "P05",
+      "persistence_potential": "moderate",
+      "reason": "The complete retained formula is a fluid liquid-wax emollient, so an ordinary retained lipid coating is the better reading. Its fluid architecture tips the judgment away from a particularly cohesive gum or adherent-polymer film without treating mobility as absence of coating; organic origin adds no ingredient or persistence mechanism.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+        }
+      ],
+      "considered_ranks": [
+        1
+      ]
+    },
+    {
+      "case_id": "P06",
+      "persistence_potential": "high",
+      "reason": "The retained silicone-gum and conditioning-fluid system, together with fixed oils and lipid esters, favors a coherent conditioning coating after the volatile carrier contribution. The integrated dimethiconol film route tips the judgment beyond a merely mobile emollient remainder; spreading does not cancel that route, while elastomer rheology, UV-filter identity, proteins and unassessed extracts are not independently promoted into persistent-film proof.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "CYCLOPENTASILOXANE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "CAPRYLYL METHICONE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "MORINGA OLEIFERA SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "ORYZA SATIVA BRAN OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "BAMBUSA VULGARIS EXTRACT"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "CAMELLIA SINENSIS LEAF EXTRACT"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "HYDROLYZED SOY PROTEIN"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "DIMETHICONE CROSSPOLYMER"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "POLYSILICONE-15"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "GLYCERYL LINOLEATE"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "GLYCERYL LINOLENATE"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
+      ]
+    }
+  ]
+}

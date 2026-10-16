@@ -1,0 +1,3 @@
+{
+  "version":"0.2","status":"merge_staging_for_root_review","corrected_comp_dictionary":"corrected-function-dictionary-v0.2.json","holdout_new_entries":"data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.1/dictionary-staging/reviewed-functions-v0.2.json","merge_rule":"Resolve an exact holdout canonical name from corrected COMP first; otherwise retain the holdout reviewed entry with its existing source refs and limits. No alias-based material-function transfer without the explicit corrected-COMP alias basis.","coverage":{"corrected_comp_entries":269,"holdout_reviewed_new_entries":27},"note":"This manifest preserves the two immutable source dictionaries for root-owned deterministic merge; it does not synthesize a new function claim."
+}

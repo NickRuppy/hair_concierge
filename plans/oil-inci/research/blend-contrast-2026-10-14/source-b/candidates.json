@@ -1,0 +1,326 @@
+{
+  "schema": "oil-blend-contrast-source-candidates-v1",
+  "source_lane": "b",
+  "access_date": "2026-10-14",
+  "purpose": "Source/identity/use preflight only; no weight or other property classifications",
+  "selection_basis": "Full maker ordered declarations plus retained hair-fibre directions; multi-botanical formulas. Marketing weight and hair-type suitability claims not used.",
+  "candidate_count": 2,
+  "candidates": [
+    {
+      "candidate_id": "source-b-fushi-really-good-100ml",
+      "brand": "Fushi",
+      "product": "Really Good Hair Oil",
+      "variant": "Original / Really Good; not Root Revival",
+      "package": "100 ml",
+      "market_scope": "UK maker English storefront, GBP; DE/EU pack identity not established",
+      "product_url": "https://fushiwellbeing.com/products/really-good-hair-oil-100ml",
+      "identity_url": "https://fushiwellbeing.com/products/really-good-hair-oil-100ml.js",
+      "product_code": "F0030306",
+      "gtin": "5060112866166",
+      "shopify_product_id": 6851593863358,
+      "shopify_variant_id": 40229286838462,
+      "access_date": "2026-10-14",
+      "admission": "proposed_source_admitted_with_exact_name_limitation",
+      "full_ordered_declaration": "Sesamum Indicum (Sesame) Seed Oil, Cocos Nucifera (Coconut) Oil, Persea Americana (Avocado) Oil, Prunus Dulcis (Sweet Almond) Oil, Argania Spinosa (Argan) Kernel Oil, Brahmi Herpestis (Brahmi) Fruit Extract, Jasminum Officinale (Jasmin Absolute) Oil, Tocopherol (Vitamin E), Azadirachta Indica (Neem) Oil, Benzyl Benzoateε, Linaloolε, Eugenolε, Benzyl Alcoholε, Geraniolε (These Are Naturally Occurring Chemicals In Essential Oils), Organic Ingredient Ε Components Of Essential Oils - Total 99% Organic, 100% Natural Origin: Fushi Oils, Organic, Virgin Cold Pressed & Fresh From Harvest, Fushi Herbs, Organic, Freshly Harvested & Triple Infused, Made From Freshly Pressed Oils From Harvest.",
+      "ordered_ingredients": [
+        {
+          "rank": 1,
+          "source_name": "Sesamum Indicum (Sesame) Seed Oil"
+        },
+        {
+          "rank": 2,
+          "source_name": "Cocos Nucifera (Coconut) Oil"
+        },
+        {
+          "rank": 3,
+          "source_name": "Persea Americana (Avocado) Oil"
+        },
+        {
+          "rank": 4,
+          "source_name": "Prunus Dulcis (Sweet Almond) Oil"
+        },
+        {
+          "rank": 5,
+          "source_name": "Argania Spinosa (Argan) Kernel Oil"
+        },
+        {
+          "rank": 6,
+          "source_name": "Brahmi Herpestis (Brahmi) Fruit Extract"
+        },
+        {
+          "rank": 7,
+          "source_name": "Jasminum Officinale (Jasmin Absolute) Oil"
+        },
+        {
+          "rank": 8,
+          "source_name": "Tocopherol (Vitamin E)"
+        },
+        {
+          "rank": 9,
+          "source_name": "Azadirachta Indica (Neem) Oil"
+        },
+        {
+          "rank": 10,
+          "source_name": "Benzyl Benzoateε"
+        },
+        {
+          "rank": 11,
+          "source_name": "Linaloolε"
+        },
+        {
+          "rank": 12,
+          "source_name": "Eugenolε"
+        },
+        {
+          "rank": 13,
+          "source_name": "Benzyl Alcoholε"
+        },
+        {
+          "rank": 14,
+          "source_name": "Geraniolε"
+        }
+      ],
+      "declaration_footnote": "(These Are Naturally Occurring Chemicals In Essential Oils), Organic Ingredient Ε Components Of Essential Oils - Total 99% Organic, 100% Natural Origin: Fushi Oils, Organic, Virgin Cold Pressed & Fresh From Harvest, Fushi Herbs, Organic, Freshly Harvested & Triple Infused, Made From Freshly Pressed Oils From Harvest.",
+      "ingredient_source_location": "Maker product page FULL INGREDIENT LIST; web read lines537-538",
+      "retained_fibre_source_quote": "If you wanted to leave it in, only a few drops are recommended to be run through the ends of the hair or the dry frizzy areas to smooth away flyaway hair and leave a shine.",
+      "retained_fibre_source_location": "Maker product page FAQ: Can you leave Really Good Hair Oil in hair? lines611-612",
+      "retained_context": {
+        "site": "hair ends or dry frizzy areas",
+        "stage": "retained dry fibre finish",
+        "dose": "only a few drops",
+        "removal": "leave-in explicitly stated in FAQ",
+        "frequency": "unestablished for this specific retained scenario"
+      },
+      "source_limitations": [
+        "Published exact declaration says Brahmi Herpestis (Brahmi) Fruit Extract. No alias, corrected identity or ingredient function is invented. Main preflight must decide whether this unresolved declared botanical name blocks its intended formula assessment.",
+        "Source is current English UK maker declaration, not observed batch label or DE/EU pack verification.",
+        "Selected FAQ establishes retained fibre use although main directions also describe washed-out scalp treatments.",
+        "Greek ε allergen markers and tail retained as printed; tail has maker copy quality issues and is not treated as extra ingredient ranks."
+      ],
+      "exposure_check": {
+        "terms": [
+          "Fushi",
+          "Really Good Hair Oil"
+        ],
+        "roots": [
+          "data/research/oil-inci",
+          "plans/oil-inci"
+        ],
+        "current_run_excluded": true,
+        "exact_product_hit_count": 0,
+        "brand_other_product_hits": "Fushi Root Revival only; not inspected for prior labels"
+      },
+      "classification_performed": false,
+      "ordered_names_sha256": "cffc044dfc7fa01d020fc7a0b244070791c3a51455f723853b46510a30c9b7a3",
+      "raw_declaration_sha256": "2e41327d5021a99866a413d2d1cd12da9dd2491c5189d71be81049c57259791d"
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "brand": "Tabitha James Kraan Professional Haircare",
+      "product": "Scented Organic Hair Oil",
+      "variant": "Original / Amber Rose; not Fine & Oily or Curly & Dry",
+      "package": "150 ml",
+      "market_scope": "UK professional maker storefront, GBP; no DE/EU pack equivalence established",
+      "product_url": "https://tabithajkpro.com/products/scented-organic-hair-oil-150ml",
+      "identity_url": "https://tabithajkpro.com/products/scented-organic-hair-oil-150ml.js",
+      "product_code": "SOHOAR-BW150",
+      "gtin": null,
+      "shopify_product_id": 8103826915615,
+      "shopify_variant_id": 44390569804063,
+      "access_date": "2026-10-14",
+      "admission": "proposed_source_admitted",
+      "full_ordered_declaration": "carthamus tinctorius (safflower) seed oil*, rosa canina (rosehip) fruit oil*, argania spinosa (argan) kernel oil*, hippophae rhamnoides (sea buckthorn) seed oil*, rosa damascena (rose) flower oil*, pelargonium graveolens (rose geranium) flower oil*, citrus sinensis (sweet orange) peel oil expressed*, cananga odorata (yang ylang) flower oil*, pogostemon cablin (patchouli) leaf oil*, lycium barbarum (goji berry) fruit extract*, styrax tonkinensis (benzoin) resin extract, rosmarinus officinalis (rosemary) extract*, cedrus atlantica (cedar) bark oil*, citrus aurantium (orange) flower oil*, anthemis nobilis (chamomile) flower oil*, helianthus annuus (sunflower) seed oil, tocopherol (vitamin E), citronellol**, limonene**, geraniol**, linalool**, benzyl benzoate**, citral**, farnesol**, benzyl salicylate**, eugenol** * organic ingredient ** naturally occurring components of essential oils",
+      "ordered_ingredients": [
+        {
+          "rank": 1,
+          "source_name": "carthamus tinctorius (safflower) seed oil*"
+        },
+        {
+          "rank": 2,
+          "source_name": "rosa canina (rosehip) fruit oil*"
+        },
+        {
+          "rank": 3,
+          "source_name": "argania spinosa (argan) kernel oil*"
+        },
+        {
+          "rank": 4,
+          "source_name": "hippophae rhamnoides (sea buckthorn) seed oil*"
+        },
+        {
+          "rank": 5,
+          "source_name": "rosa damascena (rose) flower oil*"
+        },
+        {
+          "rank": 6,
+          "source_name": "pelargonium graveolens (rose geranium) flower oil*"
+        },
+        {
+          "rank": 7,
+          "source_name": "citrus sinensis (sweet orange) peel oil expressed*"
+        },
+        {
+          "rank": 8,
+          "source_name": "cananga odorata (yang ylang) flower oil*"
+        },
+        {
+          "rank": 9,
+          "source_name": "pogostemon cablin (patchouli) leaf oil*"
+        },
+        {
+          "rank": 10,
+          "source_name": "lycium barbarum (goji berry) fruit extract*"
+        },
+        {
+          "rank": 11,
+          "source_name": "styrax tonkinensis (benzoin) resin extract"
+        },
+        {
+          "rank": 12,
+          "source_name": "rosmarinus officinalis (rosemary) extract*"
+        },
+        {
+          "rank": 13,
+          "source_name": "cedrus atlantica (cedar) bark oil*"
+        },
+        {
+          "rank": 14,
+          "source_name": "citrus aurantium (orange) flower oil*"
+        },
+        {
+          "rank": 15,
+          "source_name": "anthemis nobilis (chamomile) flower oil*"
+        },
+        {
+          "rank": 16,
+          "source_name": "helianthus annuus (sunflower) seed oil"
+        },
+        {
+          "rank": 17,
+          "source_name": "tocopherol (vitamin E)"
+        },
+        {
+          "rank": 18,
+          "source_name": "citronellol**"
+        },
+        {
+          "rank": 19,
+          "source_name": "limonene**"
+        },
+        {
+          "rank": 20,
+          "source_name": "geraniol**"
+        },
+        {
+          "rank": 21,
+          "source_name": "linalool**"
+        },
+        {
+          "rank": 22,
+          "source_name": "benzyl benzoate**"
+        },
+        {
+          "rank": 23,
+          "source_name": "citral**"
+        },
+        {
+          "rank": 24,
+          "source_name": "farnesol**"
+        },
+        {
+          "rank": 25,
+          "source_name": "benzyl salicylate**"
+        },
+        {
+          "rank": 26,
+          "source_name": "eugenol**"
+        }
+      ],
+      "declaration_footnote": "* organic ingredient ** naturally occurring components of essential oils",
+      "ingredient_source_location": "Maker product page Ingredients; web read line79",
+      "retained_fibre_source_quote": "2. Warm 1-2 tiny drops in your hands and apply directly to dehydrated curls or lengths and ends.",
+      "retained_fibre_source_location": "Maker product page How to use, separate second scenario; web read lines66-72",
+      "retained_context": {
+        "site": "curls or hair lengths and ends",
+        "stage": "retained fibre application; damp/dry not specified in this specific instruction",
+        "dose": "1-2 tiny drops",
+        "removal": "retention by distinct second-use context; first scenario separately requires washing",
+        "frequency": "unestablished for this specific retained scenario"
+      },
+      "source_limitations": [
+        "Source is UK professional-maker original 150 ml declaration, not observed batch label or DE/EU pack verification.",
+        "Exact spelling yang ylang is preserved. No species, oil/extract or grade correction is made.",
+        "Product page rendered sale status says sold out whereas product JSON available=true; availability is not used for formula admission.",
+        "No formula harmonization with consumer pages or other Tabitha variants was attempted."
+      ],
+      "exposure_check": {
+        "terms": [
+          "Scented Organic Hair Oil",
+          "Scented Hair Oil"
+        ],
+        "roots": [
+          "data/research/oil-inci",
+          "plans/oil-inci"
+        ],
+        "current_run_excluded": true,
+        "exact_product_hit_count": 0,
+        "brand_other_product_hits": "Prior Tabitha Fine & Oily source only; no prior labels read"
+      },
+      "classification_performed": false,
+      "ordered_names_sha256": "4854c5723a59066054c6c775964bce2e2958b07ee3e761b621086008a434117b",
+      "raw_declaration_sha256": "b685bdd01307969548bcc3cd0ebc2d55ab871a716f9a9052c5a07f644e03ed20"
+    }
+  ],
+  "held_or_excluded": [
+    {
+      "product": "The Innate Life Rose Hair Elixir",
+      "url": "https://theinnatelife.com/products/rose-hair-elixir?variant=15844532998",
+      "access_date": "2026-10-14",
+      "disposition": "held_not_admitted",
+      "reason": "Complete maker FULL INGREDIENTS LIST uses common oil names instead of exact Latin INCI; species/part mapping must not be invented. Retained fibre directions are clear.",
+      "raw_full_ingredients": "Avocado Oil*, Sweet Almond Oil*, Sunflower Seed Oil*, Grape Seed Oil*, Flaxseed Oil*, Pumpkin Seed Oil*, Macadamia Nut Oil*, Camellia Seed Oil*, Evening Primrose Oil*, Argan Oil*, Rosehip Fruit Oil*, Jojoba Seed Oil*, Sea Buckthorn Fruit Oil*, Black Cumin Seed Oil*, Tocopherol/Vitamin E, Fragrance**.",
+      "footnotes": [
+        "*CERTIFIED ORGANIC INGREDIENTS",
+        "**DERIVED FROM ESSENTIAL OILS"
+      ],
+      "retention_evidence": "FAQ Do I wash it off? It is a leave-in product for daily use. You are not required to wash it off.",
+      "name_exposure_hits": 0
+    },
+    {
+      "product": "Innersense Harmonic Healing Oil / current Harmonic Treatment Oil",
+      "url": "https://innersensebeauty.com/products/harmonic-treatment-oil",
+      "access_date": "2026-10-14",
+      "disposition": "excluded_scope",
+      "reason": "Current maker directs pre-shampoo treatment or skin/scalp moisture; Directions for Use applies to body. No maker retained hair-fibre scenario admitted. Customer reviews do not replace directions.",
+      "scope_quote": "Use Harmonic Treatment Oil before shampoo as a hydrating treatment or anytime the skin or scalp needs a boost of moisture.",
+      "name_exposure_hits": 0
+    },
+    {
+      "product": "It's Pure Macadamia & Argan Moisturising Hair Oil 50 ml",
+      "url": "https://itspure.co.uk/products/macadamia-and-argan-moisturising-hair-oil",
+      "retained_source_url": "https://itspure.co.uk/blogs/news/make-the-most-of-your-me-time-this-christmas",
+      "access_date": "2026-10-14",
+      "disposition": "reserve_not_admitted",
+      "reason": "Bound already met with two proposed admissions. Maker INCI has exact spellings Macadamia tetraphilla and simondsia and argania spinosa seed oil; not silently repaired. Loose name exposure query hit generic text in blind-record files; no records or labels opened. Would require exact identity resolution and stricter exposure audit before use.",
+      "raw_full_ingredients": "Macadamia tetraphilla nut oil*, cocos nucifera oil*, argania spinosa seed oil *, simondsia chinensis seed oil*, cannabis sativa seed oil*, rosa canina seed oil*, rosmarinus officinalis extract*",
+      "footnote": "* Certified Organic Ingredients (100% of product)"
+    }
+  ],
+  "access_failures": [
+    {
+      "url": "https://innersensebeauty.com/products/harmonic-healing-oil",
+      "access_date": "2026-10-14",
+      "result": "web open Internal Error; canonical current treatment-oil page subsequently read successfully"
+    },
+    {
+      "url": "https://fushiwellbeing.com/de/collections/neem-oil-for-hair/products/really-good-hair-oil-100ml",
+      "result": "Search-discovery rendering showed unrelated supplement list; not admitted, not joined to current English declaration."
+    }
+  ],
+  "limits": [
+    "No product labels observed. Published maker page/list scope only.",
+    "No production, catalogue, database, brand-contact or Git-publication actions.",
+    "Transient names-only searches inspected candidate exposure, not past candidate labels.",
+    "Oil authority README was read for category routing and contained unrelated historical labels; no shortlisted product labels were exposed or used."
+  ]
+}

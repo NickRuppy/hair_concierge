@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-09",
+  "status": "sealed_before_parent_content_inspection",
+  "lane_output_hashes": {
+    "lane-a/records.json": "9d8cfb78a726d0566a05e14608d48d4f1233759a382b91a317cf0932e3a0dc96",
+    "lane-a/notes.json": "eb9dec9d5f47568792bc62efdd488111100c9025efc2f8d653faad3a7e92cc5a",
+    "lane-b/records.json": "f3c387eec5960931a0a07126f601a5018d70b0e9810362aa3b70a27ffd3a3fcb",
+    "lane-b/notes.json": "5651cae17ddc4c059c8be4af37ed02d9edb37e928d2f2c467d5cbe829fd42f78"
+  }
+}

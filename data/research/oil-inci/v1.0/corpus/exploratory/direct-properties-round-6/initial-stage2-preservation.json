@@ -1,0 +1,13 @@
+{
+  "files": {
+    "input-manifest.json": "83f4b8b2ba56436bd48e5a39c9dce89c2efd50d7df7e397409af68b7cf923476",
+    "source-packet.json": "f1b643c33e4ec6e17b9ff050a12e34a242a7e1a675859e016e31c80080ab0d48",
+    "unblinded-packet.json": "f1b643c33e4ec6e17b9ff050a12e34a242a7e1a675859e016e31c80080ab0d48",
+    "comparison.json": "9635f98ce27b11daf52be63c0d0f693b96590b6a699d3b1f1f0d45ecd4bca931",
+    "lane-a/final-records.json": "0658dd450ef0e9be5b0f7839415e5000a608dc7c093dd58874759cd82d368070",
+    "lane-a/final-notes.md": "65dace078f230d1faa415e43d5e6db97d47bfa547a6f15ce07974e1c29bba928",
+    "lane-b/final-records.json": "15ab282ef29c6cea6372f2408faa3b35b59075e0ee60412c65190524ab43c3a2",
+    "lane-b/final-notes.md": "10de5c3e240c120b2c2667812e02c373b9cdba5ccd5338531966f76a91501f0f"
+  },
+  "provenance_limit": "Original final receipts retain temporary timestamp-only seal reread hash41902\u2026; exact transient seal bytes were not retained. First actual seal read original12b322\u2026 independently reported by both lanes. Original seal restored byte-exact; current v0.1.1 derivation must reread/hash canonical original. Do not claim original full provenance verification."
+}

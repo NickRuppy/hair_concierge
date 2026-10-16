@@ -1,0 +1,643 @@
+{
+  "aliases": {
+    "PARFUM/FRAGRANCE": "PARFUM",
+    "PARFUM / FRAGRANCE": "PARFUM",
+    "PARFUM (FRAGRANCE)": "PARFUM",
+    "AQUA / WATER": "AQUA",
+    "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL": "HELIANTHUS ANNUUS SEED OIL",
+    "HELIANTHUS ANNUUS (SUNFLOWER) SEED EXTRACT": "HELIANTHUS ANNUUS SEED EXTRACT",
+    "RICINUS COMMUNIS (CASTOR) SEED OIL": "RICINUS COMMUNIS SEED OIL",
+    "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL": "PRUNUS AMYGDALUS DULCIS OIL",
+    "CITRUS AURANTIUM DULCIS (ORANGE) PEEL OIL": "CITRUS AURANTIUM DULCIS PEEL OIL",
+    "LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL": "LAVANDULA ANGUSTIFOLIA OIL",
+    "GLYCINE SOJA (SOYBEAN) OIL": "GLYCINE SOJA OIL",
+    "CI 40800 (BETA-CAROTENE)": "CI 40800",
+    "CI 19140 / YELLOW 5": "CI 19140",
+    "CI 15985 / YELLOW 6": "CI 15985"
+  },
+  "rows": [
+    {
+      "neutral_id": "PC01",
+      "rank": 1,
+      "raw_name": "Dimethicone",
+      "canonical_name": "DIMETHICONE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC01",
+      "rank": 2,
+      "raw_name": "Dimethiconol",
+      "canonical_name": "DIMETHICONOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC01",
+      "rank": 3,
+      "raw_name": "Undecane",
+      "canonical_name": "UNDECANE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC01",
+      "rank": 4,
+      "raw_name": "Dicaprylyl Ether",
+      "canonical_name": "DICAPRYLYL ETHER",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC01",
+      "rank": 5,
+      "raw_name": "Tridecane",
+      "canonical_name": "TRIDECANE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC01",
+      "rank": 6,
+      "raw_name": "Argania Spinosa Kernel Oil",
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC01",
+      "rank": 7,
+      "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+      "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC01",
+      "rank": 8,
+      "raw_name": "Tocopherol",
+      "canonical_name": "TOCOPHEROL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC01",
+      "rank": 9,
+      "raw_name": "Parfum (Fragrance)",
+      "canonical_name": "PARFUM",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC01",
+      "rank": 10,
+      "raw_name": "Linalool",
+      "canonical_name": "LINALOOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC01",
+      "rank": 11,
+      "raw_name": "Anise Alcohol",
+      "canonical_name": "ANISE ALCOHOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC01",
+      "rank": 12,
+      "raw_name": "Linalyl Acetate",
+      "canonical_name": "LINALYL ACETATE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC01",
+      "rank": 13,
+      "raw_name": "Trisiloxane",
+      "canonical_name": "TRISILOXANE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC01",
+      "rank": 14,
+      "raw_name": "Disiloxane",
+      "canonical_name": "DISILOXANE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC01",
+      "rank": 15,
+      "raw_name": "CI 40800 (Beta-Carotene)",
+      "canonical_name": "CI 40800",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 1,
+      "raw_name": "ISODODECANE",
+      "canonical_name": "ISODODECANE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 2,
+      "raw_name": "AQUA / WATER",
+      "canonical_name": "AQUA",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 3,
+      "raw_name": "DIPROPYLENE GLYCOL",
+      "canonical_name": "DIPROPYLENE GLYCOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 4,
+      "raw_name": "DIMETHICONE",
+      "canonical_name": "DIMETHICONE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 5,
+      "raw_name": "ALCOHOL DENAT.",
+      "canonical_name": "ALCOHOL DENAT.",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 6,
+      "raw_name": "DIMETHICONOL",
+      "canonical_name": "DIMETHICONOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 7,
+      "raw_name": "GLYCERIN",
+      "canonical_name": "GLYCERIN",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 8,
+      "raw_name": "PEG-14 DIMETHICONE",
+      "canonical_name": "PEG-14 DIMETHICONE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 9,
+      "raw_name": "HYDROXYETHYL UREA",
+      "canonical_name": "HYDROXYETHYL UREA",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 10,
+      "raw_name": "PHENOXYETHANOL",
+      "canonical_name": "PHENOXYETHANOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 11,
+      "raw_name": "PEG-60 HYDROGENATED CASTOR OIL",
+      "canonical_name": "PEG-60 HYDROGENATED CASTOR OIL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 12,
+      "raw_name": "LIMONENE",
+      "canonical_name": "LIMONENE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 13,
+      "raw_name": "POLYACRYLAMIDE",
+      "canonical_name": "POLYACRYLAMIDE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 14,
+      "raw_name": "C13-14 ISOPARAFFIN",
+      "canonical_name": "C13-14 ISOPARAFFIN",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 15,
+      "raw_name": "PROPYLENE GLYCOL",
+      "canonical_name": "PROPYLENE GLYCOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 16,
+      "raw_name": "HEXYL CINNAMAL",
+      "canonical_name": "HEXYL CINNAMAL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 17,
+      "raw_name": "LINALOOL",
+      "canonical_name": "LINALOOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 18,
+      "raw_name": "LAURETH-7",
+      "canonical_name": "LAURETH-7",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 19,
+      "raw_name": "CARAMEL",
+      "canonical_name": "CARAMEL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 20,
+      "raw_name": "CITRAL",
+      "canonical_name": "CITRAL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 21,
+      "raw_name": "GLYCINE",
+      "canonical_name": "GLYCINE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 22,
+      "raw_name": "GERANIOL",
+      "canonical_name": "GERANIOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 23,
+      "raw_name": "COUMARIN",
+      "canonical_name": "COUMARIN",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 24,
+      "raw_name": "CI 19140 / YELLOW 5",
+      "canonical_name": "CI 19140",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 25,
+      "raw_name": "POLYQUATERNIUM-7",
+      "canonical_name": "POLYQUATERNIUM-7",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 26,
+      "raw_name": "CI 15985 / YELLOW 6",
+      "canonical_name": "CI 15985",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 27,
+      "raw_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+      "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 28,
+      "raw_name": "SODIUM BENZOATE",
+      "canonical_name": "SODIUM BENZOATE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC02",
+      "rank": 29,
+      "raw_name": "PARFUM / FRAGRANCE",
+      "canonical_name": "PARFUM",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 1,
+      "raw_name": "Arachis Hypogaea Oil",
+      "canonical_name": "ARACHIS HYPOGAEA OIL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 2,
+      "raw_name": "Melia Azadirachta Leaf Extract",
+      "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 3,
+      "raw_name": "Triticum Vulgare Germ Oil",
+      "canonical_name": "TRITICUM VULGARE GERM OIL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 4,
+      "raw_name": "Chamomilla Recutita Flower Extract",
+      "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 5,
+      "raw_name": "Lecithin",
+      "canonical_name": "LECITHIN",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 6,
+      "raw_name": "Alcohol",
+      "canonical_name": "ALCOHOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 7,
+      "raw_name": "Parfum*",
+      "canonical_name": "PARFUM",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 8,
+      "raw_name": "Helianthus Annuus Seed Oil",
+      "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 9,
+      "raw_name": "Lavandula Oil/Extract",
+      "canonical_name": "LAVANDULA OIL/EXTRACT",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 10,
+      "raw_name": "Pinene*",
+      "canonical_name": "PINENE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 11,
+      "raw_name": "Camphor*",
+      "canonical_name": "CAMPHOR",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 12,
+      "raw_name": "Linalool*",
+      "canonical_name": "LINALOOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 13,
+      "raw_name": "Beta-Caryophyllene*",
+      "canonical_name": "BETA-CARYOPHYLLENE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 14,
+      "raw_name": "Limonene*",
+      "canonical_name": "LIMONENE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 15,
+      "raw_name": "Terpineol*",
+      "canonical_name": "TERPINEOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 16,
+      "raw_name": "Linalyl Acetate*",
+      "canonical_name": "LINALYL ACETATE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 17,
+      "raw_name": "Citronellol*",
+      "canonical_name": "CITRONELLOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 18,
+      "raw_name": "Citral*",
+      "canonical_name": "CITRAL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC03",
+      "rank": 19,
+      "raw_name": "Alpha-Terpinene*",
+      "canonical_name": "ALPHA-TERPINENE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 1,
+      "raw_name": "ISOPROPYL PALMITATE",
+      "canonical_name": "ISOPROPYL PALMITATE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 2,
+      "raw_name": "COCO-CAPRYLATE/CAPRATE",
+      "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 3,
+      "raw_name": "C13-15 ALKANE",
+      "canonical_name": "C13-15 ALKANE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 4,
+      "raw_name": "ETHYLHEXYL PALMITATE",
+      "canonical_name": "ETHYLHEXYL PALMITATE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 5,
+      "raw_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+      "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 6,
+      "raw_name": "OCTYLDODECANOL",
+      "canonical_name": "OCTYLDODECANOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 7,
+      "raw_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED EXTRACT",
+      "canonical_name": "HELIANTHUS ANNUUS SEED EXTRACT",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 8,
+      "raw_name": "DAUCUS CAROTA SATIVA (CARROT) ROOT EXTRACT",
+      "canonical_name": "DAUCUS CAROTA SATIVA (CARROT) ROOT EXTRACT",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 9,
+      "raw_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+      "canonical_name": "RICINUS COMMUNIS SEED OIL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 10,
+      "raw_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+      "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 11,
+      "raw_name": "CITRUS AURANTIUM DULCIS (ORANGE) PEEL OIL",
+      "canonical_name": "CITRUS AURANTIUM DULCIS PEEL OIL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 12,
+      "raw_name": "PELARGONIUM GRAVEOLENS LEAF OIL",
+      "canonical_name": "PELARGONIUM GRAVEOLENS LEAF OIL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 13,
+      "raw_name": "LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL",
+      "canonical_name": "LAVANDULA ANGUSTIFOLIA OIL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 14,
+      "raw_name": "CANANGA ODORATA FLOWER OIL",
+      "canonical_name": "CANANGA ODORATA FLOWER OIL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 15,
+      "raw_name": "ANGELICA ARCHANGELICA SEED OIL",
+      "canonical_name": "ANGELICA ARCHANGELICA SEED OIL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 16,
+      "raw_name": "ANGELICA ARCHANGELICA ROOT OIL",
+      "canonical_name": "ANGELICA ARCHANGELICA ROOT OIL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 17,
+      "raw_name": "GLYCINE SOJA (SOYBEAN) OIL",
+      "canonical_name": "GLYCINE SOJA OIL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 18,
+      "raw_name": "HYDROGENATED COCO-GLYCERIDES",
+      "canonical_name": "HYDROGENATED COCO-GLYCERIDES",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 19,
+      "raw_name": "TOCOPHEROL",
+      "canonical_name": "TOCOPHEROL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 20,
+      "raw_name": "TOCOPHERYL ACETATE",
+      "canonical_name": "TOCOPHERYL ACETATE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 21,
+      "raw_name": "PARFUM/FRAGRANCE",
+      "canonical_name": "PARFUM",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 22,
+      "raw_name": "BENZYL BENZOATE",
+      "canonical_name": "BENZYL BENZOATE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 23,
+      "raw_name": "LIMONENE",
+      "canonical_name": "LIMONENE",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 24,
+      "raw_name": "LINALOOL",
+      "canonical_name": "LINALOOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 25,
+      "raw_name": "CITRONELLOL",
+      "canonical_name": "CITRONELLOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    },
+    {
+      "neutral_id": "PC04",
+      "rank": 26,
+      "raw_name": "GERANIOL",
+      "canonical_name": "GERANIOL",
+      "reason": "Literal uppercase/whitespace normalization; source asterisk removed as footnote marker; only explicitly listed source descriptor/alternate-language aliases applied."
+    }
+  ]
+}

@@ -1,0 +1,2049 @@
+{
+  "version": "oil-research-envelope-v1",
+  "research_id": "oil:oil-targeted-t02",
+  "submission_id": null,
+  "research_method": {
+    "purpose": "consolidation_serialization",
+    "policy_pins": {
+      "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md": "2238a966c7cefbae48bec2df72293bef98837e29cba15c0eed9b5c2e91a281cc",
+      "docs/research/oil-inci/v1.0/01_property-set-v0.2.md": "b9bc09bdf9c6076530d9d34ac33c4e8b7ba3b4b47dc11d91491f72e05b9eefd5",
+      "docs/research/oil-inci/v1.0/11_operating-guide-v0.2.md": "c7ca970424c3004d825c2faa4a636a8df0d93e214e293671acdab9a00ca5d28d",
+      "docs/research/oil-inci/v1.0/10_persistence-guidance-v0.2.md": "251bcbfd705e521df4303a9f5b24c4007d0dd138a2c7dce554bb14fbb99e6208",
+      "docs/research/shared/persistence-potential-v0.1.md": "b8b9ef91e408af0756dcb7d9f931f5fe0f8c3874f92ffc780512baf423f31fd4",
+      "docs/research/oil-inci/v1.0/03_weight-reference-v0.10.md": "dc6d7f117cae895014620ce9b3f542f5cb35c980581d0e692aa022862ede657d",
+      "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50",
+      "docs/research/oil-inci/v1.0/04_blend-weight-policy-v0.2.md": "5db652413c5dd814f9a9488dfab6a8bedbd7dcc107a9fe002448203429db8391",
+      "data/research/oil-inci/v1.0/reference/blend-weight-policy-v0.2.json": "00d916f2faab0b07f607b3a220e788c4d82e026a36381faab40c49bcae9d5305",
+      "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+      "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+      "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+    }
+  },
+  "identity": {
+    "brand": "OGX",
+    "product": "Argan Oil of Morocco Weightless Healing Dry Oil",
+    "market": "US maker",
+    "variant": null,
+    "package": {
+      "size_text": "4 fl oz",
+      "size_ml": null,
+      "combined_declaration": null
+    },
+    "identifier": null,
+    "category": "hair_oil",
+    "original": {
+      "brand": "OGX",
+      "product": "Argan Oil of Morocco Weightless Healing Dry Oil",
+      "market": "US maker",
+      "size": "4 fl oz",
+      "identifier_if_verified": null
+    },
+    "mapping_receipt": [
+      {
+        "rule": "Literal approved historical identity mapping; no unit conversion, market split, or inferred variant.",
+        "fields": {
+          "brand": "original.brand",
+          "product": "original.product",
+          "market": "original.market",
+          "market_size": null,
+          "size": "original.size",
+          "size_ml": null,
+          "variant": null,
+          "gtin_if_verified": null,
+          "identifier_if_verified": "original.identifier_if_verified"
+        },
+        "source_path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/stage2-packet.json",
+        "source_record_key": "T02"
+      }
+    ],
+    "source_ids": [
+      "T02-maker"
+    ],
+    "conflicts": []
+  },
+  "formula": {
+    "raw_inci": "Dimethicone, Isododecane, C12-15 Alkyl Benzoate, Argania Kernel Oil, Phenyl Trimethicone, Fragrance (Parfum)",
+    "ingredients": [
+      {
+        "rank": 1,
+        "raw_name": "Dimethicone",
+        "canonical_name": "DIMETHICONE"
+      },
+      {
+        "rank": 2,
+        "raw_name": "Isododecane",
+        "canonical_name": "ISODODECANE"
+      },
+      {
+        "rank": 3,
+        "raw_name": "C12-15 Alkyl Benzoate",
+        "canonical_name": "C12-15 ALKYL BENZOATE"
+      },
+      {
+        "rank": 4,
+        "raw_name": "Argania Kernel Oil",
+        "canonical_name": "ARGANIA KERNEL OIL"
+      },
+      {
+        "rank": 5,
+        "raw_name": "Phenyl Trimethicone",
+        "canonical_name": "PHENYL TRIMETHICONE"
+      },
+      {
+        "rank": 6,
+        "raw_name": "Fragrance (Parfum)",
+        "canonical_name": "FRAGRANCE (PARFUM)"
+      }
+    ],
+    "raw_sha256": "10bdf857c77ab853bf61a0fb936387013637eec52e2fde125e8adef5f25bac34",
+    "normalized_sha256": "8492b705a87871b8e244e0943f0ee06c6be72a3b589819bbab9de0142443e301",
+    "normalization_receipt": [
+      {
+        "rank": 1,
+        "raw_name": "Dimethicone",
+        "canonical_name": "DIMETHICONE",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 2,
+        "raw_name": "Isododecane",
+        "canonical_name": "ISODODECANE",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 3,
+        "raw_name": "C12-15 Alkyl Benzoate",
+        "canonical_name": "C12-15 ALKYL BENZOATE",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 4,
+        "raw_name": "Argania Kernel Oil",
+        "canonical_name": "ARGANIA KERNEL OIL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 5,
+        "raw_name": "Phenyl Trimethicone",
+        "canonical_name": "PHENYL TRIMETHICONE",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 6,
+        "raw_name": "Fragrance (Parfum)",
+        "canonical_name": "FRAGRANCE (PARFUM)",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      }
+    ],
+    "source_ids": [
+      "T02-maker"
+    ],
+    "declaration_status": "complete",
+    "conflicts": [],
+    "contextual_declarations": []
+  },
+  "profile": {
+    "case_id": "T02",
+    "ingredient_ledger": [
+      {
+        "rank": 1,
+        "raw_name": "Dimethicone",
+        "canonical_name": "DIMETHICONE",
+        "dictionary_roles": [
+          "silicone_carrier",
+          "conditioning_film"
+        ],
+        "formula_role": "principal",
+        "role_reason": "The exact silicone-carrier and conditioning-film functions provide the strongest coherent principal conditioning backbone in the complete carrier sequence.",
+        "ambiguity": "Grade and quantity are unspecified; principal is a functional estimate, not a mass claim."
+      },
+      {
+        "rank": 2,
+        "raw_name": "Isododecane",
+        "canonical_name": "ISODODECANE",
+        "dictionary_roles": [
+          "hydrocarbon_carrier",
+          "emollient"
+        ],
+        "formula_role": "secondary",
+        "role_reason": "The reviewed hydrocarbon-carrier and emollient functions support distribution alongside the principal silicone conditioning route.",
+        "ambiguity": "Its quantitative contribution and physical grade are unknown; no evaporation fraction or volatility is inferred from the supplied roles."
+      },
+      {
+        "rank": 3,
+        "raw_name": "C12-15 Alkyl Benzoate",
+        "canonical_name": "C12-15 ALKYL BENZOATE",
+        "dictionary_roles": [
+          "defined_ester_emollient"
+        ],
+        "formula_role": "secondary",
+        "role_reason": "The exact ester-emollient function supplies a competing emollient contribution within the silicone conditioning architecture.",
+        "ambiguity": "No proportion or sensory performance is established."
+      },
+      {
+        "rank": 4,
+        "raw_name": "Argania Kernel Oil",
+        "canonical_name": "ARGANIA KERNEL OIL",
+        "dictionary_roles": [
+          "not_assessed"
+        ],
+        "formula_role": "unresolved",
+        "role_reason": "The dictionary marks this literal species-incomplete declaration not_assessed. No intact-oil, species, emollient, weight or penetration function is substituted.",
+        "ambiguity": "Exact species and function remain unresolved. The independently identified silicone, hydrocarbon and ester system supports a working backbone judgment without treating this ingredient as negligible."
+      },
+      {
+        "rank": 5,
+        "raw_name": "Phenyl Trimethicone",
+        "canonical_name": "PHENYL TRIMETHICONE",
+        "dictionary_roles": [
+          "silicone_carrier",
+          "conditioning_film"
+        ],
+        "formula_role": "secondary",
+        "role_reason": "The exact silicone-carrier and conditioning-film functions reinforce the principal conditioning route rather than constituting an auxiliary marker.",
+        "ambiguity": "Position does not establish amount, grade or negligible activity."
+      },
+      {
+        "rank": 6,
+        "raw_name": "Fragrance (Parfum)",
+        "canonical_name": "FRAGRANCE (PARFUM)",
+        "dictionary_roles": [
+          "fragrance_composition"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "The reviewed fragrance-composition function is auxiliary to the conditioning carrier system.",
+        "ambiguity": "No exposure amount or intentional-perfuming inference beyond the exact declaration is made."
+      }
+    ],
+    "auxiliary_suffix": {
+      "status": "no_boundary",
+      "ranks": [],
+      "markers": [],
+      "reason": "Only rank 6 supplies a recognized auxiliary function. Two independent functions in different ingredients are absent; rank 5 is a conditioning carrier and rank 4 remains unresolved. No auxiliary suffix or trace boundary is established."
+    },
+    "ingredient_flags": {
+      "silicones": {
+        "value": true,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "PHENYL TRIMETHICONE"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": "none",
+        "reason": "All exact recognized positive matches are included; the remaining ranks were reviewed against this closed family.",
+        "unresolved": []
+      },
+      "mineral_oil": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [],
+        "counter_signal": [],
+        "nearest_alternative": "none",
+        "reason": "All six exact declarations have reviewed negative results for this closed family in the supplied dictionary. No substring or broader-family inference is used.",
+        "unresolved": []
+      },
+      "drying_alcohol": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [],
+        "counter_signal": [],
+        "nearest_alternative": "none",
+        "reason": "All six exact declarations have reviewed negative results for this closed family in the supplied dictionary. No substring or broader-family inference is used.",
+        "unresolved": []
+      },
+      "fragrance": {
+        "value": true,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "rank": 6,
+            "canonical_name": "FRAGRANCE (PARFUM)"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": "none",
+        "reason": "All exact recognized positive matches are included; the remaining ranks were reviewed against this closed family.",
+        "unresolved": []
+      },
+      "scalp_active_botanicals": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [],
+        "counter_signal": [],
+        "nearest_alternative": "none",
+        "reason": "All six exact declarations have reviewed negative results for this closed family in the supplied dictionary. No substring or broader-family inference is used.",
+        "unresolved": []
+      }
+    },
+    "base": {
+      "value": "silicone_led",
+      "estimate": true,
+      "confidence": "low",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE"
+        }
+      ],
+      "counter_signal": [
+        "Ranks 2 and 3 supply an affirmative hydrocarbon/ester carrier rival. Rank 4 is not functionally assessed and cannot be counted as a confirmed intact botanical oil."
+      ],
+      "nearest_alternative": "ester_alkane_led",
+      "reason": "Dimethicone supplies the leading reviewed carrier/conditioning-film route, reinforced by Phenyl Trimethicone within the complete emollient system. That connected conditioning route favors silicone-led over ester/alkane-led; different early carrier families alone do not establish hybrid.",
+      "unresolved": [
+        "No concentrations or silicone grades; exact identity/function of rank 4 is unresolved. Its presence is retained as a limitation, not assigned a fabricated species or ignored."
+      ]
+    },
+    "weight": {
+      "value": "medium",
+      "estimate": true,
+      "confidence": "low",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE"
+        }
+      ],
+      "counter_signal": [
+        "The hydrocarbon/ester carrier-emollient route makes a lighter interpretation credible. A richer result would require an affirmative substantial structured-film argument beyond the supplied ordinary carrier/conditioning-film roles."
+      ],
+      "nearest_alternative": "light",
+      "reason": "Under B0/B1 and B5, the principal silicone conditioning system plus reinforcing conditioning silicone provides affirmative intermediate retained-film load alongside the hydrocarbon and ester emollients. Light is the closest rival; rich lacks a stronger whole-system structural argument under B6. No botanical material prior matches rank 4 and none is transferred.",
+      "unresolved": [
+        "Blend estimate only; silicone grades, carrier proportions, dose and distribution are unknown. Rank 4 exact species and function are unresolved. Neither evaporation nor measured retained mass is established."
+      ]
+    },
+    "penetration_potential": {
+      "value": "surface_led",
+      "estimate": true,
+      "confidence": "low",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE"
+        }
+      ],
+      "counter_signal": [
+        "The exact function of rank 4 remains unassessed; it is not evidence against penetration and cannot inherit a studied whole-oil anchor."
+      ],
+      "nearest_alternative": "unknown",
+      "reason": "The positive evidence is a coherent silicone conditioning-film and hydrocarbon/ester emollient architecture. This supports a surface-led working interpretation without claiming that silicones cannot penetrate. An alternative principal plant-penetration architecture has no admitted exact-form support in the supplied dictionary.",
+      "unresolved": [
+        "No exact-formula penetration study, quantitative blend evidence or normal-dose efficacy evidence. Qualitative ingredient-function-to-formula extrapolation only; no absent-study negative or invented lab-to-retail result."
+      ]
+    },
+    "persistence_potential": "moderate",
+    "named_oils": [
+      {
+        "hero_id": "T02-hero-1",
+        "hero_name": "Moroccan argan oil",
+        "matched_ranks": [
+          4
+        ],
+        "prominence": {
+          "value": "unknown",
+          "estimate": false,
+          "confidence": "low",
+          "evidence": [
+            {
+              "rank": 4,
+              "canonical_name": "ARGANIA KERNEL OIL"
+            },
+            {
+              "source_id": "T02-maker"
+            }
+          ],
+          "counter_signal": [
+            "The literal hero mapping establishes a present source token, but neither a principal nor an affirmative secondary function is established by the frozen ledger."
+          ],
+          "nearest_alternative": "supporting",
+          "reason": "The predeclared hero maps to the literal ARGANIA KERNEL OIL at rank 4. Its frozen formula role is unresolved, and no qualified auxiliary suffix exists. Preserve unknown prominence rather than inferring prominence from the hero text or ingredient position.",
+          "unresolved": [
+            "Species-incomplete identity and function remain unresolved. The source mapping does not authorize an Argania Spinosa alias, material-prior transfer or blind-ledger revision."
+          ]
+        }
+      }
+    ],
+    "dispenser": {
+      "value": "spray",
+      "estimate": false,
+      "confidence": "high",
+      "evidence": [
+        {
+          "source_id": "T02-maker"
+        }
+      ],
+      "counter_signal": [],
+      "nearest_alternative": "none",
+      "reason": "Maker text explicitly describes spray/misting.",
+      "unresolved": [
+        "The packet establishes the maker-described mechanism, not package/batch verification."
+      ]
+    },
+    "provides_heat_protection": {
+      "value": false,
+      "estimate": false,
+      "confidence": "high",
+      "evidence": [
+        {
+          "source_id": "T02-maker"
+        }
+      ],
+      "counter_signal": [],
+      "nearest_alternative": "none",
+      "reason": "No explicit heat protection claim in reviewed maker description, benefits or directions.",
+      "unresolved": [
+        "False records absence of an accepted explicit claim in the completed source review, not measured zero protection."
+      ]
+    },
+    "provides_uv_protection": {
+      "value": false,
+      "estimate": false,
+      "confidence": "high",
+      "evidence": [
+        {
+          "source_id": "T02-maker"
+        }
+      ],
+      "counter_signal": [],
+      "nearest_alternative": "none",
+      "reason": "The completed maker review has no accepted explicit hair-UV claim, and none of the six exact declared ingredients is a recognized UV filter in the supplied dictionary. Both conditions for a positive result are absent.",
+      "unresolved": [
+        "No measured UV-protection conclusion is inferred."
+      ]
+    },
+    "supported_uses": [
+      "leave_on_fibre_conditioning"
+    ],
+    "use_evidence": {
+      "value": [
+        "leave_on_fibre_conditioning"
+      ],
+      "estimate": false,
+      "confidence": "high",
+      "evidence": [
+        {
+          "source_id": "T02-maker",
+          "direction_id": "T02-direction-1"
+        }
+      ],
+      "counter_signal": [
+        "The retained finishing context does not establish an explicit dry-hair stage."
+      ],
+      "nearest_alternative": "none",
+      "reason": "The coherent maker direction specifies misting hair to finish a style. Styling context establishes retention and therefore general leave-on fibre conditioning. It supplies no explicit damp/dry alternative, scalp site or pre-wash removal instruction; dry_finish is not inferred.",
+      "unresolved": [
+        "Wet versus dry stage, amount and contact time are unestablished."
+      ]
+    },
+    "application_scenarios": [
+      {
+        "source_id": "T02-maker",
+        "direction_id": "T02-direction-1",
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "finish_style_unspecified_wet_dry",
+        "dose": "mist all over; amount unestablished",
+        "contact_time": "unestablished",
+        "removal": "retention_by_styling_context",
+        "restrictions": "none stated in reviewed exact product text",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ]
+      }
+    ],
+    "product_key": "oil-targeted-t02",
+    "identity": {
+      "brand": "OGX",
+      "product": "Argan Oil of Morocco Weightless Healing Dry Oil",
+      "market": "US maker",
+      "size": "4 fl oz",
+      "identifier_if_verified": null
+    },
+    "formula": {
+      "raw_inci": "Dimethicone, Isododecane, C12-15 Alkyl Benzoate, Argania Kernel Oil, Phenyl Trimethicone, Fragrance (Parfum)",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Isododecane",
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 3,
+          "raw_name": "C12-15 Alkyl Benzoate",
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Argania Kernel Oil",
+          "canonical_name": "ARGANIA KERNEL OIL"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Phenyl Trimethicone",
+          "canonical_name": "PHENYL TRIMETHICONE"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Fragrance (Parfum)",
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        }
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment"
+    },
+    "field_authority": {
+      "ingredient_ledger": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+        "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+        "record_key": "T02",
+        "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+      },
+      "auxiliary_suffix": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+        "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+        "record_key": "T02",
+        "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+      },
+      "base": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+        "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+        "record_key": "T02",
+        "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+      },
+      "weight": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+        "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+        "record_key": "T02",
+        "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+      },
+      "penetration_potential": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+        "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+        "record_key": "T02",
+        "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+      },
+      "ingredient_flags": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+        "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+        "record_key": "T02",
+        "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+      },
+      "persistence_potential": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+        "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+        "record_key": "T02",
+        "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+      },
+      "named_oils": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+        "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+        "record_key": "T02",
+        "reason": "Controlled source reveal after both fresh blind outputs sealed."
+      },
+      "dispenser": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+        "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+        "record_key": "T02",
+        "reason": "Controlled source reveal after both fresh blind outputs sealed."
+      },
+      "provides_heat_protection": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+        "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+        "record_key": "T02",
+        "reason": "Controlled source reveal after both fresh blind outputs sealed."
+      },
+      "provides_uv_protection": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+        "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+        "record_key": "T02",
+        "reason": "Controlled source reveal after both fresh blind outputs sealed."
+      },
+      "supported_uses": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+        "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+        "record_key": "T02",
+        "reason": "Controlled source reveal after both fresh blind outputs sealed."
+      },
+      "use_evidence": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+        "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+        "record_key": "T02",
+        "reason": "Controlled source reveal after both fresh blind outputs sealed."
+      },
+      "application_scenarios": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+        "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+        "record_key": "T02",
+        "reason": "Controlled source reveal after both fresh blind outputs sealed."
+      },
+      "formula": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/source-packet.json",
+        "sha256": "38278813aadcbbfe316a774d381e2a59b4e82ce866406b830c8b80e55f808c92",
+        "record_key": "T02",
+        "reason": "Attributed research decision"
+      }
+    },
+    "persistence_trace_reference": {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/persistence-research-trace.json",
+      "sha256": "ab9bac50ed9205797f3c51a25149eeb46c8b5aa2c3daa862c4d668d5f7f80b2b",
+      "record_key": "T02",
+      "reason": "Attributed research decision"
+    },
+    "fit": {
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        }
+      }
+    },
+    "completion_status": "complete_research_with_permitted_gaps"
+  },
+  "sources": [
+    {
+      "source_id": "T02-maker",
+      "url": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-weightless-healing-dry-oil?phrase=2024",
+      "url_note": null,
+      "original": {
+        "id": "T02-maker",
+        "url": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-weightless-healing-dry-oil?phrase=2024",
+        "scope": "Exact maker online formula, product text, directions, packaging mechanism and accepted claim review; not package/batch verification."
+      },
+      "directions": [
+        {
+          "direction_id": "T02-direction-1",
+          "text": "Finish style by misting all over for shine and frizz control; no explicit damp/dry instruction."
+        }
+      ]
+    }
+  ],
+  "persistence_trace": {
+    "reason": "The reviewed silicone-carrier/conditioning-film route at ranks 1 and 5, combined with hydrocarbon and ester emollient roles at ranks 2 and 3, supports an ordinary retained conditioning coating. A low reading gives too little weight to the affirmative conditioning-film route; a high reading would require a stronger whole-system cohesive/adherent/structured-film argument than these supplied functions establish. Rank 4 remains functionally unassessed rather than assigned a species, oil prior or persistence mechanism. Rank 6 provides fragrance composition without an admitted conditioning mechanism.",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "DIMETHICONE"
+      },
+      {
+        "rank": 2,
+        "canonical_name": "ISODODECANE"
+      },
+      {
+        "rank": 3,
+        "canonical_name": "C12-15 ALKYL BENZOATE"
+      },
+      {
+        "rank": 4,
+        "canonical_name": "ARGANIA KERNEL OIL"
+      },
+      {
+        "rank": 5,
+        "canonical_name": "PHENYL TRIMETHICONE"
+      },
+      {
+        "rank": 6,
+        "canonical_name": "FRAGRANCE (PARFUM)"
+      }
+    ],
+    "considered_ranks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "tipping_assumption": "The identified carrier and conditioning-film functions represent ordinary retained coating rather than a particularly cohesive or adherent system. This commitment uses the admitted retained-fibre context and the complete known architecture while preserving rank 4 as an unresolved contribution; no volatile-carrier cancellation, material weight prior, binary buildup value, rinse estimate or scalp assumption is used.",
+    "tipping_assumption_note": null,
+    "context": {
+      "source_id": "T02-maker",
+      "direction_id": "T02-direction-1",
+      "role": "leave_on_fibre_conditioning"
+    },
+    "original": {
+      "case_id": "T02",
+      "reason": "The reviewed silicone-carrier/conditioning-film route at ranks 1 and 5, combined with hydrocarbon and ester emollient roles at ranks 2 and 3, supports an ordinary retained conditioning coating. A low reading gives too little weight to the affirmative conditioning-film route; a high reading would require a stronger whole-system cohesive/adherent/structured-film argument than these supplied functions establish. Rank 4 remains functionally unassessed rather than assigned a species, oil prior or persistence mechanism. Rank 6 provides fragrance composition without an admitted conditioning mechanism.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ARGANIA KERNEL OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "tipping_assumption": "The identified carrier and conditioning-film functions represent ordinary retained coating rather than a particularly cohesive or adherent system. This commitment uses the admitted retained-fibre context and the complete known architecture while preserving rank 4 as an unresolved contribution; no volatile-carrier cancellation, material weight prior, binary buildup value, rinse estimate or scalp assumption is used."
+    }
+  },
+  "scenario_fit": [
+    {
+      "source_id": "T02-maker",
+      "direction_id": "T02-direction-1",
+      "role": "leave_on_fibre_conditioning",
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+        "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+        "record_key": "T02",
+        "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+      },
+      "policy_pins": {
+        "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+        "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+        "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+      },
+      "original": {
+        "case_id": "T02",
+        "direction_id": "T02-direction-1",
+        "source_id": "T02-maker",
+        "supported_role": "leave_on_fibre_conditioning",
+        "scenario": {
+          "source_id": "T02-maker",
+          "direction_id": "T02-direction-1",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "finish_style_unspecified_wet_dry",
+          "dose": "mist all over; amount unestablished",
+          "contact_time": "unestablished",
+          "removal": "retention_by_styling_context",
+          "restrictions": "none stated in reviewed exact product text",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ]
+        },
+        "weight": "medium",
+        "weight_authority": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+          "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+          "record_key": "T02",
+          "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+        },
+        "weight_confidence": "low",
+        "estimate": true,
+        "thickness": {
+          "fine": {
+            "value": "conditional",
+            "reason": "greater_load_or_flattening_concern",
+            "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+          },
+          "normal": {
+            "value": "suitable",
+            "reason": "thickness_weight_preference",
+            "condition": null
+          },
+          "coarse": {
+            "value": "suitable",
+            "reason": "thickness_weight_preference",
+            "condition": null
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "wavy": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "curly": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "coily": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          },
+          "moderately_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          },
+          "highly_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          }
+        },
+        "alternative_weight": "light",
+        "alternative_thickness": {
+          "fine": "suitable",
+          "normal": "suitable",
+          "coarse": "conditional"
+        }
+      }
+    }
+  ],
+  "provenance": {
+    "import_kind": "historical",
+    "original_method": {
+      "run_id": "current-view-v0.2",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/profiles.json",
+      "sha256": "737bbcccf68550056fcbe0d4033f22b2e73c1efabc75ad105ccfe05e1f3433fa",
+      "declared_version": null,
+      "unrecorded_note": "The selected consolidated container records no uniform method version; field-specific historical methods remain separately attributed."
+    },
+    "original_record": {
+      "case_id": "T02",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE",
+          "dictionary_roles": [
+            "silicone_carrier",
+            "conditioning_film"
+          ],
+          "formula_role": "principal",
+          "role_reason": "The exact silicone-carrier and conditioning-film functions provide the strongest coherent principal conditioning backbone in the complete carrier sequence.",
+          "ambiguity": "Grade and quantity are unspecified; principal is a functional estimate, not a mass claim."
+        },
+        {
+          "rank": 2,
+          "raw_name": "Isododecane",
+          "canonical_name": "ISODODECANE",
+          "dictionary_roles": [
+            "hydrocarbon_carrier",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "The reviewed hydrocarbon-carrier and emollient functions support distribution alongside the principal silicone conditioning route.",
+          "ambiguity": "Its quantitative contribution and physical grade are unknown; no evaporation fraction or volatility is inferred from the supplied roles."
+        },
+        {
+          "rank": 3,
+          "raw_name": "C12-15 Alkyl Benzoate",
+          "canonical_name": "C12-15 ALKYL BENZOATE",
+          "dictionary_roles": [
+            "defined_ester_emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "The exact ester-emollient function supplies a competing emollient contribution within the silicone conditioning architecture.",
+          "ambiguity": "No proportion or sensory performance is established."
+        },
+        {
+          "rank": 4,
+          "raw_name": "Argania Kernel Oil",
+          "canonical_name": "ARGANIA KERNEL OIL",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The dictionary marks this literal species-incomplete declaration not_assessed. No intact-oil, species, emollient, weight or penetration function is substituted.",
+          "ambiguity": "Exact species and function remain unresolved. The independently identified silicone, hydrocarbon and ester system supports a working backbone judgment without treating this ingredient as negligible."
+        },
+        {
+          "rank": 5,
+          "raw_name": "Phenyl Trimethicone",
+          "canonical_name": "PHENYL TRIMETHICONE",
+          "dictionary_roles": [
+            "silicone_carrier",
+            "conditioning_film"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "The exact silicone-carrier and conditioning-film functions reinforce the principal conditioning route rather than constituting an auxiliary marker.",
+          "ambiguity": "Position does not establish amount, grade or negligible activity."
+        },
+        {
+          "rank": 6,
+          "raw_name": "Fragrance (Parfum)",
+          "canonical_name": "FRAGRANCE (PARFUM)",
+          "dictionary_roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The reviewed fragrance-composition function is auxiliary to the conditioning carrier system.",
+          "ambiguity": "No exposure amount or intentional-perfuming inference beyond the exact declaration is made."
+        }
+      ],
+      "auxiliary_suffix": {
+        "status": "no_boundary",
+        "ranks": [],
+        "markers": [],
+        "reason": "Only rank 6 supplies a recognized auxiliary function. Two independent functions in different ingredients are absent; rank 5 is a conditioning carrier and rank 4 remains unresolved. No auxiliary suffix or trace boundary is established."
+      },
+      "ingredient_flags": {
+        "silicones": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 1,
+              "canonical_name": "DIMETHICONE"
+            },
+            {
+              "rank": 5,
+              "canonical_name": "PHENYL TRIMETHICONE"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": "none",
+          "reason": "All exact recognized positive matches are included; the remaining ranks were reviewed against this closed family.",
+          "unresolved": []
+        },
+        "mineral_oil": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": "none",
+          "reason": "All six exact declarations have reviewed negative results for this closed family in the supplied dictionary. No substring or broader-family inference is used.",
+          "unresolved": []
+        },
+        "drying_alcohol": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": "none",
+          "reason": "All six exact declarations have reviewed negative results for this closed family in the supplied dictionary. No substring or broader-family inference is used.",
+          "unresolved": []
+        },
+        "fragrance": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 6,
+              "canonical_name": "FRAGRANCE (PARFUM)"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": "none",
+          "reason": "All exact recognized positive matches are included; the remaining ranks were reviewed against this closed family.",
+          "unresolved": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": "none",
+          "reason": "All six exact declarations have reviewed negative results for this closed family in the supplied dictionary. No substring or broader-family inference is used.",
+          "unresolved": []
+        }
+      },
+      "base": {
+        "value": "silicone_led",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "PHENYL TRIMETHICONE"
+          }
+        ],
+        "counter_signal": [
+          "Ranks 2 and 3 supply an affirmative hydrocarbon/ester carrier rival. Rank 4 is not functionally assessed and cannot be counted as a confirmed intact botanical oil."
+        ],
+        "nearest_alternative": "ester_alkane_led",
+        "reason": "Dimethicone supplies the leading reviewed carrier/conditioning-film route, reinforced by Phenyl Trimethicone within the complete emollient system. That connected conditioning route favors silicone-led over ester/alkane-led; different early carrier families alone do not establish hybrid.",
+        "unresolved": [
+          "No concentrations or silicone grades; exact identity/function of rank 4 is unresolved. Its presence is retained as a limitation, not assigned a fabricated species or ignored."
+        ]
+      },
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "PHENYL TRIMETHICONE"
+          }
+        ],
+        "counter_signal": [
+          "The hydrocarbon/ester carrier-emollient route makes a lighter interpretation credible. A richer result would require an affirmative substantial structured-film argument beyond the supplied ordinary carrier/conditioning-film roles."
+        ],
+        "nearest_alternative": "light",
+        "reason": "Under B0/B1 and B5, the principal silicone conditioning system plus reinforcing conditioning silicone provides affirmative intermediate retained-film load alongside the hydrocarbon and ester emollients. Light is the closest rival; rich lacks a stronger whole-system structural argument under B6. No botanical material prior matches rank 4 and none is transferred.",
+        "unresolved": [
+          "Blend estimate only; silicone grades, carrier proportions, dose and distribution are unknown. Rank 4 exact species and function are unresolved. Neither evaporation nor measured retained mass is established."
+        ]
+      },
+      "penetration_potential": {
+        "value": "surface_led",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "PHENYL TRIMETHICONE"
+          }
+        ],
+        "counter_signal": [
+          "The exact function of rank 4 remains unassessed; it is not evidence against penetration and cannot inherit a studied whole-oil anchor."
+        ],
+        "nearest_alternative": "unknown",
+        "reason": "The positive evidence is a coherent silicone conditioning-film and hydrocarbon/ester emollient architecture. This supports a surface-led working interpretation without claiming that silicones cannot penetrate. An alternative principal plant-penetration architecture has no admitted exact-form support in the supplied dictionary.",
+        "unresolved": [
+          "No exact-formula penetration study, quantitative blend evidence or normal-dose efficacy evidence. Qualitative ingredient-function-to-formula extrapolation only; no absent-study negative or invented lab-to-retail result."
+        ]
+      },
+      "persistence_potential": "moderate",
+      "named_oils": [
+        {
+          "hero_id": "T02-hero-1",
+          "hero_name": "Moroccan argan oil",
+          "matched_ranks": [
+            4
+          ],
+          "prominence": {
+            "value": "unknown",
+            "estimate": false,
+            "confidence": "low",
+            "evidence": [
+              {
+                "rank": 4,
+                "canonical_name": "ARGANIA KERNEL OIL"
+              },
+              {
+                "source_id": "T02-maker"
+              }
+            ],
+            "counter_signal": [
+              "The literal hero mapping establishes a present source token, but neither a principal nor an affirmative secondary function is established by the frozen ledger."
+            ],
+            "nearest_alternative": "supporting",
+            "reason": "The predeclared hero maps to the literal ARGANIA KERNEL OIL at rank 4. Its frozen formula role is unresolved, and no qualified auxiliary suffix exists. Preserve unknown prominence rather than inferring prominence from the hero text or ingredient position.",
+            "unresolved": [
+              "Species-incomplete identity and function remain unresolved. The source mapping does not authorize an Argania Spinosa alias, material-prior transfer or blind-ledger revision."
+            ]
+          }
+        }
+      ],
+      "dispenser": {
+        "value": "spray",
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T02-maker"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": "none",
+        "reason": "Maker text explicitly describes spray/misting.",
+        "unresolved": [
+          "The packet establishes the maker-described mechanism, not package/batch verification."
+        ]
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T02-maker"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": "none",
+        "reason": "No explicit heat protection claim in reviewed maker description, benefits or directions.",
+        "unresolved": [
+          "False records absence of an accepted explicit claim in the completed source review, not measured zero protection."
+        ]
+      },
+      "provides_uv_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T02-maker"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": "none",
+        "reason": "The completed maker review has no accepted explicit hair-UV claim, and none of the six exact declared ingredients is a recognized UV filter in the supplied dictionary. Both conditions for a positive result are absent.",
+        "unresolved": [
+          "No measured UV-protection conclusion is inferred."
+        ]
+      },
+      "supported_uses": [
+        "leave_on_fibre_conditioning"
+      ],
+      "use_evidence": {
+        "value": [
+          "leave_on_fibre_conditioning"
+        ],
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T02-maker",
+            "direction_id": "T02-direction-1"
+          }
+        ],
+        "counter_signal": [
+          "The retained finishing context does not establish an explicit dry-hair stage."
+        ],
+        "nearest_alternative": "none",
+        "reason": "The coherent maker direction specifies misting hair to finish a style. Styling context establishes retention and therefore general leave-on fibre conditioning. It supplies no explicit damp/dry alternative, scalp site or pre-wash removal instruction; dry_finish is not inferred.",
+        "unresolved": [
+          "Wet versus dry stage, amount and contact time are unestablished."
+        ]
+      },
+      "application_scenarios": [
+        {
+          "source_id": "T02-maker",
+          "direction_id": "T02-direction-1",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "finish_style_unspecified_wet_dry",
+          "dose": "mist all over; amount unestablished",
+          "contact_time": "unestablished",
+          "removal": "retention_by_styling_context",
+          "restrictions": "none stated in reviewed exact product text",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ]
+        }
+      ],
+      "product_key": "oil-targeted-t02",
+      "identity": {
+        "brand": "OGX",
+        "product": "Argan Oil of Morocco Weightless Healing Dry Oil",
+        "market": "US maker",
+        "size": "4 fl oz",
+        "identifier_if_verified": null
+      },
+      "formula": {
+        "raw_inci": "Dimethicone, Isododecane, C12-15 Alkyl Benzoate, Argania Kernel Oil, Phenyl Trimethicone, Fragrance (Parfum)",
+        "ingredients": [
+          {
+            "rank": 1,
+            "raw_name": "Dimethicone",
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 2,
+            "raw_name": "Isododecane",
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 3,
+            "raw_name": "C12-15 Alkyl Benzoate",
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 4,
+            "raw_name": "Argania Kernel Oil",
+            "canonical_name": "ARGANIA KERNEL OIL"
+          },
+          {
+            "rank": 5,
+            "raw_name": "Phenyl Trimethicone",
+            "canonical_name": "PHENYL TRIMETHICONE"
+          },
+          {
+            "rank": 6,
+            "raw_name": "Fragrance (Parfum)",
+            "canonical_name": "FRAGRANCE (PARFUM)"
+          }
+        ],
+        "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment"
+      },
+      "field_authority": {
+        "ingredient_ledger": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+          "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+          "record_key": "T02",
+          "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+        },
+        "auxiliary_suffix": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+          "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+          "record_key": "T02",
+          "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+        },
+        "base": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+          "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+          "record_key": "T02",
+          "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+        },
+        "weight": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+          "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+          "record_key": "T02",
+          "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+        },
+        "penetration_potential": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+          "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+          "record_key": "T02",
+          "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+        },
+        "ingredient_flags": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+          "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+          "record_key": "T02",
+          "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+        },
+        "persistence_potential": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+          "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+          "record_key": "T02",
+          "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+        },
+        "named_oils": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+          "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+          "record_key": "T02",
+          "reason": "Controlled source reveal after both fresh blind outputs sealed."
+        },
+        "dispenser": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+          "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+          "record_key": "T02",
+          "reason": "Controlled source reveal after both fresh blind outputs sealed."
+        },
+        "provides_heat_protection": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+          "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+          "record_key": "T02",
+          "reason": "Controlled source reveal after both fresh blind outputs sealed."
+        },
+        "provides_uv_protection": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+          "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+          "record_key": "T02",
+          "reason": "Controlled source reveal after both fresh blind outputs sealed."
+        },
+        "supported_uses": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+          "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+          "record_key": "T02",
+          "reason": "Controlled source reveal after both fresh blind outputs sealed."
+        },
+        "use_evidence": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+          "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+          "record_key": "T02",
+          "reason": "Controlled source reveal after both fresh blind outputs sealed."
+        },
+        "application_scenarios": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+          "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+          "record_key": "T02",
+          "reason": "Controlled source reveal after both fresh blind outputs sealed."
+        },
+        "formula": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/source-packet.json",
+          "sha256": "38278813aadcbbfe316a774d381e2a59b4e82ce866406b830c8b80e55f808c92",
+          "record_key": "T02",
+          "reason": "Attributed research decision"
+        }
+      },
+      "persistence_trace_reference": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/persistence-research-trace.json",
+        "sha256": "ab9bac50ed9205797f3c51a25149eeb46c8b5aa2c3daa862c4d668d5f7f80b2b",
+        "record_key": "T02",
+        "reason": "Attributed research decision"
+      },
+      "fit": {
+        "thickness": {
+          "fine": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "normal": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "coarse": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "wavy": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "curly": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "coily": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "moderately_damaged": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "highly_damaged": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          }
+        }
+      },
+      "completion_status": "complete_research_with_permitted_gaps"
+    },
+    "original_record_sha256": "4e50e874c7fba5c9a1d966b281f145813862fcf0f0f3bc7b8920f7e4cabe0978",
+    "field_authorities": {
+      "ingredient_ledger": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+        "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+        "record_key": "T02",
+        "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+      },
+      "auxiliary_suffix": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+        "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+        "record_key": "T02",
+        "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+      },
+      "base": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+        "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+        "record_key": "T02",
+        "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+      },
+      "weight": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+        "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+        "record_key": "T02",
+        "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+      },
+      "penetration_potential": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+        "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+        "record_key": "T02",
+        "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+      },
+      "ingredient_flags": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+        "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+        "record_key": "T02",
+        "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+      },
+      "persistence_potential": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+        "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+        "record_key": "T02",
+        "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration."
+      },
+      "named_oils": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+        "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+        "record_key": "T02",
+        "reason": "Controlled source reveal after both fresh blind outputs sealed."
+      },
+      "dispenser": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+        "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+        "record_key": "T02",
+        "reason": "Controlled source reveal after both fresh blind outputs sealed."
+      },
+      "provides_heat_protection": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+        "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+        "record_key": "T02",
+        "reason": "Controlled source reveal after both fresh blind outputs sealed."
+      },
+      "provides_uv_protection": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+        "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+        "record_key": "T02",
+        "reason": "Controlled source reveal after both fresh blind outputs sealed."
+      },
+      "supported_uses": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+        "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+        "record_key": "T02",
+        "reason": "Controlled source reveal after both fresh blind outputs sealed."
+      },
+      "use_evidence": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+        "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+        "record_key": "T02",
+        "reason": "Controlled source reveal after both fresh blind outputs sealed."
+      },
+      "application_scenarios": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+        "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+        "record_key": "T02",
+        "reason": "Controlled source reveal after both fresh blind outputs sealed."
+      },
+      "formula": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/source-packet.json",
+        "sha256": "38278813aadcbbfe316a774d381e2a59b4e82ce866406b830c8b80e55f808c92",
+        "record_key": "T02",
+        "reason": "Attributed research decision"
+      }
+    },
+    "dependencies": [
+      {
+        "kind": "selection_inventory",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/combined-profile-inventory.json",
+        "sha256": "7abad99eb94b66ecdd8c0700c25c1955314ecf87026fc87fbb4ca5ecd04d8a87"
+      },
+      {
+        "kind": "original_profile",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/profiles.json",
+        "sha256": "737bbcccf68550056fcbe0d4033f22b2e73c1efabc75ad105ccfe05e1f3433fa"
+      },
+      {
+        "kind": "authority",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+        "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9"
+      },
+      {
+        "kind": "authority",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+        "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6"
+      },
+      {
+        "kind": "authority",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/source-packet.json",
+        "sha256": "38278813aadcbbfe316a774d381e2a59b4e82ce866406b830c8b80e55f808c92"
+      },
+      {
+        "kind": "authority",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/persistence-research-trace.json",
+        "sha256": "ab9bac50ed9205797f3c51a25149eeb46c8b5aa2c3daa862c4d668d5f7f80b2b"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/input-manifest.json",
+        "sha256": "c2afefb64cde50fd01b023c53cddf418586f3b4f3075a287cad6555a26746c26"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/method.md",
+        "sha256": "d3574b9b59b9214ea2c47827e361707b8b69b003b586e1244e1ba8c0df48a726"
+      },
+      {
+        "kind": "normalization_mapping",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/blind-packet.json",
+        "sha256": "fe8f733abba22ae94767c6afee84fa0d416324d4233e89961da80d9bfbe2e9bb"
+      },
+      {
+        "kind": "function_dictionary",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/function-dictionary.json",
+        "sha256": "4cb416b844706777e191a6b262dcb61b04498b222e30f1289cc07d16a1e224ad"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/material-weight-reference.json",
+        "sha256": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/stage2-manifest.json",
+        "sha256": "294bdd537cc617c5b58e9084565eac8df1b0964bf757a57c9e0fe1ddbc9caf93"
+      },
+      {
+        "kind": "stage_seal",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/blind-seal.json",
+        "sha256": "c1a62c0678632d19dcd116ba75f2b37e46850e4d4809e1129e6da8c48954b126"
+      },
+      {
+        "kind": "stage_seal",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/stage2-seal.json",
+        "sha256": "c65f14cf50712f2846177d65949b903cac48d091762e825c428ea168d1501bb4"
+      },
+      {
+        "kind": "source_packet",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/stage2-packet.json",
+        "sha256": "5b27d15d1537553c059149643645d3c5bb41e4b3707bdc3025049a3df072bdf1"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/input-manifest.json",
+        "sha256": "8337bf4408d41e3cec0d0f16dcc553ffcbedf3b795c1c3d095663f1934cd673d"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/method.md",
+        "sha256": "d3574b9b59b9214ea2c47827e361707b8b69b003b586e1244e1ba8c0df48a726"
+      },
+      {
+        "kind": "normalization_mapping",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/blind-packet.json",
+        "sha256": "e6c0e101c6adb066179a4a0076b53f224d795a3c021105831843d1f65b1fe241"
+      },
+      {
+        "kind": "function_dictionary",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json",
+        "sha256": "b8db54b6dfc6534b9fe2c4e4be2009c2ded2cfb8b0c0439617194009e64f6a69"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/material-weight-reference.json",
+        "sha256": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/stage2-manifest.json",
+        "sha256": "fb47122c7dd4239e18f73d70a4748154ecffe889a8c7dedfafae9a8634e3ed5f"
+      },
+      {
+        "kind": "stage_seal",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/blind-seal.json",
+        "sha256": "bcf44e0787d8269fd45f6b6b8e3aaeb17e4f9220b4d648b0cc06558816022984"
+      },
+      {
+        "kind": "stage_seal",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/stage2-seal.json",
+        "sha256": "4d9158dd52500df547afd8dc1d22804c72c685e784a18096871a52c393e59c77"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/stage2-packet.json",
+        "sha256": "2a4f18234d03bcb7bdcdc08bfe8299caff23969f28fee3312b464a1d81ca4c6e"
+      },
+      {
+        "kind": "scenario_fit",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/scenario-fit.json",
+        "sha256": "1fc140b189f72e3957fed37613daafe8f44e61dcc214725f8146ba3fe2670cc2"
+      }
+    ],
+    "mapping_receipts": [
+      {
+        "kind": "field_authority_resolutions",
+        "records": [
+          {
+            "field": "ingredient_ledger",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+            "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+            "record_key": "T02",
+            "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration.",
+            "original_method": {
+              "run_id": "oil-targeted-neutral-v0.2",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "24e6bf0f24695afe56d59375fff1240e76f4e12ddecd4d511c7defb477e0a7be"
+          },
+          {
+            "field": "auxiliary_suffix",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+            "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+            "record_key": "T02",
+            "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration.",
+            "original_method": {
+              "run_id": "oil-targeted-neutral-v0.2",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "24e6bf0f24695afe56d59375fff1240e76f4e12ddecd4d511c7defb477e0a7be"
+          },
+          {
+            "field": "base",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+            "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+            "record_key": "T02",
+            "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration.",
+            "original_method": {
+              "run_id": "oil-targeted-neutral-v0.2",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "24e6bf0f24695afe56d59375fff1240e76f4e12ddecd4d511c7defb477e0a7be"
+          },
+          {
+            "field": "weight",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+            "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+            "record_key": "T02",
+            "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration.",
+            "original_method": {
+              "run_id": "oil-targeted-neutral-v0.2",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "24e6bf0f24695afe56d59375fff1240e76f4e12ddecd4d511c7defb477e0a7be"
+          },
+          {
+            "field": "penetration_potential",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+            "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+            "record_key": "T02",
+            "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration.",
+            "original_method": {
+              "run_id": "oil-targeted-neutral-v0.2",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "24e6bf0f24695afe56d59375fff1240e76f4e12ddecd4d511c7defb477e0a7be"
+          },
+          {
+            "field": "ingredient_flags",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+            "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+            "record_key": "T02",
+            "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration.",
+            "original_method": {
+              "run_id": "oil-targeted-neutral-v0.2",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "24e6bf0f24695afe56d59375fff1240e76f4e12ddecd4d511c7defb477e0a7be"
+          },
+          {
+            "field": "persistence_potential",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+            "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+            "record_key": "T02",
+            "reason": "Fresh neutral successor after role-hint removal; original first pass preserved and excluded from clean T02 calibration.",
+            "original_method": {
+              "run_id": "oil-targeted-neutral-v0.2",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "24e6bf0f24695afe56d59375fff1240e76f4e12ddecd4d511c7defb477e0a7be"
+          },
+          {
+            "field": "named_oils",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+            "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+            "record_key": "T02",
+            "reason": "Controlled source reveal after both fresh blind outputs sealed.",
+            "original_method": {
+              "run_id": "oil-targeted-neutral-v0.2",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "0ca4ddf2173a3a782e714006a2be7eadaf0b6d32faeb6ba6b85bc311d70785b3"
+          },
+          {
+            "field": "dispenser",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+            "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+            "record_key": "T02",
+            "reason": "Controlled source reveal after both fresh blind outputs sealed.",
+            "original_method": {
+              "run_id": "oil-targeted-neutral-v0.2",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "0ca4ddf2173a3a782e714006a2be7eadaf0b6d32faeb6ba6b85bc311d70785b3"
+          },
+          {
+            "field": "provides_heat_protection",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+            "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+            "record_key": "T02",
+            "reason": "Controlled source reveal after both fresh blind outputs sealed.",
+            "original_method": {
+              "run_id": "oil-targeted-neutral-v0.2",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "0ca4ddf2173a3a782e714006a2be7eadaf0b6d32faeb6ba6b85bc311d70785b3"
+          },
+          {
+            "field": "provides_uv_protection",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+            "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+            "record_key": "T02",
+            "reason": "Controlled source reveal after both fresh blind outputs sealed.",
+            "original_method": {
+              "run_id": "oil-targeted-neutral-v0.2",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "0ca4ddf2173a3a782e714006a2be7eadaf0b6d32faeb6ba6b85bc311d70785b3"
+          },
+          {
+            "field": "supported_uses",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+            "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+            "record_key": "T02",
+            "reason": "Controlled source reveal after both fresh blind outputs sealed.",
+            "original_method": {
+              "run_id": "oil-targeted-neutral-v0.2",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "0ca4ddf2173a3a782e714006a2be7eadaf0b6d32faeb6ba6b85bc311d70785b3"
+          },
+          {
+            "field": "use_evidence",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+            "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+            "record_key": "T02",
+            "reason": "Controlled source reveal after both fresh blind outputs sealed.",
+            "original_method": {
+              "run_id": "oil-targeted-neutral-v0.2",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "0ca4ddf2173a3a782e714006a2be7eadaf0b6d32faeb6ba6b85bc311d70785b3"
+          },
+          {
+            "field": "application_scenarios",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+            "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6",
+            "record_key": "T02",
+            "reason": "Controlled source reveal after both fresh blind outputs sealed.",
+            "original_method": {
+              "run_id": "oil-targeted-neutral-v0.2",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "0ca4ddf2173a3a782e714006a2be7eadaf0b6d32faeb6ba6b85bc311d70785b3"
+          },
+          {
+            "field": "formula",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/source-packet.json",
+            "sha256": "38278813aadcbbfe316a774d381e2a59b4e82ce866406b830c8b80e55f808c92",
+            "record_key": "T02",
+            "reason": "Attributed research decision",
+            "original_method": {
+              "run_id": "oil-targeted-coverage-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "a6538f225f5ae5c4bd30e80599d058f467536ccf7327ae8efc271e3873bf5900"
+          }
+        ]
+      },
+      {
+        "kind": "persistence_trace_resolution",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/persistence-research-trace.json",
+        "sha256": "ab9bac50ed9205797f3c51a25149eeb46c8b5aa2c3daa862c4d668d5f7f80b2b",
+        "record_key": "T02",
+        "reason": "Attributed research decision",
+        "resolved_record_sha256": "76bcf453571f81ed97eb8dc5b28dc62ec03b470a8c00cc8beb1c29431df2d301"
+      },
+      {
+        "kind": "scenario_fit_resolution",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/scenario-fit.json",
+        "policy_versions": [
+          "OE42-thickness-v0.1",
+          "OE43-pattern-v0.1",
+          "OE45-damage-v0.1"
+        ],
+        "rows": 1
+      },
+      {
+        "kind": "source_context",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/stage2-packet.json",
+        "original": {
+          "case_id": "T02",
+          "identity": {
+            "brand": "OGX",
+            "product": "Argan Oil of Morocco Weightless Healing Dry Oil",
+            "market": "US maker",
+            "size": "4 fl oz",
+            "identifier_if_verified": null
+          },
+          "sources": [
+            {
+              "id": "T02-maker",
+              "url": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-weightless-healing-dry-oil?phrase=2024",
+              "scope": "Exact maker online formula, product text, directions, packaging mechanism and accepted claim review; not package/batch verification."
+            }
+          ],
+          "heroes": [
+            {
+              "hero_id": "T02-hero-1",
+              "hero_name": "Moroccan argan oil",
+              "canonical_ingredients": [
+                "ARGANIA KERNEL OIL"
+              ],
+              "source_id": "T02-maker",
+              "mapping_note": "Literal species-incomplete source token only; no argan species alias or material prior."
+            }
+          ],
+          "non_oil_features": [],
+          "packaging": {
+            "value": "spray",
+            "status": "confirmed",
+            "source_id": "T02-maker",
+            "observation": "Maker text explicitly describes spray/misting."
+          },
+          "claims": {
+            "heat": {
+              "accepted": false,
+              "review_complete": true,
+              "source_id": "T02-maker",
+              "reason": {
+                "accepted_explicit": false,
+                "negative_basis": "No explicit heat protection claim in reviewed maker description, benefits or directions."
+              }
+            },
+            "uv": {
+              "accepted": false,
+              "review_complete": true,
+              "source_id": "T02-maker",
+              "reason": {
+                "accepted_explicit": false,
+                "basis": "No explicit hair UV claim in reviewed maker description, benefits or directions."
+              }
+            }
+          },
+          "directions": [
+            {
+              "source_id": "T02-maker",
+              "dose": "mist all over; amount unestablished",
+              "contact_time": "unestablished",
+              "restrictions": "none stated in reviewed exact product text",
+              "direction_id": "T02-direction-1",
+              "site": [
+                "hair_fibre"
+              ],
+              "stage": "finish_style_unspecified_wet_dry",
+              "removal": "retention_by_styling_context",
+              "text": "Finish style by misting all over for shine and frizz control; no explicit damp/dry instruction."
+            }
+          ],
+          "source_limits": [
+            "Current online formula only; packaging may differ.",
+            "Different Arabia OGX nine-item formula excluded; Argania Kernel Oil literal species-incomplete token preserved."
+          ],
+          "source_record_ref": "source-packet.json#T02"
+        },
+        "directions": [
+          {
+            "source_id": "T02-maker",
+            "dose": "mist all over; amount unestablished",
+            "contact_time": "unestablished",
+            "restrictions": "none stated in reviewed exact product text",
+            "direction_id": "T02-direction-1",
+            "site": [
+              "hair_fibre"
+            ],
+            "stage": "finish_style_unspecified_wet_dry",
+            "removal": "retention_by_styling_context",
+            "text": "Finish style by misting all over for shine and frizz control; no explicit damp/dry instruction."
+          }
+        ]
+      },
+      {
+        "kind": "declaration_admission",
+        "basis": "Complete frozen raw formula and ordered ingredients preserved under original source admission; no fresh source acquisition or physical batch verification."
+      }
+    ]
+  }
+}

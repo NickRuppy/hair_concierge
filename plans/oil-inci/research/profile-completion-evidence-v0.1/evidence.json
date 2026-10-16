@@ -1,0 +1,438 @@
+{
+  "revision": "profile-completion-evidence-v0.1",
+  "reviewed_at": "2026-10-09",
+  "status": "bounded_evidence_pass_complete_not_all_properties_resolved",
+  "scope": "Existing round6 exact profiles only; independent of holdout. No production, standard change or historical rewrite.",
+  "method_authority": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+  "sources": [
+    {
+      "source_id": "biopark-maker",
+      "url": "https://biopark-cosmetics.com/products/organic-coconut-oil-100ml",
+      "accessed_at": "2026-10-09",
+      "scope": "Exact maker, Organic Coconut Oil 100ml, international page supporting captured DE product",
+      "paraphrase": [
+        "Maker pairs the sole Cocos Nucifera Fruit Oil declaration with cold-pressed, unrefined coconut oil.",
+        "The current declaration matches the captured single-ingredient formula."
+      ],
+      "limitations": [
+        "Maker penetration, repair and medical-adjacent claims are not admitted efficacy evidence."
+      ]
+    },
+    {
+      "source_id": "biopark-de-market",
+      "url": "https://www.ecco-verde.de/biopark-cosmetics/coconut-oil",
+      "accessed_at": "2026-10-09",
+      "scope": "DE market/package corroboration only; retailer, not scientific authority",
+      "paraphrase": [
+        "100ml jar, EAN 3830066651079, article BPC-BIOP071; cold-pressed and unrefined description."
+      ],
+      "limitations": [
+        "Ingredient display abbreviates to Cocos Nucifera (Coconut); retain maker exact Fruit Oil declaration."
+      ]
+    },
+    {
+      "source_id": "croda-coconut-identity",
+      "url": "https://www.crodabeauty.com/en-gb/products/product/2659-seatons_1_refined_1_coconut_1_oil",
+      "accessed_at": "2026-10-09",
+      "scope": "Primary supplier whole-material identity documentation",
+      "paraphrase": [
+        "Cocos Nucifera (Coconut) Oil is the declared INCI; supplier describes pressing coconut white flesh before refining."
+      ],
+      "limitations": [
+        "This supplier product is refined; it is not the Biopark batch or a supplier equivalence certificate. Skin feel and solid state do not determine hair penetration."
+      ]
+    },
+    {
+      "source_id": "ruetsch-2001",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/11413497",
+      "accessed_at": "2026-10-09",
+      "scope": "Primary paper abstract: Ruetsch, Kamath, Rele, Mohile; J Cosmet Sci 52(3):169-184 (2001)",
+      "paraphrase": [
+        "Cross-sectional TOF-SIMS located coconut-oil characteristic ions inside treated human hair; mineral oil contrasted in the tested conditions."
+      ],
+      "limitations": [
+        "Ex-vivo fibre evidence, not an exact Biopark product experiment or ordinary-dose performance guarantee. Abstract does not resolve every processing grade/contact-time condition. Commercial Marico coauthors; not an independent consumer efficacy trial."
+      ]
+    },
+    {
+      "source_id": "evolve-maker",
+      "url": "https://www.evolvebeauty.com/products/weightless-hair-serum",
+      "accessed_at": "2026-10-09",
+      "scope": "Exact maker UK 30ml; description, key ingredients, complete INCI",
+      "paraphrase": [
+        "Gardenia Monoi remains an explicit advertised ingredient. Maker describes Monoi as flower maceration into coconut oil.",
+        "Current 22-position INCI matches captured D01."
+      ],
+      "limitations": [
+        "No quantified preparation breakdown or allocation of declared coconut to Monoi is supplied. Efficacy claims not adopted."
+      ]
+    },
+    {
+      "source_id": "kerastase-de-maker",
+      "url": "https://www.kerastase.de/produktlinien/produktart/ole-seren/nach-haartyp-filtern/widerspenstiges-haar/l-huile-originale-nachfullbar/KER_00303.html",
+      "accessed_at": "2026-10-09",
+      "scope": "Exact maker DE 75ml refillable KER_00303; key ingredients and full INCI",
+      "paraphrase": [
+        "French camellia and wild camellia are both explicitly advertised; French material is described as hand harvested in Brittany and cold extracted.",
+        "Current 19-position formula matches captured D03, including Camellia Oleifera Seed Oil and Camellia Japonica Flower Extract."
+      ],
+      "limitations": [
+        "Page does not explicitly map either marketing name to its unique species/preparation. Geography, common-name inference and ingredient elimination do not resolve exact mapping."
+      ]
+    },
+    {
+      "source_id": "kerastase-uk-corrob",
+      "url": "https://www.kerastase.co.uk/ranges/regimen/elixir-ultime/l-huile-originale-l-huile-originale-refillable/KER_00303.html",
+      "accessed_at": "2026-10-09",
+      "scope": "Secondary maker market cross-check for same product code; no replacement of DE formula",
+      "paraphrase": [
+        "UK maker repeats French/wild camellia positioning and the same 19-position declaration."
+      ],
+      "limitations": [
+        "No explicit species/preparation mapping; not independent confirmation or DE batch evidence."
+      ]
+    },
+    {
+      "source_id": "neqi-maker",
+      "url": "https://neqi-hair.com/products/smooth-strength-rosemary-oil",
+      "accessed_at": "2026-10-09",
+      "scope": "Exact maker DE 75ml; product body, ingredients and official gallery",
+      "paraphrase": [
+        "Rosemary, castor and almond remain explicitly promoted.",
+        "Current 17-position declaration matches D04; Rosemary Leaf Oil is rank 4.",
+        "Official gallery shows the named bottle alongside a removed bulb-and-glass pipette."
+      ],
+      "limitations": [
+        "Growth, scalp and peptide claims are not adopted. Current displayed formula still has no named peptide; no formula merging. No drop-to-volume conversion."
+      ]
+    },
+    {
+      "source_id": "neqi-image",
+      "url": "https://neqi-hair.com/cdn/shop/files/NEQI_Online-Assets_Group_Rosemary-Oil_002.png?v=1730711119&width=1024",
+      "accessed_at": "2026-10-09",
+      "scope": "Image linked from exact DE maker product gallery; visually inspected",
+      "paraphrase": [
+        "Green Smooth Strength Rosemary Oil bottle with a separate black rubber bulb, screw collar and long glass pipette."
+      ],
+      "limitations": [
+        "Maker image observation, not physical batch inspection."
+      ]
+    },
+    {
+      "source_id": "aroma-fr-maker",
+      "url": "https://www.aroma-zone.com/info/fiche-technique/huile-de-soin-cheveux-bio-aroma-zone",
+      "accessed_at": "2026-10-09",
+      "scope": "Exact maker FR 250ml ref 0298701; INCI, composition and official gallery",
+      "paraphrase": [
+        "Seven named plant oils and Amla macerate remain advertised. Current ten-position declaration matches D06, with Emblica Officinalis Fruit Powder at rank 8.",
+        "Main package photo shows a screw cap. Usage photo shows the same labelled bottle open and tilted, releasing a continuous stream through the unobstructed neck.",
+        "Pump and service cap are separately listed accessories, not evidence of the selected supplied mechanism."
+      ],
+      "limitations": [
+        "No physical batch inspection. Carrier/extract details from a separately sold raw material cannot replace this powder declaration."
+      ]
+    },
+    {
+      "source_id": "aroma-en-maker",
+      "url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil",
+      "accessed_at": "2026-10-09",
+      "scope": "Same maker 250ml formula, English source used historically",
+      "paraphrase": [
+        "The composition section explicitly couples Amla macerate and organic castor oil and links a separately sold Amla infusion."
+      ],
+      "limitations": [
+        "This supports a castor relationship but not allocation of total castor to macerate or a unified prominence for the captured blend."
+      ]
+    },
+    {
+      "source_id": "aroma-amla-linked",
+      "url": "https://www.aroma-zone.com/en/product/organic-amla-infused-oil",
+      "accessed_at": "2026-10-09",
+      "scope": "Primary supplier identity documentation for linked raw material, NOT the captured haircare blend",
+      "paraphrase": [
+        "Supplier describes Amla fruit maceration in virgin castor oil with controlled heat and filtration. Its INCI is Ricinus Communis Seed Oil and Emblica Officinalis Fruit Extract."
+      ],
+      "limitations": [
+        "Extract differs from D06 Fruit Powder. A link is not a certificate of exact raw-material/batch composition in the captured formula. Do not merge formulas or borrow rank 1 prominence."
+      ]
+    },
+    {
+      "source_id": "aroma-package-image",
+      "url": "https://cdn.aroma-zone.com/image/upload/f_auto,q_auto,w_1280,c_fit/v1/ctcdn/e5f608cf-85e6-4db5-8d00-81b1960857bb/060-stele-298701-047-HBIpWS_c.jpg",
+      "accessed_at": "2026-10-09",
+      "scope": "FR product gallery main image",
+      "paraphrase": [
+        "Label identifies Huile de soin cheveux / Haircare oil with seven precious oils; metal screw cap visible."
+      ],
+      "limitations": []
+    },
+    {
+      "source_id": "aroma-usage-image",
+      "url": "https://cdn.aroma-zone.com/image/upload/f_auto,q_auto,w_1280,c_fit/v1/ctcdn/e5f608cf-85e6-4db5-8d00-81b1960857bb/incarne_110_0009-FBlp8SPO.jpg",
+      "accessed_at": "2026-10-09",
+      "scope": "FR product gallery usage image; visually inspected",
+      "paraphrase": [
+        "Same labelled bottle shown with cap removed, open threaded neck and oil flowing as continuous stream."
+      ],
+      "limitations": []
+    }
+  ],
+  "findings": [
+    {
+      "id": "D02-penetration",
+      "neutral_id": "D02",
+      "field": "penetration_potential",
+      "previous": "unknown",
+      "proposed": "penetration_potential",
+      "estimate": true,
+      "confidence": "low",
+      "status": "bounded_exact_product_mapping_resolved",
+      "sources": [
+        "biopark-maker",
+        "croda-coconut-identity",
+        "ruetsch-2001",
+        "biopark-de-market"
+      ],
+      "matched_ranks": [
+        1
+      ],
+      "reason": "Exact maker confirms whole unrefined coconut oil under the Fruit Oil declaration. The entire one-ingredient conditioning backbone is that material. Admit the existing whole-coconut positive route for this exact product; retain Fruit Oil as a distinct declared identity, with no global alias.",
+      "caveat": "Whole-material to finished-product and processing-grade extrapolation. Not evidence of measured magnitude, predominance, ordinary dose efficacy, repair or equal behavior of all derivatives. Surface conditioning can coexist with constituent penetration.",
+      "rejected": [
+        "Universal Fruit Oil equals Coconut Oil alias without product preparation evidence.",
+        "Skin absorption, viscosity, semisolid state, weight label or maker repair claim as proof."
+      ]
+    },
+    {
+      "id": "D04-dispenser",
+      "neutral_id": "D04",
+      "field": "dispenser",
+      "previous": "unknown",
+      "proposed": "dropper",
+      "estimate": false,
+      "confidence": "high",
+      "status": "resolved_observation",
+      "sources": [
+        "neqi-maker",
+        "neqi-image"
+      ],
+      "reason": "Exact maker gallery visibly shows a removable bulb-and-glass pipette.",
+      "caveat": "Source package observation; not physical batch verification; dose unconverted."
+    },
+    {
+      "id": "D06-dispenser",
+      "neutral_id": "D06",
+      "field": "dispenser",
+      "previous": "unknown",
+      "proposed": "pour",
+      "estimate": false,
+      "confidence": "high",
+      "status": "resolved_observation",
+      "sources": [
+        "aroma-fr-maker",
+        "aroma-package-image",
+        "aroma-usage-image"
+      ],
+      "reason": "Exact FR 250ml gallery depicts continuous pouring from an open, unobstructed threaded bottle neck.",
+      "caveat": "Optional separately sold pump/capsule does not replace selected package. Source image is not physical batch verification."
+    },
+    {
+      "id": "D01-gardenia-monoi",
+      "neutral_id": "D01",
+      "field": "named_oils.prominence",
+      "hero_id": "gardenia_monoi",
+      "previous": "unknown",
+      "proposed": "unknown",
+      "status": "positioning_review_complete_method_gap_retained",
+      "sources": [
+        "evolve-maker"
+      ],
+      "matched_ranks": [
+        4,
+        6
+      ],
+      "reason": "Named preparation affirmed and coconut-maceration relationship explicit. Frozen coconut role is secondary; Gardenia extract role unresolved. Current method does not assign one prominence from mismatched component roles.",
+      "needed": "Exact preparation/formula allocation plus admitted formula role, or an explicitly approved preparation-prominence policy. Do not infer absence or borrow coconut supporting status."
+    },
+    {
+      "id": "D03-french-camellia",
+      "neutral_id": "D03",
+      "field": "named_oils.prominence",
+      "hero_id": "french_camellia",
+      "previous": "unknown",
+      "proposed": "unknown",
+      "status": "positioning_review_complete_identity_gap_retained",
+      "sources": [
+        "kerastase-de-maker",
+        "kerastase-uk-corrob"
+      ],
+      "matched_ranks": [],
+      "reason": "French camellia is present in positioning; exact mapping to one declared species/preparation is not supplied.",
+      "needed": "Maker documentation mapping this hero to the declared ingredient/preparation. Even a future Japonica Flower Extract mapping leaves its frozen role unresolved; do not assume seed-oil status."
+    },
+    {
+      "id": "D03-wild-camellia",
+      "neutral_id": "D03",
+      "field": "named_oils.prominence",
+      "hero_id": "wild_camellia",
+      "previous": "unknown",
+      "proposed": "unknown",
+      "status": "positioning_review_complete_identity_gap_retained",
+      "sources": [
+        "kerastase-de-maker",
+        "kerastase-uk-corrob"
+      ],
+      "matched_ranks": [],
+      "reason": "Wild camellia is present in positioning; exact mapping to one declared species/preparation is not supplied.",
+      "needed": "Maker mapping; do not derive Oleifera from wild/geography, botany alone, or by eliminating the other extract."
+    },
+    {
+      "id": "D04-rosemary",
+      "neutral_id": "D04",
+      "field": "named_oils.prominence",
+      "hero_id": "rosemary_oil",
+      "previous": "unknown",
+      "proposed": "unknown",
+      "status": "positioning_review_complete_method_gap_retained",
+      "sources": [
+        "neqi-maker"
+      ],
+      "matched_ranks": [
+        4
+      ],
+      "reason": "Rosemary identity and positioning are established. Frozen rank4 role is auxiliary and qualified suffix begins at rank7; unresolved Lavandula Oil/Extract at rank6 blocks extension. No existing leading/supporting/trace rule fits.",
+      "needed": "Retain unknown under current standard. Any new rule for auxiliary heroes outside the qualified suffix is a method decision, not additional marketing capture."
+    },
+    {
+      "id": "D06-amla",
+      "neutral_id": "D06",
+      "field": "named_oils.prominence",
+      "hero_id": "amla_macerate",
+      "previous": "unknown",
+      "proposed": "unknown",
+      "status": "positioning_review_complete_preparation_gap_retained",
+      "sources": [
+        "aroma-fr-maker",
+        "aroma-en-maker",
+        "aroma-amla-linked"
+      ],
+      "matched_ranks": [
+        8
+      ],
+      "reason": "Amla macerate and castor relationship affirmed; linked raw material declares extract but frozen blend declares powder with unresolved role. Its component proportions and exact preparation binding remain unproved.",
+      "needed": "Exact blend/preparation evidence and admitted formula role, or approved preparation policy. Do not add rank1 to exact mapping or inherit all castor prominence from a different product."
+    }
+  ],
+  "base_wording": {
+    "status": "proposal_for_owning_session_wording_checkpoint",
+    "values": {
+      "pure_plant_oil": "Ein Pflanzenöl bildet die Pflegebasis. Seine Lipide können die Haaroberfläche geschmeidiger machen und Glanz unterstützen.",
+      "plant_oil_blend": "Mehrere Pflanzenöle bilden die Pflegebasis. Ihre Lipide können die Haaroberfläche geschmeidiger machen und Glanz unterstützen.",
+      "silicone_led": "Silikone prägen die Pflegebasis. Ihr gleitender Film kann die Haaroberfläche glatter wirken lassen und Glanz unterstützen.",
+      "ester_alkane_led": "Ester und/oder Alkane prägen die Pflegebasis. Sie verteilen die Pflege auf dem Haar; das Haargefühl hängt von der gesamten Formel ab.",
+      "hybrid": "Mehrere unterschiedliche Träger prägen gemeinsam die Pflegebasis. Wie sich das Öl auf dem Haar anfühlt, hängt von ihrem Zusammenspiel ab.",
+      "water_based": "Wasser prägt die Trägerbasis. Die enthaltenen Pflegestoffe bestimmen das Haargefühl und den verbleibenden Pflegefilm."
+    },
+    "limits": "Generic base descriptions only. No added scored property, product-specific strength, repair, protein/moisture direction, guaranteed lightness, penetration, humidity, heat/UV protection, persistence class or same-base equivalence."
+  },
+  "input_bindings": [
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json",
+      "sha256": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/working-records-v0.1.1.json",
+      "sha256": "841f5489e92a07a49e36cd5a8197deb70ee149bb491ebf713af8304fc72694bd"
+    },
+    {
+      "path": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+      "sha256": "2238a966c7cefbae48bec2df72293bef98837e29cba15c0eed9b5c2e91a281cc"
+    },
+    {
+      "path": "docs/research/oil-inci/v1.0/01_property-set-v0.2.md",
+      "sha256": "b9bc09bdf9c6076530d9d34ac33c4e8b7ba3b4b47dc11d91491f72e05b9eefd5"
+    }
+  ],
+  "exact_formula_bindings": [
+    {
+      "neutral_id": "D01",
+      "identity": {
+        "brand": "Evolve Organic Beauty",
+        "product": "Nourishing Hair Elixir – Dry Hair Serum",
+        "size_ml": 30,
+        "market": "UK"
+      },
+      "raw_inci": "Isoamyl Laurate, Argania Spinosa (Argan) Kernel Oil*, Adansonia Digitata (Baobab) Seed Oil*, Cocos Nucifera (Coconut) Oil, Parfum (Naturally derived Fragrance), Gardenia Tahitensis Flower Extract, Citral, Geraniol, Limonene, Linalool, Beta-Caryophyllene, Linalyl Acetate, Terpineol, Vanillin, Citrus Aurantium Peel Oil, Citrus Aurantium Bergamia Peel Oil, Citrus Limon Peel Oil, Mentha Piperita Oil, Pelargonium Graveolens Flower Oil, Pogostemon Cablin Oil, Geranyl Acetate, Pinene",
+      "raw_inci_sha256": "f4dd40fa06bafe92179165d8fb44bb4bfaca312d3a8b5d5bd93a600013648f81"
+    },
+    {
+      "neutral_id": "D02",
+      "identity": {
+        "brand": "Biopark Cosmetics",
+        "product": "Organic Coconut Oil",
+        "size_ml": 100,
+        "market": "DE"
+      },
+      "raw_inci": "Cocos Nucifera Fruit Oil",
+      "raw_inci_sha256": "12d315272564ff15869bd669ab67e3c97ee7009e31089e76838a510a166cd70a"
+    },
+    {
+      "neutral_id": "D03",
+      "identity": {
+        "brand": "Kérastase",
+        "product": "Elixir Ultime L’Huile Originale Nachfüllbar",
+        "size_ml": 75,
+        "market": "DE"
+      },
+      "raw_inci": "ISODODECANE, DIMETHICONE, DIMETHICONOL, CAMELLIA OLEIFERA SEED OIL, ZEA MAYS GERM OIL / CORN GERM OIL, ARGANIA SPINOSA KERNEL OIL, SCLEROCARYA BIRREA SEED OIL, PENTACLETHRA MACROLOBA SEED OIL, CAPRYLIC/CAPRIC TRIGLYCERIDE, CAMELINA SATIVA SEED OIL, LINALOOL, ALPHA-ISOMETHYL IONONE, LIMONENE, COUMARIN, BENZYL ALCOHOL, CAMELLIA JAPONICA FLOWER EXTRACT, PHYLLANTHUS EMBLICA FRUIT EXTRACT, TOCOPHEROL, PARFUM / FRAGRANCE",
+      "raw_inci_sha256": "52fcf285675027f80417d6d08ab71d310061f358532db15653c2bcd26e3bdec7"
+    },
+    {
+      "neutral_id": "D04",
+      "identity": {
+        "brand": "NEQI",
+        "product": "Smooth Strength Rosemary Oil",
+        "size_ml": 75,
+        "market": "DE"
+      },
+      "raw_inci": "Prunus amygdalus dulcis (Sweet almond) oil, Ricinus communis (Castor) seed oil, Carthamus tinctorius (Safflower) seed oil, Rosmarinus officinalis (Rosemary) leaf oil, Mentha arvensis (Wild mint) leaf oil, Lavandula oil/extract, Camphor, Menthol, Tocopheryl acetate, Beta-caryophyllene, Pinene, Terpineol, Geranyl acetate, Linalyl acetate, Geraniol, Limonene, Linalool",
+      "raw_inci_sha256": "a2f4a532222b0be1083e6e7ff443a1d673c09912b8b60f9f02286524a86e1c68"
+    },
+    {
+      "neutral_id": "D06",
+      "identity": {
+        "brand": "Aroma-Zone",
+        "product": "Haircare Oil With 7 Precious Oils",
+        "size_ml": 250,
+        "market": "FR"
+      },
+      "raw_inci": "Ricinus communis seed oil* (organic Ricin carrier oil), Olea europaea fruit oil* (organic Olive carrier oil), Cocos nucifera oil* (organic Coconut carrier oil), Persea gratissima oil* (organic Avocado carrier oil), Brassica nigra seed oil* (organic Mustard carrier oil), Simmondsia chinensis seed oil* (organic Jojoba plant oil), Brassica oleracea italica seed oil* (organic Broccoli plant oil), Emblica officinalis fruit powder* (organic Amla powder), Tocopherol (vitamin E), Helianthus annuus seed oil (Sunflower plant oil, tocopherol carrier oil)",
+      "raw_inci_sha256": "aea7af4a466cb809a950d137b25af8ee05df2eb6f0aff0072e79b9cc7da35274"
+    }
+  ],
+  "images": [
+    {
+      "file": "aroma-maker-package.jpg",
+      "sha256": "b5c4e2dc7c56f7fcc399bb41ee0bb5491bff691d4182c21751a815484a281e03",
+      "visually_inspected": true
+    },
+    {
+      "file": "aroma-maker-usage.jpg",
+      "sha256": "3278ca6820d5837ef78080a03dced7a02fcdfc38e9604dc7a5d6eeb2b5b62ca4",
+      "visually_inspected": true
+    },
+    {
+      "file": "neqi-maker-package.png",
+      "sha256": "1bcf485a11970389e07f029784eef3df2183104cfe2e34acd0574504e11a2328",
+      "visually_inspected": true
+    }
+  ],
+  "verification": {
+    "gap_count": 8,
+    "resolved_values": 3,
+    "retained_hero_unknowns": 5,
+    "historical_files_edited": false,
+    "application_tests": "not_applicable_research_only",
+    "source_declarations": "Compared current maker declaration identity and order against frozen D01,D02,D03,D04,D06; no revised declaration substituted."
+  }
+}
