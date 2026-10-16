@@ -7,6 +7,7 @@ import type { ProductDeepCleansingShampooSpecs } from "../src/lib/deep-cleansing
 import type { ProductDryShampooSpecs } from "../src/lib/dry-shampoo/constants"
 import type { ProductLeaveInSpecs } from "../src/lib/leave-in/constants"
 import type { ProductMaskSpecs } from "../src/lib/mask/constants"
+import type { ProductOilSpecs } from "../src/lib/oil/constants"
 import type { ProductPeelingSpecs } from "../src/lib/peeling/constants"
 import type {
   BondbuilderRecommendationMetadata,
@@ -76,6 +77,20 @@ function createMatchedProduct(
     combined_score: 0.8,
     ...overrides,
   }
+}
+
+function oilMetadata(product: MatchedProduct | undefined) {
+  const meta = product?.recommendation_meta
+  assert.ok(meta?.category === "oil")
+  return meta
+}
+
+function oilDecision(profile: HairProfile, message: string) {
+  return buildRecommendationEngineRuntimeFromPersistence(
+    profile,
+    [],
+    buildRecommendationRequestContext({ requestedCategory: "oil", message }),
+  ).categories.oil
 }
 
 function createMaskDecision(
@@ -1658,394 +1673,302 @@ test("engine shampoo reranking requires specs for owned non-recommended assessme
   )
 })
 
-test("engine oil reranking follows normalized request purpose and annotates the legacy matcher bridge", () => {
-  const requestContext = buildRecommendationRequestContext({
-    requestedCategory: "oil",
-    message: "Ich suche ein Styling-Oel als Finish gegen Frizz und fuer mehr Glanz.",
-  })
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(
-    LOW_DAMAGE_PROFILE,
-    [],
-    requestContext,
-  )
-  const decision = runtime.categories.oil
-
-  assert.equal(decision.relevant, true)
-  assert.equal(decision.targetProfile?.purpose, "styling_finish")
-  assert.equal(decision.targetProfile?.matcherSubtype, "styling-oel")
-
+test("engine oil reranking uses researched weight over a high-score legacy dry-oil tag", () => {
+  const profile = { ...LOW_DAMAGE_PROFILE, thickness: "fine" as const }
   const reranked = rerankOilProductsWithEngine({
     candidates: [
-      createMatchedProduct("oil-1", "Öle", { combined_score: 0.81 }),
-      createMatchedProduct("oil-2", "Öle", { combined_score: 0.77 }),
+      createMatchedProduct("heavy-dry-tag", "Öle", { combined_score: 0.99, tags: ["trocken-oel"] }),
+      createMatchedProduct("actual-light", "Öle", { combined_score: 0.2 }),
     ],
-    decision,
-    hairProfile: LOW_DAMAGE_PROFILE,
-  })
-
-  assert.equal(reranked[0]?.recommendation_meta?.category, "oil")
-  assert.equal(
-    (reranked[0]?.recommendation_meta as OilRecommendationMetadata | undefined)?.use_mode,
-    "styling_finish",
-  )
-  assert.equal(
-    (reranked[0]?.recommendation_meta as OilRecommendationMetadata | undefined)?.matched_subtype,
-    "styling-oel",
-  )
-})
-
-test("engine oil reranking requires eligibility rows for owned non-recommended assessment candidates", () => {
-  const requestContext = buildRecommendationRequestContext({
-    requestedCategory: "oil",
-    message: "Ich suche ein Styling-Oel als Finish gegen Frizz und fuer mehr Glanz.",
-  })
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(
-    LOW_DAMAGE_PROFILE,
-    [],
-    requestContext,
-  )
-  const decision = runtime.categories.oil
-
-  const reranked = rerankOilProductsWithEngine({
-    candidates: [
-      createMatchedProduct("owned-with-eligibility", "Öle", {
-        combined_score: 0.72,
-        is_chaarlie_recommended: false,
-      }),
-      createMatchedProduct("owned-without-eligibility", "Öle", {
-        combined_score: 0.99,
-        is_chaarlie_recommended: false,
-      }),
+    specs: [
+      { product_id: "heavy-dry-tag", weight: "rich", role_support: ["dry_finish"] },
+      { product_id: "actual-light", weight: "light", role_support: ["dry_finish"] },
     ],
-    decision,
-    hairProfile: LOW_DAMAGE_PROFILE,
-    eligibilityRows: [
-      {
-        product_id: "owned-with-eligibility",
-        thickness: LOW_DAMAGE_PROFILE.thickness!,
-        oil_subtype: "styling-oel",
-        oil_purpose: "styling_finish",
-      },
-    ],
-    includeProductIds: ["owned-with-eligibility", "owned-without-eligibility"],
+    decision: oilDecision(profile, "Ich suche ein leichtes Oel als Finish."),
+    hairProfile: profile,
   })
 
   assert.deepEqual(
     reranked.map((product) => product.id),
-    ["owned-with-eligibility"],
+    ["actual-light"],
   )
+  const meta = reranked[0]?.recommendation_meta as OilRecommendationMetadata | undefined
+  assert.equal(meta?.fit_status, "ideal")
+  assert.equal(meta?.product_weight, "light")
+  assert.deepEqual(meta?.product_roles, ["dry_finish"])
+  assert.equal(meta?.selected_role, "dry_finish")
 })
 
-test("engine oil reranking prefers exact oil-purpose matches over subtype-only bridge candidates", () => {
-  const requestContext = buildRecommendationRequestContext({
-    requestedCategory: "oil",
-    message: "Ich suche ein leichtes Oel als Finish gegen Frizz und fuer mehr Glanz.",
-  })
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(
-    LOW_DAMAGE_PROFILE,
-    [],
-    requestContext,
-  )
-  const decision = runtime.categories.oil
-
-  const reranked = rerankOilProductsWithEngine({
-    candidates: [
-      createMatchedProduct("subtype-only", "Öle", { combined_score: 0.86 }),
-      createMatchedProduct("purpose-exact", "Öle", { combined_score: 0.74 }),
-    ],
-    decision,
-    hairProfile: LOW_DAMAGE_PROFILE,
-    eligibilityRows: [
-      {
-        product_id: "subtype-only",
-        thickness: LOW_DAMAGE_PROFILE.thickness!,
-        oil_subtype: "styling-oel",
-        oil_purpose: "light_finish",
-      },
-      {
-        product_id: "purpose-exact",
-        thickness: LOW_DAMAGE_PROFILE.thickness!,
-        oil_subtype: "styling-oel",
-        oil_purpose: "styling_finish",
-      },
-    ],
-  })
-
-  assert.equal(reranked[0]?.id, "purpose-exact")
-})
-
-test("engine oil reranking softly prefers light non-heavy oil when CareBalance flags daily oil load", () => {
-  const profile = {
-    ...LOW_DAMAGE_PROFILE,
-    thickness: "fine" as const,
-    density: "low" as const,
-    goals: ["volume"] as HairProfile["goals"],
+test("engine oil reranking applies canonical fine, normal, and coarse finish weight targets", () => {
+  for (const [thickness, expected] of [
+    ["fine", [["light"], ["medium"]]],
+    ["normal", [["light", "medium"], ["rich"]]],
+    ["coarse", [["medium", "rich"], ["light"]]],
+  ] as const) {
+    const profile = { ...LOW_DAMAGE_PROFILE, thickness }
+    const reranked = rerankOilProductsWithEngine({
+      candidates: ["light", "medium", "rich"].map((id, index) =>
+        createMatchedProduct(id, "Öle", { combined_score: 0.7 - index / 100 }),
+      ),
+      specs: ["light", "medium", "rich"].map((weight) => ({
+        product_id: weight,
+        weight: weight as ProductOilSpecs["weight"],
+        role_support: ["dry_finish"],
+      })),
+      decision: oilDecision(profile, "Ich suche ein Oel als Finish gegen Frizz."),
+      hairProfile: profile,
+    })
+    assert.deepEqual(
+      reranked.map((product) => product.id),
+      [...expected[0], ...expected[1]],
+    )
+    for (const product of reranked) {
+      assert.equal(
+        oilMetadata(product).fit_status,
+        (expected[0] as readonly string[]).includes(product.id) ? "ideal" : "supportive",
+      )
+    }
   }
-  const requestContext = buildRecommendationRequestContext({
+})
+
+test("engine oil reranking narrows normal finish weight for an explicit light request or daily-oil load", () => {
+  const profile = { ...LOW_DAMAGE_PROFILE, thickness: "normal" as const }
+  const candidates = ["light", "medium"].map((id, index) =>
+    createMatchedProduct(id, "Öle", { combined_score: 0.7 + index / 10 }),
+  )
+  const specs: ProductOilSpecs[] = ["light", "medium"].map((product_id) => ({
+    product_id,
+    weight: product_id as ProductOilSpecs["weight"],
+    role_support: ["dry_finish"],
+  }))
+  const explicitLightDecision = oilDecision(profile, "Ich suche ein leichtes Oel als Finish.")
+  assert.equal(explicitLightDecision.targetProfile?.weightRequest, "light")
+  const explicitLight = rerankOilProductsWithEngine({
+    candidates,
+    specs,
+    decision: explicitLightDecision,
+    hairProfile: profile,
+  })
+
+  const request = buildRecommendationRequestContext({
     requestedCategory: "oil",
-    message: "Ich moechte ein Haaroel als Finish.",
+    message: "Ich suche ein Oel als Finish.",
   })
   const runtime = buildRecommendationEngineRuntimeFromPersistence(
     profile,
     [{ category: "oil", product_name: "Daily Oil", frequency_range: "daily_1x" }],
-    requestContext,
+    request,
   )
-  const decision = runtime.categories.oil
-
-  const reranked = rerankOilProductsWithEngine({
-    candidates: [
-      createMatchedProduct("classic-oil", "Öle", { combined_score: 0.88 }),
-      createMatchedProduct("light-oil", "Öle", { combined_score: 0.72 }),
-    ],
-    decision,
+  const loadSensitive = rerankOilProductsWithEngine({
+    candidates,
+    specs,
+    decision: runtime.categories.oil,
     hairProfile: profile,
-    eligibilityRows: [
-      {
-        product_id: "classic-oil",
-        thickness: "normal",
-        oil_subtype: "styling-oel",
-        oil_purpose: "styling_finish",
-      },
-      {
-        product_id: "light-oil",
-        thickness: "normal",
-        oil_subtype: "trocken-oel",
-        oil_purpose: "light_finish",
-      },
-    ],
     runtime,
-  } as Parameters<typeof rerankOilProductsWithEngine>[0] & { runtime: typeof runtime })
+  })
 
-  assert.equal(
-    runtime.careBalance.rows.find((row) => row.category === "oil")?.recommendation,
-    "decrease_frequency",
+  assert.deepEqual(
+    explicitLight.map((product) => product.id),
+    ["light", "medium"],
   )
-  assert.equal(reranked[0]?.id, "light-oil")
-  const meta = reranked[0]?.recommendation_meta as OilRecommendationMetadata | undefined
-  assert.match(JSON.stringify(meta), /care_balance|daily_oil_use|light/i)
+  assert.deepEqual(
+    loadSensitive.map((product) => product.id),
+    ["light", "medium"],
+  )
+  for (const reranked of [explicitLight, loadSensitive]) {
+    assert.equal(oilMetadata(reranked[0]).fit_status, "ideal")
+    assert.equal(oilMetadata(reranked[1]).fit_status, "supportive")
+  }
 })
 
-test("engine keeps explicit overload-risk oil requests product-addressable with caveat context", () => {
-  const requestContext = buildRecommendationRequestContext({
+test("engine oil reranking narrows coarse daily-oil fits to medium before supportive light or rich", () => {
+  const profile = { ...LOW_DAMAGE_PROFILE, thickness: "coarse" as const }
+  const request = buildRecommendationRequestContext({
     requestedCategory: "oil",
-    message: "Ich will trotz Build-up und plattem Ansatz ein leichtes Oel als Finish.",
+    message: "Ich suche ein Oel als Finish.",
   })
   const runtime = buildRecommendationEngineRuntimeFromPersistence(
-    {
-      ...LOW_DAMAGE_PROFILE,
-      thickness: "fine",
-      density: "low",
-      scalp_type: "oily",
-      goals: ["volume"],
-    },
+    profile,
     [{ category: "oil", product_name: "Daily Oil", frequency_range: "daily_1x" }],
-    requestContext,
+    request,
   )
+  const reranked = rerankOilProductsWithEngine({
+    candidates: [
+      createMatchedProduct("light", "Öle", { combined_score: 0.99 }),
+      createMatchedProduct("medium", "Öle", { combined_score: 0.7 }),
+      createMatchedProduct("rich", "Öle", { combined_score: 0.8 }),
+    ],
+    specs: ["light", "medium", "rich"].map((product_id) => ({
+      product_id,
+      weight: product_id as ProductOilSpecs["weight"],
+      role_support: ["dry_finish"],
+    })),
+    decision: runtime.categories.oil,
+    hairProfile: profile,
+    runtime,
+  })
 
-  assert.equal(runtime.categories.oil.noRecommendationReason, "overload_risk")
-  assert.equal(runtime.categories.oil.targetProfile?.purpose, "styling_finish")
-  assert.equal(runtime.categories.oil.targetProfile?.matcherSubtype, "styling-oel")
-  assert.equal(runtime.categories.oil.targetProfile?.overloadRisk, true)
+  assert.deepEqual(
+    reranked.map((product) => product.id),
+    ["medium", "light", "rich"],
+  )
+  assert.deepEqual(
+    reranked.map((product) => oilMetadata(product).fit_status),
+    ["ideal", "supportive", "supportive"],
+  )
+})
+
+test("engine oil reranking uses distance buckets and accepts null pre-wash weight", () => {
+  const fineProfile = { ...LOW_DAMAGE_PROFILE, thickness: "fine" as const }
+  const finish = rerankOilProductsWithEngine({
+    candidates: [
+      createMatchedProduct("ideal", "Öle", { combined_score: 0.2, suitable_thicknesses: ["fine"] }),
+      createMatchedProduct("one-step", "Öle", {
+        combined_score: 0.99,
+        suitable_thicknesses: ["normal"],
+      }),
+      createMatchedProduct("two-step", "Öle", {
+        combined_score: 1,
+        suitable_thicknesses: ["coarse"],
+      }),
+    ],
+    specs: ["ideal", "one-step", "two-step"].map((product_id) => ({
+      product_id,
+      weight: "light",
+      role_support: ["dry_finish"],
+    })),
+    decision: oilDecision(fineProfile, "Ich suche ein Oel als Finish."),
+    hairProfile: fineProfile,
+  })
+  assert.deepEqual(
+    finish.map((product) => product.id),
+    ["ideal", "one-step"],
+  )
+  assert.equal(oilMetadata(finish[1]).fit_status, "supportive")
+
+  const prewash = rerankOilProductsWithEngine({
+    candidates: [createMatchedProduct("unknown-weight-prewash", "Öle", { combined_score: 0.2 })],
+    specs: [
+      {
+        product_id: "unknown-weight-prewash",
+        weight: null,
+        role_support: ["pre_wash_fibre_treatment"],
+      },
+    ],
+    decision: oilDecision(fineProfile, "Ich moechte Hair Oiling vor dem Waschen machen."),
+    hairProfile: fineProfile,
+  })
+  assert.equal(prewash[0]?.id, "unknown-weight-prewash")
+  assert.equal(oilMetadata(prewash[0]).fit_status, "ideal")
+  assert.equal(oilMetadata(prewash[0]).product_weight, null)
   assert.equal(
-    runtime.careBalance.rows.find((row) => row.category === "oil")?.recommendation,
-    "decrease_frequency",
+    (prewash[0]?.recommendation_meta as OilRecommendationMetadata).selected_role,
+    "pre_wash_fibre_treatment",
   )
 })
 
-test("engine oil reranking hides finish bridge candidates when exact purpose coverage is enough", () => {
-  const requestContext = buildRecommendationRequestContext({
-    requestedCategory: "oil",
-    message: "Ich suche ein Styling-Oel als Finish gegen Frizz.",
-  })
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(
-    LOW_DAMAGE_PROFILE,
-    [],
-    requestContext,
-  )
-  const decision = runtime.categories.oil
-
+test("engine oil reranking excludes unsupported or missing facts despite legacy tags, owned inclusion, and preserve IDs", () => {
+  const profile = { ...LOW_DAMAGE_PROFILE, thickness: "normal" as const }
   const reranked = rerankOilProductsWithEngine({
     candidates: [
-      createMatchedProduct("exact-1", "Öle", { combined_score: 0.7 }),
-      createMatchedProduct("exact-2", "Öle", { combined_score: 0.68 }),
-      createMatchedProduct("exact-3", "Öle", { combined_score: 0.66 }),
-      createMatchedProduct("bridge", "Öle", { combined_score: 0.95 }),
+      createMatchedProduct("safe", "Öle", { combined_score: 0.1 }),
+      createMatchedProduct("unknown-thickness", "Öle", {
+        combined_score: 1,
+        suitable_thicknesses: [],
+      }),
+      ...[
+        "scalp-only",
+        "damp-only",
+        "invalid-weight",
+        "missing-role",
+        "missing-spec",
+        "legacy-1",
+        "legacy-2",
+        "legacy-3",
+      ].map((id) =>
+        createMatchedProduct(id, "Öle", {
+          combined_score: 1,
+          tags: ["styling-oel", "trocken-oel"],
+          is_chaarlie_recommended: id !== "missing-spec",
+        }),
+      ),
     ],
-    decision,
-    hairProfile: LOW_DAMAGE_PROFILE,
-    eligibilityRows: [
-      {
-        product_id: "exact-1",
-        thickness: LOW_DAMAGE_PROFILE.thickness!,
-        oil_subtype: "styling-oel",
-        oil_purpose: "styling_finish",
-      },
-      {
-        product_id: "exact-2",
-        thickness: LOW_DAMAGE_PROFILE.thickness!,
-        oil_subtype: "styling-oel",
-        oil_purpose: "styling_finish",
-      },
-      {
-        product_id: "exact-3",
-        thickness: LOW_DAMAGE_PROFILE.thickness!,
-        oil_subtype: "styling-oel",
-        oil_purpose: "styling_finish",
-      },
-      {
-        product_id: "bridge",
-        thickness: LOW_DAMAGE_PROFILE.thickness!,
-        oil_subtype: "trocken-oel",
-        oil_purpose: "light_finish",
-      },
+    specs: [
+      { product_id: "safe", weight: "light", role_support: ["dry_finish"] },
+      { product_id: "unknown-thickness", weight: "light", role_support: ["dry_finish"] },
+      { product_id: "scalp-only", weight: "light", role_support: ["scalp_application"] },
+      { product_id: "damp-only", weight: "light", role_support: ["leave_on_fibre_conditioning"] },
+      { product_id: "invalid-weight", weight: null, role_support: ["dry_finish"] },
+      { product_id: "missing-role", weight: "light", role_support: null },
+      ...["legacy-1", "legacy-2", "legacy-3"].map((product_id) => ({
+        product_id,
+        weight: "rich" as const,
+        role_support: ["scalp_application"] as const,
+      })),
+    ],
+    decision: oilDecision(profile, "Ich suche ein Oel als Finish."),
+    hairProfile: profile,
+    includeProductIds: ["missing-spec"],
+    preserveProductIds: [
+      "scalp-only",
+      "damp-only",
+      "invalid-weight",
+      "missing-role",
+      "missing-spec",
     ],
   })
 
   assert.deepEqual(
     reranked.map((product) => product.id),
-    ["exact-1", "exact-2", "exact-3"],
+    ["safe"],
   )
 })
 
-test("engine oil reranking allows only adjacent finish bridge below exact threshold", () => {
-  const finishRequest = buildRecommendationRequestContext({
-    requestedCategory: "oil",
-    message: "Ich suche ein Styling-Oel als Finish gegen Frizz.",
+test("engine oil reranking preserves budget-before-cut while excluding unverified owned candidates", () => {
+  const profile = { ...LOW_DAMAGE_PROFILE, thickness: "normal" as const }
+  const order = createChatBudgetEngineOrder({
+    budget: { kind: "capped", limitEur: 5, allowExceptions: false },
+    protectedProductIds: new Set(),
   })
-  const finishDecision = buildRecommendationEngineRuntimeFromPersistence(
-    LOW_DAMAGE_PROFILE,
-    [],
-    finishRequest,
-  ).categories.oil
-
-  const finishReranked = rerankOilProductsWithEngine({
-    candidates: [
-      createMatchedProduct("exact-1", "Öle", { combined_score: 0.7 }),
-      createMatchedProduct("exact-2", "Öle", { combined_score: 0.68 }),
-      createMatchedProduct("light-bridge", "Öle", { combined_score: 0.95 }),
-      createMatchedProduct("prewash", "Öle", { combined_score: 0.99 }),
-    ],
-    decision: finishDecision,
-    hairProfile: LOW_DAMAGE_PROFILE,
-    eligibilityRows: [
-      {
-        product_id: "exact-1",
-        thickness: LOW_DAMAGE_PROFILE.thickness!,
-        oil_subtype: "styling-oel",
-        oil_purpose: "styling_finish",
-      },
-      {
-        product_id: "exact-2",
-        thickness: LOW_DAMAGE_PROFILE.thickness!,
-        oil_subtype: "styling-oel",
-        oil_purpose: "styling_finish",
-      },
-      {
-        product_id: "light-bridge",
-        thickness: LOW_DAMAGE_PROFILE.thickness!,
-        oil_subtype: "trocken-oel",
-        oil_purpose: "light_finish",
-      },
-      {
-        product_id: "prewash",
-        thickness: LOW_DAMAGE_PROFILE.thickness!,
-        oil_subtype: "natuerliches-oel",
-        oil_purpose: "pre_wash_oiling",
-      },
-    ],
-  })
-
-  assert.deepEqual(
-    finishReranked.map((product) => product.id),
-    ["exact-1", "exact-2", "light-bridge"],
-  )
-  assert.match(
-    finishReranked[2]?.recommendation_meta?.tradeoffs.join(" ") ?? "",
-    /angrenzende Finish-Rolle/,
-  )
-})
-
-test("engine oil reranking preserves classic subtype eligibility when oil purpose is not populated", () => {
-  const requestContext = buildRecommendationRequestContext({
-    requestedCategory: "oil",
-    message: "Ich moechte Hair Oiling vor dem Waschen machen.",
-  })
-  const decision = buildRecommendationEngineRuntimeFromPersistence(
-    LOW_DAMAGE_PROFILE,
-    [],
-    requestContext,
-  ).categories.oil
-
+  assert.ok(order)
   const reranked = rerankOilProductsWithEngine({
     candidates: [
-      createMatchedProduct("classic-natural", "Öle", { combined_score: 0.7 }),
-      createMatchedProduct("wrong-subtype", "Öle", { combined_score: 0.99 }),
+      createMatchedProduct("first", "Öle", {
+        combined_score: 0.9,
+        price_eur: 29,
+        purchase_link_status: "available",
+      }),
+      createMatchedProduct("second", "Öle", {
+        combined_score: 0.8,
+        price_eur: 19,
+        purchase_link_status: "available",
+      }),
+      createMatchedProduct("cheap-owned", "Öle", {
+        combined_score: 0.7,
+        price_eur: 4,
+        purchase_link_status: "available",
+        is_chaarlie_recommended: false,
+      }),
+      createMatchedProduct("unverified-owned", "Öle", {
+        combined_score: 1,
+        price_eur: 1,
+        purchase_link_status: "available",
+        is_chaarlie_recommended: false,
+      }),
     ],
-    decision,
-    hairProfile: LOW_DAMAGE_PROFILE,
-    eligibilityRows: [
-      {
-        product_id: "classic-natural",
-        thickness: LOW_DAMAGE_PROFILE.thickness!,
-        oil_subtype: "natuerliches-oel",
-        oil_purpose: null,
-      },
-      {
-        product_id: "wrong-subtype",
-        thickness: LOW_DAMAGE_PROFILE.thickness!,
-        oil_subtype: "styling-oel",
-        oil_purpose: null,
-      },
-    ],
+    specs: ["first", "second", "cheap-owned"].map((product_id) => ({
+      product_id,
+      weight: "light",
+      role_support: ["dry_finish"],
+    })),
+    decision: oilDecision(profile, "Ich suche ein leichtes Oel als Finish."),
+    hairProfile: profile,
+    includeProductIds: ["cheap-owned", "unverified-owned"],
+    orderBeforeCut: order.order,
   })
-
   assert.deepEqual(
     reranked.map((product) => product.id),
-    ["classic-natural"],
-  )
-  assert.equal(
-    (reranked[0]?.recommendation_meta as OilRecommendationMetadata | undefined)?.purpose_fit,
-    "unknown",
-  )
-})
-
-test("engine oil reranking keeps exact purpose matches ahead of legacy subtype fallback", () => {
-  const requestContext = buildRecommendationRequestContext({
-    requestedCategory: "oil",
-    message: "Ich suche ein Styling-Oel als Finish gegen Frizz.",
-  })
-  const decision = buildRecommendationEngineRuntimeFromPersistence(
-    LOW_DAMAGE_PROFILE,
-    [],
-    requestContext,
-  ).categories.oil
-
-  const reranked = rerankOilProductsWithEngine({
-    candidates: [
-      createMatchedProduct("legacy-subtype", "Öle", { combined_score: 0.99 }),
-      createMatchedProduct("exact-purpose", "Öle", { combined_score: 0.7 }),
-    ],
-    decision,
-    hairProfile: LOW_DAMAGE_PROFILE,
-    eligibilityRows: [
-      {
-        product_id: "legacy-subtype",
-        thickness: LOW_DAMAGE_PROFILE.thickness!,
-        oil_subtype: "styling-oel",
-        oil_purpose: null,
-      },
-      {
-        product_id: "exact-purpose",
-        thickness: LOW_DAMAGE_PROFILE.thickness!,
-        oil_subtype: "styling-oel",
-        oil_purpose: "styling_finish",
-      },
-    ],
-  })
-
-  assert.deepEqual(
-    reranked.map((product) => product.id),
-    ["exact-purpose", "legacy-subtype"],
+    ["cheap-owned", "first", "second"],
   )
 })
 
