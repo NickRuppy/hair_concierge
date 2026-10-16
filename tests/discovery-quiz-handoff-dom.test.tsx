@@ -116,7 +116,10 @@ test("a participant tap while the quiz is saving continues once with the returne
   const flow = mountParticipant()
   await waitFor(() => assert.equal(flow.requests.length, 1))
   assert.equal(flow.requests[0].marketingConsent, false)
-  fireEvent.click(screen.getByRole("button", { name: "Weiter zu deinen Produkten" }))
+  assert.ok(screen.getByText("Profil fertig"))
+  assert.ok(screen.getByText("Produkte offen"))
+  assert.ok(screen.getByRole("heading", { name: "Als Nächstes: deine Produkte." }))
+  fireEvent.click(screen.getByRole("button", { name: "Produkte ergänzen" }))
   assert.deepEqual(flow.pushes, [], "waits for the saved lead")
   await act(async () =>
     flow.replies[0](Response.json({ leadId: "handoff-lead", journey: "discovery" })),
@@ -135,7 +138,7 @@ test("a failed save can be retried and the successful retry continues to product
   await act(async () =>
     flow.replies[1](Response.json({ leadId: "retry-lead", journey: "discovery" })),
   )
-  fireEvent.click(screen.getByRole("button", { name: "Weiter zu deinen Produkten" }))
+  fireEvent.click(screen.getByRole("button", { name: "Produkte ergänzen" }))
   await waitFor(() => assert.deepEqual(flow.pushes, ["/beratung/produkte?lead=retry-lead"]))
 })
 
@@ -147,7 +150,7 @@ test("returning to the saved quiz ending keeps continuation usable without savin
   )
   flow.unmount()
   render(flow.ui)
-  fireEvent.click(await screen.findByRole("button", { name: "Weiter zu deinen Produkten" }))
+  fireEvent.click(await screen.findByRole("button", { name: "Produkte ergänzen" }))
   await waitFor(() => assert.deepEqual(flow.pushes, ["/beratung/produkte?lead=return-lead"]))
   assert.equal(flow.requests.length, 1, "the same saved answers are reused")
 })
