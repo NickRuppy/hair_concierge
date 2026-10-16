@@ -33,13 +33,6 @@ export function clearDependentHeatReviewStateOnOilChange(input: {
   }
 }
 
-export function isCurrentStage3PreviewGeneration(
-  responseGeneration: number,
-  currentGeneration: number,
-): boolean {
-  return responseGeneration === currentGeneration
-}
-
 /**
  * Whether the changed local choices need a fresh server projection. With a saved budget the server
  * allocates it over the whole proposal, so every changed product decision (plan, keep, skip) can
