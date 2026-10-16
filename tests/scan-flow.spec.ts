@@ -305,6 +305,8 @@ async function openLab(
     holdCamera?: boolean
     denyCamera?: string
     tier?: "free" | "premium"
+    /** Mounts the production scan arrival acknowledgement beside the real flow. */
+    welcomeHint?: boolean
     /**
      * Task 7: stands in for the SERVER-derived `retailerSearchEnabled` prop
      * `/scan/page.tsx` passes in production — see `scan-lab-client.tsx`'s
@@ -320,6 +322,7 @@ async function openLab(
         "chaarlie_cookie_consent_v1",
         JSON.stringify({ essential: true, analytics: false, marketing: false, ts: Date.now() }),
       )
+      window.sessionStorage.removeItem("chaarlie.scan.welcome-hint-dismissed")
       if (holdCamera) window.__SCAN_LAB_HOLD_CAMERA = true
       if (denyCamera) window.__SCAN_LAB_DENY_CAMERA = denyCamera
       // Fix round 1 (F1): stands in for the SERVER-derived `tier` prop `/scan/page.tsx`
@@ -334,7 +337,7 @@ async function openLab(
       retailerSearchEnabled: boot.retailerSearchEnabled ?? false,
     },
   )
-  await page.goto(LAB_PATH)
+  await page.goto(boot.welcomeHint ? `${LAB_PATH}?welcome=scan` : LAB_PATH)
   await page.waitForFunction(() => Boolean(window.__scanLab))
 }
 
@@ -720,6 +723,36 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
 
     const names = await trackedEventNames(page)
     expect(names.filter((name) => name === "scan_fallback_search_used")).toHaveLength(1)
+  })
+
+  test("scan welcome remains actionable above the denied-camera fallback sheet", async ({
+    page,
+  }) => {
+    await installScanApi(page)
+    await openLab(page, { denyCamera: "NotAllowedError", welcomeHint: true })
+
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-auxiliary", "search")
+    // The acknowledgement remains nonblocking: the camera fallback is still usable
+    // without first dismissing the hint, and the hint itself passes real hit-testing.
+    await expect(page.getByRole("dialog").filter({ hasText: "Produkt finden" })).toBeVisible()
+    const acknowledgement = page.locator("[data-scan-welcome-hint] button")
+    await expect(acknowledgement).toBeVisible()
+    await acknowledgement.click({ timeout: 5_000 })
+    await expect(acknowledgement).toBeHidden()
+    await expect(page.getByRole("dialog").filter({ hasText: "Produkt finden" })).toBeVisible()
+  })
+
+  test("scan welcome does not make a working camera flow inert", async ({ page }) => {
+    await installScanApi(page)
+    await openLab(page, { welcomeHint: true })
+    await expect(page.locator("[data-scan-welcome-hint]")).toBeVisible()
+    await page
+      .getByRole("button", { name: "Merkliste öffnen", exact: true })
+      .click({ timeout: 5_000 })
+    await expect(page.getByRole("dialog").filter({ hasText: "Merkliste" })).toBeVisible()
+    await closeSheetContaining(page, "Merkliste").click()
+    await page.getByRole("button", { name: "Produkt suchen", exact: true }).click()
+    await expect(page.getByRole("dialog").filter({ hasText: "Produkt finden" })).toBeVisible()
   })
 
   test("F8: a dead stream that cannot be re-acquired shows the restart tile", async ({ page }) => {

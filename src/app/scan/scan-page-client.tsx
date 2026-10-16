@@ -1,6 +1,7 @@
 "use client"
 
 import { useSyncExternalStore } from "react"
+import { createPortal } from "react-dom"
 import { useRouter } from "next/navigation"
 
 import { ScanFlow } from "@/components/scan/scan-flow"
@@ -90,23 +91,35 @@ export function ScanWelcomeHint() {
     readWelcomeHintDismissed,
     () => true,
   )
-
   if (dismissed) return null
-  return (
+  const hint = (
     <div
-      className="mx-auto flex max-w-[36rem] items-center justify-between gap-3 px-5 pt-4"
+      // The initial camera fallback can open its bottom sheet before this greeting is
+      // acknowledged (notably when no camera exists). Keep this one-shot action above
+      // the sheet backdrop so the hand-over remains dismissible.
+      className="pointer-events-none fixed inset-x-0 top-4 z-[60] mx-auto flex max-w-[36rem] items-center justify-between gap-3 px-5"
       data-scan-welcome-hint
+      data-modal-layer-exempt
       role="status"
     >
       <p className="text-sm leading-6 text-[var(--text-sub)]">{SCAN_WELCOME_HINT}</p>
       <button
         type="button"
-        className="shrink-0 rounded-full border border-border px-3 py-1 text-xs font-medium text-foreground"
+        className="pointer-events-auto shrink-0 rounded-full border border-border px-3 py-1 text-xs font-medium text-foreground"
         onClick={dismissWelcomeHint}
       >
         {SCAN_WELCOME_HINT_DISMISS}
       </button>
     </div>
+  )
+  // Bottom sheets are portaled directly under <body>. Mount the acknowledgement in the
+  // same layer so its z-index can reliably sit above the fallback's z-50 backdrop.
+  return (
+    <>
+      {/* Reserve the greeting's original flow space so it cannot cover scanner controls. */}
+      <div aria-hidden="true" className="h-14" />
+      {typeof document === "undefined" ? hint : createPortal(hint, document.body)}
+    </>
   )
 }
 
