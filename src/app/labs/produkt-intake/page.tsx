@@ -77,7 +77,13 @@ function fixtures(): ProductReviewQueueEntry[] {
 export default async function ProductIntakeLab({
   searchParams,
 }: {
-  searchParams: Promise<{ gruppe?: string; detail?: string; fehler?: string; leer?: string }>
+  searchParams: Promise<{
+    gruppe?: string
+    detail?: string
+    fehler?: string
+    leer?: string
+    bilder?: string
+  }>
 }) {
   if (process.env.NODE_ENV !== "development") notFound()
   const query = await searchParams
@@ -124,6 +130,18 @@ export default async function ProductIntakeLab({
           },
         },
         job: entry.job,
+        images:
+          query.bilder === "missing"
+            ? []
+            : (["raw", "magenta", "final"] as const).map((kind) => ({
+                id: `example-${kind}`,
+                kind,
+                sha256: "a".repeat(64),
+                signed_url:
+                  query.bilder === "abgelaufen" && kind === "raw"
+                    ? "/labs/produkt-intake/expired-image.png"
+                    : `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="180" height="220" viewBox="0 0 180 220"><rect width="180" height="220" fill="${kind === "magenta" ? "#ff00ff" : kind === "raw" ? "#ececec" : "#f6f4ef"}"/><rect x="58" y="27" width="64" height="160" rx="12" fill="#e7ddc8"/><rect x="62" y="28" width="56" height="17" rx="4" fill="#4a463b"/><rect x="64" y="74" width="52" height="61" fill="#faf8f2"/><text x="90" y="95" text-anchor="middle" font-size="11" font-family="sans-serif" fill="#38352c">CARE</text><text x="90" y="113" text-anchor="middle" font-size="6" font-family="sans-serif" fill="#38352c">BEISPIEL</text></svg>`)}`,
+              })),
         decisions: [],
         artifacts: [
           {

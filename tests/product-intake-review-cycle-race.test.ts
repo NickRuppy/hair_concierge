@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import { spawn } from "node:child_process"
+import { readFile } from "node:fs/promises"
 import test from "node:test"
 import { setTimeout } from "node:timers/promises"
 
@@ -35,6 +36,7 @@ type Job = {
   review_cycle_id: string
   reserved_model_runs: number
   status: string
+  payload_revision?: number
 }
 
 test(
@@ -79,6 +81,9 @@ test(
     const sql = (statement: string) => command(psqlArgs, statement)
     const service = (statement: string) => sql(`SET ROLE service_role; ${statement}`)
     await sql(await loadAdminAlertTestDatabaseSql())
+    await sql(
+      `RESET ROLE; ${await readFile(new URL("../supabase/migrations/20261016104506_product_intake_review_evidence.sql", import.meta.url), "utf8")}`,
+    )
     const createClaim = async (): Promise<Job> => {
       await service(
         "INSERT INTO public.product_submissions(user_id,source,intake_method,category,frequency_range) VALUES('11111111-1111-4111-8111-111111111111','chat','manual','conditioner','weekly_1x');",
@@ -89,7 +94,7 @@ test(
         ),
       )
     }
-    const complete = (job: Job) => {
+    const complete = (job: Job, revision?: number) => {
       const payload = {
         product_name: "Test",
         category_label: "Conditioner",
@@ -100,7 +105,7 @@ test(
         review_url: `https://chaarlie.de/admin/produkt-intake/${job.submission_id}`,
         is_test: false,
       }
-      return `SELECT row_to_json(j) FROM public.product_intake_commit_research_pass('${job.id}','${job.locked_by}','${job.locked_at}','waiting_for_review','preview_build','{}',NULL,'{"final":"test"}','{}','ready_for_review','${JSON.stringify(payload)}','${job.review_cycle_id}','[{"kind":"model_judgment","payload":{"defects":[]}}]',false) j;`
+      return `SELECT row_to_json(j) FROM public.product_intake_commit_research_pass('${job.id}','${job.locked_by}','${job.locked_at}','waiting_for_review','preview_build','{}',NULL,'{"final":"test"}','{}','ready_for_review','${JSON.stringify(payload)}','${job.review_cycle_id}','[{"kind":"model_judgment","payload":{"defects":[]}}]',false${revision === undefined ? "" : `,${revision},'[]'`}) j;`
     }
     const rework = (job: Job) =>
       `SELECT row_to_json(j) FROM public.product_intake_request_rework_job('${job.submission_id}') j;`
@@ -191,6 +196,25 @@ test(
     assert.equal(persisted.review_cycle_id, reworkWins.winner.review_cycle_id)
     assert.equal(persisted.reserved_model_runs, 0)
     assert.equal(persisted.status, "waiting_for_rework")
+    assert.equal(
+      await service("SELECT count(*) FROM public.product_intake_research_artifacts;"),
+      "2",
+    )
+    assert.equal(
+      await service("SELECT count(*) FROM public.product_intake_admin_notifications;"),
+      "2",
+    )
+    await service(
+      `UPDATE public.product_intake_research_jobs SET status='blocked' WHERE id='${second.id}';`,
+    )
+    const third = await createClaim()
+    const payloadWins = await race(
+      `UPDATE public.product_submissions SET researched_payload='{"final":"human correction"}'
+       WHERE id='${third.submission_id}' RETURNING row_to_json(product_submissions);`,
+      complete(third, 1),
+    )
+    assert.equal(payloadWins.winner.payload_revision, 2)
+    assert.match(payloadWins.loser.error?.message ?? "", /payload revision no longer matches/)
     assert.equal(
       await service("SELECT count(*) FROM public.product_intake_research_artifacts;"),
       "2",

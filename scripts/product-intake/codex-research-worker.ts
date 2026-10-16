@@ -780,7 +780,10 @@ export async function completeResearchPass(params: {
   supabase: ReturnType<typeof createSupabaseClientFromEnv>
   job: ProductIntakeResearchJob
   category: string | null | undefined
-  submission: Pick<ProductIntakeSubmissionDetail, "id" | "source" | "status"> | null
+  submission: Pick<
+    ProductIntakeSubmissionDetail,
+    "id" | "source" | "status" | "payload_revision"
+  > | null
   reworkRequest?: JsonRecord | null
   resolveDecisionIds?: string[]
   workerId: string
@@ -984,6 +987,7 @@ export async function completeResearchPass(params: {
           : "needs_nick"
   const updated = await commitResearchPass(params.supabase, {
     jobId: leasedJob.id,
+    expectedPayloadRevision: params.submission?.payload_revision,
     reviewOutcome,
     researchedPayload: hasFinalPayload ? researchOutput.researched_payload : null,
     expectedReviewCycleId: leasedJob.review_cycle_id,

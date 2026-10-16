@@ -5,6 +5,7 @@ import {
   type ProductIntakeResearchArtifact,
   type ProductIntakeResearchJob,
   type ProductIntakeReviewDecisionRow,
+  type ProductIntakeReviewAsset,
 } from "@chaarlie/product-intake-core"
 import {
   latestProductReviewJob,
@@ -12,13 +13,18 @@ import {
   type ProductReviewQueueEntry,
   type ProductReviewSubmission,
 } from "./admin-review-model"
+import { signProductReviewAsset } from "./review-assets"
 
-export type ProductReviewReadClient = Pick<SupabaseClient, "from">
+export type ProductReviewReadClient = Pick<SupabaseClient, "from" | "storage">
+export type ProductReviewImage = Pick<ProductIntakeReviewAsset, "id" | "kind" | "sha256"> & {
+  signed_url: string | null
+}
 export type ProductReviewDetail = {
   submission: ProductReviewSubmission
   job: ProductIntakeResearchJob | null
   artifacts: ProductIntakeResearchArtifact[]
   decisions: ProductIntakeReviewDecisionRow[]
+  images?: ProductReviewImage[]
 }
 
 // Keyset pagination avoids offset shifts when an earlier submission closes.
@@ -93,6 +99,7 @@ export async function loadAdminProductReviewDetail(
     .maybeSingle()
   if (error) throw error
   if (!data) return null
+  const revision = typeof data.payload_revision === "number" ? data.payload_revision : undefined
   const [jobs, artifacts, decisions] = await Promise.all([
     allRows<ProductIntakeResearchJob>(client, "product_intake_research_jobs", (query) =>
       query.eq("submission_id", id),
@@ -118,8 +125,33 @@ export async function loadAdminProductReviewDetail(
       ? { payload_revision: data.payload_revision }
       : {}),
   }
+  const manifests =
+    revision === undefined
+      ? []
+      : await allRows<ProductIntakeReviewAsset>(client, "product_intake_review_assets", (query) =>
+          query.eq("submission_id", id).eq("payload_revision", revision),
+        )
+  const images: ProductReviewImage[] = await Promise.all(
+    manifests
+      .filter((asset) => ["raw", "magenta", "final"].includes(asset.kind))
+      .map(async (asset) => {
+        let signed_url: string | null = null
+        try {
+          signed_url = await signProductReviewAsset({
+            client,
+            asset,
+            submissionId: id,
+            payloadRevision: revision!,
+          })
+        } catch {
+          // Keep exact data review available if image delivery temporarily fails.
+        }
+        return { id: asset.id, kind: asset.kind, sha256: asset.sha256, signed_url }
+      }),
+  )
   return {
     submission,
+    images,
     job: latestProductReviewJob(jobs),
     artifacts: artifacts.sort(
       (a, b) => b.created_at.localeCompare(a.created_at) || b.id.localeCompare(a.id),

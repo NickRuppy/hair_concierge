@@ -159,6 +159,7 @@ else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=d
   const artifacts: Record<string, unknown>[] = []
   const commits: Record<string, any>[] = []
   let payload: unknown = null
+  let payloadRevision = 1
   const job: Record<string, unknown> = {
     id,
     submission_id: submissionId,
@@ -227,6 +228,7 @@ else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=d
       if (table === "product_intake_commit_research_pass") {
         commits.push(body)
         payload = body.researched_payload
+        payloadRevision++
         for (const artifact of body.research_artifacts)
           artifacts.push({
             ...artifact,
@@ -260,6 +262,8 @@ else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=d
           product_name: "Hydra",
           source: "admin",
           payload,
+          payload_revision: payloadRevision,
+          payload_sha256: "a".repeat(64),
           created_at: now,
           updated_at: now,
           intake_history: [],
@@ -363,6 +367,7 @@ test(
     const committed = await f.run()
     assert.equal(f.job.reserved_model_runs, 4, JSON.stringify(committed.next_progress))
     assert.equal(committed.review_outcome, "ready_for_review")
+    assert.equal(committed.expected_payload_revision, 1)
     assert.equal(committed.expected_review_cycle_id, f.cycleId)
     assert.equal(f.commits.length, 1)
     assert.equal(
@@ -433,6 +438,7 @@ test(
       (a: any) => a.kind === "formula" && a.payload.stage === "shampoo_research_stages_v1",
     ).payload.proof
     const second = await f.run([], true)
+    assert.equal(second.expected_payload_revision, 2)
     assert.equal(second.review_outcome, "ready_for_review", JSON.stringify(second.next_progress))
     assert.equal(f.job.reserved_model_runs, 6)
     assert.equal(f.commits.length, 2)

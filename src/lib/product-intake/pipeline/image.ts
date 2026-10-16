@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs"
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { basename, join } from "node:path"
 import { createHash } from "node:crypto"
 import sharp from "sharp"
@@ -12,6 +12,7 @@ import type {
 } from "@chaarlie/product-intake-core"
 
 import { buildAdminReviewSnapshot } from "../admin-review-email"
+import { uploadProductReviewAsset } from "../review-assets"
 import { finalizeProductImageAsset } from "../../../../scripts/product-intake/finalize-package-image"
 import { finalizedImageOutputRoot, runAutomaticBackgroundRemoval } from "./image-background"
 import {
@@ -66,6 +67,9 @@ export async function processApprovedImageForReview(
   deps: ImageStageDeps,
 ) {
   const { commitResearchPass, measureModelRun, refreshModelRunLease } = deps
+  const expectedRevision = params.detail?.payload_revision
+  if (!Number.isSafeInteger(expectedRevision) || !expectedRevision || expectedRevision < 1)
+    throw new Error("review_payload_revision_missing")
   let leasedJob = params.job
   const finalArtifacts: Array<Omit<AppendResearchArtifactParams, "jobId" | "submissionId">> = []
   const sourceImageUrl = findApprovedSourceImageUrl(params.detail)
@@ -138,6 +142,16 @@ export async function processApprovedImageForReview(
 
     return commitResearchPass(params.supabase, {
       jobId: params.job.id,
+      expectedPayloadRevision: expectedRevision,
+      reviewAssets: [
+        await uploadProductReviewAsset({
+          client: params.supabase,
+          submissionId: params.job.submission_id,
+          payloadRevision: expectedRevision + 1,
+          kind: "raw",
+          bytes: sourceBytes,
+        }),
+      ],
       expectedReviewCycleId: params.job.review_cycle_id,
       artifacts: [artifact],
       reviewOutcome: "needs_nick",
@@ -320,8 +334,36 @@ export async function processApprovedImageForReview(
   // An image-only/manual pass cannot upgrade unverified research to ready.
   const researchReady = params.job.progress.readiness_check === "passed"
   const packageReady = finalImageReady && researchReady
+  const finalBytes = readFileSync(finalized.finalFile)
+  const thumbnailBytes = readFileSync(finalized.thumbnailFile)
+  if (
+    createHash("sha256").update(finalBytes).digest("hex") !== finalized.sha256 ||
+    createHash("sha256").update(thumbnailBytes).digest("hex") !== finalized.thumbnailSha256
+  )
+    throw new Error("prepared_review_image_bytes_changed")
+  const reviewAssets = []
+  // Sequential uploads bound memory on the shared worker. Storage can retain an
+  // orphan after failure; only the fenced atomic manifest makes it reviewable.
+  for (const [kind, bytes] of [
+    ["raw", sourceBytes],
+    ["magenta", readFileSync(finalized.qaFile)],
+    ["neutral", finalBytes],
+    ["final", finalBytes],
+    ["search_thumbnail", thumbnailBytes],
+  ] as const)
+    reviewAssets.push(
+      await uploadProductReviewAsset({
+        client: params.supabase,
+        submissionId: params.job.submission_id,
+        payloadRevision: expectedRevision + 1,
+        kind,
+        bytes,
+      }),
+    )
   return commitResearchPass(params.supabase, {
     jobId: params.job.id,
+    expectedPayloadRevision: expectedRevision,
+    reviewAssets,
     expectedReviewCycleId: leasedJob.review_cycle_id,
     artifacts: [...finalArtifacts, artifact],
     reviewOutcome: packageReady ? "ready_for_review" : "needs_nick",

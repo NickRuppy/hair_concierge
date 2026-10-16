@@ -10,6 +10,7 @@ import type {
   ProductIntakeReviewDecision,
   ProductIntakeReviewDecisionRow,
   ProductIntakeSubmissionDetail,
+  ProductIntakeReviewAssetInput,
 } from "./jobs"
 import {
   PRODUCT_INTAKE_NON_TERMINAL_JOB_STATUSES,
@@ -129,6 +130,8 @@ export async function updateResearchJob(
 }
 
 export type CommitResearchPassParams = UpdateResearchJobParams & {
+  expectedPayloadRevision?: number | null
+  reviewAssets?: ProductIntakeReviewAssetInput[]
   researchedPayload?: JsonRecord | null
   resolveDecisionIds?: string[]
   reviewOutcome: "continue" | "ready_for_review" | "needs_nick"
@@ -168,6 +171,12 @@ export async function commitResearchPass(
       prompt_version: artifact.promptVersion ?? null,
     })),
     request_auto_rework: params.autoRework ?? false,
+    ...(params.expectedPayloadRevision !== undefined || params.reviewAssets !== undefined
+      ? {
+          expected_payload_revision: params.expectedPayloadRevision ?? null,
+          review_assets: params.reviewAssets ?? [],
+        }
+      : {}),
   })
   if (error?.code === "23514" && error.details === "cycle_deadline")
     throw new ResearchModelReservationError("cycle_deadline", error.code)
@@ -422,7 +431,7 @@ export async function loadProductIntakeSubmissionDetail(
   const { data, error } = await client
     .from("product_submissions")
     .select(
-      "id,status,category,brand:brand_text,product_name:product_name_text,source,payload:researched_payload,created_at,updated_at",
+      "id,status,category,brand:brand_text,product_name:product_name_text,source,payload:researched_payload,payload_revision,payload_sha256,created_at,updated_at",
     )
     .eq("id", submissionId)
     .maybeSingle()
@@ -445,6 +454,10 @@ export async function loadProductIntakeSubmissionDetail(
     product_name: nullableString(record.product_name),
     source: nullableString(record.source),
     payload: normalizeRecord(record.payload),
+    ...(typeof record.payload_revision === "number"
+      ? { payload_revision: record.payload_revision }
+      : {}),
+    ...(typeof record.payload_sha256 === "string" ? { payload_sha256: record.payload_sha256 } : {}),
     created_at: String(record.created_at),
     updated_at: String(record.updated_at),
     job: jobsBySubmissionId.get(submissionId) ?? null,

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { randomUUID } from "node:crypto"
+import { createHash, randomUUID } from "node:crypto"
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
@@ -292,6 +292,21 @@ test("transparent image completion commits the ready notification snapshot with 
     .toBuffer()
   const commits: Array<Record<string, unknown>> = []
   const artifacts: Array<Record<string, unknown>> = []
+  const uploads: Array<{ key: string; bytes: Buffer }> = []
+  const storageClient = {
+    storage: {
+      from(bucket: string) {
+        assert.equal(bucket, "product-intake-review")
+        return {
+          upload: async (key: string, bytes: Buffer, options: { upsert: boolean }) => {
+            assert.equal(options.upsert, false)
+            uploads.push({ key, bytes: Buffer.from(bytes) })
+            return { data: { path: key }, error: null }
+          },
+        }
+      },
+    },
+  }
   const job: ProductIntakeResearchJob = {
     id: "image-job-1",
     submission_id: submissionId,
@@ -345,10 +360,11 @@ test("transparent image completion commits the ready notification snapshot with 
   try {
     await processApprovedImageForReview(
       {
-        supabase: {} as never,
+        supabase: storageClient as never,
         job,
         detail: {
           id: submissionId,
+          payload_revision: 4,
           status: "researching",
           category: "mask",
           brand: "Chaarlie",
@@ -385,6 +401,23 @@ test("transparent image completion commits the ready notification snapshot with 
 
     assert.equal(commits.length, 1)
     const commit = commits[0]!
+    assert.equal(commit.expectedPayloadRevision, 4)
+    const manifest = commit.reviewAssets as Array<{
+      kind: string
+      sha256: string
+      storage_key: string
+    }>
+    assert.deepEqual(
+      manifest.map((asset) => asset.kind),
+      ["raw", "magenta", "neutral", "final", "search_thumbnail"],
+    )
+    assert.equal(uploads.length, 5)
+    assert.deepEqual(uploads[0].bytes, source)
+    for (const [index, asset] of manifest.entries()) {
+      assert.equal(asset.storage_key, `${submissionId}/5/${asset.sha256}`)
+      assert.equal(uploads[index].key, asset.storage_key)
+      assert.equal(createHash("sha256").update(uploads[index].bytes).digest("hex"), asset.sha256)
+    }
     assert.equal(commit.reviewOutcome, "ready_for_review")
     assert.equal(commit.status, "waiting_for_review")
     assert.equal(commit.expectedLockedBy, job.locked_by)
@@ -409,10 +442,11 @@ test("transparent image completion commits the ready notification snapshot with 
     }
     await processApprovedImageForReview(
       {
-        supabase: {} as never,
+        supabase: storageClient as never,
         job: incompleteJob,
         detail: {
           id: incompleteSubmissionId,
+          payload_revision: 4,
           status: "researching",
           category: "mask",
           brand: "Chaarlie",

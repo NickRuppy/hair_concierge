@@ -11,6 +11,7 @@ import {
   type ProductReviewQueueEntry,
 } from "@/lib/product-intake/admin-review-model"
 import type { ProductReviewDetail } from "@/lib/product-intake/admin-review-repository"
+import { ProductReviewImages } from "./review-images"
 
 const categoryLabels: Record<string, string> = {
   shampoo: "Shampoo",
@@ -314,21 +315,17 @@ export function ProductReviewDetailView({
           <section className={card}>
             <h2 className="text-lg font-semibold">Bild prüfen</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Die privaten Bildansichten werden noch angebunden. Hier kann noch kein Bild
-              freigegeben werden.
+              Vergleiche Rohbild, Magenta-Prüfung und Katalogbild für diese Version. Hier kann noch
+              kein Bild freigegeben werden.
             </p>
-            <div className="mt-4 grid grid-cols-3 gap-2">
-              {["Rohbild", "Magenta-Prüfung", "Katalogbild"].map((label) => (
-                <div
-                  key={label}
-                  className="flex min-h-28 items-center justify-center rounded-lg border bg-muted/30 px-2 text-center text-xs text-muted-foreground"
-                >
-                  {label}
-                  <br />
-                  Noch nicht verfügbar
-                </div>
-              ))}
-            </div>
+            <ProductReviewImages
+              images={detail.images}
+              reloadHref={
+                queuePath.startsWith("/labs/")
+                  ? `${queuePath}?detail=${submission.id}`
+                  : `/admin/produkt-intake/${submission.id}`
+              }
+            />
           </section>
           <section className={card}>
             <h2 className="text-lg font-semibold">Prüfung &amp; Abschluss</h2>

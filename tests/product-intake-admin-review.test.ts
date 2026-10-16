@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { randomUUID } from "node:crypto"
 import test from "node:test"
 import { NextResponse } from "next/server"
 import type { ProductIntakeResearchJob } from "@chaarlie/product-intake-core"
@@ -162,6 +163,70 @@ test("detail is nullable and excludes unrelated submission personal identifiers"
   assert.equal("user_id" in detail.submission, false)
   assert.equal("source_conversation_id" in detail.submission, false)
   assert.equal(await loadAdminProductReviewDetail(client, "missing"), null)
+})
+
+test("authenticated detail signs only committed images of its current revision and keeps data on signing failure", async () => {
+  const id = randomUUID()
+  const asset = {
+    id: randomUUID(),
+    submission_id: id,
+    payload_revision: 3,
+    job_id: randomUUID(),
+    kind: "raw",
+    sha256: "a".repeat(64),
+    storage_key: `${id}/3/${"a".repeat(64)}`,
+    media_type: "image/png",
+    byte_length: 12,
+    created_at: "2026-10-16",
+  }
+  const client = clientFor({
+    product_submissions: [
+      { id, payload_revision: 3, researched_payload: { final: { exact: "data" } } },
+    ],
+    product_intake_review_assets: [
+      asset,
+      { ...asset, id: randomUUID(), payload_revision: 2, storage_key: `${id}/2/${asset.sha256}` },
+      { ...asset, id: randomUUID(), submission_id: randomUUID() },
+    ],
+  })
+  const signed: string[] = []
+  let fail = false
+  client.storage = {
+    from: (bucket: string) => {
+      assert.equal(bucket, "product-intake-review")
+      return {
+        createSignedUrl: async (key: string, seconds: number) => {
+          assert.equal(seconds, 300)
+          signed.push(key)
+          return fail
+            ? { error: new Error("private provider details"), data: null }
+            : { error: null, data: { signedUrl: "https://storage.example.test/signed" } }
+        },
+      }
+    },
+  } as unknown as ProductReviewReadClient["storage"]
+  const handlers = createProductReviewReadHandlers({
+    requireAdmin: async () => ({ userId: "admin" }),
+    createAdminClient: () => client as ReturnType<typeof createAdminClient>,
+  })
+  const read = () =>
+    handlers.detail(new Request("https://example.test"), {
+      params: Promise.resolve({ submissionId: id }),
+    })
+  const response = await read()
+  assert.equal(response.status, 200)
+  assert.equal(response.headers.get("cache-control"), "private, no-store")
+  const detail = await response.json()
+  assert.deepEqual(signed, [asset.storage_key])
+  assert.equal(detail.images.length, 1)
+  assert.equal(detail.images[0].signed_url, "https://storage.example.test/signed")
+  fail = true
+  const retry = await read()
+  assert.equal(retry.status, 200)
+  const failed = await retry.json()
+  assert.equal(failed.images[0].signed_url, null)
+  assert.deepEqual(failed.submission.researched_payload, { final: { exact: "data" } })
+  assert.ok(!JSON.stringify(failed).includes("private provider details"))
 })
 
 for (const status of [401, 403])
