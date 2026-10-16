@@ -8,6 +8,7 @@ error-event allowance only when the observed unhealthy state changes.
 import json
 import os
 from pathlib import Path
+import shutil
 import socket
 import subprocess
 import sys
@@ -37,11 +38,24 @@ RELEASE_ENV = Path(
 PROC_ROOT = Path(os.environ.get("CHAARLIE_WORKER_HEALTH_PROC_ROOT", "/proc"))
 SYSTEMCTL = os.environ.get("CHAARLIE_WORKER_HEALTH_SYSTEMCTL", "/usr/bin/systemctl")
 STALE_MS = 10 * 60 * 1000
-REQUEST_TIMEOUT_SECONDS = 8
+QUEUE_AGE_MS = 2 * 60 * 60 * 1000
+REQUEST_TIMEOUT_SECONDS = 5
+NETWORK_BUDGET_SECONDS = 20
 
 
 class HealthReadError(Exception):
     pass
+
+
+class RequestBudget:
+    def __init__(self):
+        self.deadline = time.monotonic() + NETWORK_BUDGET_SECONDS
+
+    def timeout(self):
+        remaining = self.deadline - time.monotonic()
+        if remaining <= 0:
+            raise HealthReadError("operational_read_failed")
+        return min(5, remaining)
 
 
 def now_ms():
@@ -119,33 +133,126 @@ def process_identity(pid, expected_release):
     return {"matches": True, "release_sha": actual_release}
 
 
-def read_heartbeat(host, pid):
+def supabase_rows(table, query, budget, failure_reason):
     url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL", "").rstrip("/")
     key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
     if not url or not key:
-        raise HealthReadError("heartbeat_credentials_unavailable")
-    query = urllib.parse.urlencode(
-        {
-            "select": "host,pid,release_sha,started_at,last_seen_at",
-            "host": f"eq.{host}",
-            "pid": f"eq.{pid}",
-            "order": "last_seen_at.desc",
-            "limit": "1",
-        }
-    )
+        raise HealthReadError(failure_reason)
     request = urllib.request.Request(
-        f"{url}/rest/v1/product_intake_worker_heartbeats?{query}",
+        f"{url}/rest/v1/{table}?{urllib.parse.urlencode(query)}",
         headers={"apikey": key, "Authorization": f"Bearer {key}", "Accept": "application/json"},
         method="GET",
     )
     try:
-        with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
+        with urllib.request.urlopen(request, timeout=budget.timeout()) as response:
             payload = json.loads(response.read().decode("utf-8"))
     except Exception as error:  # Provider details must never enter a host log or Sentry event.
-        raise HealthReadError("heartbeat_read_failed") from error
-    if not isinstance(payload, list) or len(payload) > 1:
+        raise HealthReadError(failure_reason) from error
+    if not isinstance(payload, list):
+        raise HealthReadError(failure_reason)
+    return payload
+
+
+def read_heartbeat(host, pid, budget):
+    rows = supabase_rows(
+        "product_intake_worker_heartbeats",
+        {
+            "select": "worker_id,host,pid,release_sha,started_at,last_seen_at",
+            "host": f"eq.{host}",
+            "pid": f"eq.{pid}",
+            "order": "last_seen_at.desc",
+            "limit": "1",
+        },
+        budget,
+        "heartbeat_read_failed",
+    )
+    if len(rows) > 1:
         raise HealthReadError("heartbeat_read_failed")
-    return payload[0] if payload else None
+    return rows[0] if rows else None
+
+
+def is_claimable(row, observed):
+    """Mirror the read-only predicates from product_intake_claim_research_jobs.
+
+    The REST query joins only research-open submissions; this local predicate
+    supplies the claim function's status, due-time, stale-lock and attempt cap
+    without invoking its mutating RPC.
+    """
+    if not isinstance(row, dict) or not isinstance(row.get("submission"), dict):
+        return False
+    if row["submission"].get("status") not in ("pending_review", "researching", "ready_for_review", "needs_more_info"):
+        return False
+    if not isinstance(row.get("attempt_count"), int) or not isinstance(row.get("max_attempts"), int):
+        return False
+    if row["attempt_count"] >= row["max_attempts"]:
+        return False
+    due = parse_timestamp_ms(row.get("next_run_at"))
+    if due is None or due > observed:
+        return False
+    status = row.get("status")
+    if status in ("queued", "waiting_for_rework"):
+        return True
+    if status == "running":
+        locked = parse_timestamp_ms(row.get("locked_at"))
+        return locked is None or locked <= observed - STALE_MS
+    return False
+
+
+def is_aged_claimable(due_at, observed):
+    """The queue-age threshold starts when claim work becomes eligible."""
+    due = parse_timestamp_ms(due_at)
+    return due is not None and observed - due > QUEUE_AGE_MS
+
+
+def operational_reasons(worker_id, observed, budget):
+    """Return enum-only operational signals without IDs or diagnostic text."""
+    reasons = []
+    try:
+        candidates = supabase_rows(
+            "product_intake_research_jobs",
+            {
+                "select": "status,attempt_count,max_attempts,next_run_at,locked_at,submission:product_submissions!inner(status)",
+                "status": "in.(queued,waiting_for_rework,running)",
+                "submission.status": "in.(pending_review,researching,ready_for_review,needs_more_info)",
+                "order": "next_run_at.asc",
+                "limit": "100",
+            },
+            budget,
+            "operational_read_failed",
+        )
+        claimable_due = [row.get("next_run_at") for row in candidates if is_claimable(row, observed)]
+        if any(is_aged_claimable(due, observed) for due in claimable_due):
+            reasons.append("claimable_queue_aged")
+        elif len(candidates) == 100:
+            # This bounded read cannot prove the absence of an aged claimable row beyond its window.
+            reasons.append("queue_health_incomplete")
+
+        if isinstance(worker_id, str) and worker_id:
+            outcomes = supabase_rows(
+                "product_intake_research_jobs",
+                {
+                    "select": "status,updated_at,worker_id:progress->>worker_id,error_code:progress->>error_code",
+                    "progress->>worker_id": f"eq.{worker_id}",
+                    "status": "in.(failed,blocked,done,cancelled,waiting_for_review)",
+                    "order": "updated_at.desc",
+                    "limit": "3",
+                },
+                budget,
+                "operational_read_failed",
+            )
+            if outcomes and outcomes[0].get("error_code") == "infra_auth":
+                reasons.append("infra_auth")
+            if len(outcomes) == 3 and all(row.get("status") == "failed" for row in outcomes):
+                reasons.append("consecutive_job_failures")
+    except (HealthReadError, OSError, ValueError, TypeError):
+        reasons.append("operational_read_failed")
+    try:
+        disk = shutil.disk_usage(CURRENT)
+        if disk.total > 0 and disk.free / disk.total < 0.15:
+            reasons.append("disk_low")
+    except (OSError, ValueError, TypeError):
+        reasons.append("operational_read_failed")
+    return reasons
 
 
 def parse_timestamp_ms(value):
@@ -241,6 +348,8 @@ def main():
     observed = now_ms()
     state = load_state(observed)
     reasons = []
+    budget = RequestBudget()
+    worker_id = None
     try:
         expected_release = os.environ.get("PRODUCT_INTAKE_RELEASE_SHA") or read_env_file(RELEASE_ENV).get(
             "PRODUCT_INTAKE_RELEASE_SHA"
@@ -251,7 +360,8 @@ def main():
             reasons.append("worker_not_running")
         if not identity["matches"]:
             reasons.append(identity["reason"])
-        heartbeat = read_heartbeat(socket.gethostname(), unit["pid"])
+        heartbeat = read_heartbeat(socket.gethostname(), unit["pid"], budget)
+        worker_id = heartbeat.get("worker_id") if isinstance(heartbeat, dict) else None
         heartbeat_at = parse_timestamp_ms(heartbeat.get("last_seen_at")) if isinstance(heartbeat, dict) else None
         if not heartbeat or heartbeat_at is None or observed - heartbeat_at > STALE_MS:
             reasons.append("heartbeat_stale")
@@ -259,6 +369,7 @@ def main():
             reasons.append("heartbeat_release_mismatch")
     except HealthReadError as error:
         reasons.append(str(error))
+    reasons.extend(operational_reasons(worker_id, observed, budget))
     heavy_reason = heavy_stage_reason(observed)
     if heavy_reason:
         reasons.append(heavy_reason)
@@ -266,10 +377,21 @@ def main():
     signature = ",".join(sorted(set(reasons)))
     # The initial ten minutes and a still-fresh prior heartbeat cover systemd's 15s restart.
     prior_healthy = state.get("last_healthy_at_ms")
-    in_grace = bool(signature) and (
+    immediate_reasons = {
+        "heartbeat_read_failed",
+        "heartbeat_credentials_unavailable",
+        "heavy_stage_unresolved",
+        "claimable_queue_aged",
+        "queue_health_incomplete",
+        "consecutive_job_failures",
+        "infra_auth",
+        "disk_low",
+        "operational_read_failed",
+    }
+    in_grace = bool(signature) and not any(reason in immediate_reasons for reason in reasons) and (
         observed - int(state.get("first_observed_at_ms", observed)) < STALE_MS
         or (isinstance(prior_healthy, int) and observed - prior_healthy < STALE_MS)
-    ) and "heavy_stage_unresolved" not in signature
+    )
     if not signature:
         state["last_healthy_at_ms"] = observed
         status = "healthy"

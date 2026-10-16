@@ -77,6 +77,13 @@ the separate production outbox-error rule is configured for Nick's existing emai
    writes. Keep outbox and worker-health Sentry events scoped and sanitized.
    Verify repeated-failure/auth/low-disk and held-email routes with sanitized
    technical tests; never stop a real active job for monitoring proof.
+   The free observer also owns the original plan's operational thresholds:
+   claimable work waiting over two hours since `next_run_at`, three consecutive current-worker job
+   failures, current-worker `infra_auth`, and free disk below 15%. Historical
+   blocked/failed jobs are excluded; a saturated bounded queue read is reported
+   as incomplete. It reads status enums and timestamps without claiming jobs.
+   This completes Slice 0.4 through the confirmed free observer instead of the
+   unavailable Cron route; it does not change product or retry policy.
 7. Propose the exact ten-case cohort across supported engines and success,
    uncertainty and recovery outcomes. After alignment, run it sequentially and
    record calls, elapsed time, cost where available, correction count and review
@@ -122,3 +129,10 @@ orphaned audit. The installed control-group termination and OOM-stop contain its
 descendants. Unknown/pending launch identity remains a visible recovery hold.
 The helper's `.unconfirmed` sidecar contains only a fixed reason and timestamp;
 the free monitor reports it while leaving the forensic marker intact.
+
+Final monitor/keyboard review found no blocking defects. The queue-age concern
+was fixed with a failing-then-passing fresh-retry check: waiting time starts when
+work becomes due, without changing the research-cycle clock. A reported heartbeat
+grace change was rejected because the prior source already failed a heartbeat
+read immediately. Final health coverage includes the exact age boundary, bounded
+scan saturation and exhausted request budget (12 checks).

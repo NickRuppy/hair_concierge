@@ -46,7 +46,9 @@ for (const width of [1280, 390])
     const confirm = page
       .getByRole("dialog")
       .getByRole("button", { name: "Jetzt veröffentlichen", exact: true })
+    await expect(confirm).toBeEnabled()
     await confirm.focus()
+    await expect(confirm).toBeFocused()
     await page.keyboard.press("Enter")
     await expect(
       page.getByText("Produkt veröffentlicht · Version 3", { exact: true }),

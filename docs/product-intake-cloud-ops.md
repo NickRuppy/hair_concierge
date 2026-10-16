@@ -178,6 +178,13 @@ Free worker-down monitoring uses
 `chaarlie-product-intake-worker-health.timer`, independent of the worker loop.
 The read-only observer checks the actual systemd process, current release and
 matching Supabase heartbeat; a ten-minute grace avoids short restart alarms.
+The same observer reports claimable work waiting more than two hours since its
+`next_run_at` eligibility time, three consecutive
+failures scoped to the current worker, that worker's latest `infra_auth` outcome,
+and free disk strictly below 15%. Old blocked/failed backlog does not count as a
+new failure streak. Claimability follows the existing due-time, stale-lock,
+attempt and submission-state predicates; an exhausted bounded read is explicitly
+incomplete. These checks never claim, retry or modify jobs.
 It reports changed unhealthy incidents through the existing production Sentry
 error allowance and `product_intake_admin_alert` rule. Failed event delivery
 remains retryable. It does not use paid Cron capacity or Customer.io and does not
