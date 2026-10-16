@@ -558,8 +558,26 @@ test("the list joins every enrollment with the state of its checklist", async ()
         revoked_at: null,
         created_at: "2026-09-17T10:00:00.000Z",
       },
+      {
+        id: "3f1a6f2e-2b44-4a1e-9a1a-6f2e2b444a3f",
+        display_name: "Maja B.",
+        normalized_email: "maja@example.test",
+        token_version: 1,
+        claimed_at: "2026-09-20T10:00:00.000Z",
+        revoked_at: null,
+        created_at: "2026-09-17T10:00:00.000Z",
+      },
     ],
-    listIntakes: async () => [intake],
+    listIntakes: async () => [
+      intake,
+      {
+        ...intake,
+        enrollmentId: "3f1a6f2e-2b44-4a1e-9a1a-6f2e2b444a3f",
+        state: "draft",
+        submittedAt: null,
+      },
+    ],
+    listQuizProgress: async () => new Map(),
   })
   const markup = renderWithRouter(await Page())
 
@@ -570,7 +588,40 @@ test("the list joins every enrollment with the state of its checklist", async ()
   // The uninvited-yet participant has no intake at all.
   assert.ok(markup.includes("Mira K."))
   assert.ok(markup.includes("eingeladen"))
-  assert.ok(markup.includes("nicht begonnen"))
+  assert.ok(markup.includes("Haarquiz: noch nicht abgeschlossen"))
+  assert.ok(markup.includes("Produkte: noch nicht begonnen"))
+  assert.ok(markup.includes("Produkte: offen"))
+  assert.ok(markup.includes("Produkte: abgeschickt 20.09.2026 18:41 UTC"))
+})
+
+test("the list distinguishes a completed hair quiz from an unopened product checklist", async () => {
+  const Page = createDiscoveryCockpitListPage({
+    flagEnabled: () => true,
+    requireAdmin: async () => ({ userId: "admin-1" }),
+    createAdminClient: () => ({}) as never,
+    listEnrollments: async () => [
+      {
+        id: ids.enrollment,
+        display_name: "Lena M.",
+        normalized_email: "lena@example.test",
+        token_version: 1,
+        claimed_at: "2026-09-19T10:00:00.000Z",
+        revoked_at: null,
+        created_at: "2026-09-18T10:00:00.000Z",
+      },
+    ],
+    listIntakes: async () => [],
+    // The real loader classifies a complete, same-account (or still-unbound)
+    // legacy lead. This page boundary must retain that fact independently of the
+    // product checklist row.
+    listQuizProgress: async () =>
+      new Map([[ids.enrollment, { completedAt: "2026-09-19T10:15:00.000Z" }]]),
+  })
+  const markup = renderWithRouter(await Page())
+
+  assert.ok(markup.includes("Haarquiz abgeschlossen"))
+  assert.ok(markup.includes("19.09.2026 10:15 UTC"))
+  assert.ok(markup.includes("Produkte: noch nicht begonnen"))
 })
 
 /** The invite controls call `useRouter()`; a real app router is mounted in production. */
@@ -599,6 +650,23 @@ const listRow = {
   created_at: "2026-09-18T10:00:00.000Z",
 }
 
+test("the list does not call an unreadable quiz history unfinished", async () => {
+  const Page = createDiscoveryCockpitListPage({
+    flagEnabled: () => true,
+    requireAdmin: async () => ({ userId: "admin-1" }),
+    createAdminClient: () => ({}) as never,
+    listEnrollments: async () => [listRow],
+    listIntakes: async () => [],
+    listQuizProgress: async () => {
+      throw new Error("leads unavailable")
+    },
+  })
+  const markup = renderWithRouter(await Page())
+
+  assert.ok(markup.includes("Haarquiz: gerade nicht lesbar"))
+  assert.ok(markup.includes("Produkte: noch nicht begonnen"))
+})
+
 test("the list opens with the invite form and gives each live row its link controls", async () => {
   const Page = createDiscoveryCockpitListPage({
     flagEnabled: () => true,
@@ -617,6 +685,7 @@ test("the list opens with the invite form and gives each live row its link contr
       },
     ],
     listIntakes: async () => [],
+    listQuizProgress: async () => new Map(),
   })
   const markup = renderWithRouter(await Page())
 
@@ -645,6 +714,7 @@ test("without a signing secret the list still renders, just without link control
     },
     listEnrollments: async () => [listRow],
     listIntakes: async () => [],
+    listQuizProgress: async () => new Map(),
   })
   const markup = renderWithRouter(await Page())
   assert.ok(markup.includes("Lena M."))
