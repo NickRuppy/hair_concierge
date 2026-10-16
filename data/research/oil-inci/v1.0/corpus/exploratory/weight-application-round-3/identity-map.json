@@ -1,0 +1,94 @@
+{
+  "records": [
+    {
+      "neutral_id": "W01",
+      "brand": "K18",
+      "product": "Molecular Repair Hair Oil",
+      "cohort_group": "blend_product",
+      "source_url": "https://www.notino.de/k18/molecular-repair-hair-oil-pflegendes-trockenoel-fuer-beschaedigtes-und-bruechiges-haar/p-16220382/",
+      "reused_development": true,
+      "market_limit": "DE"
+    },
+    {
+      "neutral_id": "W02",
+      "brand": "PRIMAVERA",
+      "product": "Jojobaöl bio",
+      "cohort_group": "single_material_product",
+      "source_url": "https://www.primaveralife.com/jojobaoel-bio.html",
+      "reused_development": true,
+      "market_limit": "DE"
+    },
+    {
+      "neutral_id": "W03",
+      "brand": "Cliganic",
+      "product": "Organic Moringa Oil",
+      "cohort_group": "single_material_product",
+      "source_url": "https://www.cliganic.com/products/100-pure-organic-moringa-oil",
+      "reused_development": false,
+      "market_limit": "US maker page; research benchmark, DE equivalence not asserted"
+    },
+    {
+      "neutral_id": "W04",
+      "brand": "PRIMAVERA",
+      "product": "Calendulaöl bio",
+      "cohort_group": "blend_product",
+      "source_url": "https://www.primaveralife.com/calendulaoel-bio.html",
+      "reused_development": false,
+      "market_limit": "DE"
+    },
+    {
+      "neutral_id": "W05",
+      "brand": "Alepia",
+      "product": "Huile de Ricin Bio",
+      "cohort_group": "single_material_product",
+      "source_url": "https://alepia.com/fr/huiles/66-huile-de-ricin-bio-30-ml.html",
+      "reused_development": true,
+      "market_limit": "FR/EU; exact material comparison"
+    },
+    {
+      "neutral_id": "W06",
+      "brand": "NEQI",
+      "product": "Smooth Strength Rosemary Oil",
+      "cohort_group": "blend_product",
+      "source_url": "https://neqi-hair.com/products/smooth-strength-rosemary-oil",
+      "reused_development": true,
+      "market_limit": "DE"
+    },
+    {
+      "neutral_id": "W07",
+      "brand": "PRIMAVERA",
+      "product": "Arganöl bio",
+      "cohort_group": "single_material_product",
+      "source_url": "https://www.primaveralife.com/arganoel-bio.html",
+      "reused_development": false,
+      "market_limit": "DE"
+    },
+    {
+      "neutral_id": "W08",
+      "brand": "Kahai SAS",
+      "product": "Kahai Cacay oil",
+      "cohort_group": "raw_material_benchmark",
+      "source_url": "https://kahai.co/wp-content/uploads/2025/12/1.TDS_.pdf",
+      "reused_development": false,
+      "market_limit": "Colombia manufacturer material"
+    },
+    {
+      "neutral_id": "W09",
+      "brand": "OLAPLEX DE / New Flag",
+      "product": "Original N°7 Bonding Oil",
+      "cohort_group": "blend_product",
+      "source_url": "https://olaplex.de/collections/glanz-shine/products/olaplex-no-7-bonding-oil",
+      "reused_development": true,
+      "market_limit": "DE"
+    },
+    {
+      "neutral_id": "W10",
+      "brand": "PRIMAVERA",
+      "product": "Schwarzkümmelöl bio",
+      "cohort_group": "single_material_product",
+      "source_url": "https://www.primaveralife.com/schwarzkuemmeloel-bio.html",
+      "reused_development": false,
+      "market_limit": "DE"
+    }
+  ]
+}

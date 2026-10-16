@@ -1,0 +1,400 @@
+{
+  "capture_version": "round-1-source-capture-2026-10-01",
+  "capture_is_classification": false,
+  "records": [
+    {
+      "slot": "E04",
+      "identity": {
+        "brand": "OGX",
+        "product": "Coconut Miracle Oil Extra Strength Penetrating Oil",
+        "size_ml": 100,
+        "market": "DE",
+        "gtin_if_verified": "3574661563398"
+      },
+      "sources": [
+        {
+          "id": "E04-dm",
+          "url": "https://www.dm.de/p/d/2322377/ogx-haaroel-coconut-miracle-oil",
+          "source_author": "dm DE",
+          "tier": 3,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Exact name, 100 ml and GTIN; canonical German retailer ingredient declaration and directions."
+        },
+        {
+          "id": "E04-pack-front",
+          "url": "https://www.rossmann.de/media-neu/179/MAM_17990661/MAM_17990661_SHOP_IMAGE_2.0.png?auto=webp&canvas=550%2C550&dpr=1&fit=bounds&format=webply&height=550&quality=85&width=550",
+          "source_author": "OGX package reproduced by Rossmann DE",
+          "tier": 1,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Opened image linked from Rossmann exact-GTIN product page; 100 ml, hinged cap seam and front positioning visually inspected."
+        },
+        {
+          "id": "E04-pack-back",
+          "url": "https://products.dm-static.com/images/f_auto%2Cq_auto%2Cc_fit%2Ch_440%2Cw_500/v1787002790/assets/pas/images/86a15b53-8ac7-4ff6-8812-99ef82a1606e/ogx-haaroel-coconut-miracle-oil",
+          "source_author": "OGX package reproduced by dm DE",
+          "tier": 1,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Back photo visually inspected; barcode 3574661563398 visible. Small-print resolution limits transcription; use dm declaration for raw INCI."
+        },
+        {
+          "id": "E04-US-blog-excluded",
+          "url": "https://www.ogxbeauty.com/blog/coconut-oil-hair-benefits-uses",
+          "source_author": "OGX US",
+          "tier": 4,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Foreign-market named-product heat and overnight wording found but excluded from exact DE facts: no established formula/package equivalence."
+        }
+      ],
+      "raw_inci": "Dimethicone, Isopropyl Myristate, Dimethiconol, C12-15 Alkyl Benzoate, Argania Spinosa Kernel Oil, Cocos Nucifera (Coconut) Oil, Gardenia Taitensis Flower Extract, Vanilla Planifolia Fruit Extract, Carthamus Tinctorius (Safflower) Seed Oil, Tocopheryl Acetate, Parfum/Fragrance, Benzyl Benzoate, Linalool, Benzyl Salicylate, Limonene, Benzyl Alcohol, Coumarin",
+      "canonical_source_id": "E04-dm",
+      "directions": [
+        {
+          "source_id": "E04-dm",
+          "verbatim": false,
+          "text": "Einige Tropfen in den Händen verteilen und ins handtuchtrockene Haar bis zu den Spitzen einarbeiten. Bei feinem Haar auf die Spitzen konzentrieren und den Ansatz auslassen.",
+          "stage": "towel_dried",
+          "site": "hair_to_ends",
+          "dose": "a few drops",
+          "contact_time": "not_stated",
+          "rinse": "not_stated",
+          "shake": "not_stated"
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "flip-top bottle; pour/drop opening",
+        "source_id": "E04-pack-front",
+        "confidence": "moderate",
+        "notes": "Hinged cap shape/seam observed on closed pack; internal outlet not visible."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": false,
+          "author": "OGX via exact DE package images",
+          "source_id": "E04-pack-back",
+          "claim_excerpt": null,
+          "verbatim": false,
+          "review_scope": "No accepted heat/UV protection claim in reviewed exact DE pack/front, back and dm product facts. Absence of accepted claim is not an efficacy assertion."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "OGX via exact DE package images",
+          "source_id": "E04-pack-back",
+          "claim_excerpt": null,
+          "verbatim": false,
+          "review_scope": "No accepted heat/UV protection claim in reviewed exact DE pack/front, back and dm product facts. Absence of accepted claim is not an efficacy assertion."
+        }
+      },
+      "advertised_oils": [
+        {
+          "name": "coconut oil",
+          "source_id": "E04-pack-front",
+          "wording": "coconut oil",
+          "verbatim": true
+        }
+      ],
+      "advertised_oils_review": {
+        "reviewed": true,
+        "notes": "Front also highlights tiare essence and vanilla bean extract; these are not advertised oils. Argan/safflower presence alone does not make them heroes."
+      },
+      "conflict_captures": [
+        {
+          "kind": "foreign_market_claim_not_transferred",
+          "source_id": "E04-US-blog-excluded",
+          "disposition": "Excluded from German claim/use record; retain evidence that global heat-positive wording exists."
+        }
+      ],
+      "status": "capture_ready",
+      "raw_inci_sha256": "514034a70c1594f31913a5e35a2c45a1990ee7bf5d0a918672c9361150e625b5",
+      "ingredient_count": 17
+    },
+    {
+      "slot": "E05",
+      "identity": {
+        "brand": "Living Proof",
+        "product": "No Frizz Vanishing Oil",
+        "size_ml": 50,
+        "market": "DE",
+        "gtin_if_verified": "840216931084"
+      },
+      "sources": [
+        {
+          "id": "E05-cosmeterie",
+          "url": "https://www.cosmeterie.de/living-proof/no-frizz-vanishing-oil",
+          "source_author": "Cosmeterie DE",
+          "tier": 3,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Exact 50 ml/EAN 840216931084 and maker code LIP-NF-ST-106; canonical complete local ordered list, including printed spelling."
+        },
+        {
+          "id": "E05-maker",
+          "url": "https://www.livingproof.com/collections/no-frizz/products/no-frizz-vanishing-oil",
+          "source_author": "Living Proof",
+          "tier": 4,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Global exact named product 1.7 oz; ordered main formula converges with local listing after explicit spelling/format aliases. FAQ reviewed separately. Additional fragrance disclosure is separate from main INCI."
+        },
+        {
+          "id": "E05-niche",
+          "url": "https://www.niche-beauty.com/de-de/produkte/living-proof-no-frizz-vanishing-oil/887-033",
+          "source_author": "Niche Beauty DE",
+          "tier": 3,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Exact named 50 ml product positioning names five oils; used for advertised oils, not claim authority."
+        },
+        {
+          "id": "E05-pack",
+          "url": "https://media.niche-beauty.com/images/generated/det/40/15/living-proof-no-frizz-vanishing-oil.jpg",
+          "source_author": "Living Proof package reproduced by Niche Beauty DE",
+          "tier": 1,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Visually inspected 50 ml/1.7 fl oz front pack with pipette bulb; source page binds exact named 50 ml product."
+        }
+      ],
+      "raw_inci": "C13‐15 Alkane, Isohexadecane, Isododecane, Isoamyl Laurate, Ethylene/Propylene/Styrene Copolymer, C9-12 Alkane, Hippophae Rhamnoides (Sea Buckthorn) Fruit Oil, Helianthus Annus (Sunflower) Seed Oil, Coco Caprylate/Caprate, Brassica Campestris/Aleurites Fordi Oil Copolymer, Citrullus Lanatus Seed Oil, Moringa Oleifera Seed Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Orbignya Oleifera Seed Oil, Phytosteryl/Octyldodecyl Lauroyl Glutamate, Butylene/Ethylene/Styrene Copolymer, Amaranthus Caudatus Seed Extract, Diisostearyl Malate, Pentaerythrityl Tetra-Di-T-Butylhydroxyhydrocinnamate, Parfum, Citronellol, Limonene, Citral, Linalool",
+      "canonical_source_id": "E05-cosmeterie",
+      "directions": [
+        {
+          "source_id": "E05-cosmeterie",
+          "verbatim": false,
+          "text": "Mit wenig Öl auf feuchtem oder trockenem Haar beginnen; bei Bedarf erneut anwenden. Bei feinem Haar sparsam an den Spitzen, bei kräftigerem Haar auch in den Längen verteilen. Täglich nach Bedarf.",
+          "stage": "damp_or_dry",
+          "site": "lengths_and_ends",
+          "dose": "small amount; no numerical dose in local directions",
+          "contact_time": "not_stated",
+          "rinse": "not_stated",
+          "shake": "not_stated"
+        },
+        {
+          "source_id": "E05-maker",
+          "verbatim": false,
+          "text": "Der Hersteller nennt ein bis zwei Tropfen als Anfangsmenge, verteilt im abgeteilten feuchten oder trockenen Haar; Wiederholung nach Bedarf. Anwendung auch nach Hitzestyling beschrieben.",
+          "stage": "damp_or_dry; separate explicit after_heat_styling option",
+          "site": "hair_sections",
+          "dose": "1–2 drops initially",
+          "contact_time": "not_stated",
+          "rinse": "not_stated",
+          "shake": "not_stated"
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "pipette/dropper",
+        "source_id": "E05-pack",
+        "confidence": "high"
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": false,
+          "author": "Living Proof",
+          "source_id": "E05-maker",
+          "claim_excerpt": "No Frizz Vanishing Oil alone does not protect against heat.",
+          "verbatim": true
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "Living Proof",
+          "source_id": "E05-maker",
+          "claim_excerpt": "No, frizz Vanishing Oil does not protect against UV rays.",
+          "verbatim": true
+        }
+      },
+      "advertised_oils": [
+        {
+          "name": "sea buckthorn oil",
+          "source_id": "E05-niche",
+          "wording": "Sanddornöl in der hervorgehobenen Ölmischung",
+          "verbatim": false
+        },
+        {
+          "name": "jojoba oil",
+          "source_id": "E05-niche",
+          "wording": "Jojobaöl in der hervorgehobenen Ölmischung",
+          "verbatim": false
+        },
+        {
+          "name": "watermelon oil",
+          "source_id": "E05-niche",
+          "wording": "Wassermelonenöl in der hervorgehobenen Ölmischung",
+          "verbatim": false
+        },
+        {
+          "name": "babassu oil",
+          "source_id": "E05-niche",
+          "wording": "Babassuöl in der hervorgehobenen Ölmischung",
+          "verbatim": false
+        },
+        {
+          "name": "moringa oil",
+          "source_id": "E05-niche",
+          "wording": "Moringaöl in der hervorgehobenen Ölmischung",
+          "verbatim": false
+        }
+      ],
+      "advertised_oils_review": {
+        "reviewed": true,
+        "notes": "Manufacturer describes a five-oil blend; German retailer names its five oils. Amaranth is advertised as extract, not oil. No feedstock-derived oils invented."
+      },
+      "conflict_captures": [
+        {
+          "kind": "orthography_and_display_aliases",
+          "source_id": "E05-maker",
+          "raw_inci": "C13-15 Alkane, Isohexadecane, Isododecane, Isoamyl Laurate, Ethylene/Propylene/Styrene Copolymer, C9-12 Alkane, Hippophae Rhamnoides Fruit Oil, Helianthus Annuus (Sunflower) Seed Oil, Coco-Caprylate/Caprate, Brassica Campestris/Aleurites Fordi Oil Copolymer, Citrullus Lanatus (Watermelon) Seed Oil, Moringa Oleifera Seed Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Orbignya Oleifera Seed Oil, Phytosteryl/Octyldodecyl Lauroyl Glutamate, Butylene/Ethylene/Styrene Copolymer, Amaranthus Caudatus Seed Extract, Diisostearyl Malate, Pentaerythrityl Tetra-di-t-butyl Hydroxyhydrocinnamate, Fragrance/Parfum, Citronellol, Limonene, Citral, Linalool",
+          "disposition": "Canonical stays exact DE retailer declaration. Same 24 positions, with Annus/Annuus, hyphenation, common-name parentheticals, antioxidant spacing and Parfum/Fragrance differences. Preserve raw; lexicon must explicitly resolve aliases."
+        },
+        {
+          "kind": "separate_manufacturer_fragrance_disclosure",
+          "source_id": "E05-maker",
+          "raw_additional_fragrance_ingredients": "Ethyl Linalool, Methyldihydrojasmonate, Citronellol, Amyl Salicylate, Ionone, Tetramethyl Acetyloctahydronaphthalenes, Cyclamen Aldehyde, Ethylene Brassylate, Citrus Sinensis Peel Oil Expressed, Isopropyl Myristate, Methylbenzyl Acetate, Illicium Verum (Anise) Fruit/Seed Oil, Citral, Geranyl Acetate, 2,4-Dimethyl-3-Cyclohexene Carboxaldehyde",
+          "disposition": "Not appended to canonical DE INCI; separate additional-fragrance disclosure does not supply ordered DE label positions."
+        },
+        {
+          "kind": "foreign_market_alternative_not_transferred",
+          "source_url": "https://www.sephora.co.uk/p/living-proof-no-frizz-vanishing-oil",
+          "disposition": "Search surfaced UK list beginning Isododecane and containing Octafluoropentyl Methacrylate and Lagenaria Sphaerica Seed Oil. Not same exact DE GTIN evidence; excluded, not merged or dated as old."
+        }
+      ],
+      "status": "capture_ready",
+      "raw_inci_sha256": "c1dd2dbaf452e4fe9e01a81c69059c0b82cf7a0eb0420bbffee588bc6153676b",
+      "ingredient_count": 24
+    },
+    {
+      "slot": "E08",
+      "identity": {
+        "brand": "Kérastase",
+        "product": "Soleil Huile Sirène",
+        "size_ml": 150,
+        "market": "DE",
+        "gtin_if_verified": "3474636695324"
+      },
+      "sources": [
+        {
+          "id": "E08-maker-DE",
+          "url": "https://www.kerastase.de/alle-produkte/huile-sirene-ol/3474636695324.html",
+          "source_author": "Kérastase DE",
+          "tier": 2,
+          "accessed_at": "2026-10-01T08:18:00Z",
+          "notes": "Complete indexed primary product body inspected: exact 150 ml identity, all 19 ingredients, formula code C227530/1, benefits, highlighted ingredients and application. Search retrieval supplies complete sections, not reconstructed snippet fragments. Direct-open metadata returned 826 lines; subsequent direct fetches timeout."
+        },
+        {
+          "id": "E08-partner-DE",
+          "url": "https://de.lorealpartnershop.com/de/soleil-huile-sir%C3%A8ne/DE3474636695324.html",
+          "source_author": "L’Oréal Partner Shop DE",
+          "tier": 2,
+          "accessed_at": "2026-10-01T08:18:00Z",
+          "notes": "Direct full body inspected: exact 150ML/article number 3474636695324; matching 19-ingredient list; Babassu oil positioning; independent shake/hand-application/no-rinse directions. The earlier incompatible FR snippet is not this valid DE page."
+        }
+      ],
+      "raw_inci": "Aqua / Water, Isopropyl Myristate, Isododecane, Dimethicone, Vp/Va Copolymer, Magnesium Sulfate, Phenoxyethanol, Chlorphenesin, Caprylyl Glycol, Cocos Nucifera Oil / Coconut Oil, Ethylhexyl Salicylate, Benzyl Alcohol, Orbignya Oleifera Seed Oil, Tocopherol, Citric Acid, Ci 19140 / Yellow 5, Ci 17200 / Red 33, Sodium Hydroxide, Parfum / Fragrance",
+      "canonical_source_id": "E08-maker-DE",
+      "directions": [
+        {
+          "source_id": "E08-maker-DE",
+          "verbatim": false,
+          "text": "Vor Gebrauch gut schütteln. Ins feuchte oder trockene Haar sprühen, vor allem auf die Spitzen. Anschließend an der Luft trocknen lassen.",
+          "stage": "damp_or_dry",
+          "site": "hair_with_focus_on_ends",
+          "dose": "not_stated",
+          "contact_time": "not_stated",
+          "rinse": "not_stated; air_dry_after_application explicitly directed",
+          "shake": "shake_well"
+        },
+        {
+          "source_id": "E08-partner-DE",
+          "verbatim": false,
+          "text": "Die zwei Phasen durch gründliches Schütteln mischen. In die Hände sprühen, dann im Haar verteilen und im Haar belassen.",
+          "stage": "not_stated",
+          "site": "hair",
+          "dose": "not_stated",
+          "contact_time": "not_stated",
+          "rinse": "do_not_rinse",
+          "shake": "shake_well"
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "spray",
+        "source_id": "E08-maker-DE",
+        "confidence": "high",
+        "notes": "Explicit manufacturer spray direction; no count of spray actuations specified."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": false,
+          "author": "Kérastase DE",
+          "source_id": "E08-maker-DE",
+          "claim_excerpt": null,
+          "verbatim": false,
+          "review_scope": "Exact product benefits, highlighted ingredients and application reviewed; no heat-protection claim found. Generic recommendation widgets excluded."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": true,
+          "author": "Kérastase DE",
+          "source_id": "E08-maker-DE",
+          "claim_excerpt": "Bietet Sonnenschutz für das Haar. Absorbiert UV-Strahlen und minimiert ihren Effekt auf die Haarfaser.",
+          "verbatim": true,
+          "excerpt_note": "Two distinct short passages: product benefit and UV-filter key-ingredient description."
+        }
+      },
+      "advertised_oils": [
+        {
+          "name": "babassu oil",
+          "source_id": "E08-partner-DE",
+          "wording": "Mit Babassu-Öl angereichert",
+          "verbatim": true
+        }
+      ],
+      "advertised_oils_review": {
+        "reviewed": true,
+        "source_id": "E08-maker-DE",
+        "notes": "German consumer page highlights coconut water, vitamin E and UV filter; separate exact German official partner page explicitly highlights Babassu oil. Coconut water is not coconut oil. No coconut-oil hero inferred from INCI."
+      },
+      "conflict_captures": [
+        {
+          "kind": "unreliable_partner_formula_excluded",
+          "source_url": "https://fr.lorealpartnershop.com/fr/huile-sirene/FR3474636695324.html",
+          "disposition": "Preflight reported incompatible shampoo INCI in partner search result. Do not import any such list; canonical formula is complete German manufacturer section."
+        },
+        {
+          "kind": "retrieval_limitation",
+          "source_url": "https://www.kerastase.de/alle-produkte/huile-sirene/KER_00054.html?dwvar_KER__00054_size=150_ml",
+          "disposition": "Direct fetch repeated timeout/403; full indexed German primary body recovered via alternate exact EAN URL and independently inspected by capture agent."
+        }
+      ],
+      "status": "capture_ready",
+      "raw_inci_format_note": "Original uses a displayed bullet list; transcribed in displayed order with comma separators. Trailing C227530/1 is a formula identifier, not an ingredient.",
+      "formula_code": "C227530/1",
+      "other_advertised_materials": [
+        {
+          "name": "coconut water",
+          "source_id": "E08-maker-DE",
+          "wording": "Kokosnusswasser",
+          "verbatim": true
+        },
+        {
+          "name": "vitamin E",
+          "source_id": "E08-maker-DE",
+          "wording": "Vitamin E",
+          "verbatim": true
+        },
+        {
+          "name": "UV filter",
+          "source_id": "E08-maker-DE",
+          "wording": "UV-Filter",
+          "verbatim": true
+        }
+      ],
+      "corroborating_inci": [
+        {
+          "source_id": "E08-partner-DE",
+          "raw_inci": "AQUA / WATER • ISOPROPYL MYRISTATE • ISODODECANE • DIMETHICONE • VP/VA COPOLYMER • MAGNESIUM SULFATE • PHENOXYETHANOL • CHLORPHENESIN • CAPRYLYL GLYCOL • COCOS NUCIFERA OIL / COCONUT OIL • ETHYLHEXYL SALICYLATE • BENZYL ALCOHOL • ORBIGNYA OLEIFERA SEED OIL • TOCOPHEROL • CITRIC ACID • CI 19140 / YELLOW 5 • CI 17200 / RED 33 • SODIUM HYDROXIDE • PARFUM / FRAGRANCE"
+        }
+      ],
+      "raw_inci_sha256": "9c1bb5f4e619e3569b52a3bc2a2d52c45ab8a310feff259c8933b214a23399fe",
+      "ingredient_count": 19
+    }
+  ]
+}

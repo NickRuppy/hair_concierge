@@ -1,0 +1,1119 @@
+{
+  "reference_id": "oil-natural-weight-v0.10",
+  "version": "0.10",
+  "projection_note": "Exact identity and approved rough material priors only. Confidence ceilings retained; source/product/approval metadata intentionally omitted. This is not a sensory reference key.",
+  "entries": [
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+      ],
+      "canonical_inci": "SIMMONDSIA CHINENSIS SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "jojoba"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "VITIS VINIFERA (GRAPE) SEED OIL"
+      ],
+      "canonical_inci": "VITIS VINIFERA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "grapeseed"
+    },
+    {
+      "material_family": "processed_triglyceride_emollient",
+      "aliases": [],
+      "canonical_inci": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "moderate",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "c8_c10_mct"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+      ],
+      "canonical_inci": "PRUNUS AMYGDALUS DULCIS OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "sweet_almond"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "PRUNUS ARMENIACA (APRICOT) KERNEL OIL"
+      ],
+      "canonical_inci": "PRUNUS ARMENIACA KERNEL OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "apricot_kernel"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+      ],
+      "canonical_inci": "CARTHAMUS TINCTORIUS SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "safflower"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "RICINUS COMMUNIS (CASTOR) SEED OIL"
+      ],
+      "canonical_inci": "RICINUS COMMUNIS SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "moderate",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "rich"
+      },
+      "id": "castor"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "COCOS NUCIFERA (COCONUT) OIL"
+      ],
+      "canonical_inci": "COCOS NUCIFERA OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "rich"
+      },
+      "id": "coconut_whole"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "ARGANIA SPINOSA KERNEL OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "light",
+        "confidence": "low",
+        "alternatives": [
+          "light"
+        ],
+        "value": "medium"
+      },
+      "id": "argan"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "OLEA EUROPAEA (OLIVE) FRUIT OIL"
+      ],
+      "canonical_inci": "OLEA EUROPAEA FRUIT OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "rich",
+        "confidence": "low",
+        "alternatives": [
+          "rich",
+          "light"
+        ],
+        "value": "medium"
+      },
+      "id": "olive"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "PERSEA GRATISSIMA (AVOCADO) OIL"
+      ],
+      "canonical_inci": "PERSEA GRATISSIMA OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "light",
+        "confidence": "low",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "value": "medium"
+      },
+      "id": "avocado"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+      ],
+      "canonical_inci": "HELIANTHUS ANNUUS SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "sunflower"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "MACADAMIA INTEGRIFOLIA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "light",
+        "confidence": "low",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "value": "medium"
+      },
+      "id": "macadamia"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "CANNABIS SATIVA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "hemp"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "SCLEROCARYA BIRREA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "rich",
+        "confidence": "low",
+        "alternatives": [
+          "rich",
+          "light"
+        ],
+        "value": "medium"
+      },
+      "id": "marula"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "ADANSONIA DIGITATA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "baobab"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "CAMELLIA JAPONICA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "camellia_japonica"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "NIGELLA SATIVA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "light",
+        "confidence": "low",
+        "alternatives": [
+          "light"
+        ],
+        "value": "medium"
+      },
+      "id": "black_seed"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "TRITICUM VULGARE (WHEAT) GERM OIL"
+      ],
+      "canonical_inci": "TRITICUM VULGARE GERM OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "rich"
+      },
+      "id": "wheat_germ"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "HIPPOPHAE RHAMNOIDES (SEA BUCKTHORN) FRUIT OIL"
+      ],
+      "canonical_inci": "HIPPOPHAE RHAMNOIDES FRUIT OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "rich"
+      },
+      "id": "sea_buckthorn_fruit"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "CITRULLUS LANATUS (WATERMELON) SEED OIL"
+      ],
+      "canonical_inci": "CITRULLUS LANATUS SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "watermelon_seed"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "MORINGA OLEIFERA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "light",
+        "confidence": "low",
+        "alternatives": [
+          "light"
+        ],
+        "value": "medium"
+      },
+      "id": "moringa"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "ORBIGNYA OLEIFERA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "light",
+        "confidence": "low",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "value": "medium"
+      },
+      "id": "babassu"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "PUNICA GRANATUM SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "rich"
+      },
+      "id": "pomegranate_seed"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "CAMELLIA OLEIFERA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "camellia_oleifera"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "ZEA MAYS (CORN) GERM OIL"
+      ],
+      "canonical_inci": "ZEA MAYS GERM OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "corn_germ"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "ZEA MAYS (CORN) OIL"
+      ],
+      "canonical_inci": "ZEA MAYS OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "corn_oil"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "GLYCINE SOJA (SOYBEAN) OIL"
+      ],
+      "canonical_inci": "GLYCINE SOJA OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "soybean"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "SESAMUM INDICUM (SESAME) SEED OIL"
+      ],
+      "canonical_inci": "SESAMUM INDICUM SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "light",
+        "confidence": "low",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "value": "medium"
+      },
+      "id": "sesame"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "ORYZA SATIVA (RICE) BRAN OIL"
+      ],
+      "canonical_inci": "ORYZA SATIVA BRAN OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "rice_bran"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "AVENA SATIVA (OAT) KERNEL OIL"
+      ],
+      "canonical_inci": "AVENA SATIVA KERNEL OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "oat_kernel"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "BRASSICA CAMPESTRIS (RAPESEED) SEED OIL"
+      ],
+      "canonical_inci": "BRASSICA CAMPESTRIS SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "rapeseed_campestris"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "BRASSICA NAPUS SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "rapeseed_napus"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "CANOLA OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "canola_declaration"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "LINUM USITATISSIMUM (LINSEED) SEED OIL"
+      ],
+      "canonical_inci": "LINUM USITATISSIMUM SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "flax_linseed"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL"
+      ],
+      "canonical_inci": "OENOTHERA BIENNIS OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "evening_primrose"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "BORAGO OFFICINALIS (BORAGE) SEED OIL"
+      ],
+      "canonical_inci": "BORAGO OFFICINALIS SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "borage"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "CAMELINA SATIVA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "camelina"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "SALVIA HISPANICA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "chia"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "RIBES NIGRUM (BLACK CURRANT) SEED OIL"
+      ],
+      "canonical_inci": "RIBES NIGRUM SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "blackcurrant"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "HELIANTHUS ANNUUS HYBRID OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "sunflower_hybrid"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "MACADAMIA TERNIFOLIA (MACADAMIA) SEED OIL"
+      ],
+      "canonical_inci": "MACADAMIA TERNIFOLIA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "light",
+        "confidence": "low",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "value": "medium"
+      },
+      "id": "macadamia_ternifolia"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "MACADAMIA INTEGRIFOLIA / TETRAPHYLLA SEED OIL",
+        "MACADAMIA INTEGRIFOLIA TETRAPHYLLA SEED OIL"
+      ],
+      "canonical_inci": "MACADAMIA INTEGRIFOLIA/TETRAPHYLLA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "light",
+        "confidence": "low",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "value": "medium"
+      },
+      "id": "macadamia_hybrid"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "GOSSYPIUM HIRSUTUM SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "cottonseed_hirsutum"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "MAURITIA FLEXUOSA (BURITI) FRUIT OIL"
+      ],
+      "canonical_inci": "MAURITIA FLEXUOSA FRUIT OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "rich"
+      },
+      "id": "buriti"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL"
+      ],
+      "canonical_inci": "LIMNANTHES ALBA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "light",
+        "confidence": "low",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "value": "medium"
+      },
+      "id": "meadowfoam"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "ROSA CANINA FRUIT OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "rosehip_canina_fruit"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "ROSA RUBIGINOSA (ROSE HIP) SEED OIL"
+      ],
+      "canonical_inci": "ROSA RUBIGINOSA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "rosehip_rubiginosa_seed"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "ROSA MOSCHATA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "rosehip_moschata_seed"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "PASSIFLORA EDULIS (PASSIONFRUIT) SEED OIL"
+      ],
+      "canonical_inci": "PASSIFLORA EDULIS SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "passionfruit"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "OPUNTIA FICUS INDICA (PRICKLY PEAR) SEED OIL"
+      ],
+      "canonical_inci": "OPUNTIA FICUS INDICA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "prickly_pear"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "CALOPHYLLUM INOPHYLLUM SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "rich"
+      },
+      "id": "tamanu"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "BERTHOLLETIA EXCELSA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "brazil_nut"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "ALEURITES MOLUCCANUS SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "kukui"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "PLUKENETIA VOLUBILIS (SACHA INCHI) SEED OIL"
+      ],
+      "canonical_inci": "PLUKENETIA VOLUBILIS SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "sacha_inchi"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "PRUNUS DOMESTICA (PLUM) SEED OIL"
+      ],
+      "canonical_inci": "PRUNUS DOMESTICA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "plum"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "RUBUS IDAEUS (RASPBERRY) SEED OIL"
+      ],
+      "canonical_inci": "RUBUS IDAEUS SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "raspberry"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "COFFEA ARABICA (COFFEE) SEED OIL"
+      ],
+      "canonical_inci": "COFFEA ARABICA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "light",
+        "confidence": "low",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "value": "medium"
+      },
+      "id": "coffee"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "VACCINIUM MACROCARPON (CRANBERRY) SEED OIL"
+      ],
+      "canonical_inci": "VACCINIUM MACROCARPON SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "cranberry"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "CAMELLIA SINENSIS SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "camellia_sinensis"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "BRASSICA OLERACEA ITALICA (BROCCOLI) SEED OIL"
+      ],
+      "canonical_inci": "BRASSICA OLERACEA ITALICA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "broccoli_seed"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "ARACHIS HYPOGAEA (PEANUT) OIL"
+      ],
+      "canonical_inci": "ARACHIS HYPOGAEA OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "light",
+        "confidence": "low",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "value": "medium"
+      },
+      "id": "peanut"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "HIPPOPHAE RHAMNOIDES FRUIT/SEED OIL",
+      "weight_prior": {
+        "estimate": false,
+        "nearest_alternative": null,
+        "confidence": "low",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "value": "unknown"
+      },
+      "id": "sea_buckthorn_fruit_seed"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "HIPPOPHAE RHAMNOIDES SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "sea_buckthorn_seed"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "CARYODENDRON ORINOCENSE SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium",
+          "light"
+        ],
+        "value": "rich"
+      },
+      "id": "cacay"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "CORYLUS AVELLANA SEED OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "hazelnut_seed"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [],
+      "canonical_inci": "COCOS NUCIFERA FRUIT OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "rich"
+      },
+      "id": "coconut_fruit_oil_declaration"
+    },
+    {
+      "material_family": "intact_fixed_botanical_oil",
+      "aliases": [
+        "HELIANTHUS ANNUUS (SUNFLOWER) OIL"
+      ],
+      "canonical_inci": "HELIANTHUS ANNUUS OIL",
+      "weight_prior": {
+        "estimate": true,
+        "nearest_alternative": "medium",
+        "confidence": "low",
+        "alternatives": [
+          "medium"
+        ],
+        "value": "light"
+      },
+      "id": "sunflower_oil_declaration"
+    }
+  ]
+}

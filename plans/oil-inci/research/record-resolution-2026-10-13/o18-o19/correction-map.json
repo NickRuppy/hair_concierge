@@ -1,0 +1,154 @@
+{
+  "version": "oil-record-resolution-map-v0.1",
+  "date": "2026-10-13",
+  "scope": "O18/O19 source representation reconciliation only",
+  "classification_rerun": false,
+  "global_alias_rule_change": false,
+  "cases": [
+    {
+      "case_id": "O18",
+      "product_key": "oil-persistence-18",
+      "input_envelope": {
+        "path": "data/research/oil-inci/v1.0/adapter-replay-v0.2/envelopes/oil-persistence-18.json",
+        "sha256": "7c998b6ecc08d1a692aa7ef4da9b4bcd9faa1e379ab3a548ca21c62460985922"
+      },
+      "diagnosis": "Raw token truncated at comma within balanced explanatory parentheses; canonical ingredient and full raw declaration already correct.",
+      "rank": 10,
+      "correction": {
+        "field": "raw_name",
+        "from": "Helianthus annuus seed oil (Sunflower plant oil",
+        "to": "Helianthus annuus seed oil (Sunflower plant oil, tocopherol carrier oil)"
+      },
+      "new_copy_paths": [
+        "/formula/ingredients/9/raw_name",
+        "/formula/normalization_receipt/9/raw_name",
+        "/profile/formula/ingredients/9/raw_name",
+        "/provenance/original_record/formula/ingredients/9/raw_name"
+      ],
+      "new_copy_requirement": "Create an immutable corrected source/profile successor, not mutate the adapter v0.2 envelope or any frozen original. These JSON pointers describe equivalent changes in the new derived envelope only.",
+      "source_record_keys": {
+        "source": "D06",
+        "persistence": "O18"
+      },
+      "normalization_audit_pointer": "/entries/87",
+      "weight_preserved": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "source_ref": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+            "record_key": "R05"
+          }
+        ],
+        "counter_signal": "Estimate is not measured efficacy or amount.",
+        "nearest_alternative": "medium",
+        "reason": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+        "unresolved": "Quantities/grades/sensory performance unverified."
+      },
+      "persistence_preserved": "moderate",
+      "raw_inci_sha256_unchanged": "aea7af4a466cb809a950d137b25af8ee05df2eb6f0aff0072e79b9cc7da35274",
+      "normalized_sha256_before": "871b8ad8e1442fe0f15ebadc465a6115ab4000f72de1f9f45048e12882b782c4",
+      "follow_through": [
+        "Raw formula SHA256 and ordered canonical digest remain unchanged.",
+        "Normalization receipt reason names exact frozen balanced token evidence.",
+        "Create new formula authority reference and record digest; retain old formula authority as predecessor.",
+        "Profile is a newly derived corrected record; bind provenance.original_record and its digest to that new record while retaining frozen predecessor path/hash in dependencies.",
+        "No persistence trace representation change required; original canonical sunflower evidence remains intact."
+      ],
+      "unchanged": [
+        "raw_inci",
+        "ingredient_ledger",
+        "direct property values, reasons, confidence, alternatives and unresolved gaps",
+        "named-oil hero mapping and matched ranks",
+        "source declarations and directions",
+        "supported uses and application scenarios",
+        "scenario_fit and all fit conditions",
+        "weight authority",
+        "persistence scalar and context"
+      ],
+      "owner_decision_required": false,
+      "normalized_sha256_after": "871b8ad8e1442fe0f15ebadc465a6115ab4000f72de1f9f45048e12882b782c4"
+    },
+    {
+      "case_id": "O19",
+      "product_key": "oil-persistence-19",
+      "input_envelope": {
+        "path": "data/research/oil-inci/v1.0/adapter-replay-v0.2/envelopes/oil-persistence-19.json",
+        "sha256": "a04ac8ce44f40fff3924428395465f7dab4c8628935f489fd23327a712839d1d"
+      },
+      "diagnosis": "Persistence formula uses literal parenthetical canonical spelling while direct ledger uses already admitted exact alias mapping. Raw ingredient and material functions agree.",
+      "rank": 4,
+      "correction": {
+        "field": "canonical_name",
+        "from": "COCOS NUCIFERA (COCONUT) OIL",
+        "to": "COCOS NUCIFERA OIL"
+      },
+      "new_copy_paths": [
+        "/formula/ingredients/3/canonical_name",
+        "/formula/normalization_receipt/3/canonical_name",
+        "/profile/formula/ingredients/3/canonical_name",
+        "/provenance/original_record/formula/ingredients/3/canonical_name",
+        "/persistence_trace/evidence/3/canonical_name",
+        "/persistence_trace/original/evidence/3/canonical_name"
+      ],
+      "new_copy_requirement": "Create an immutable corrected source/profile successor, not mutate the adapter v0.2 envelope or any frozen original. These JSON pointers describe equivalent changes in the new derived envelope only.",
+      "source_record_keys": {
+        "source": "D01",
+        "persistence": "O19"
+      },
+      "normalization_audit_pointer": "/entries/3",
+      "weight_preserved": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "source_ref": "plans/oil-inci/research/evolve-oe38-weight-decision-2026-10-05.json",
+            "record_key": "OE38"
+          }
+        ],
+        "counter_signal": "Estimate is not measured efficacy or amount.",
+        "nearest_alternative": "medium",
+        "reason": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+        "unresolved": "Quantities/grades/sensory performance unverified."
+      },
+      "persistence_preserved": "moderate",
+      "raw_inci_sha256_unchanged": "f4dd40fa06bafe92179165d8fb44bb4bfaca312d3a8b5d5bd93a600013648f81",
+      "normalized_sha256_before": "2f371bedb2068a0de9206452a8f677d96f2e2cef8d25db14b444e7863daf6e24",
+      "follow_through": [
+        "Raw formula SHA256 remains unchanged; recompute ordered canonical digest for the one corrected canonical identity.",
+        "Normalization receipt reason cites D01 exact mapping and closed admitted alias; no generic parentheses stripping.",
+        "New persistence trace copy changes only rank4 canonical evidence, preserving scalar, reason, considered ranks and application context. Canonical trace.original binds this new trace; retain old trace path/hash as predecessor.",
+        "Update new profile.persistence_trace_reference to corrected trace path/hash/key.",
+        "Create new formula authority reference and record digest; retain old formula authority as predecessor.",
+        "Profile is a newly derived corrected record; bind provenance.original_record and its digest to that new record while retaining frozen predecessor path/hash in dependencies."
+      ],
+      "unchanged": [
+        "raw_inci",
+        "ingredient_ledger",
+        "direct property values, reasons, confidence, alternatives and unresolved gaps",
+        "named-oil hero mapping and matched ranks",
+        "source declarations and directions",
+        "supported uses and application scenarios",
+        "scenario_fit and all fit conditions",
+        "weight authority",
+        "persistence scalar and context"
+      ],
+      "owner_decision_required": false,
+      "normalized_sha256_after": "45c4f1f8180e55eefb0bdbd5e5eb90e511d6a22b8060818355addd9178c896f6"
+    }
+  ],
+  "rejected_alternatives": [
+    "Do not split O18 into an invented extra ingredient from the comma inside explanatory parentheses.",
+    "Do not remove plant-part words or accept broad coconut derivative equivalence.",
+    "Do not convert O19 ledger and all direct property evidence to a new spelling merely to preserve an inconsistent imported canonical representation. Existing exact D01 normalization has stronger local authority.",
+    "Do not reclassify O18 rich or O19 light, or alter persistence/fit in response to a representation repair."
+  ],
+  "verification_contract": [
+    "Check every cited file hash and pointer against frozen bytes.",
+    "New copies preserve every non-representation property and exact direction/fit structure.",
+    "All formula ranks, normalization receipts, ledger names and evidence links agree.",
+    "Old 37-case replay remains byte-identical; new replay references corrected successors explicitly."
+  ]
+}

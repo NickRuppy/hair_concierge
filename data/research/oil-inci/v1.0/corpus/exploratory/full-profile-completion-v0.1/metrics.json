@@ -1,0 +1,218 @@
+{
+  "scope": "17 missing-property development formulas; original dictionary defect and corrected replay both retained. Not unseen calibration.",
+  "formula_fields": {
+    "base": {
+      "matches": 17,
+      "denominator": 17,
+      "both_known": 17,
+      "known_matches": 17,
+      "lane_a_counts": {
+        "ester_alkane_led": 2,
+        "silicone_led": 7,
+        "plant_oil_blend": 4,
+        "hybrid": 1,
+        "pure_plant_oil": 2,
+        "water_based": 1
+      },
+      "lane_b_counts": {
+        "ester_alkane_led": 2,
+        "silicone_led": 7,
+        "plant_oil_blend": 4,
+        "hybrid": 1,
+        "pure_plant_oil": 2,
+        "water_based": 1
+      }
+    },
+    "weight": {
+      "matches": 16,
+      "denominator": 17,
+      "both_known": 17,
+      "known_matches": 16,
+      "lane_a_counts": {
+        "light": 5,
+        "medium": 11,
+        "rich": 1
+      },
+      "lane_b_counts": {
+        "light": 4,
+        "medium": 12,
+        "rich": 1
+      }
+    },
+    "penetration_potential": {
+      "matches": 16,
+      "denominator": 17,
+      "both_known": 11,
+      "known_matches": 11,
+      "lane_a_counts": {
+        "surface_led": 10,
+        "unknown": 6,
+        "penetration_potential": 1
+      },
+      "lane_b_counts": {
+        "surface_led": 10,
+        "unknown": 5,
+        "penetration_potential": 2
+      }
+    },
+    "silicones": {
+      "matches": 17,
+      "denominator": 17,
+      "both_known": 17,
+      "known_matches": 17,
+      "lane_a_counts": {
+        "False": 9,
+        "True": 8
+      },
+      "lane_b_counts": {
+        "False": 9,
+        "True": 8
+      },
+      "positive_conditioned": {
+        "matches": 8,
+        "denominator": 8
+      },
+      "negative_conditioned": {
+        "matches": 9,
+        "denominator": 9
+      }
+    },
+    "mineral_oil": {
+      "matches": 17,
+      "denominator": 17,
+      "both_known": 17,
+      "known_matches": 17,
+      "lane_a_counts": {
+        "False": 17
+      },
+      "lane_b_counts": {
+        "False": 17
+      },
+      "positive_conditioned": {
+        "matches": 0,
+        "denominator": 0
+      },
+      "negative_conditioned": {
+        "matches": 17,
+        "denominator": 17
+      }
+    },
+    "drying_alcohol": {
+      "matches": 17,
+      "denominator": 17,
+      "both_known": 17,
+      "known_matches": 17,
+      "lane_a_counts": {
+        "False": 16,
+        "True": 1
+      },
+      "lane_b_counts": {
+        "False": 16,
+        "True": 1
+      },
+      "positive_conditioned": {
+        "matches": 1,
+        "denominator": 1
+      },
+      "negative_conditioned": {
+        "matches": 16,
+        "denominator": 16
+      }
+    },
+    "fragrance": {
+      "matches": 17,
+      "denominator": 17,
+      "both_known": 17,
+      "known_matches": 17,
+      "lane_a_counts": {
+        "True": 15,
+        "False": 2
+      },
+      "lane_b_counts": {
+        "True": 15,
+        "False": 2
+      },
+      "positive_conditioned": {
+        "matches": 15,
+        "denominator": 15
+      },
+      "negative_conditioned": {
+        "matches": 2,
+        "denominator": 2
+      }
+    },
+    "scalp_active_botanicals": {
+      "matches": 17,
+      "denominator": 17,
+      "both_known": 17,
+      "known_matches": 17,
+      "lane_a_counts": {
+        "False": 12,
+        "True": 5
+      },
+      "lane_b_counts": {
+        "False": 12,
+        "True": 5
+      },
+      "positive_conditioned": {
+        "matches": 5,
+        "denominator": 5
+      },
+      "negative_conditioned": {
+        "matches": 12,
+        "denominator": 12
+      }
+    }
+  },
+  "source_fields": {
+    "dispenser": {
+      "matches": 17,
+      "denominator": 17,
+      "disagreements": []
+    },
+    "provides_heat_protection": {
+      "matches": 17,
+      "denominator": 17,
+      "disagreements": [],
+      "positive_conditioned": {
+        "matches": 6,
+        "denominator": 6
+      },
+      "negative_conditioned": {
+        "matches": 11,
+        "denominator": 11
+      }
+    },
+    "provides_uv_protection": {
+      "matches": 17,
+      "denominator": 17,
+      "disagreements": [],
+      "positive_conditioned": {
+        "matches": 2,
+        "denominator": 2
+      },
+      "negative_conditioned": {
+        "matches": 15,
+        "denominator": 15
+      }
+    },
+    "supported_uses": {
+      "matches": 17,
+      "denominator": 17,
+      "disagreements": []
+    },
+    "named_oil_prominence": {
+      "matches": 29,
+      "denominator": 30,
+      "both_known": 23,
+      "disagreements": [
+        {
+          "case_id": "O27",
+          "hero_id": "coconut_oil",
+          "lane_a": "supporting",
+          "lane_b": "leading"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "scope": "Source-only candidates; no persistence/weight prediction or desired class selection",
+  "candidates": [
+    {
+      "candidate_id": "PSB01",
+      "identity": {
+        "brand": "Dr. Hauschka",
+        "product": "Haaröl",
+        "market": "DE",
+        "size_ml": 75,
+        "gtin": null,
+        "producer_url": "https://www.drhauschka.de/haarpflege/haaroel/"
+      },
+      "raw_inci": "Arachis Hypogaea Oil, Melia Azadirachta Leaf Extract, Triticum Vulgare Germ Oil, Chamomilla Recutita Flower Extract, Lecithin, Alcohol, Parfum*, Helianthus Annuus Seed Oil, Lavandula Oil/Extract, Pinene*, Camphor*, Linalool*, Beta-Caryophyllene*, Limonene*, Terpineol*, Linalyl Acetate*, Citronellol*, Citral*, Alpha-Terpinene*.",
+      "formula_source_id": "PSB-S01",
+      "use_source_id": "PSB-S01",
+      "directions_exact": "Nach der Haarwäsche: Zur Pflege der Haarspitzen sehr wenig Haaröl in die Spitzen geben (in leicht feuchtes oder trockenes Haar), nicht auswaschen. Wir empfehlen, das Haaröl einmal pro Woche anzuwenden, bei Bedarf auch öfter.",
+      "source_line_ranges": {
+        "identity": "45-56",
+        "formula": "101-105",
+        "directions": "107-110"
+      },
+      "extracted_at": "2026-10-15T06:42:22Z",
+      "source_excerpt_file": "PSB-S01-dr-hauschka.txt",
+      "source_admission": "primary DE maker declaration plus explicit retained application to damp/dry ends",
+      "limits": [
+        "GTIN not captured; page identity and 75 ml size only.",
+        "Use scope is postwash small-dose ends only. Prewash/scalp passages deliberately excluded from application assessment.",
+        "Producer descriptive copy mentions rosemary, but current ordered INCI declares Lavandula Oil/Extract and does not list rosemary oil. Preserve declaration; do not insert or substitute rosemary.",
+        "Lavandula Oil/Extract is generic exact source wording; species, plant part and extract carrier unresolved.",
+        "Asterisks retained in raw string and are footnote markers, not separate ingredients."
+      ]
+    },
+    {
+      "candidate_id": "PSB02",
+      "identity": {
+        "brand": "L’Occitane en Provence",
+        "product": "Huile Cheveux Réparation Intense",
+        "market": "FR",
+        "size_ml": 50,
+        "gtin": null,
+        "sku": "11HI050G24",
+        "producer_url": "https://fr.loccitane.com/huile-cheveux-reparation-intense-11HI050G24.html"
+      },
+      "raw_inci": "ISOPROPYL PALMITATE - COCO-CAPRYLATE/CAPRATE - C13-15 ALKANE - ETHYLHEXYL PALMITATE - PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL - OCTYLDODECANOL - HELIANTHUS ANNUUS (SUNFLOWER) SEED EXTRACT - DAUCUS CAROTA SATIVA (CARROT) ROOT EXTRACT - RICINUS COMMUNIS (CASTOR) SEED OIL - HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL - CITRUS AURANTIUM DULCIS (ORANGE) PEEL OIL - PELARGONIUM GRAVEOLENS LEAF OIL - LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL - CANANGA ODORATA FLOWER OIL - ANGELICA ARCHANGELICA SEED OIL - ANGELICA ARCHANGELICA ROOT OIL - GLYCINE SOJA (SOYBEAN) OIL - HYDROGENATED COCO-GLYCERIDES - TOCOPHEROL - TOCOPHERYL ACETATE - PARFUM/FRAGRANCE - BENZYL BENZOATE - LIMONENE - LINALOOL - CITRONELLOL - GERANIOL",
+      "formula_source_id": "PSB-S02",
+      "use_source_id": "PSB-S02",
+      "directions_exact": "Huile seule, cheveux humides ou secs : Chauffez 3 - 4 gouttes entre vos mains. Appliquez sur les longueurs et les pointes.",
+      "source_line_ranges": {
+        "identity": "134-147",
+        "formula": "197-198",
+        "directions": "175-177"
+      },
+      "extracted_at": "2026-10-15T06:42:22Z",
+      "source_excerpt_file": "PSB-S02-loccitane.txt",
+      "source_admission": "primary France maker declaration and same-page damp/dry lengths/ends application",
+      "limits": [
+        "GTIN not captured. Exact URL SKU and 50 ml current selected size; 100 ml alternate is not assumed package-identical.",
+        "Same directions section separately permits a generous overnight use followed by washing. The initial 3-4 drops damp/dry branch is the retained styling application selected; exclude overnight prewash branch.",
+        "No repair/bond or thermoprotection claim evidence supplied to formula classifier.",
+        "Hyphens around ingredients are source separators; the internal hyphen in C13-15 is part of the exact ingredient name."
+      ]
+    }
+  ],
+  "novelty_check": {
+    "checked_inventory": "plans/oil-inci/research/blend-contrast-2026-10-14/exposure-inventory.json",
+    "local_rg": "rg -il Hauschka|Typology|Occitane plans/oil-inci/research data/research/oil-inci/v1.0/corpus --glob *.json --glob *packet* --glob *source*",
+    "result": "no local source/name matches before new receipt creation",
+    "limit": "root must perform final exact raw formula fingerprint comparison across admitted project formulas"
+  },
+  "rejected_candidates": [
+    {
+      "name": "Typology Huile riche cheveux Péqui 5% + argan FR",
+      "reason": "Primary product page initially indexed, subsequent direct extraction degraded to3 lines; no complete formula captured. Not admitted."
+    }
+  ]
+}

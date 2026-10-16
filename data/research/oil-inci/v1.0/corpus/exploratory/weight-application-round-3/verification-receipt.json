@@ -1,0 +1,37 @@
+{
+  "status": "passed",
+  "scope": "artifact contracts, not scientific accuracy",
+  "materials_reviewed": 65,
+  "exact_names": 104,
+  "input_cases": 10,
+  "single_material_products": 5,
+  "blended_products": 4,
+  "raw_material_benchmarks": 1,
+  "historical_files_unchanged": 59,
+  "v0_7_pin_verified": true,
+  "read_scope_limit": "declared files and recorded hashes; no proof of hidden recognition/access",
+  "mode": "sealed_outputs",
+  "independent_lane_records": 20,
+  "main_records": 10,
+  "declared_read_scope_verified": true,
+  "comparison_denominators_verified": true,
+  "negative_controls": [
+    {
+      "control": "reject_wrong_material_inheritance",
+      "rejected_at_expected_contract": true
+    },
+    {
+      "control": "reject_declared_identity_access",
+      "rejected_at_expected_contract": true
+    },
+    {
+      "control": "reject_pure_confidence_inflation",
+      "rejected_at_expected_contract": true
+    },
+    {
+      "control": "reject_unknown_without_gap",
+      "rejected_at_expected_contract": true
+    }
+  ],
+  "date": "2026-10-02"
+}

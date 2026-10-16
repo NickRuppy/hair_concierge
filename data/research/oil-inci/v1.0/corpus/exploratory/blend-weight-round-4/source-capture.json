@@ -1,0 +1,1068 @@
+{
+  "run_id": "oil-blend-weight-round-4",
+  "records": [
+    {
+      "source_key": "nuxe_de_original_n2212",
+      "brand": "NUXE",
+      "product": "Huile Prodigieuse original",
+      "size": "30 ml selected; page variants retained separately",
+      "market": "DE",
+      "source_url": "https://de.nuxe.com/products/wichtiger-ol%C2%AE/",
+      "raw_inci": "COCO-CAPRYLATE/CAPRATE, MACADAMIA INTEGRIFOLIA SEED OIL, DICAPRYLYL ETHER, CAPRYLIC/CAPRIC TRIGLYCERIDE, PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL, CORYLUS AVELLANA (HAZELNUT) SEED OIL, CAMELLIA OLEIFERA SEED OIL, PARFUM/FRAGRANCE, CAMELLIA JAPONICA SEED OIL, ARGANIA SPINOSA KERNEL OIL, BORAGO OFFICINALIS SEED OIL, TOCOPHEROL, HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL, TOCOPHERYL ACETATE, ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT, POLYGLYCERYL-3 DIISOSTEARATE, AQUA/WATER, ASCORBIC ACID, SOLANUM LYCOPERSICUM (TOMATO) FRUIT EXTRACT, ACETYL CEDRENE, LINALYL ACETATE, LINALOOL, CITRUS AURANTIUM PEEL OIL, DIMETHYL PHENETHYL ACETATE, LIMONENE, CITRONELLOL, VANILLIN, GERANIOL, PELARGONIUM GRAVEOLENS FLOWER OIL, ISOEUGENYL ACETATE, PINENE [N2212/E]",
+      "formula_code": "N2212/E",
+      "hair_directions": "A few drops on lengths/ends as needed; FAQ 1–2 sprays on lengths/ends or weekly mask ≥10 minutes before shampoo.",
+      "alternatives": [
+        {
+          "url": "https://de.nuxe.com/products/wichtiger-ol-50ml",
+          "status": "same N2212/E complete declaration, 50 ml separate page"
+        },
+        {
+          "url": "https://de.nuxe.com/products/erstaunliches-ol-oder-50-ml",
+          "status": "distinct Or N2213/E, excluded"
+        },
+        {
+          "url": "https://www.nuxe.com/products/huile-prodigieuse-riche-100ml",
+          "status": "distinct Riche, excluded"
+        }
+      ],
+      "limits": "Original only, not Riche/Florale/Or; actual hair directions establish eligibility despite multi-use claims. Formula code is not ingredient. No physical pack/batch verified.",
+      "source_tier": "primary_maker",
+      "accessed_at": "2026-10-03",
+      "physical_pack_verified": false,
+      "cohort_group": "fresh",
+      "capture_status": "source_scoped_complete",
+      "neutral_id": "Q01",
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "MACADAMIA INTEGRIFOLIA SEED OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "DICAPRYLYL ETHER"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "CORYLUS AVELLANA SEED OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "CAMELLIA OLEIFERA SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "CAMELLIA JAPONICA SEED OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "BORAGO OFFICINALIS SEED OIL"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "POLYGLYCERYL-3 DIISOSTEARATE"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "AQUA/WATER"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "ASCORBIC ACID"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "SOLANUM LYCOPERSICUM (TOMATO) FRUIT EXTRACT"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "ACETYL CEDRENE"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 22,
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "CITRUS AURANTIUM PEEL OIL"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "DIMETHYL PHENETHYL ACETATE"
+        },
+        {
+          "rank": 25,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 26,
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 27,
+          "canonical_name": "VANILLIN"
+        },
+        {
+          "rank": 28,
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 29,
+          "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL"
+        },
+        {
+          "rank": 30,
+          "canonical_name": "ISOEUGENYL ACETATE"
+        },
+        {
+          "rank": 31,
+          "canonical_name": "PINENE"
+        }
+      ]
+    },
+    {
+      "neutral_id": "Q02",
+      "brand": "PRIMAVERA",
+      "product": "Calendulaöl bio",
+      "size": "100 ml",
+      "market": "DE",
+      "cohort_group": "replay",
+      "raw_inci": "Helianthus Annuus (Sunflower) Seed Oil*, Olea Europaea (Olive) Fruit Oil*, Calendula Officinalis Flower Extract*, Rosmarinus Officinalis (Rosemary) Leaf Extract*",
+      "source_url": "https://www.primaveralife.com/calendulaoel-bio.html",
+      "source_tier": "exact_local_manufacturer",
+      "accessed_at": "2026-10-02",
+      "identity_status": "source_scoped_formula_complete",
+      "limits": "Exact flower macerate in sunflower/olive carriers; carrier ratios absent. Hair-use directions observed; skin positioning does not decide weight.",
+      "reused_development_id": "W04",
+      "physical_pack_verified": false,
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "OLEA EUROPAEA (OLIVE) FRUIT OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "CALENDULA OFFICINALIS FLOWER EXTRACT"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ROSMARINUS OFFICINALIS LEAF EXTRACT"
+        }
+      ]
+    },
+    {
+      "source_key": "wella_de_reflections",
+      "brand": "Wella Professionals",
+      "product": "Oil Reflections Luminous Smoothing Oil",
+      "size": "DE maker page does not state size; US same-name 100 ml is corroboration only",
+      "market": "DE",
+      "source_url": "https://www.wella.com/professional/de-DE/products/haarpflege/oil-reflections/oil-reflections-luminous-smoothing-oil",
+      "raw_inci": "Cyclopentasiloxane, Dimethiconol, Alcohol Denat., Parfum/Fragrance, Tocopheryl Acetate, Hexyl Cinnamal, Linalool, Limonene, Cocos Nucifera (Coconut) Oil, Macadamia Ternifolia Seed Oil, Persea Gratissima (Avocado) Oil, Alpha-Isomethyl Ionone.",
+      "hair_directions": "1–2 pumps; apply to lengths/ends before blow-drying or on dry hair.",
+      "alternatives": [
+        {
+          "url": "https://www.wella.com/professional/en-US/products/hair-care/oil-reflections/oil-reflections-luminous-smoothing-oil",
+          "market": "US",
+          "status": "same complete INCI; 100 ml on US page is not DE pack verification"
+        }
+      ],
+      "limits": "Complete DE maker declaration; local size/batch unverified.",
+      "source_tier": "primary_maker",
+      "accessed_at": "2026-10-03",
+      "physical_pack_verified": false,
+      "cohort_group": "fresh",
+      "capture_status": "source_scoped_complete",
+      "neutral_id": "Q03",
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "CYCLOPENTASILOXANE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ALCOHOL DENAT."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "HEXYL CINNAMAL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "MACADAMIA TERNIFOLIA SEED OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "PERSEA GRATISSIMA (AVOCADO) OIL"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "ALPHA-ISOMETHYL IONONE"
+        }
+      ]
+    },
+    {
+      "source_key": "mielle_us_original",
+      "brand": "Mielle",
+      "product": "Rosemary Mint Scalp & Hair Strengthening Oil (Original)",
+      "size": "2 fl oz US; corroborating DE offer 59 ml",
+      "market": "US maker with matching DE Notino listing; no universal batch equivalence",
+      "source_url": "https://mielleorganics.com/products/rosemary-mint-oil",
+      "raw_inci": "Glycine Soja (Soybean) Oil, Ricinus Communis (Castor) Seed Oil, Rosmarinus Officinalis (Rosemary) Leaf Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Mentha Piperita (Peppermint) Oil, Eucalyptus Globolus (Eucalyptus) Leaf Oil, Menthol, Melalueca Alternifolia (Tea Tree) Leaf Oil, Cocos Nucifera (Coconut) Oil, Equisetum Arvense (Horsetail) Extract, Aloe Barbadensis Extract, Lavandula Angustifolia (Lavender) Oil, Triticum Vulgare (Wheat) Germ Oil, Carthamus Tinctorius (Safflower) Seed Oil, Oenothera Biennis (Evening Primrose) Oil, Vitis Vinifera (Grape) Seed Oil, Benzyl Nicotinate, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Oryza Sativa (Rice) Bran Oil, Tocopheryl Acetate, Biotin, Arctium Lappa (Burdock) Root Extract, Glycerin, Apium Graveolens (Celery) Seed Extract, Cholecalciferol (Vitamin D), Ascorbic Acid, Ocimum, Basilicum (Basil) Oil, Pogostemon Cablin (Patchouli) Oil, Salvia Officinalis (Sage) Oil, Silica, Urtica Dioica (Nettle) Extract",
+      "hair_directions": "Small amount on scalp; massage and comb through ends, leave in. Daily scalp/ends use; capped ends treatment can be rinsed/shampooed.",
+      "alternatives": [
+        {
+          "url": "https://www.notino.de/mielle/rosemary-mint-naehrendes-oel-fuer-die-haare/p-16268357/",
+          "market": "DE retailer",
+          "status": "same ordered full sequence, capitalization/punctuation differences only"
+        },
+        {
+          "url": "https://mielleorganics.com/products/rosemary-mint-light-scalp-hair-strengthening-oil",
+          "status": "distinct Light variant with different order, excluded"
+        }
+      ],
+      "limits": "Preserve source misspellings Globolus/Melalueca and malformed Ocimum, Basilicum as unresolved display tokens; no silent generic correction. US maker/local offer scope only.",
+      "source_tier": "primary_maker",
+      "accessed_at": "2026-10-03",
+      "physical_pack_verified": false,
+      "cohort_group": "fresh",
+      "capture_status": "source_scoped_complete",
+      "neutral_id": "Q04",
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "GLYCINE SOJA (SOYBEAN) OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "MENTHA PIPERITA (PEPPERMINT) OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "EUCALYPTUS GLOBOLUS (EUCALYPTUS) LEAF OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "MENTHOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "MELALUECA ALTERNIFOLIA (TEA TREE) LEAF OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "EQUISETUM ARVENSE (HORSETAIL) EXTRACT"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "ALOE BARBADENSIS EXTRACT"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "TRITICUM VULGARE (WHEAT) GERM OIL"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "BENZYL NICOTINATE"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "ORYZA SATIVA (RICE) BRAN OIL"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "BIOTIN"
+        },
+        {
+          "rank": 22,
+          "canonical_name": "ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "APIUM GRAVEOLENS (CELERY) SEED EXTRACT"
+        },
+        {
+          "rank": 25,
+          "canonical_name": "CHOLECALCIFEROL (VITAMIN D)"
+        },
+        {
+          "rank": 26,
+          "canonical_name": "ASCORBIC ACID"
+        },
+        {
+          "rank": 27,
+          "canonical_name": "OCIMUM"
+        },
+        {
+          "rank": 28,
+          "canonical_name": "BASILICUM (BASIL) OIL"
+        },
+        {
+          "rank": 29,
+          "canonical_name": "POGOSTEMON CABLIN (PATCHOULI) OIL"
+        },
+        {
+          "rank": 30,
+          "canonical_name": "SALVIA OFFICINALIS (SAGE) OIL"
+        },
+        {
+          "rank": 31,
+          "canonical_name": "SILICA"
+        },
+        {
+          "rank": 32,
+          "canonical_name": "URTICA DIOICA (NETTLE) EXTRACT"
+        }
+      ]
+    },
+    {
+      "neutral_id": "Q05",
+      "brand": "OLAPLEX DE / New Flag",
+      "product": "Original N°7 Bonding Oil",
+      "size": "30 ml selected; shared page with size options",
+      "market": "DE",
+      "cohort_group": "replay",
+      "raw_inci": "Dimethicone, Isohexadecane, C13-14 Isoalkane, Coco-Caprylate, Phenyl Trimethicone, Bis-Aminopropyl Diglycol Dimaleate, Propanediol, Zea Mays (Corn) Oil, Beta-Carotene, Helianthus Annuus (Sunflower) Seed Oil, Punica Granatum Seed Oil, Wasser/Aqua/Eau, Morinda Citrifolia Fruit Extract, Tocopherol, Pseudozyma Epicola/Camellia Sinensis Seed Oil Ferment Extract Filtrate, Parfüm (Parfum), Citral, Linalool, Limonene, Citronellol, Hexyl Cinnamal",
+      "source_url": "https://olaplex.de/collections/glanz-shine/products/olaplex-no-7-bonding-oil",
+      "source_tier": "local_brand_distributor_site",
+      "accessed_at": "2026-10-02",
+      "identity_status": "source_scoped_formula_complete",
+      "limits": "Current 21-entry local branded declaration read directly. Localized Wasser and Parfüm receive scoped display receipts; no composition merged with historical 25-entry alternative.",
+      "reused_development_id": "W09",
+      "physical_pack_verified": false,
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISOHEXADECANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C13-14 ISOALKANE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "COCO-CAPRYLATE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "BIS-AMINOPROPYL DIGLYCOL DIMALEATE"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "PROPANEDIOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "ZEA MAYS (CORN) OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "BETA-CAROTENE"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "PUNICA GRANATUM SEED OIL"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "AQUA"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "MORINDA CITRIFOLIA FRUIT EXTRACT"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "PSEUDOZYMA EPICOLA/CAMELLIA SINENSIS SEED OIL FERMENT EXTRACT FILTRATE"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "CITRAL"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "HEXYL CINNAMAL"
+        }
+      ]
+    },
+    {
+      "source_key": "john_frieda_de_baendiger",
+      "brand": "John Frieda",
+      "product": "Der Bändiger – Extra Strong Serum",
+      "size": "50 ml",
+      "market": "DE",
+      "source_url": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/seren/der-baendiger-extra-strong-serum/",
+      "raw_inci": "Dimethicone, Dimethiconol, Oryza Sativa (Rice) Bran Oil, Tocopherol, Fragrance/Parfum, Citronellol, Hexyl Cinnamal, Tetramethyl Acetyloctahydronaphthalenes, Vanillin",
+      "hair_directions": "One pump on wet/damp hair avoiding roots; air-dry/style. A few drops on dry hair for frizz.",
+      "alternatives": [
+        {
+          "url": "https://www.dm.de/p/d/3123438/john-frieda-haarserum-frizz-ease-der-baendiger",
+          "market": "DE retailer",
+          "status": "same current rice-oil formula; GTIN 5037156298864 on listing, no physical verification"
+        },
+        {
+          "url": "https://www.johnfrieda.com/en-uk/products/frizz-ease/extra-strength-6-effects-serum.html",
+          "market": "UK historical indexed; direct 404",
+          "raw_inci": "Dimethicone, Dimethiconol, Parfum, Argania Spinosa Kernel Oil, Cocos Nucifera Oil, Moringa Oleifera Seed Oil, Tocopherol, Hexyl Cinnamal, Limonene, Linalool",
+          "status": "distinct All-in-1 formula/name; excluded"
+        }
+      ],
+      "limits": "Current DE exact name/formula differs from old All-in-1 UK/retail declarations. Pack/batch not inspected.",
+      "source_tier": "primary_maker",
+      "accessed_at": "2026-10-03",
+      "physical_pack_verified": false,
+      "cohort_group": "fresh",
+      "capture_status": "source_scoped_complete",
+      "neutral_id": "Q06",
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ORYZA SATIVA (RICE) BRAN OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "FRAGRANCE/PARFUM"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "HEXYL CINNAMAL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "VANILLIN"
+        }
+      ]
+    },
+    {
+      "neutral_id": "Q07",
+      "brand": "NEQI",
+      "product": "Smooth Strength Rosemary Oil",
+      "size": "75 ml",
+      "market": "DE",
+      "cohort_group": "replay",
+      "raw_inci": "Prunus amygdalus dulcis (Sweet almond) oil, Ricinus communis (Castor) seed oil, Carthamus tinctorius (Safflower) seed oil, Rosmarinus officinalis (Rosemary) leaf oil, Mentha arvensis (Wild mint) leaf oil, Lavandula oil/extract, Camphor, Menthol, Tocopheryl acetate, Beta-caryophyllene, Pinene, Terpineol, Geranyl acetate, Linalyl acetate, Geraniol, Limonene, Linalool",
+      "source_url": "https://neqi-hair.com/products/smooth-strength-rosemary-oil",
+      "source_tier": "exact_local_manufacturer",
+      "accessed_at": "2026-10-02",
+      "identity_status": "source_scoped_formula_complete",
+      "limits": "Current complete 17-entry maker declaration matches stored development capture. Declared Lavandula oil/extract preparation remains ambiguous.",
+      "reused_development_id": "W06",
+      "physical_pack_verified": false,
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "MENTHA ARVENSIS (WILD MINT) LEAF OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "LAVANDULA OIL/EXTRACT"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "CAMPHOR"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "MENTHOL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "BETA-CARYOPHYLLENE"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "PINENE"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "TERPINEOL"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "GERANYL ACETATE"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "LINALOOL"
+        }
+      ]
+    },
+    {
+      "source_key": "khadi_de_strong_amla",
+      "brand": "khadi",
+      "product": "Strong Amla Haaröl",
+      "size": "50 ml",
+      "market": "DE",
+      "source_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "raw_inci": "HELIANTHUS ANNUUS SEED OIL*, SESAMUM INDICUM SEED OIL, CANANGA ODORATA OIL/EXTRACT**, PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL*, BETA-CARYOPHYLLENE**, ONOSMA HISPIDUM ROOT EXTRACT, CINNAMOMUM CAMPHORA WOOD OIL (DECAMPHORISED)**, TOCOPHEROL, HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL, EMBLICA OFFICINALIS FRUIT EXTRACT*, OCIMUM SANCTUM LEAF EXTRACT*, BACOPA MONNIERI LEAF EXTRACT*, CENTELLA ASIATICA LEAF EXTRACT*, ECLIPTA ALBA LEAF EXTRACT*, LAWSONIA INERMIS (HENNA) LEAF EXTRACT*, LIMONENE**, BENZYL BENZOATE**, LINALOOL**, ACACIA CONCINNA FRUIT EXTRACT*, ALOE BARBADENSIS LEAF EXTRACT*, SAPINDUS MUKOROSSI FRUIT EXTRACT*, GERANYL ACETATE**, PINENE**, FARNESOL**, SYMPLOCOS RACEMOSA BARK EXTRACT, TRIGONELLA FOENUM-GRAECUM SEED EXTRACT*, WITHANIA SOMNIFERA LEAF/ROOT EXTRACT*, BENZYL SALICYLATE**, ALPHA-TERPINENE**, GERANIOL**, EUGENOL**, CITRAL**, TERPINOLENE**",
+      "hair_directions": "2–3 pumps on scalp/lengths; sparse daily leave-in or pre-wash 30–60 min/overnight 1–2 times weekly.",
+      "alternatives": [],
+      "limits": "Source * is organic marker and ** essential-oil constituent annotation; preserve source parentheticals/duplicates. Current web declaration only.",
+      "source_tier": "primary_maker",
+      "accessed_at": "2026-10-03",
+      "physical_pack_verified": false,
+      "cohort_group": "fresh",
+      "capture_status": "source_scoped_complete",
+      "neutral_id": "Q08",
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "SESAMUM INDICUM SEED OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "CANANGA ODORATA OIL/EXTRACT"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "BETA-CARYOPHYLLENE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "ONOSMA HISPIDUM ROOT EXTRACT"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "CINNAMOMUM CAMPHORA WOOD OIL (DECAMPHORISED)"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "EMBLICA OFFICINALIS FRUIT EXTRACT"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "OCIMUM SANCTUM LEAF EXTRACT"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "BACOPA MONNIERI LEAF EXTRACT"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "CENTELLA ASIATICA LEAF EXTRACT"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "ECLIPTA ALBA LEAF EXTRACT"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "LAWSONIA INERMIS (HENNA) LEAF EXTRACT"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "BENZYL BENZOATE"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "ACACIA CONCINNA FRUIT EXTRACT"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "ALOE BARBADENSIS LEAF EXTRACT"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "SAPINDUS MUKOROSSI FRUIT EXTRACT"
+        },
+        {
+          "rank": 22,
+          "canonical_name": "GERANYL ACETATE"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "PINENE"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "FARNESOL"
+        },
+        {
+          "rank": 25,
+          "canonical_name": "SYMPLOCOS RACEMOSA BARK EXTRACT"
+        },
+        {
+          "rank": 26,
+          "canonical_name": "TRIGONELLA FOENUM-GRAECUM SEED EXTRACT"
+        },
+        {
+          "rank": 27,
+          "canonical_name": "WITHANIA SOMNIFERA LEAF/ROOT EXTRACT"
+        },
+        {
+          "rank": 28,
+          "canonical_name": "BENZYL SALICYLATE"
+        },
+        {
+          "rank": 29,
+          "canonical_name": "ALPHA-TERPINENE"
+        },
+        {
+          "rank": 30,
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 31,
+          "canonical_name": "EUGENOL"
+        },
+        {
+          "rank": 32,
+          "canonical_name": "CITRAL"
+        },
+        {
+          "rank": 33,
+          "canonical_name": "TERPINOLENE"
+        }
+      ]
+    },
+    {
+      "source_key": "moroccanoil_de_mot02",
+      "brand": "Moroccanoil",
+      "product": "Behandlung Original",
+      "size": "100 ml selected; page also 25/50 ml",
+      "market": "DE",
+      "source_url": "https://de.moroccanoil.com/products/moroccanoil-treatment-original",
+      "raw_inci": "DIMETHICONE, DIMETHICONOL, TRISILOXANE, UNDECANE, CAPRYLYL METHICONE, TRIDECANE, OCTYLDODECANOL, PHENYLPROPYLDIMETHYLSILOXYSILICATE, PARFUM/FRAGRANCE, ARGANIA SPINOSA (ARGAN) KERNEL OIL, CAPSANTHIN/CAPSORUBIN, DIETHYLHEXYL SODIUM SULFOSUCCINATE, DIMETHICONE/VINYL DIMETHICONE CROSSPOLYMER, ALPHA-ISOMETHYL IONONE, CAMPHOR, CARVONE, EUCALYPTUS GLOBULUS OIL, HEXAMETHYLINDANOPYRAN, ISOEUGENYL ACETATE, LAVANDULA (LAVENDER) OIL/EXTRACT, LINALOOL, LINALYL ACETATE, MENTHA VIRIDIS (SPEARMINT) LEAF OIL, PINENE, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, VANILLIN. MOT02",
+      "formula_code": "MOT02",
+      "hair_directions": "Small amount midlengths to ends of clean towel-dried hair; blow-dry or air-dry; also apply to dry hair.",
+      "alternatives": [
+        {
+          "url": "https://eu.moroccanoil.com/products/moroccanoil-treatment-original",
+          "market": "EU official other declaration",
+          "raw_inci": "CYCLOMETHICONE, DIMETHICONE, ARGANIA SPINOSA (ARGAN) KERNEL OIL, PARFUM/FRAGRANCE, LINUM USITATISSIMUM (LINSEED) SEED EXTRACT, CI 26100 (RED 17), CI 47000 (YELLOW 11). MOT01",
+          "status": "separate MOT01; not merged with DE MOT02"
+        }
+      ],
+      "limits": "Current DE web declaration; other official EU formula differs materially. No physical pack/batch verified.",
+      "source_tier": "primary_maker",
+      "accessed_at": "2026-10-03",
+      "physical_pack_verified": false,
+      "cohort_group": "fresh",
+      "capture_status": "source_scoped_complete",
+      "neutral_id": "Q09",
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "TRISILOXANE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "UNDECANE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "CAPRYLYL METHICONE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "TRIDECANE"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "OCTYLDODECANOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "PHENYLPROPYLDIMETHYLSILOXYSILICATE"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "CAPSANTHIN/CAPSORUBIN"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "DIETHYLHEXYL SODIUM SULFOSUCCINATE"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "DIMETHICONE/VINYL DIMETHICONE CROSSPOLYMER"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "ALPHA-ISOMETHYL IONONE"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "CAMPHOR"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "CARVONE"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "EUCALYPTUS GLOBULUS OIL"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "HEXAMETHYLINDANOPYRAN"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "ISOEUGENYL ACETATE"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "LAVANDULA (LAVENDER) OIL/EXTRACT"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 22,
+          "canonical_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "MENTHA VIRIDIS (SPEARMINT) LEAF OIL"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "PINENE"
+        },
+        {
+          "rank": 25,
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 26,
+          "canonical_name": "VANILLIN"
+        }
+      ]
+    },
+    {
+      "neutral_id": "Q10",
+      "brand": "K18",
+      "product": "Molecular Repair Hair Oil",
+      "size": "30 ml",
+      "market": "DE",
+      "cohort_group": "replay",
+      "raw_inci": "CAPRYLYL CAPRYLATE/CAPRATE, SQUALANE, PERSEA GRATISSIMA (AVOCADO) OIL, HELIANTHUS ANNUUS (SUNFLOWER) OIL, C13-15 ALKANE, UNDECANE, BENZYL ALCOHOL, TRIDECANE, CASTOR ISOSTEARATE SUCCINATE, PROPANEDIOL, SH-OLIGOPEPTIDE-78, FRAGRANCE (PARFUM), TOCOPHEROL, CINNAMAL, HEXYL CINNAMAL, LIMONENE, LINALOOL.",
+      "source_url": "https://www.notino.de/k18/molecular-repair-hair-oil-pflegendes-trockenoel-fuer-beschaedigtes-und-bruechiges-haar/p-16220382/",
+      "source_tier": "exact_local_retailer",
+      "accessed_at": "2026-10-02",
+      "identity_status": "source_scoped_formula_complete",
+      "limits": "Current Notino DE 17-entry sequence matches current UK maker sequence; historical global 22-entry alternative remains separate. Physical stock/batch not inspected.",
+      "reused_development_id": "W01",
+      "physical_pack_verified": false,
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "CAPRYLYL CAPRYLATE/CAPRATE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "SQUALANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "PERSEA GRATISSIMA (AVOCADO) OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "C13-15 ALKANE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "UNDECANE"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "BENZYL ALCOHOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "TRIDECANE"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "CASTOR ISOSTEARATE SUCCINATE"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "PROPANEDIOL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "SH-OLIGOPEPTIDE-78"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "CINNAMAL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "HEXYL CINNAMAL"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "LINALOOL"
+        }
+      ]
+    }
+  ],
+  "held_candidates": [
+    {
+      "brand": "Garnier",
+      "product": "Fructis Wunderöl 150 ml",
+      "status": "held_formula_conflict",
+      "primary_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/schaden-loescher/wunder-oel-hitzeschutz",
+      "primary_code": "C204953/1",
+      "retailer_url": "https://www.rewe.de/shop/p/garnier-fructis-wunderoel-hitzeschutz-anti-frizz-multi-use-150ml/3229808",
+      "retailer_code": "C253780/1",
+      "reason": "Different declarations/ingredient ordering under same name; no canonical current-bottle formula inferred. Replaced by exact current DE John Frieda.",
+      "source_authority_limit": "A recently readable page does not establish a recently manufactured formula."
+    }
+  ]
+}

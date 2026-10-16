@@ -1,0 +1,129 @@
+{
+  "run_id": "oil-targeted-neutral-v0.2",
+  "lane_id": "a",
+  "records": [
+    {
+      "case_id": "T02",
+      "named_oils": [
+        {
+          "hero_id": "T02-hero-1",
+          "hero_name": "Moroccan argan oil",
+          "matched_ranks": [
+            4
+          ],
+          "prominence": {
+            "value": "unknown",
+            "estimate": false,
+            "confidence": "low",
+            "evidence": [
+              {
+                "rank": 4,
+                "canonical_name": "ARGANIA KERNEL OIL"
+              },
+              {
+                "source_id": "T02-maker"
+              }
+            ],
+            "counter_signal": [
+              "The literal hero mapping establishes a present source token, but neither a principal nor an affirmative secondary function is established by the frozen ledger."
+            ],
+            "nearest_alternative": "supporting",
+            "reason": "The predeclared hero maps to the literal ARGANIA KERNEL OIL at rank 4. Its frozen formula role is unresolved, and no qualified auxiliary suffix exists. Preserve unknown prominence rather than inferring prominence from the hero text or ingredient position.",
+            "unresolved": [
+              "Species-incomplete identity and function remain unresolved. The source mapping does not authorize an Argania Spinosa alias, material-prior transfer or blind-ledger revision."
+            ]
+          }
+        }
+      ],
+      "dispenser": {
+        "value": "spray",
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T02-maker"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": "none",
+        "reason": "Maker text explicitly describes spray/misting.",
+        "unresolved": [
+          "The packet establishes the maker-described mechanism, not package/batch verification."
+        ]
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T02-maker"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": "none",
+        "reason": "No explicit heat protection claim in reviewed maker description, benefits or directions.",
+        "unresolved": [
+          "False records absence of an accepted explicit claim in the completed source review, not measured zero protection."
+        ]
+      },
+      "provides_uv_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T02-maker"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": "none",
+        "reason": "The completed maker review has no accepted explicit hair-UV claim, and none of the six exact declared ingredients is a recognized UV filter in the supplied dictionary. Both conditions for a positive result are absent.",
+        "unresolved": [
+          "No measured UV-protection conclusion is inferred."
+        ]
+      },
+      "supported_uses": [
+        "leave_on_fibre_conditioning"
+      ],
+      "use_evidence": {
+        "value": [
+          "leave_on_fibre_conditioning"
+        ],
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T02-maker",
+            "direction_id": "T02-direction-1"
+          }
+        ],
+        "counter_signal": [
+          "The retained finishing context does not establish an explicit dry-hair stage."
+        ],
+        "nearest_alternative": "none",
+        "reason": "The coherent maker direction specifies misting hair to finish a style. Styling context establishes retention and therefore general leave-on fibre conditioning. It supplies no explicit damp/dry alternative, scalp site or pre-wash removal instruction; dry_finish is not inferred.",
+        "unresolved": [
+          "Wet versus dry stage, amount and contact time are unestablished."
+        ]
+      },
+      "application_scenarios": [
+        {
+          "source_id": "T02-maker",
+          "direction_id": "T02-direction-1",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "finish_style_unspecified_wet_dry",
+          "dose": "mist all over; amount unestablished",
+          "contact_time": "unestablished",
+          "removal": "retention_by_styling_context",
+          "restrictions": "none stated in reviewed exact product text",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ]
+        }
+      ]
+    }
+  ]
+}

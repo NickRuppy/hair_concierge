@@ -1,0 +1,77 @@
+{
+  "status": "passed",
+  "controls": [
+    {
+      "name": "fabricated_material_match",
+      "expected_guard": "False or missing exact material match",
+      "rejected": true
+    },
+    {
+      "name": "confidence_inflation",
+      "expected_guard": "Mixture confidence ceiling",
+      "rejected": true
+    },
+    {
+      "name": "missing_role",
+      "expected_guard": "Role coverage",
+      "rejected": true
+    },
+    {
+      "name": "missing_case",
+      "expected_guard": "Output case completeness",
+      "rejected": true
+    },
+    {
+      "name": "missing_gap",
+      "expected_guard": "Missing unresolved argument/gap",
+      "rejected": true
+    },
+    {
+      "name": "metric_tampering",
+      "expected_guard": "Comparison denominator/value error",
+      "rejected": true
+    },
+    {
+      "name": "forbidden_scope",
+      "expected_guard": "Forbidden access disclosure",
+      "rejected": true
+    },
+    {
+      "name": "mutated_input_hash",
+      "expected_guard": "Sealed input changed: blind-packet.json",
+      "rejected": true
+    },
+    {
+      "name": "duplicate_packet_input",
+      "expected_guard": "Duplicate or missing packet input IDs",
+      "rejected": true
+    },
+    {
+      "name": "truncated_provenance",
+      "expected_guard": "Provenance seal completeness",
+      "rejected": true
+    },
+    {
+      "name": "empty_historical_baseline",
+      "expected_guard": "Historical baseline completeness",
+      "rejected": true
+    },
+    {
+      "name": "duplicate_adjudication",
+      "expected_guard": "Working adjudication coverage",
+      "rejected": true
+    },
+    {
+      "name": "csv_label_mismatch",
+      "expected_guard": "Working CSV mismatch",
+      "rejected": true
+    },
+    {
+      "name": "role_projection_mismatch",
+      "expected_guard": "Role/source projection mismatch",
+      "rejected": true
+    }
+  ],
+  "executed_at": "2026-10-04T08:52:59.013798+00:00",
+  "scope": "Fourteen actual intended-guard failures on temporary copies after a fresh valid baseline; no live run mutation."
+}

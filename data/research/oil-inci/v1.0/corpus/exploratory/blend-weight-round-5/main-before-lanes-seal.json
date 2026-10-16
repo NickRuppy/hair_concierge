@@ -1,0 +1,6 @@
+{
+  "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+  "written_before_lanes": true,
+  "sealed_at": "2026-10-04T08:39:37.635154+00:00",
+  "limits": "Root has not opened lane outputs. Timing plus declaration does not technically prove cognitive independence."
+}

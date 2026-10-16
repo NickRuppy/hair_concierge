@@ -1,0 +1,79 @@
+{
+  "run_id": "oil-full-profile-holdout-source-staging-v0.1",
+  "captured_at": "2026-10-09",
+  "scope": "Exact-product source capture only. No property classification, target labels, or expected outcomes are present.",
+  "records": [
+    {
+      "source_key": "S01",
+      "identity": {"brand": "Wella Professionals", "product": "Ultimate Smooth Miracle Oil Serum", "market": "US maker storefront", "size": "100 ml / 3.38 fl oz", "gtin_if_verified": null},
+      "maker_url": "https://www.wella.com/professional/en-US/products/hair-care/ultimate-smooth/ultimate-smooth-miracle-oil-serum",
+      "raw_inci": "DIMETHICONE, DIMETHICONOL, ALCOHOL DENAT., PARFUM/FRAGRANCE, TOCOPHERYL ACETATE, GLYCERYL OLEATE, MALIC ACID, LIMONENE, LINALOOL, OLEIC ACID, SQUALANE, LECITHIN, ASCORBYL PALMITATE, TOCOPHEROL, HYDROGENATED PALM GLYCERIDES CITRATE.",
+      "directions": {"site": ["lengths", "ends"], "stage": ["damp_before_styling", "dry_finish"], "dose": "1–3 pumps on damp hair; a small amount as finish", "removal": "do not rinse", "restrictions": "none stated in reviewed instructions", "source_paraphrase": "The maker directs 1–3 pumps to damp lengths and ends, combing through, waiting 30 seconds before styling, then optionally using a small finishing amount on dry hair."},
+      "dispenser": {"observed": "pump", "basis": "maker directions specify pumps and pack image shows pump"},
+      "named_oil_claims": [{"claim_name": "Squalane", "inci_mapping": "SQUALANE (rank 11)", "maker_context": "patented technology with Squalane and Omega-9"}, {"claim_name": "Omega-9", "inci_mapping": "OLEIC ACID (rank 10) is present; the claim phrase is not itself an INCI name", "maker_context": "patented technology with Squalane and Omega-9"}],
+      "claim_review": {"heat": {"accepted_explicit": true, "excerpt": "UV & Heat protection", "scope": "hair product page"}, "hair_uv": {"accepted_explicit": true, "excerpt": "UV & Heat protection", "scope": "hair product page"}},
+      "oil_category_evidence": "Maker calls it a delicate hair oil / Miracle Oil Serum.",
+      "source_limits": "Published maker declaration; page says formula information may change."
+    },
+    {
+      "source_key": "S02",
+      "identity": {"brand": "SACHAJUAN", "product": "Intensive Hair Oil", "market": "US English maker storefront", "size": "not established in retrieved maker text", "gtin_if_verified": null},
+      "maker_url": "https://shop.sachajuan.com/products/intensive-hair-oil",
+      "raw_inci": "CYCLOPENTASILOXANE, ARGANIA SPINOSA KERNEL OIL, DIPHENYL DIMETHICONE, PARFUM (FRAGRANCE), DIMETHICONOL, HIPPOPHAE RHAMNOIDES SEED OIL, LINALOOL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, LIMONENE, BENZYL SALICYLATE, HEXYL CINNAMAL, HEXAMETHYLINDANOPYRAN, CITRONELLOL, JUNIPERUS VIRGINIANA OIL, POGOSTEMON CABLIN OIL, ALPHA-ISOMETHYL IONONE, GERANYL ACETATE, ACETYL CEDRENE, GERANIOL, TERPINEOL, DIMETHYL PHENETHYL ACETATE, COUMARIN, EUGENOL, ROSE KETONES, VANILLIN, PINENE, BETA-CARYOPHYLLENE, HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL, ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT.",
+      "directions": {"site": ["mid_lengths", "ends"], "stage": ["damp", "dry"], "dose": "desired amount", "removal": "retained styling context", "restrictions": "avoid contact with eyes; discontinue if undesirable effects; not for children under three", "source_paraphrase": "The maker instructs applying the desired amount to damp or dry hair, concentrating on mid-lengths and ends, then distributing evenly."},
+      "dispenser": {"observed": "unknown", "basis": "retrieved page did not establish outlet mechanism"},
+      "named_oil_claims": [{"claim_name": "argan oil", "inci_mapping": "ARGANIA SPINOSA KERNEL OIL (rank 2)", "maker_context": "enriched with argan oil"}, {"claim_name": "sea buckthorn oil", "inci_mapping": "HIPPOPHAE RHAMNOIDES SEED OIL (rank 6)", "maker_context": "enriched with sea buckthorn oil"}],
+      "claim_review": {"heat": {"accepted_explicit": false, "reviewed_sections": ["product details", "how to use", "ingredients", "product regulations"]}, "hair_uv": {"accepted_explicit": false, "reviewed_sections": ["product details", "how to use", "ingredients", "product regulations"]}},
+      "oil_category_evidence": "Maker titles the exact product Intensive Hair Oil and describes it as a lightweight nourishing oil.",
+      "source_limits": "Published maker declaration; maker directs readers to delivered product for exact current ingredient list."
+    },
+    {
+      "source_key": "S03",
+      "identity": {"brand": "Gisou", "product": "Honey Infused Hair Oil", "market": "US English maker storefront", "size": "not established in retrieved maker text", "gtin_if_verified": null},
+      "maker_url": "https://gisou.com/products/honey-infused-hair-oil?variant=47738663076170",
+      "raw_inci": "DIMETHICONE, DIMETHICONOL, TRISILOXANE, MEL (HONEY/MIEL), PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL, COCOS NUCIFERA (COCONUT) OIL, ARGANIA SPINOSA KERNEL OIL, PASSIFLORA INCARNATA SEED OIL, TOCOPHERYL ACETATE, PARFUM (FRAGRANCE), GARDENIA TAITENSIS FLOWER EXTRACT, CI 47000 (YELLOW 11), TOCOPHEROL, CI 26100 (RED 17), COUMARIN, HEXYL CINNAMAL, LIMONENE, LINALOOL.",
+      "directions": {"site": ["mid_lengths", "ends"], "stage": ["pre_styling", "post_styling"], "dose": "few drops", "removal": "retained styling context", "restrictions": "none stated in retrieved maker directions", "source_paraphrase": "The maker's product material shows dispensing into the palm and applying from mid-lengths to ends; a maker bundle page also identifies a few drops as pre- or post-styling use."},
+      "dispenser": {"observed": "dropper", "basis": "maker product imagery describes hair oil dripping from the dropper"},
+      "named_oil_claims": [{"claim_name": "Bee Garden oil blend", "inci_mapping": "SWEET ALMOND OIL (rank 5), COCONUT OIL (rank 6), ARGAN OIL (rank 7), PASSIONFLOWER SEED OIL (rank 8)", "maker_context": "maker calls this an eight-oil blend; only these exact intact oil names occur in the captured declaration"}],
+      "claim_review": {"heat": {"accepted_explicit": true, "excerpt": "up to 450°F/230°C heat protection", "scope": "maker product/bundle material for Honey Infused Hair Oil"}, "hair_uv": {"accepted_explicit": false, "reviewed_sections": ["product ingredients FAQ", "product imagery/copy", "maker bundle material"]}},
+      "oil_category_evidence": "Exact maker page title is Honey Infused Hair Oil.",
+      "source_limits": "Maker pages returned divergent Hair Oil declarations on different bundles; this record retains the single exact product-variant page declaration above and does not merge them."
+    },
+    {
+      "source_key": "S04",
+      "identity": {"brand": "Oribe", "product": "Gold Lust Nourishing Hair Oil", "market": "US maker storefront", "size": "100 ml", "gtin_if_verified": "840035204499"},
+      "maker_url": "https://www.oribe.com/products/gold-lust-nourishing-hair-oil",
+      "raw_inci": "ISODODECANE, COCONUT ALKANES, DIMETHICONE, CAPRYLIC/CAPRIC TRIGLYCERIDE, CRAMBE ABYSSINICA SEED OIL, COCO-CAPRYLATE/CAPRATE, LIMNANTHES ALBA (MEADOWFOAM) SEED OIL, BUTYROSPERMUM PARKII (SHEA) BUTTER, ARGANIA SPINOSA KERNEL OIL, TOCOPHEROL, PARFUM/FRAGRANCE, ORBIGNYA SPECIOSA KERNEL OIL, POLYSILICONE-15, ASTROCARYUM MURUMURU SEED BUTTER, CITRUS LIMON (LEMON) PEEL OIL, SANTALUM ALBUM (SANDALWOOD) WOOD EXTRACT, OLEA EUROPAEA (OLIVE) FRUIT OIL, CITRULLUS LANATUS (WATERMELON) SEED OIL, RIBES NIGRUM (BLACK CURRANT) SEED OIL, JASMINUM OFFICINALE (JASMINE) OIL, LEONTOPODIUM ALPINUM FLOWER/LEAF EXTRACT, LITCHI CHINENSIS FRUIT EXTRACT, TOCOPHERYL ACETATE, HEXYL CINNAMAL, LIMONENE, LINALOOL, CITRAL, HEXAMETHYLINDANOPYRAN, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, CITRUS AURANTIUM BERGAMIA (BERGAMOT) PEEL OIL.",
+      "directions": {"site": ["damp hair", "ends"], "stage": ["damp", "dry_finish"], "dose": "not stated", "removal": "retained styling context", "restrictions": "none stated in retrieved maker directions", "source_paraphrase": "The maker directs application throughout damp hair and an additional amount to ends after styling."},
+      "dispenser": {"observed": "unknown", "basis": "retrieved maker text and product image did not establish outlet mechanism"},
+      "named_oil_claims": [{"claim_name": "argan oil", "inci_mapping": "ARGANIA SPINOSA KERNEL OIL (rank 9)", "maker_context": "maker ingredient section"}, {"claim_name": "cassis seed oil", "inci_mapping": "RIBES NIGRUM (BLACK CURRANT) SEED OIL (rank 19)", "maker_context": "maker ingredient section"}, {"claim_name": "jasmine oil", "inci_mapping": "JASMINUM OFFICINALE (JASMINE) OIL (rank 20)", "maker_context": "maker ingredient section"}],
+      "claim_review": {"heat": {"accepted_explicit": false, "reviewed_sections": ["how to use", "ingredients", "product detail"]}, "hair_uv": {"accepted_explicit": false, "reviewed_sections": ["how to use", "ingredients", "product detail"]}},
+      "oil_category_evidence": "Exact maker page title is Gold Lust Nourishing Hair Oil.",
+      "source_limits": "GTIN came from maker storefront structured product data; published ingredient list remains subject to package confirmation."
+    },
+    {
+      "source_key": "S05",
+      "identity": {"brand": "Virtue", "product": "Healing Oil", "market": "US English maker storefront", "size": "not established in retrieved maker text", "gtin_if_verified": null},
+      "maker_url": "https://www.virtuelabs.com/healing-oil.html",
+      "raw_inci": "CYCLOPENTASILOXANE, DIMETHICONOL, PARFUM (FRAGRANCE), ALPHA KERATIN, SCLEROCARYA BIRREA SEED OIL, CITRULLUS LANATUS (WATERMELON) SEED OIL, COCOS NUCIFERA (COCONUT) OIL, GARDENIA TAITENSIS FLOWER EXTRACT, TOCOPHEROL, POLYGLYCERYL-4 ISOSTEARATE, HEXYL LAURATE, CETYL PEG/PPG-10/1 DIMETHICONE, SILICONE QUATERNIUM-3, TRIDECETH-12, PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE, BENZYL BENZOATE, COUMARIN, LIMONENE, GERANIOL, HEXYL CINNAMAL, LINALOOL, BENZYL SALICYLATE.",
+      "directions": {"site": ["hair"], "stage": ["damp", "dry"], "dose": "few drops", "removal": "retained styling context", "restrictions": "none stated in retrieved maker directions", "shake": "shake well before each use to mix key ingredients", "source_paraphrase": "The maker says to shake before each use, shake a few drops into hands, then work throughout damp or dry hair and style."},
+      "dispenser": {"observed": "unknown", "basis": "shake/drop directions establish use but not the outlet mechanism"},
+      "named_oil_claims": [{"claim_name": "Kalahari melon seed oil", "inci_mapping": "CITRULLUS LANATUS (WATERMELON) SEED OIL (rank 6)", "maker_context": "maker ingredient section"}],
+      "claim_review": {"heat": {"accepted_explicit": false, "reviewed_sections": ["details", "how to use", "ingredients", "FAQ"]}, "hair_uv": {"accepted_explicit": false, "reviewed_sections": ["details", "how to use", "ingredients", "FAQ"]}},
+      "oil_category_evidence": "Exact maker page title is Healing Oil and describes a blend of oils for hair.",
+      "source_limits": "Maker calls this shake-to-activate but does not explicitly call it biphasic; do not treat shaking as biphasic proof."
+    },
+    {
+      "source_key": "S06",
+      "identity": {"brand": "R+Co", "product": "TWO-WAY MIRROR Smoothing Oil", "market": "US maker storefront", "size": "2 oz", "gtin_if_verified": "6842175389891"},
+      "maker_url": "https://www.randco.com/collections/promo-shop-all/products/two-way-mirror-smoothing-oil",
+      "raw_inci": "CYCLOPENTASILOXANE, COCONUT ALKANES, DIMETHICONOL, CAPRYLIC/CAPRIC TRIGLYCERIDE, LIMNANTHES ALBA (MEADOWFOAM) SEED OIL, BUTYROSPERMUM PARKII (SHEA) BUTTER, ARGANIA SPINOSA KERNEL OIL, PARFUM/FRAGRANCE, COCO-CAPRYLATE/CAPRATE, ORBIGNYA SPECIOSA KERNEL OIL, BIXA ORELLANA SEED OIL, BRASSICA CAMPESTRIS (RAPESEED) SEED OIL, TOCOPHEROL, ASTROCARYUM MURUMURU SEED BUTTER, EMBLICA OFFICINALIS FRUIT EXTRACT, SESAMUM INDICUM (SESAME) SEED OIL, ECLIPTA PROSTRATA EXTRACT, MELIA AZADIRACHTA LEAF EXTRACT, MELIA AZADIRACHTA FLOWER EXTRACT, CORALLINA OFFICINALIS EXTRACT, MORINGA OLEIFERA SEED OIL, COCCINIA INDICA LEAF EXTRACT, SOLANUM MELONGENA (EGGPLANT) FRUIT EXTRACT, ALOE BARBADENSIS FLOWER EXTRACT, TBHQ, SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL, CURCUMA LONGA (TURMERIC) ROOT EXTRACT, OCIMUM BASILICUM (BASIL) FLOWER/LEAF EXTRACT, OCIMUM SANCTUM LEAF EXTRACT, CITRIC ACID, CITRAL, LIMONENE.",
+      "directions": {"site": ["mid_shaft", "lower hair"], "stage": ["damp", "dry"], "dose": "small amount", "removal": "retained styling context", "restrictions": "none stated in retrieved maker directions", "source_paraphrase": "The maker directs a small amount to damp or dry hair from mid-shaft downward with a smoothing motion."},
+      "dispenser": {"observed": "unknown", "basis": "retrieved maker text did not establish outlet mechanism"},
+      "named_oil_claims": [{"claim_name": "Bixa orellana seed oil", "inci_mapping": "BIXA ORELLANA SEED OIL (rank 11)", "maker_context": "maker ingredient section"}, {"claim_name": "Moringa seed oil", "inci_mapping": "MORINGA OLEIFERA SEED OIL (rank 21)", "maker_context": "maker ingredient section"}],
+      "claim_review": {"heat": {"accepted_explicit": false, "reviewed_sections": ["description", "ingredients", "how to use"]}, "hair_uv": {"accepted_explicit": false, "reviewed_sections": ["description", "ingredients", "how to use"]}},
+      "oil_category_evidence": "Exact maker page title is TWO-WAY MIRROR Smoothing Oil.",
+      "source_limits": "GTIN shown in maker storefront product data; maker advises verification against the received package."
+    }
+  ]
+}

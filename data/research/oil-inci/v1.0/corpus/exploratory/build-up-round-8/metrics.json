@@ -1,0 +1,17 @@
+{
+  "case_count": 4,
+  "assessment_count": 8,
+  "binary_completion_count": 8,
+  "value_agreement_count": 4,
+  "value_agreement_denominator": 4,
+  "classes_by_lane": {
+    "a": {
+      "low": 2,
+      "elevated": 2
+    },
+    "b": {
+      "low": 2,
+      "elevated": 2
+    }
+  }
+}

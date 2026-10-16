@@ -1,0 +1,135 @@
+{
+  "reference_id": "oil-natural-build-up-v0.1",
+  "version": "0.1",
+  "prepared_at": "2026-10-06",
+  "status": "approved_narrow_rough_prior_for_local_research",
+  "authority": "OE51 yes to low for pure jojoba plus request to reuse natural-base documentation; OE14 approximate estimates. No sensory or intake validation.",
+  "basis_reference": {
+    "path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+    "sha256": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50",
+    "reuse": "Exact identity/aliases and material observations only. Weight entries remain unchanged; no weight-to-build-up mapping."
+  },
+  "matching": "Case-insensitive exact canonical or already-reviewed alias after whitespace normalization; no substring, derivative or plant-part collapse.",
+  "application_rule": "Use the prior for a complete single-ingredient whole-oil declaration. For blends, annotate the constituent clue and assess the complete retained architecture; it cannot decide the finished blend. Source-specific contrary evidence or a decisive grade ambiguity requires fresh review/unknown.",
+  "entries": [
+    {
+      "material_id": "jojoba",
+      "display_name": "Jojoba",
+      "canonical_inci": "SIMMONDSIA CHINENSIS SEED OIL",
+      "aliases": [
+        "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+      ],
+      "identity_limits": "Do not match Jojoba Esters, Hydrolyzed Jojoba Esters, Hydrogenated Jojoba Oil, Isopropyl Jojobate or PEG derivatives.",
+      "build_up_prior": {
+        "value": "low",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "unknown",
+        "reason": "OE51 accepted practical whole-jojoba prior. Existing exact-material documentation identifies a fluid liquid wax; at comparable small retained applications this supports a weak-coating hypothesis. This is an explicitly approved rough material inference, not a deduction from light weight or measured repeated washout.",
+        "evidence": [
+          {
+            "source_reference": "natural-oil-weight-v0.10",
+            "material_id": "jojoba",
+            "source_id": "HW001",
+            "observation": "Existing reference records liquid-wax/fluidity context; reused only as bounded material-inference support."
+          },
+          {
+            "decision_id": "OE51",
+            "type": "human_accepted_rough_material_prior"
+          }
+        ],
+        "counter_signal": [
+          "Fluidity does not establish low deposited mass, easy shampoo removal or repeated accumulation.",
+          "Whole jojoba leaves a retained lipid coating; dose, grade, temperature and reapplication affect actual residue."
+        ],
+        "unresolved": [
+          "No controlled comparative repeat-application/shampoo hair-residue measurement establishes this class."
+        ]
+      }
+    }
+  ],
+  "coverage": {
+    "basis_material_entries": 68,
+    "assessed_build_up_material_entries": 1,
+    "unassessed_material_ids": [
+      "grapeseed",
+      "c8_c10_mct",
+      "sweet_almond",
+      "apricot_kernel",
+      "safflower",
+      "castor",
+      "coconut_whole",
+      "argan",
+      "olive",
+      "avocado",
+      "sunflower",
+      "macadamia",
+      "hemp",
+      "marula",
+      "baobab",
+      "camellia_japonica",
+      "black_seed",
+      "wheat_germ",
+      "sea_buckthorn_fruit",
+      "watermelon_seed",
+      "moringa",
+      "babassu",
+      "pomegranate_seed",
+      "camellia_oleifera",
+      "corn_germ",
+      "corn_oil",
+      "soybean",
+      "sesame",
+      "rice_bran",
+      "oat_kernel",
+      "rapeseed_campestris",
+      "rapeseed_napus",
+      "canola_declaration",
+      "flax_linseed",
+      "evening_primrose",
+      "borage",
+      "camelina",
+      "chia",
+      "blackcurrant",
+      "sunflower_hybrid",
+      "macadamia_ternifolia",
+      "macadamia_hybrid",
+      "cottonseed_hirsutum",
+      "buriti",
+      "meadowfoam",
+      "rosehip_canina_fruit",
+      "rosehip_rubiginosa_seed",
+      "rosehip_moschata_seed",
+      "passionfruit",
+      "prickly_pear",
+      "tamanu",
+      "brazil_nut",
+      "kukui",
+      "sacha_inchi",
+      "plum",
+      "raspberry",
+      "coffee",
+      "cranberry",
+      "camellia_sinensis",
+      "broccoli_seed",
+      "peanut",
+      "sea_buckthorn_fruit_seed",
+      "sea_buckthorn_seed",
+      "cacay",
+      "hazelnut_seed",
+      "coconut_fruit_oil_declaration",
+      "sunflower_oil_declaration"
+    ],
+    "meaning": "This companion adds one assessed build-up prior; it does not claim all 68 base-oil build-up tendencies are complete."
+  },
+  "sources": {
+    "HW001": {
+      "title": "www.cosmeticsandtoiletries.com — hair-weight research source",
+      "url": "https://www.cosmeticsandtoiletries.com/magazine/article/22862759/cosmetics-toiletries-magazine-choosing-the-right-plant-oil-for-hair-and-skin-benefits",
+      "kind": "mechanism_context",
+      "access": "Observed in 2026-10-02 research; per-entry access/grade limits retained.",
+      "supports": "Only the scoped observations attached to entries; no implicit hair-weight validation."
+    }
+  },
+  "evidence_ceiling": "Practical estimated retained-film tendency; not measured cumulative build-up, washability, intolerance or weight."
+}

@@ -1,0 +1,34 @@
+{
+  "artifact": "oil-holdout-dictionary-staging-review-notes",
+  "version": "v0.1-staging",
+  "status": "normalization_complete_function_confirmation_pending",
+  "source_packet": "../source-staging/source-packet-v0.2.json",
+  "base_dictionary": "../../../exploratory/full-profile-completion-v0.1/function-dictionary.json",
+  "normalization": {
+    "formula_count": 6,
+    "ordered_token_count": 93,
+    "exact_existing_dictionary_mappings": 52,
+    "reviewed_parenthetical_or_existing_alias_mappings": 12,
+    "new_canonical_identities": 29,
+    "tokenizer_assurance": "The splitter keeps commas within parenthetical text inside one token. Parenthetical repeated INCI aliases were mapped only where the resulting canonical form already exists in the frozen dictionary."
+  },
+  "new_entry_source_coverage": {
+    "primary_supplier_or_exact_CosIng_function_confirmations": 0,
+    "official_CosIng_access_reference": "https://ec.europa.eu/growth/tools-databases/cosing/ (accessed 2026-10-09)",
+    "maker_declaration_identity_coverage": "29/29",
+    "disposition": "Every new entry has an exact product-declaration reference and a pending CosIng/primary-supplier function reference, but no unverified function has been promoted. Root review must either supply exact function evidence or retain these entries as unresolved before any classifier reads the dictionary."
+  },
+  "closed_family_checks": {
+    "reused_exact_family_hits": "Existing frozen entries retain their prior flags, including ALCOHOL DENAT., recognized silicones, POLYSILICONE-15, declared fragrance/allergens, and rosemary extract.",
+    "new_entries": "All new entries carry all five closed-family fields. AROMA is the sole new exact fragrance declaration marked true; all other new-family negatives are stated as closed-list exclusions, not general safety or performance claims.",
+    "uv_filter": "No new identity is marked an UV filter. Existing POLYSILICONE-15 stays bound to the frozen base dictionary; source-side product claim review remains separate."
+  },
+  "penetration_boundary": "No new penetration anchor is added. The new entries explicitly retain only the current three exact admitted forms as the possible anchor set and do not infer penetration or nonpenetration.",
+  "blocked_or_ambiguous_identity_notes": [
+    "Organic qualifiers are retained as part of the raw token. Only Organic Decolorized Aloe Barbadensis Leaf Oil and Organic Rosmarinus Officinalis (Rosemary) Leaf Extract are mapped to pre-existing exact-form dictionary identities; organic Calendula and Coconut fruit-oil forms remain new identities.",
+    "AROMA is a generic declaration and intentionally has no expanded constituent list.",
+    "Gardenia enfleurage oil, Santalum wood extract, and the new botanical fixed oils have no promoted cosmetic function in this staging packet.",
+    "No source was used to infer hair weight, residue, base, film, finished-product behavior, or persistence."
+  ],
+  "classifier_boundary": "Do not provide this folder to a classifier until root freezes the normalized list and resolves the pending exact-function evidence."
+}

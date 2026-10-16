@@ -1,0 +1,28 @@
+{
+  "lane_id": "b",
+  "files_read": [
+    "method.md",
+    "blind-packet.json",
+    "function-dictionary.json",
+    "material-weight-reference.json"
+  ],
+  "input_hashes": {
+    "method.md": "d3574b9b59b9214ea2c47827e361707b8b69b003b586e1244e1ba8c0df48a726",
+    "blind-packet.json": "fe8f733abba22ae94767c6afee84fa0d416324d4233e89961da80d9bfbe2e9bb",
+    "function-dictionary.json": "4cb416b844706777e191a6b262dcb61b04498b222e30f1289cc07d16a1e224ad",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+  },
+  "completed_ids": [
+    "T02"
+  ],
+  "recognized_formulas": [],
+  "access_incidents": [],
+  "limitations": [
+    "The first combined input display was truncated. All four allowed inputs were then read completely in bounded displays before assessment; no additional file was accessed.",
+    "Rank 4 is species-incomplete and functionally unassessed. It remains unresolved without alias expansion, material-weight transfer, penetration transfer or assumed negligible amount.",
+    "The task explicitly admits this one case. Independent identified carrier/film functions support working substantive judgments despite the rank-4 gap; this is not a claim that its identity is resolved.",
+    "Carrier proportions, grades, sensory measurements and exact-formula penetration or persistence measurements are absent.",
+    "No spontaneous finished-product recognition occurred. No source reveal, browser, memory, peer output or other repository material was consulted.",
+    "The task-specified run_id oil-targeted-neutral-v0.2 overrides the embedded older run identifiers. The top case_id schema overrides older embedded record examples."
+  ]
+}

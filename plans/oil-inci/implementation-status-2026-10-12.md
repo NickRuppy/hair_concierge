@@ -1,0 +1,23 @@
+Current successor (2026-10-13): the [four-record resolution](record-resolution-status-2026-10-13.md) supersedes the historical open-record queue below. All 37 profiles now support local property projection; Rahua remains an explicitly provisional owner estimate. [Current verification](record-resolution-verification-2026-10-13.json) covers the extended tree. The following receipt preserves the original bridge completion and its 33/four replay result.
+
+# Oil bridge v1 implementation
+
+Current local completion check: 2026-10-13.
+
+Outcome: implement the [reviewed plan](oil-intake-bridge-v1-plan-2026-10-12.md) as a lossless local oil envelope/exporter/projector and inactive intake helper. Project only weight, supported fibre roles and heat protection. Preserve richer research and scenario conditions, with manual legacy matching.
+
+Authorization: Nick asked “can you actually start with the implementation use subagents please?” then “continue”. Decision coverage remains confirmed with the original manual-matching choice. No undiscussed consequential assumptions affect this scope. No commit/push/PR/activation/production write is authorized.
+
+Worktree: codex/oil-intake-bridge-v1, refreshed base 81201a9e4e577ce03730809cc367ab21b10ce091. Original oil-inci research checkout remains intact. The transfer manifest records 721 byte-identical input files at creation base d08f9a0d; routing files may receive intentional current-state updates, with original bytes retained under implementation-transfer-routing-snapshot. Integration hashes are rechecked before implementation.
+
+Execution: three bounded agents own (1) strict contracts/pure projector + tests, (2) historical exporter/independent replay + tests, (3) CLI/inactive helper/operator documentation + tests. Main owns public interface decisions, routing/package changes, integration, independent verification and final review. No shared writer scope.
+
+Historical precision clarification: a separately unrecorded tipping assumption may remain null only for a documented historical import with its original reason/trace retained. This is a provenance gap, not an unknown persistence class. Fresh current-format traces must supply the required assumption. No historical research is reclassified to fill a missing field.
+
+Implemented: strict envelope, pure projector, historical exporter, independent replay verifier, bounded offline CLI and inactive intake helper. Replay: 33 property_projection_ready, four needs_research, zero not_applicable. O04/O18/O19 retain original formula-versus-ledger representation conflicts; O04 additionally has an unresolved identity source reference E01-retailer-de; H04 retains its unknown weight. The v0.1 report is preserved, with a reason-level v0.2 successor documenting all causes. No historical classes or files were repaired to manufacture admission.
+
+Verification: root independently passed all 40 new seam tests and all 37 existing category-router tests (77 total). The existing oil-unavailable regression remains green. Worker behavioral RED proofs cover hash validation, exact submission binding and projector refusal/output behavior. All 721 transferred historical hashes remain identical (the intentionally updated routing index has a preserved original snapshot). The original read-only targeted verifier passes in the preserved source worktree; its historical root .gitignore binding cannot be asserted against refreshed main, so the exact old ignore bytes are retained rather than rewriting the old receipt. Native-order CLI envelope round trips, named consistency checks, shared atomic output and the reason-level replay are implemented. The first Claude review completed with revisions, now addressed or explicitly reconciled; the completed fixed-packet counterpart review, its locally verified fixes and final build confirmation are recorded in the implementation verification/review receipt. No UI, database or activation check is implied by this inactive scope.
+
+Artifacts: implementation/source/docs/tests/new replay and transfer evidence are commit-intended; detailed terminal/reviewer scratch output is discarded after concise receipt. Historical artifacts remain unchanged except explicitly snapshotted routing updates. Stop before publication or activation.
+
+Base freshness: origin/main advanced five commits during the interrupted session. Read-only comparison shows subsequent fit-verdict and dependency/development changes; oil singleton fields and intake routing have no new conflicting ownership. This local result is verified on the recorded 81201a9e base. Publication requires the normal fresh-main integration/check gates; no dirty checkout was rebased or reset.

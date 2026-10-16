@@ -1,0 +1,530 @@
+{
+  "lane_id": "a",
+  "records": [
+    {
+      "case_id": "H01",
+      "reason": "The retained emollient/fixed-oil system favors an ordinary fluid lipid coating. The carrier sequence and auxiliaries do not establish a cohesive gum/adherent film; conversely, the collective retained fixed oils make a less persistent dispersible-remainder reading weaker. Unresolved functions are retained as gaps rather than counted as negligible.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIISOPROPYL ADIPATE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ISODECYL NEOPENTANOATE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "DICAPRYLYL CARBONATE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "PERSEA GRATISSIMA (AVOCADO) OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "BHT"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "GERANYL ACETATE"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "HEXADECANOLACTONE"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "HEXAMETHYLINDANOPYRAN"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "ISOEUGENYL ACETATE"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "POGOSTEMON CABLIN OIL"
+        },
+        {
+          "rank": 22,
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "TOCOPHEROL"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "tipping_assumption": "Treat the admitted synthetic emollients and fixed oils as an ordinary fluid conditioning remainder; do not infer volatility or a cohesive film from unresolved rank 3 or unassessed ranks 18/19."
+    },
+    {
+      "case_id": "H02",
+      "reason": "A silicone carrier coupled to a principal conditioning gum supplies a coherent retained gum/film system, with secondary emollients modifying rather than replacing it. Alcohol solvent does not cancel that remainder. This favors high over an ordinary fluid coating without depending on the isolated presence of a polymer; unresolved malic acid/ascorbyl palmitate are not promoted to film evidence.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ALCOHOL DENAT."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "GLYCERYL OLEATE"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "MALIC ACID"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "OLEIC ACID"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "SQUALANE"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "LECITHIN"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "ASCORBYL PALMITATE"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "HYDROGENATED PALM GLYCERIDES CITRATE"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "tipping_assumption": "Assume the paired dimethicone/dimethiconol route is functionally substantive conditioning architecture rather than a very dilute gum modifier; exact gum grade and proportions are undisclosed."
+    },
+    {
+      "case_id": "H03",
+      "reason": "A retained single hydrocarbon emollient supports an ordinary fluid coating. There is no affirmative dispersible/removal route to favor low and no cohesive structured-film route to favor high; the positive middle reading is its retained fluid-emollient architecture, independent of sensory weight.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "SQUALANE"
+        }
+      ],
+      "considered_ranks": [
+        1
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "tipping_assumption": "Treat the admitted squalane emollient as an ordinary retained fluid layer; do not infer rapid disappearance, water dispersibility or measured wash resistance."
+    },
+    {
+      "case_id": "H04",
+      "reason": "Within the already admitted retained-fibre context, the recognized Mauritia fixed oil and the oil-declared preparation system favor ordinary retained lipid conditioning over either a dispersible remainder or a demonstrated cohesive polymer/structured-film architecture. This commitment makes an explicit preparation assumption; unresolved identities/functions are not treated as negligible and the weight reference does not set persistence.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "CALENDULA OFFICINALIS FLOWER OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ALOE BARBADENSIS LEAF OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) FRUIT OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "OENOCARPUS BATAUA (RAHUA UNGURAHUA) OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "MAURITIA FLEXUOSA FRUIT OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "PLUKENETIA VOLUBILIS (SACHA INCHI) SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "AROMA"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "GARDENIA JASMINOIDES (GARDENIA ENFLEURAGE) OIL"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "tipping_assumption": "Assume the unresolved oil preparations act collectively as ordinary lipid preparations in this retained application, rather than as a strongly structured adherent system or predominantly dispersible vehicle. This is the weakest-supported commitment and requires later preparation evidence, without silently rewriting the frozen value."
+    },
+    {
+      "case_id": "H05",
+      "reason": "The mixed carrier/conditioning architecture leaves a fluid silicone/emollient/lipid coating. Secondary shea adds residual body, but neither that ingredient alone nor a UV-filter silicone polymer establishes a coherent adherent conditioning network. Low is weaker because the principal dimethicone film and retained lipids are substantive; high lacks affirmative joint gum/structured conditioning-film evidence.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "COCONUT ALKANES"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "CRAMBE ABYSSINICA SEED OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "BUTYROSPERMUM PARKII BUTTER"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "ORBIGNYA SPECIOSA KERNEL OIL"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "POLYSILICONE-15"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "ASTROCARYUM MURUMURU SEED BUTTER"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "CITRUS LIMON PEEL OIL"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "SANTALUM ALBUM (SANDALWOOD) WOOD EXTRACT"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "OLEA EUROPAEA FRUIT OIL"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "CITRULLUS LANATUS SEED OIL"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "RIBES NIGRUM SEED OIL"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "JASMINUM OFFICINALE (JASMINE) OIL"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "LEONTOPODIUM ALPINUM FLOWER/LEAF EXTRACT"
+        },
+        {
+          "rank": 22,
+          "canonical_name": "LITCHI CHINENSIS FRUIT EXTRACT"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "HEXYL CINNAMAL"
+        },
+        {
+          "rank": 25,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 26,
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 27,
+          "canonical_name": "CITRAL"
+        },
+        {
+          "rank": 28,
+          "canonical_name": "HEXAMETHYLINDANOPYRAN"
+        },
+        {
+          "rank": 29,
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 30,
+          "canonical_name": "CITRUS AURANTIUM BERGAMIA PEEL OIL"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "tipping_assumption": "Treat dimethicone as a fluid conditioning contribution and secondary butter/lipids as body within that fluid coating, not a dominant coherent structured film. Do not promote unassessed butters/oils/extracts or the UV-filter polymer into high-persistence evidence."
+    },
+    {
+      "case_id": "H06",
+      "reason": "The volatile distribution vehicle leaves an integrated gum/dimethicone conditioning film with a complementary silicone elastomer/structurant route. The joint conditioning architecture favors a coherent persistent film over an ordinary fluid coating. The structurant reinforces an already admitted gum/film route rather than independently deciding the class, and the carrier cannot erase it.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "CYCLOPENTASILOXANE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "DIMETHICONE/VINYL DIMETHICONE CROSSPOLYMER"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "HEXYL CINNAMAL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "ALPHA-ISOMETHYL IONONE"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "COUMARIN"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "CAMELLIA OLEIFERA SEED OIL"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "FARNESOL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "GERANIOL"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "tipping_assumption": "Treat the gum and dimethicone route as substantive retained conditioning, with elastomer contributing structure instead of only bottle rheology; exact grades and film behavior remain unmeasured."
+    }
+  ]
+}

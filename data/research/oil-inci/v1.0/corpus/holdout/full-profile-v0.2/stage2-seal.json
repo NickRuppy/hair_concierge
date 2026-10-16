@@ -1,0 +1,9 @@
+{
+  "outputs": {
+    "lane-a/stage2-records.json": "bdd9b0f6235b023feffacc17920975218166ff7a7f42d6b128c9009bc1da812a",
+    "lane-a/stage2-notes.json": "9f4044230a20ff805c62939459221499b12ea2f089e818f677480708dd8a592f",
+    "lane-b/stage2-records.json": "fbba44a1781f7249f200da5b9eb04c99db36541e2ebbb195c7570acdea907e00",
+    "lane-b/stage2-notes.json": "bc037e6b25acaf771ada5903e28a9d36b44c3cd1a7b853295eca7de8b0848cbe"
+  },
+  "sealed_before_semantic_inspection": true
+}

@@ -1,0 +1,111 @@
+{
+  "decision_id": "OE48",
+  "date": "2026-10-05",
+  "status": "human_accepted_product_specific_estimate",
+  "authorization": "Nick ok yeah sure to elevated for NEQI, explicitly estimated with low confidence.",
+  "neutral_id": "D04",
+  "identity": {
+    "brand": "NEQI",
+    "product": "Smooth Strength Rosemary Oil",
+    "size_ml": 75,
+    "market": "DE"
+  },
+  "source_id": "D04-maker",
+  "source_url": "https://neqi-hair.com/products/smooth-strength-rosemary-oil",
+  "raw_inci": "Prunus amygdalus dulcis (Sweet almond) oil, Ricinus communis (Castor) seed oil, Carthamus tinctorius (Safflower) seed oil, Rosmarinus officinalis (Rosemary) leaf oil, Mentha arvensis (Wild mint) leaf oil, Lavandula oil/extract, Camphor, Menthol, Tocopheryl acetate, Beta-caryophyllene, Pinene, Terpineol, Geranyl acetate, Linalyl acetate, Geraniol, Limonene, Linalool",
+  "source_hashes": {
+    "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/working-records-v0.1.1.json": "841f5489e92a07a49e36cd5a8197deb70ee149bb491ebf713af8304fc72694bd",
+    "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.4.md": "36d95689a7007185ee09e8a1853089ac69ab80552be6bcd6430dbfc0b2fcb9b5",
+    "plans/oil-inci/research/evolve-oe46-build-up-decision-2026-10-05.json": "5862f13859a12938235e53cc830d434bab0958a609e7b0312120fea377f695c7",
+    "plans/oil-inci/research/coconut-oe47-build-up-decision-2026-10-05.json": "3d13818012fec5d8107bdc08167d18c2540162defb78fe0a93c81b3fa45bbafe"
+  },
+  "original_property": {
+    "value": "unknown",
+    "estimate": false,
+    "confidence": "low",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL"
+      },
+      {
+        "rank": 2,
+        "canonical_name": "RICINUS COMMUNIS SEED OIL"
+      },
+      {
+        "rank": 3,
+        "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL"
+      },
+      {
+        "rank": 6,
+        "canonical_name": "LAVANDULA OIL/EXTRACT"
+      }
+    ],
+    "counter_signal": [
+      "No admitted gum/resin structurant establishes substantial film; lavender preparation is unresolved."
+    ],
+    "nearest_alternative": "elevated",
+    "reason": "The fixed-oil blend supplies residual emollience, but admitted roles do not determine whether it is a weak-film fluid system or a substantial rich coating. Elevated is plausible for the residual oil blend but cannot be derived merely from plant origin or the name castor.",
+    "unresolved": [
+      "Actual oil-blend film/load behavior and lavender preparation-specific residue are unestablished."
+    ]
+  },
+  "approved_property": {
+    "value": "elevated",
+    "estimate": true,
+    "confidence": "low",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL"
+      },
+      {
+        "rank": 2,
+        "canonical_name": "RICINUS COMMUNIS SEED OIL"
+      },
+      {
+        "rank": 3,
+        "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL"
+      },
+      {
+        "rank": 6,
+        "canonical_name": "LAVANDULA OIL/EXTRACT"
+      }
+    ],
+    "counter_signal": [
+      "No admitted gum/resin structurant establishes substantial film; lavender preparation is unresolved.",
+      "Almond and safflower may make the blend more fluid; exact carrier proportions and actual post-shampoo retention are unknown.",
+      "Authoritative directions establish scalp use followed by shampoo, reducing practical relevance of a retained-film concern without guaranteeing complete removal."
+    ],
+    "nearest_alternative": "unknown",
+    "reason": "OE48 human-approved practical elevated residual-film estimate for the exact almond/castor/safflower fixed-oil backbone. Principal castor contribution within the retained oil system supports a substantial-coating hypothesis; this is not inferred from plant origin, castor presence or the medium weight alone, and is not measured repeated accumulation.",
+    "unresolved": [
+      "Actual oil-blend film/load behavior and lavender preparation-specific residue are unestablished."
+    ]
+  },
+  "application_scenarios": [
+    {
+      "source_id": "D04-maker",
+      "direction_id": "D04-direction-1",
+      "supported_roles": [
+        "scalp_application"
+      ],
+      "site": [
+        "scalp"
+      ],
+      "stage": "dry_or_damp_before_shampoo",
+      "dose": "small amount; unit unspecified",
+      "contact_time": "at least 10 minutes",
+      "removal": "shampoo",
+      "restrictions": "unestablished"
+    }
+  ],
+  "unchanged": [
+    "Frozen records, lane judgments, trial metrics, seals and receipts",
+    "Every other property, accepted medium weight and fit policy",
+    "Scalp-only shampooed direction; no fibre permission inferred",
+    "General build-up mechanism; no automatic castor-presence rule"
+  ],
+  "next_case": "D06 Aroma-Zone Haircare Oil With 7 Precious Oils; not adjudicated here."
+}

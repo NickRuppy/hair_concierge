@@ -1,0 +1,15 @@
+{
+  "cases": {
+    "T02": {
+      "lane": "a",
+      "reason": "Both fresh independent lanes agree on every direct class and all seven source-field values. Select coherent lane A, whose affirmative architecture evidence distinguishes the unresolved rank4 contribution from identified functional anchors. No species/function/amount is invented; medium has light alternative and moderate uses the retained-film endpoint."
+    }
+  },
+  "unaffected_cases": [
+    "T01",
+    "T04",
+    "T06"
+  ],
+  "original_T02_excluded_from_clean_calibration": true,
+  "both_stages_sealed_before_comparison": true
+}

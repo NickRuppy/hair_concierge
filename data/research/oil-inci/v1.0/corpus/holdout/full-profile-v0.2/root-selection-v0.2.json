@@ -1,0 +1,29 @@
+{
+  "cases": {
+    "H01": {
+      "lane": "a",
+      "reason": "All independent formula scalar/flag values agree. Select intact laneA to preserve internally coherent ledger, property reasoning and source prominence; unknown material functions remain unknown rather than guessed."
+    },
+    "H02": {
+      "lane": "a",
+      "reason": "All independent formula scalar/flag values agree. Select intact laneA to preserve internally coherent ledger, property reasoning and source prominence; unknown material functions remain unknown rather than guessed."
+    },
+    "H03": {
+      "lane": "a",
+      "reason": "All independent formula scalar/flag values agree. Select intact laneA to preserve internally coherent ledger, property reasoning and source prominence; unknown material functions remain unknown rather than guessed."
+    },
+    "H04": {
+      "lane": "a",
+      "reason": "All independent formula scalar/flag values agree. Select intact laneA to preserve internally coherent ledger, property reasoning and source prominence; unknown material functions remain unknown rather than guessed. Source difference H04-hero-3 Sacha Inchi: lane A unknown, lane B supporting. Select unknown because the matched preparation has unresolved function in the selected sealed lane-A ledger; source positioning cannot promote it."
+    },
+    "H05": {
+      "lane": "a",
+      "reason": "All independent formula scalar/flag values agree. Select intact laneA to preserve internally coherent ledger, property reasoning and source prominence; unknown material functions remain unknown rather than guessed."
+    },
+    "H06": {
+      "lane": "a",
+      "reason": "All independent formula scalar/flag values agree. Select intact laneA to preserve internally coherent ledger, property reasoning and source prominence; unknown material functions remain unknown rather than guessed."
+    }
+  },
+  "source_difference": "Named prominence can differ with independently assigned roles; selected source-stage must remain coherent with its own sealed ledger. No first-pass metric rewritten."
+}

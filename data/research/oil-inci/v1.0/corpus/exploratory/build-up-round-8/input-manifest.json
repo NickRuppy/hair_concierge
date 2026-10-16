@@ -1,0 +1,32 @@
+{
+  "run_id": "oil-build-up-round-8",
+  "status": "frozen_before_dispatch",
+  "run_inputs": {
+    "source-packet.json": "d15f6b95b45efe5d7b257b1c47651d773563e3eae8ff8bbae882d9999abffd11",
+    "normalization-audit.json": "d2959a31a09ad2083b63a7ead54738d5d74f6661a1febb655ac6230437420f50",
+    "function-evidence.json": "0f51516ecc7cf233db04684497e83d75dc3f35b1d21751a9fb7dc5e49928ee4d",
+    "method.md": "0a2579c41ff0d2c64b0bfde27eb8c572867f3075be05eeaca091a48c82c494d5",
+    "blind-packet.json": "12146506e1f1566c1abe3064f1c3e36608d0b784679c36d719b2a444b8383c6f",
+    "blind-lexicon.json": "b3974e95c9a7e3c77434a3be561f5c1dee464b5da7b3c35c907d9114985cb659",
+    "natural-oil-build-up-v0.1.json": "724f7688d0c97febcc569dd730528a47d9870ab0758367fc890a4fae956579e2",
+    "novelty-audit.json": "261bc91d83df5d7da7a2c6e425ff03df7421c5d5ae56ddef8191cce8762c9ebb",
+    "historical-preservation.json": "31509cf854f97d2c091324918cd39d2a0c11fba5d74bd66c4010eeb11ea605ee"
+  },
+  "dependencies": {
+    "docs/research/oil-inci/v1.0/08_build-up-guidance-v0.3.md": "e6b6cbd57e7e361bbd49544760c89effd855a19ee2f8c2882460f71dcd731fed",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.6.md": "b9b345177edee617b0cb20b10d7f590523086a498a4d56c085acca9287e97d4d",
+    "docs/research/oil-inci/v1.0/00_category_charter.md": "995023cdc782dd6989bb957e621594a97fdd9c2b62950cc8064107378927b82c",
+    "data/research/oil-inci/v1.0/reference/natural-oil-build-up-v0.1.json": "724f7688d0c97febcc569dd730528a47d9870ab0758367fc890a4fae956579e2",
+    "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50",
+    "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json": "55d39f6cd2bc24237b3912abdcdd6773a805c96343f7b328df58d51132448d5b",
+    "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json": "7840fe6645b08ab24248463f7cc6abf575fe081c8775ff607dfba7e7298c88ca",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json": "0914d5743c52942fad30392e2e3293d0228d6d030c52feb3e7bb07ccc4a7d546"
+  },
+  "blind_read_allowlist": [
+    "method.md",
+    "blind-packet.json",
+    "blind-lexicon.json",
+    "natural-oil-build-up-v0.1.json"
+  ],
+  "limits": "Integrity/contractual read isolation, not technical sandbox or sensory validation."
+}

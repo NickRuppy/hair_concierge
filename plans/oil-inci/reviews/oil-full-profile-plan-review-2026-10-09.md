@@ -1,0 +1,5 @@
+# Oil full-profile plan review reconciliation
+
+2026-10-09. One read-only terminal Claude Opus4.8/high review: approve with revisions. Source/candidate overlap and unregistered discovery were verified, preserved and corrected with an explicit pre-label v0.2 registration plus independent declaration/alias overlap audit. Artifact paths, per-stage schemas and exact verifier commands were made concrete. The current draft standard is frozen per run, not represented as universally validated.
+
+No repeat user approval is required for the already accepted consolidation/test. Reviewer-proposed threshold ratification is not adopted as a user gate: values are declared internal diagnostic defaults with no adapter/production unlock. Informational base wording remains a visible proposal for the existing owner checkpoint and is excluded from classification inputs. No source gap becomes a fabricated boolean or absent hero. Main owns verification and adjudication. Detailed transient report discarded after capture; this summary is commit-intended.

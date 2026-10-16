@@ -1,0 +1,121 @@
+{
+  "run_id": "oil-exploratory-2026-10-01-round-1",
+  "authorization": "OE15",
+  "selection": "Eight exploratory contrast inputs; not reference answers or unseen holdout.",
+  "records": [
+    {
+      "neutral_id": "F01",
+      "slot": "E06",
+      "identity": {
+        "brand": "K18",
+        "product": "Molecular Repair Hair Oil",
+        "size_ml": 30,
+        "market": "DE",
+        "gtin_if_verified": "858511001500",
+        "gtin_source_id": "k-flaconi",
+        "gtin_limit": "Also corroborated by local K18-branded shop; barcode alone does not establish formulation version."
+      },
+      "canonical_source_id": "k-notino",
+      "category_disposition": "included cosmetic oil/oil-labelled serum"
+    },
+    {
+      "neutral_id": "F02",
+      "slot": "E02",
+      "identity": {
+        "brand": "NEQI",
+        "product": "Smooth Strength Rosemary Oil",
+        "size_ml": 75,
+        "market": "DE",
+        "gtin_if_verified": "4063528086280",
+        "gtin_source_id": "E02-retailer-de",
+        "manufacturer_code": "NQ-HO-RO-201"
+      },
+      "canonical_source_id": "E02-maker-de",
+      "category_disposition": "included cosmetic oil/oil-labelled serum"
+    },
+    {
+      "neutral_id": "F03",
+      "slot": "E08",
+      "identity": {
+        "brand": "Kérastase",
+        "product": "Soleil Huile Sirène",
+        "size_ml": 150,
+        "market": "DE",
+        "gtin_if_verified": "3474636695324"
+      },
+      "canonical_source_id": "E08-maker-DE",
+      "category_disposition": "included exploratory oil-labelled boundary probe"
+    },
+    {
+      "neutral_id": "F04",
+      "slot": "E01",
+      "identity": {
+        "brand": "Biopark Cosmetics",
+        "product": "Organic Coconut Oil",
+        "size_ml": 100,
+        "market": "DE",
+        "gtin_if_verified": "3830066651079",
+        "gtin_source_id": "E01-retailer-de",
+        "selection_note": "Authorized cosmetic replacement for the original dmBio food-oil slot; original selection history remains in preflight."
+      },
+      "canonical_source_id": "E01-maker",
+      "category_disposition": "included cosmetic oil/oil-labelled serum"
+    },
+    {
+      "neutral_id": "F05",
+      "slot": "E05",
+      "identity": {
+        "brand": "Living Proof",
+        "product": "No Frizz Vanishing Oil",
+        "size_ml": 50,
+        "market": "DE",
+        "gtin_if_verified": "840216931084"
+      },
+      "canonical_source_id": "E05-cosmeterie",
+      "category_disposition": "included cosmetic oil/oil-labelled serum"
+    },
+    {
+      "neutral_id": "F06",
+      "slot": "E07",
+      "identity": {
+        "brand": "NEQI",
+        "product": "Opulent Oil Hair Serum",
+        "size_ml": 75,
+        "market": "DE",
+        "gtin_if_verified": "4063528078520",
+        "gtin_source_id": "E07-maker-pack-asset",
+        "gtin_corroborating_source_id": "E07-retailer-pl"
+      },
+      "canonical_source_id": "E07-maker-de",
+      "category_disposition": "included cosmetic oil/oil-labelled serum"
+    },
+    {
+      "neutral_id": "F07",
+      "slot": "E03",
+      "identity": {
+        "brand": "OLAPLEX",
+        "product": "No.7 Bonding Oil",
+        "size_ml": 30,
+        "market": "DE",
+        "gtin_if_verified": "0850045076085",
+        "gtin_source_id": "ol-apotheke",
+        "gtin_limit": "Identifier corroborates named 30ml pack, not canonical formula version; no readable batch label captured."
+      },
+      "canonical_source_id": "ol-zalando",
+      "category_disposition": "included cosmetic oil/oil-labelled serum"
+    },
+    {
+      "neutral_id": "F08",
+      "slot": "E04",
+      "identity": {
+        "brand": "OGX",
+        "product": "Coconut Miracle Oil Extra Strength Penetrating Oil",
+        "size_ml": 100,
+        "market": "DE",
+        "gtin_if_verified": "3574661563398"
+      },
+      "canonical_source_id": "E04-dm",
+      "category_disposition": "included cosmetic oil/oil-labelled serum"
+    }
+  ]
+}

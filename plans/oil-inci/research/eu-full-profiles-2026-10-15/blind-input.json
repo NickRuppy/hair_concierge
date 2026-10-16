@@ -1,0 +1,3001 @@
+{
+  "scope": "New remaining formula properties only. Prior persistence is carried independently and is not an assessment target. No product identity, marketing, directions, fit, named-oil or dispenser inference.",
+  "records": [
+    {
+      "neutral_id": "PC01",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Dimethiconol",
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Undecane",
+          "canonical_name": "UNDECANE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Dicaprylyl Ether",
+          "canonical_name": "DICAPRYLYL ETHER"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Tridecane",
+          "canonical_name": "TRIDECANE"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Tocopherol",
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Parfum (Fragrance)",
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Anise Alcohol",
+          "canonical_name": "ANISE ALCOHOL"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Linalyl Acetate",
+          "canonical_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Trisiloxane",
+          "canonical_name": "TRISILOXANE"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Disiloxane",
+          "canonical_name": "DISILOXANE"
+        },
+        {
+          "rank": 15,
+          "raw_name": "CI 40800 (Beta-Carotene)",
+          "canonical_name": "CI 40800"
+        }
+      ],
+      "contextual_declarations": []
+    },
+    {
+      "neutral_id": "PC02",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "ISODODECANE",
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "AQUA / WATER",
+          "canonical_name": "AQUA"
+        },
+        {
+          "rank": 3,
+          "raw_name": "DIPROPYLENE GLYCOL",
+          "canonical_name": "DIPROPYLENE GLYCOL"
+        },
+        {
+          "rank": 4,
+          "raw_name": "DIMETHICONE",
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 5,
+          "raw_name": "ALCOHOL DENAT.",
+          "canonical_name": "ALCOHOL DENAT."
+        },
+        {
+          "rank": 6,
+          "raw_name": "DIMETHICONOL",
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "GLYCERIN",
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 8,
+          "raw_name": "PEG-14 DIMETHICONE",
+          "canonical_name": "PEG-14 DIMETHICONE"
+        },
+        {
+          "rank": 9,
+          "raw_name": "HYDROXYETHYL UREA",
+          "canonical_name": "HYDROXYETHYL UREA"
+        },
+        {
+          "rank": 10,
+          "raw_name": "PHENOXYETHANOL",
+          "canonical_name": "PHENOXYETHANOL"
+        },
+        {
+          "rank": 11,
+          "raw_name": "PEG-60 HYDROGENATED CASTOR OIL",
+          "canonical_name": "PEG-60 HYDROGENATED CASTOR OIL"
+        },
+        {
+          "rank": 12,
+          "raw_name": "LIMONENE",
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 13,
+          "raw_name": "POLYACRYLAMIDE",
+          "canonical_name": "POLYACRYLAMIDE"
+        },
+        {
+          "rank": 14,
+          "raw_name": "C13-14 ISOPARAFFIN",
+          "canonical_name": "C13-14 ISOPARAFFIN"
+        },
+        {
+          "rank": 15,
+          "raw_name": "PROPYLENE GLYCOL",
+          "canonical_name": "PROPYLENE GLYCOL"
+        },
+        {
+          "rank": 16,
+          "raw_name": "HEXYL CINNAMAL",
+          "canonical_name": "HEXYL CINNAMAL"
+        },
+        {
+          "rank": 17,
+          "raw_name": "LINALOOL",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "LAURETH-7",
+          "canonical_name": "LAURETH-7"
+        },
+        {
+          "rank": 19,
+          "raw_name": "CARAMEL",
+          "canonical_name": "CARAMEL"
+        },
+        {
+          "rank": 20,
+          "raw_name": "CITRAL",
+          "canonical_name": "CITRAL"
+        },
+        {
+          "rank": 21,
+          "raw_name": "GLYCINE",
+          "canonical_name": "GLYCINE"
+        },
+        {
+          "rank": 22,
+          "raw_name": "GERANIOL",
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 23,
+          "raw_name": "COUMARIN",
+          "canonical_name": "COUMARIN"
+        },
+        {
+          "rank": 24,
+          "raw_name": "CI 19140 / YELLOW 5",
+          "canonical_name": "CI 19140"
+        },
+        {
+          "rank": 25,
+          "raw_name": "POLYQUATERNIUM-7",
+          "canonical_name": "POLYQUATERNIUM-7"
+        },
+        {
+          "rank": 26,
+          "raw_name": "CI 15985 / YELLOW 6",
+          "canonical_name": "CI 15985"
+        },
+        {
+          "rank": 27,
+          "raw_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+          "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE"
+        },
+        {
+          "rank": 28,
+          "raw_name": "SODIUM BENZOATE",
+          "canonical_name": "SODIUM BENZOATE"
+        },
+        {
+          "rank": 29,
+          "raw_name": "PARFUM / FRAGRANCE",
+          "canonical_name": "PARFUM"
+        }
+      ],
+      "contextual_declarations": []
+    },
+    {
+      "neutral_id": "PC03",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Arachis Hypogaea Oil",
+          "canonical_name": "ARACHIS HYPOGAEA OIL"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Melia Azadirachta Leaf Extract",
+          "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Triticum Vulgare Germ Oil",
+          "canonical_name": "TRITICUM VULGARE GERM OIL"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Chamomilla Recutita Flower Extract",
+          "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Lecithin",
+          "canonical_name": "LECITHIN"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Alcohol",
+          "canonical_name": "ALCOHOL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Parfum*",
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Helianthus Annuus Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Lavandula Oil/Extract",
+          "canonical_name": "LAVANDULA OIL/EXTRACT"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Pinene*",
+          "canonical_name": "PINENE"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Camphor*",
+          "canonical_name": "CAMPHOR"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Linalool*",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Beta-Caryophyllene*",
+          "canonical_name": "BETA-CARYOPHYLLENE"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Limonene*",
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 15,
+          "raw_name": "Terpineol*",
+          "canonical_name": "TERPINEOL"
+        },
+        {
+          "rank": 16,
+          "raw_name": "Linalyl Acetate*",
+          "canonical_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 17,
+          "raw_name": "Citronellol*",
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "Citral*",
+          "canonical_name": "CITRAL"
+        },
+        {
+          "rank": 19,
+          "raw_name": "Alpha-Terpinene*",
+          "canonical_name": "ALPHA-TERPINENE"
+        }
+      ],
+      "contextual_declarations": [
+        "Asterisks identify constituents from natural essential oils; not extra ingredients."
+      ]
+    },
+    {
+      "neutral_id": "PC04",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "ISOPROPYL PALMITATE",
+          "canonical_name": "ISOPROPYL PALMITATE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "COCO-CAPRYLATE/CAPRATE",
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE"
+        },
+        {
+          "rank": 3,
+          "raw_name": "C13-15 ALKANE",
+          "canonical_name": "C13-15 ALKANE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "ETHYLHEXYL PALMITATE",
+          "canonical_name": "ETHYLHEXYL PALMITATE"
+        },
+        {
+          "rank": 5,
+          "raw_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL"
+        },
+        {
+          "rank": 6,
+          "raw_name": "OCTYLDODECANOL",
+          "canonical_name": "OCTYLDODECANOL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED EXTRACT",
+          "canonical_name": "HELIANTHUS ANNUUS SEED EXTRACT"
+        },
+        {
+          "rank": 8,
+          "raw_name": "DAUCUS CAROTA SATIVA (CARROT) ROOT EXTRACT",
+          "canonical_name": "DAUCUS CAROTA SATIVA (CARROT) ROOT EXTRACT"
+        },
+        {
+          "rank": 9,
+          "raw_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+          "canonical_name": "RICINUS COMMUNIS SEED OIL"
+        },
+        {
+          "rank": 10,
+          "raw_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 11,
+          "raw_name": "CITRUS AURANTIUM DULCIS (ORANGE) PEEL OIL",
+          "canonical_name": "CITRUS AURANTIUM DULCIS PEEL OIL"
+        },
+        {
+          "rank": 12,
+          "raw_name": "PELARGONIUM GRAVEOLENS LEAF OIL",
+          "canonical_name": "PELARGONIUM GRAVEOLENS LEAF OIL"
+        },
+        {
+          "rank": 13,
+          "raw_name": "LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL",
+          "canonical_name": "LAVANDULA ANGUSTIFOLIA OIL"
+        },
+        {
+          "rank": 14,
+          "raw_name": "CANANGA ODORATA FLOWER OIL",
+          "canonical_name": "CANANGA ODORATA FLOWER OIL"
+        },
+        {
+          "rank": 15,
+          "raw_name": "ANGELICA ARCHANGELICA SEED OIL",
+          "canonical_name": "ANGELICA ARCHANGELICA SEED OIL"
+        },
+        {
+          "rank": 16,
+          "raw_name": "ANGELICA ARCHANGELICA ROOT OIL",
+          "canonical_name": "ANGELICA ARCHANGELICA ROOT OIL"
+        },
+        {
+          "rank": 17,
+          "raw_name": "GLYCINE SOJA (SOYBEAN) OIL",
+          "canonical_name": "GLYCINE SOJA OIL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "HYDROGENATED COCO-GLYCERIDES",
+          "canonical_name": "HYDROGENATED COCO-GLYCERIDES"
+        },
+        {
+          "rank": 19,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 20,
+          "raw_name": "TOCOPHERYL ACETATE",
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 21,
+          "raw_name": "PARFUM/FRAGRANCE",
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 22,
+          "raw_name": "BENZYL BENZOATE",
+          "canonical_name": "BENZYL BENZOATE"
+        },
+        {
+          "rank": 23,
+          "raw_name": "LIMONENE",
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 24,
+          "raw_name": "LINALOOL",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 25,
+          "raw_name": "CITRONELLOL",
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 26,
+          "raw_name": "GERANIOL",
+          "canonical_name": "GERANIOL"
+        }
+      ],
+      "contextual_declarations": []
+    }
+  ],
+  "function_dictionary": {
+    "scope": "Exact generic functions only; sources are opaque identifiers bound outside the blind lane. No product/material labels or exact finished grades/amounts.",
+    "entries": [
+      {
+        "canonical_name": "ALCOHOL",
+        "roles": [
+          "solvent"
+        ],
+        "notes": [
+          "Exact ingredient is Alcohol, no denaturant assumption. No percentage, retained amount or negligible-remainder inference."
+        ],
+        "source_ids": [
+          "F001"
+        ]
+      },
+      {
+        "canonical_name": "ALCOHOL DENAT.",
+        "roles": [
+          "solvent_alcohol"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F002"
+        ]
+      },
+      {
+        "canonical_name": "ALPHA-TERPINENE",
+        "roles": [
+          "not_assessed"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+        ],
+        "source_ids": [
+          "F003"
+        ]
+      },
+      {
+        "canonical_name": "ANGELICA ARCHANGELICA ROOT OIL",
+        "roles": [
+          "essential_oil",
+          "aromatic_auxiliary"
+        ],
+        "notes": [
+          "Exact root essential oil documented by supplier. No grade, contribution, retained remainder or medicinal claim inferred."
+        ],
+        "source_ids": [
+          "F004"
+        ]
+      },
+      {
+        "canonical_name": "ANGELICA ARCHANGELICA SEED OIL",
+        "roles": [
+          "aromatic_capability",
+          "preparation_not_resolved"
+        ],
+        "notes": [
+          "Exact-INCI suppliers describe aromatic oil and coldpressed oil. No particular extraction/grade or intact fixed-oil prior admitted. Fragrance longevity not hair persistence."
+        ],
+        "source_ids": [
+          "F005"
+        ]
+      },
+      {
+        "canonical_name": "ANISE ALCOHOL",
+        "roles": [
+          "declared_fragrance_allergen"
+        ],
+        "notes": [
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F006"
+        ]
+      },
+      {
+        "canonical_name": "AQUA",
+        "roles": [
+          "aqueous_vehicle"
+        ],
+        "notes": [
+          "Water vehicle does not decide residual architecture.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F007"
+        ]
+      },
+      {
+        "canonical_name": "ARACHIS HYPOGAEA OIL",
+        "roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "notes": [
+          "No grade/coldpressed identity transfer."
+        ],
+        "source_ids": [
+          "F008"
+        ]
+      },
+      {
+        "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+        "roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "notes": [
+          "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F009"
+        ]
+      },
+      {
+        "canonical_name": "BENZYL BENZOATE",
+        "roles": [
+          "declared_fragrance_allergen"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+        ],
+        "source_ids": [
+          "F010"
+        ]
+      },
+      {
+        "canonical_name": "BETA-CARYOPHYLLENE",
+        "roles": [
+          "declared_fragrance_allergen"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+        ],
+        "source_ids": [
+          "F011"
+        ]
+      },
+      {
+        "canonical_name": "C13-14 ISOPARAFFIN",
+        "roles": [
+          "hydrocarbon_carrier",
+          "rheology_system_component"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F012"
+        ]
+      },
+      {
+        "canonical_name": "C13-15 ALKANE",
+        "roles": [
+          "hydrocarbon_carrier",
+          "emollient",
+          "solvent"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "No synonym to hemisqualane or assumption of sugarcane origin, particular volatility, dose or finishedproduct remainder."
+        ],
+        "source_ids": [
+          "F013"
+        ]
+      },
+      {
+        "canonical_name": "CAMPHOR",
+        "roles": [
+          "cooling_or_aromatic_auxiliary",
+          "declared_fragrance_allergen"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+        ],
+        "source_ids": [
+          "F014"
+        ]
+      },
+      {
+        "canonical_name": "CANANGA ODORATA FLOWER OIL",
+        "roles": [
+          "essential_oil",
+          "declared_fragrance_allergen"
+        ],
+        "notes": [
+          "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+        ],
+        "source_ids": [
+          "F015"
+        ]
+      },
+      {
+        "canonical_name": "CARAMEL",
+        "roles": [
+          "colourant",
+          "fragrance"
+        ],
+        "notes": [
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F016"
+        ]
+      },
+      {
+        "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT",
+        "roles": [
+          "not_assessed"
+        ],
+        "notes": [
+          "Exact function not assessed. Contribution is not assumed negligible; do not infer a film, preparation or persistence class from the name."
+        ],
+        "source_ids": [
+          "F017"
+        ]
+      },
+      {
+        "canonical_name": "CI 15985",
+        "roles": [
+          "colourant"
+        ],
+        "notes": [
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F018"
+        ]
+      },
+      {
+        "canonical_name": "CI 19140",
+        "roles": [
+          "colourant"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F019"
+        ]
+      },
+      {
+        "canonical_name": "CI 40800",
+        "roles": [
+          "colourant"
+        ],
+        "notes": [
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F020"
+        ]
+      },
+      {
+        "canonical_name": "CITRAL",
+        "roles": [
+          "declared_fragrance_allergen"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F021"
+        ]
+      },
+      {
+        "canonical_name": "CITRONELLOL",
+        "roles": [
+          "declared_fragrance_allergen"
+        ],
+        "notes": [
+          "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+        ],
+        "source_ids": [
+          "F022"
+        ]
+      },
+      {
+        "canonical_name": "CITRUS AURANTIUM DULCIS PEEL OIL",
+        "roles": [
+          "not_assessed"
+        ],
+        "notes": [
+          "Exact function not assessed. Contribution is not assumed negligible; do not infer a film, preparation or persistence class from the name."
+        ],
+        "source_ids": [
+          "F023"
+        ]
+      },
+      {
+        "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+        "roles": [
+          "defined_ester_emollient",
+          "emollient"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "Exact slash-containing mixed ester; no intact-coconut-oil prior transfer."
+        ],
+        "source_ids": [
+          "F024"
+        ]
+      },
+      {
+        "canonical_name": "COUMARIN",
+        "roles": [
+          "declared_fragrance_allergen"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F025"
+        ]
+      },
+      {
+        "canonical_name": "DAUCUS CAROTA SATIVA (CARROT) ROOT EXTRACT",
+        "roles": [
+          "not_assessed"
+        ],
+        "notes": [
+          "Exact function not assessed. Contribution is not assumed negligible; do not infer a film, preparation or persistence class from the name."
+        ],
+        "source_ids": [
+          "F026"
+        ]
+      },
+      {
+        "canonical_name": "DICAPRYLYL ETHER",
+        "roles": [
+          "emollient"
+        ],
+        "notes": [
+          "Emollience does not itself prove low persistence.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F027"
+        ]
+      },
+      {
+        "canonical_name": "DIMETHICONE",
+        "roles": [
+          "silicone_carrier",
+          "conditioning_film"
+        ],
+        "notes": [
+          "Previously reviewed exact material functions copied; no weight, penetration or product build-up answer is included. Grade/dose/residual load remain unestablished.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+          "The INCI spans different grades, including low-viscosity volatile fluids and high-molecular-weight conditioning material. The finished-product grade is undisclosed; do not assume universal nonvolatility, gum structure or substantial residue."
+        ],
+        "source_ids": [
+          "F028"
+        ]
+      },
+      {
+        "canonical_name": "DIMETHICONOL",
+        "roles": [
+          "silicone_gum",
+          "conditioning_film"
+        ],
+        "notes": [
+          "Gum/residual-film signal; finished load and durability require architecture and grade.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F029"
+        ]
+      },
+      {
+        "canonical_name": "DIPROPYLENE GLYCOL",
+        "roles": [
+          "cosolvent"
+        ],
+        "notes": [
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F030"
+        ]
+      },
+      {
+        "canonical_name": "DISILOXANE",
+        "roles": [
+          "silicone_carrier",
+          "volatile_carrier"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F031"
+        ]
+      },
+      {
+        "canonical_name": "ETHYLHEXYL PALMITATE",
+        "roles": [
+          "emollient"
+        ],
+        "notes": [
+          "Historical generic role only; grade undisclosed."
+        ],
+        "source_ids": [
+          "F032"
+        ]
+      },
+      {
+        "canonical_name": "GERANIOL",
+        "roles": [
+          "declared_fragrance_allergen"
+        ],
+        "notes": [
+          "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F033"
+        ]
+      },
+      {
+        "canonical_name": "GLYCERIN",
+        "roles": [
+          "humectant"
+        ],
+        "notes": [
+          "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F034"
+        ]
+      },
+      {
+        "canonical_name": "GLYCINE",
+        "roles": [
+          "buffering",
+          "skin_conditioning"
+        ],
+        "notes": [
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F035"
+        ]
+      },
+      {
+        "canonical_name": "GLYCINE SOJA OIL",
+        "roles": [
+          "fixed_oil_carrier"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+        ],
+        "source_ids": [
+          "F036"
+        ]
+      },
+      {
+        "canonical_name": "HELIANTHUS ANNUUS SEED EXTRACT",
+        "roles": [
+          "botanical_seed_extract",
+          "skin_conditioning"
+        ],
+        "notes": [
+          "Extract, not sunflower fixed oil, wax or ceramide identity. No hairfilm inferred."
+        ],
+        "source_ids": [
+          "F037"
+        ]
+      },
+      {
+        "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+        "roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F038"
+        ]
+      },
+      {
+        "canonical_name": "HEXYL CINNAMAL",
+        "roles": [
+          "declared_fragrance_allergen"
+        ],
+        "notes": [
+          "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F039"
+        ]
+      },
+      {
+        "canonical_name": "HYDROGENATED COCO-GLYCERIDES",
+        "roles": [
+          "emollient",
+          "film_forming_capability",
+          "viscosity_increasing"
+        ],
+        "notes": [
+          "Film-forming is an affirmative generic capability supported by an exact-INCI grade. Neither persistence class nor structural dominance is implied. Grade, quantity and coating performance in finished product undisclosed; do not call it intact coconut oil.",
+          "Generic exact-INCI film-forming capability is admitted; supplier grade melting range and concentration must not be transferred to this formula. It is neither intact coconut oil nor automatic high persistence."
+        ],
+        "source_ids": [
+          "F040"
+        ]
+      },
+      {
+        "canonical_name": "HYDROXYETHYL UREA",
+        "roles": [
+          "humectant"
+        ],
+        "notes": [
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F041"
+        ]
+      },
+      {
+        "canonical_name": "ISODODECANE",
+        "roles": [
+          "hydrocarbon_carrier",
+          "emollient"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F042"
+        ]
+      },
+      {
+        "canonical_name": "ISOPROPYL PALMITATE",
+        "roles": [
+          "emollient"
+        ],
+        "notes": [
+          "No spreading-to-persistence mapping."
+        ],
+        "source_ids": [
+          "F043"
+        ]
+      },
+      {
+        "canonical_name": "LAURETH-7",
+        "roles": [
+          "emulsifying_auxiliary",
+          "rheology_system_component"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F044"
+        ]
+      },
+      {
+        "canonical_name": "LAVANDULA ANGUSTIFOLIA OIL",
+        "roles": [
+          "not_assessed"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+        ],
+        "source_ids": [
+          "F045"
+        ]
+      },
+      {
+        "canonical_name": "LAVANDULA OIL/EXTRACT",
+        "roles": [
+          "fragrance_group",
+          "botanical_preparation_unspecified"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+        ],
+        "source_ids": [
+          "F046"
+        ]
+      },
+      {
+        "canonical_name": "LECITHIN",
+        "roles": [
+          "emulsion_stabilizer"
+        ],
+        "notes": [
+          "No lysolecithin substitution. Generic stability function alone does not prove cohesive hairfilm or rinsability."
+        ],
+        "source_ids": [
+          "F047"
+        ]
+      },
+      {
+        "canonical_name": "LIMONENE",
+        "roles": [
+          "declared_fragrance_allergen"
+        ],
+        "notes": [
+          "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F048"
+        ]
+      },
+      {
+        "canonical_name": "LINALOOL",
+        "roles": [
+          "declared_fragrance_allergen"
+        ],
+        "notes": [
+          "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F049"
+        ]
+      },
+      {
+        "canonical_name": "LINALYL ACETATE",
+        "roles": [
+          "declared_fragrance_allergen"
+        ],
+        "notes": [
+          "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F050"
+        ]
+      },
+      {
+        "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+        "roles": [
+          "botanical_extract",
+          "botanical_leaf_extract",
+          "skin_conditioning"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "Extract, not neem fixed oil. No carrier/oil quantity or hairfilm inferred."
+        ],
+        "source_ids": [
+          "F051"
+        ]
+      },
+      {
+        "canonical_name": "OCTYLDODECANOL",
+        "roles": [
+          "emollient",
+          "solvent"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "No drying-alcohol role; no spreading-to-persistence mapping."
+        ],
+        "source_ids": [
+          "F052"
+        ]
+      },
+      {
+        "canonical_name": "PARFUM",
+        "roles": [
+          "fragrance_composition"
+        ],
+        "notes": [
+          "Mixture composition unspecified; not automatically volatile or negligible.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F053"
+        ]
+      },
+      {
+        "canonical_name": "PEG-14 DIMETHICONE",
+        "roles": [
+          "hair_conditioning",
+          "skin_conditioning",
+          "plasticizing_agent_for_hair_setting_polymers"
+        ],
+        "notes": [
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F054"
+        ]
+      },
+      {
+        "canonical_name": "PEG-60 HYDROGENATED CASTOR OIL",
+        "roles": [
+          "nonionic_solubilizer",
+          "emulsifying_auxiliary"
+        ],
+        "notes": [
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F055"
+        ]
+      },
+      {
+        "canonical_name": "PELARGONIUM GRAVEOLENS LEAF OIL",
+        "roles": [
+          "essential_oil",
+          "aromatic_auxiliary"
+        ],
+        "notes": [
+          "Exact leaf essential oil preparation/function; do not substitute floweroil or intactfixedoil."
+        ],
+        "source_ids": [
+          "F056"
+        ]
+      },
+      {
+        "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+        "roles": [
+          "antioxidant"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F057"
+        ]
+      },
+      {
+        "canonical_name": "PHENOXYETHANOL",
+        "roles": [
+          "preservative"
+        ],
+        "notes": [
+          "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F058"
+        ]
+      },
+      {
+        "canonical_name": "PINENE",
+        "roles": [
+          "declared_fragrance_allergen"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+        ],
+        "source_ids": [
+          "F059"
+        ]
+      },
+      {
+        "canonical_name": "POLYACRYLAMIDE",
+        "roles": [
+          "rheology_polymer"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F060"
+        ]
+      },
+      {
+        "canonical_name": "POLYQUATERNIUM-7",
+        "roles": [
+          "conditioning_polymer_for_hair"
+        ],
+        "notes": [
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F061"
+        ]
+      },
+      {
+        "canonical_name": "PROPYLENE GLYCOL",
+        "roles": [
+          "humectant",
+          "solvent"
+        ],
+        "notes": [
+          "Water-associated auxiliary; whole residual system decides.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F062"
+        ]
+      },
+      {
+        "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+        "roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+        ],
+        "source_ids": [
+          "F063"
+        ]
+      },
+      {
+        "canonical_name": "RICINUS COMMUNIS SEED OIL",
+        "roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+        ],
+        "source_ids": [
+          "F064"
+        ]
+      },
+      {
+        "canonical_name": "SODIUM BENZOATE",
+        "roles": [
+          "preservative"
+        ],
+        "notes": [
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F065"
+        ]
+      },
+      {
+        "canonical_name": "TERPINEOL",
+        "roles": [
+          "declared_fragrance_allergen"
+        ],
+        "notes": [
+          "Fragrance exposure independent of perfuming intent; outside agreed closed scalp-active botanical group. Citrus group does not identify the particular bitter/sweet orange oil."
+        ],
+        "source_ids": [
+          "F066"
+        ]
+      },
+      {
+        "canonical_name": "TOCOPHEROL",
+        "roles": [
+          "antioxidant"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F067"
+        ]
+      },
+      {
+        "canonical_name": "TOCOPHERYL ACETATE",
+        "roles": [
+          "antioxidant_auxiliary"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied."
+        ],
+        "source_ids": [
+          "F068"
+        ]
+      },
+      {
+        "canonical_name": "TRIDECANE",
+        "roles": [
+          "hydrocarbon_carrier",
+          "possible_volatile_vehicle_in_reviewed_pair"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F069"
+        ]
+      },
+      {
+        "canonical_name": "TRISILOXANE",
+        "roles": [
+          "silicone_carrier",
+          "volatile_carrier"
+        ],
+        "notes": [
+          "Carrier identity does not establish finished evaporation.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F070"
+        ]
+      },
+      {
+        "canonical_name": "TRITICUM VULGARE GERM OIL",
+        "roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "notes": [
+          "Exact germ oil; no protein role or skinfeel transfer."
+        ],
+        "source_ids": [
+          "F071"
+        ]
+      },
+      {
+        "canonical_name": "UNDECANE",
+        "roles": [
+          "hydrocarbon_carrier",
+          "possible_volatile_vehicle_in_reviewed_pair"
+        ],
+        "notes": [
+          "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+          "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution."
+        ],
+        "source_ids": [
+          "F072"
+        ]
+      }
+    ]
+  },
+  "exact_material_priors": [
+    {
+      "id": "jojoba",
+      "canonical_inci": "SIMMONDSIA CHINENSIS SEED OIL",
+      "aliases": [
+        "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Liquid wax that remains fluid; 40-cps technical reference supports light at modest dose, not a transfer from its low-greasy skin claim.",
+        "evidence_ids": [
+          "HW001",
+          "HW002"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match Jojoba Esters, Hydrolyzed Jojoba Esters, Hydrogenated Jojoba Oil, Isopropyl Jojobate or PEG derivatives."
+    },
+    {
+      "id": "grapeseed",
+      "canonical_inci": "VITIS VINIFERA SEED OIL",
+      "aliases": [
+        "VITIS VINIFERA (GRAPE) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "The tested grapeseed was less viscous than tested macadamia in one controlled bulk-flow comparison. Easier distribution is a weak light-on-hair hypothesis; body/skin sensory results are excluded.",
+        "evidence_ids": [
+          "HW003",
+          "HW004"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Seed oil only; exclude seed extract and hydrogenated/PEG derivatives."
+    },
+    {
+      "id": "c8_c10_mct",
+      "canonical_inci": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+      "aliases": [],
+      "material_family": "processed_triglyceride_emollient",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "moderate",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Exact C8/C10 grades have relatively low specified viscosity, supporting a light distribution/coating hypothesis at modest dose. Supplier lightweight wording is material guidance, not a hair panel. The greater material specificity supports moderate robustness of this approximate direction; medium remains plausible for the nonvolatile film.",
+        "evidence_ids": [
+          "HW006",
+          "HW005"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Not whole Cocos Nucifera Oil; not Triheptanoin (C7), Caprylic/Capric/Succinic Triglyceride, caprylate esters or generic fractionated coconut oil without exact INCI."
+    },
+    {
+      "id": "sweet_almond",
+      "canonical_inci": "PRUNUS AMYGDALUS DULCIS OIL",
+      "aliases": [
+        "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "The technical formulation reference places almond in the same 60–70 cP flow range as argan. Light is the shared low-confidence working tendency; medium is credible. No neat-hair comparison establishes the boundary.",
+        "evidence_ids": [
+          "HW001",
+          "HW003"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Exclude seed extract, bitter almond essential oil, almond butter and hydrogenated carrier blends."
+    },
+    {
+      "id": "apricot_kernel",
+      "canonical_inci": "PRUNUS ARMENIACA KERNEL OIL",
+      "aliases": [
+        "PRUNUS ARMENIACA (APRICOT) KERNEL OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "An exact-material SDS reports about 60 mPa s, near the 60-70-cps easy-spreading almond/argan reference range; light is a physical-film estimate, not a skin descriptor.",
+        "evidence_ids": [
+          "HW007",
+          "HW001"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Kernel oil only; not fruit extract, kernel extract or butter."
+    },
+    {
+      "id": "safflower",
+      "canonical_inci": "CARTHAMUS TINCTORIUS SEED OIL",
+      "aliases": [
+        "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "A comparative raw-oil data table reports safflower at 55 mPa s at room temperature, below macadamia's 73 in the same table; light is a relative surface-flow estimate.",
+        "evidence_ids": [
+          "HW008"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Exclude safflower oleosomes, phospholipid derivatives and extracts. INCI does not identify chemotype."
+    },
+    {
+      "id": "castor",
+      "canonical_inci": "RICINUS COMMUNIS SEED OIL",
+      "aliases": [
+        "RICINUS COMMUNIS (CASTOR) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "moderate",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Very high specified dynamic viscosity makes the largest surface-film/volume-loss tendency in this subset a responsible engineering estimate at equal dose.",
+        "evidence_ids": [
+          "HW009",
+          "HW003"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Never transfer to Hydrogenated Castor Oil, PEG-40/60 Hydrogenated Castor Oil, Ricinoleates, castor copolymers or Triheptanoin."
+    },
+    {
+      "id": "coconut_whole",
+      "canonical_inci": "COCOS NUCIFERA OIL",
+      "aliases": [
+        "COCOS NUCIFERA (COCONUT) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "The hair-oil benchmark gives a direct relative greasiness signal supporting rich/low for whole coconut, alongside temperature-sensitive film behavior. Penetration and protein-loss outcomes do not determine weight.",
+        "evidence_ids": [
+          "HW001",
+          "HW010"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Exclude MCT/fractionated derivatives, Coconut Alkanes, Coco-Caprylate/Caprate, hydrogenated coconut oil and coconut extract."
+    },
+    {
+      "id": "argan",
+      "canonical_inci": "ARGANIA SPINOSA KERNEL OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light"
+        ],
+        "reason": "Nick approved the supplied hairdresser sheet as a practical hair-weight anchor: this oil sits in its middle band. Use medium/low as the working hair-weight estimate; the earlier physical flow observations remain counterevidence for light. The sheet ordering was explicitly described as heaviness on hair, not merely a fit label.",
+        "evidence_ids": [
+          "SHEET20261002",
+          "HW001"
+        ],
+        "unresolved": "No equal-dose comparative hair-weight protocol or independently verified sheet authorship is available. Grade, dose and distribution can change feel; light remains credible. No thickness eligibility follows.",
+        "counter_signal": [
+          "No affirmative material differentiator from almond was found: both are placed in the 60-70-cps easy-spreading range. Align argan with almond as light."
+        ]
+      },
+      "identity_limits": "Exclude kernel extract, argan butter and modified esters."
+    },
+    {
+      "id": "olive",
+      "canonical_inci": "OLEA EUROPAEA FRUIT OIL",
+      "aliases": [
+        "OLEA EUROPAEA (OLIVE) FRUIT OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "rich",
+        "alternatives": [
+          "rich",
+          "light"
+        ],
+        "reason": "Exact refined/virgin SDSs report roughly 70 to 90 mPa s, placing olive above the light 55-60-mPa-s comparator oils but far below castor; medium is the bounded material estimate.",
+        "evidence_ids": [
+          "HW011",
+          "HW012"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Fruit oil only; exclude leaf extract, olive squalane, olivates, hydrogenated olive oil and unsaponifiables."
+    },
+    {
+      "id": "avocado",
+      "canonical_inci": "PERSEA GRATISSIMA OIL",
+      "aliases": [
+        "PERSEA GRATISSIMA (AVOCADO) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "reason": "Room-temperature pulp-oil rheology provides a positive more-viscous signal than the jojoba/MCT anchors, supporting medium as a rough distribution/coating tendency. This replaces the skin-sensory rationale; refining and dose can change the result.",
+        "evidence_ids": [
+          "HW013"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Exclude avocado extract, butter, unsaponifiables and hydrogenated oil."
+    },
+    {
+      "id": "sunflower",
+      "canonical_inci": "HELIANTHUS ANNUUS SEED OIL",
+      "aliases": [
+        "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Retain Nick’s approved light/low tendency. Same-method neat-oil rheology supports sunflower-like flow as a physical distribution estimate; protein-loss and skin absorption do not choose the class.",
+        "evidence_ids": [
+          "HW014"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Seed oil only; exclude seed wax, extract, hydrogenated oil and high-oleic assumption from plain INCI."
+    },
+    {
+      "id": "macadamia",
+      "canonical_inci": "MACADAMIA INTEGRIFOLIA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "reason": "The producer’s 20 C physical specification supports medium as a macadamia-family flow/coating estimate, coherently with the separately retained ternifolia and hybrid declarations. Exact processing can support light instead.",
+        "evidence_ids": [
+          "HW015"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Macadamia Ternifolia Seed Oil is a distinct declared species, not an exact alias; similar prior requires an explicit separate mapping. Exclude Ethyl Macadamiate and hydrogenated derivatives."
+    },
+    {
+      "id": "hemp",
+      "canonical_inci": "CANNABIS SATIVA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "A primary physicochemical study reports 20-50 cP at 25 C across extracted hemp-heart-oil samples, below the cited 55-75-cP common vegetable-oil band; light is a low-confidence relative film-flow estimate.",
+        "evidence_ids": [
+          "HW016",
+          "HW001"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Seed oil only; exclude Cannabis Sativa Extract, CBD/cannabinoids and essential oils."
+    },
+    {
+      "id": "marula",
+      "canonical_inci": "SCLEROCARYA BIRREA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "rich",
+        "alternatives": [
+          "rich",
+          "light"
+        ],
+        "reason": "Retain Nick’s approved medium/low working tendency. Crude seed-oil flow data offer limited physical corroboration, with strong grade limits. The middle class is an approved estimate, not an average of contradictory skin claims.",
+        "evidence_ids": [
+          "HW017"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Exclude marula esters, extracts and alkane blends."
+    },
+    {
+      "id": "baobab",
+      "canonical_inci": "ADANSONIA DIGITATA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "An exact 100% refined baobab raw-material specification gives 25-40 cps, below the 60-70-cps almond/argan reference range; light is a modest-dose surface-flow estimate.",
+        "evidence_ids": [
+          "HW018",
+          "HW001"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Seed oil only; exclude extract, hydrolyzed seed protein and modified derivatives."
+    },
+    {
+      "id": "camellia_japonica",
+      "canonical_inci": "CAMELLIA JAPONICA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "A non-greasy hair descriptor supports a light tentative finish at modest dose, but it is supplier copy with no panel or comparator.",
+        "evidence_ids": [
+          "HW019"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not alias Camellia Sinensis Leaf Extract or any leaf extract. Japonica, oleifera and sinensis seed oils are separate botanical identities."
+    },
+    {
+      "id": "black_seed",
+      "canonical_inci": "NIGELLA SATIVA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light"
+        ],
+        "reason": "Nick approved the supplied hairdresser sheet as a practical hair-weight anchor: this oil sits in its middle band. Use medium/low as the working hair-weight estimate; the earlier physical flow observations remain counterevidence for light. The sheet ordering was explicitly described as heaviness on hair, not merely a fit label.",
+        "evidence_ids": [
+          "SHEET20261002",
+          "HW020"
+        ],
+        "unresolved": "No equal-dose comparative hair-weight protocol or independently verified sheet authorship is available. Grade, dose and distribution can change feel; light remains credible. No thickness eligibility follows.",
+        "counter_signal": [
+          "The reported 64–71 mPa s material-flow range overlaps the almond/argan reference range. Use the same light/low working tendency, with medium close; no affirmative neat-hair evidence establishes a heavier class."
+        ]
+      },
+      "identity_limits": "Only intact fixed seed oil; not essential oil, Nigella extract, thymoquinone or Carum Carvi Seed Oil."
+    },
+    {
+      "id": "wheat_germ",
+      "canonical_inci": "TRITICUM VULGARE GERM OIL",
+      "aliases": [
+        "TRITICUM VULGARE (WHEAT) GERM OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "This is the only direct hair-weight signal and supports rich for the named unrefined grade. The INCI does not disclose grade, so medium remains the explicit alternative; conflicting skin-light copy does not set the class.",
+        "evidence_ids": [
+          "HW021"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Exclude germ extract, hydrolyzed wheat protein and Wheat Germ Glycerides."
+    },
+    {
+      "id": "sea_buckthorn_fruit",
+      "canonical_inci": "HIPPOPHAE RHAMNOIDES FRUIT OIL",
+      "aliases": [
+        "HIPPOPHAE RHAMNOIDES (SEA BUCKTHORN) FRUIT OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "The positive thick/viscous supplied-fruit-material observations support a weak rich coating/distribution tendency. Medium remains close. Colour, density, fatty-acid ratios and finished-emulsion viscosity are excluded.",
+        "evidence_ids": [
+          "HW022",
+          "HW023"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not transfer to Hippophae Rhamnoides Seed Oil, extracts or carrier macerates. Pulp Oil wording needs documented INCI identity."
+    },
+    {
+      "id": "watermelon_seed",
+      "canonical_inci": "CITRULLUS LANATUS SEED OIL",
+      "aliases": [
+        "CITRULLUS LANATUS (WATERMELON) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Lower measured viscosity supports a light rough coating/spreading estimate under the technical hair mechanism anchor. It is a cultivar/extraction/food-grade material proxy, not a hair residue or volume measurement.",
+        "evidence_ids": [
+          "HW024"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Seed oil only; not fruit extract; common watermelon and Kalahari materials may differ by cultivar/grade."
+    },
+    {
+      "id": "moringa",
+      "canonical_inci": "MORINGA OLEIFERA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light"
+        ],
+        "reason": "Nick approved the supplied hairdresser sheet as a practical hair-weight anchor: this oil sits in its middle band. Use medium/low as the working hair-weight estimate; the earlier physical flow observations remain counterevidence for light. The sheet ordering was explicitly described as heaviness on hair, not merely a fit label.",
+        "evidence_ids": [
+          "SHEET20261002",
+          "HW025",
+          "HW026",
+          "HW027"
+        ],
+        "unresolved": "No equal-dose comparative hair-weight protocol or independently verified sheet authorship is available. Grade, dose and distribution can change feel; light remains credible. No thickness eligibility follows.",
+        "counter_signal": [
+          "Two reported samples at 25 C have 47–48 cP viscosity, supporting the same light working tendency as nearby ordinary seed-oil flow observations. The 43.8–103 supplier range has no stated temperature and keeps medium credible; it does not supply a positive calibrated middle class. Pure-oil hair guidance is a separate unquantified corroborating claim, not the decisive physical measurement."
+        ]
+      },
+      "identity_limits": "Seed oil only; exclude leaf/seed extracts, hydrogenated or modified oil."
+    },
+    {
+      "id": "babassu",
+      "canonical_inci": "ORBIGNYA OLEIFERA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "reason": "Propose medium/low as a weak family estimate: the exact supplier describes a runny oil above about 20 C with hair-film use, while the technical account describes a softer phase profile than whole coconut. This gives a positive less-structured-in-use counter-signal to the coconut-rich analogy; an intermediate film tendency is the working hypothesis, not a missing-evidence default. Light is close; cooler conditions could support rich.",
+        "evidence_ids": [
+          "HW028",
+          "HW029"
+        ],
+        "unresolved": "No comparative neat leave-on hair-heaviness endpoint. This is a weak family/temperature hypothesis: ordinary application can be liquid, colder lengths can differ, and grade/dose/spreading can support light or rich."
+      },
+      "identity_limits": "Exact Orbignya Oleifera identity only; not automatic Orbignya Speciosa/Attalea synonym expansion or babassu esters."
+    },
+    {
+      "id": "pomegranate_seed",
+      "canonical_inci": "PUNICA GRANATUM SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "That comparatively high measured material viscosity supports rich as a low-confidence coating/spreading estimate. Temperature, extraction/grade, and absent hair residue/volume testing keep medium plausible; no skin sensory claim decides this row.",
+        "evidence_ids": [
+          "HW030"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Seed oil only; exclude fruit extract, seed extract and modified derivatives."
+    },
+    {
+      "id": "camellia_oleifera",
+      "canonical_inci": "CAMELLIA OLEIFERA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Exact-species lightweight copy supports a light provisional finish, but the page gives no comparative hair residue or volume method and does not transfer to japonica.",
+        "evidence_ids": [
+          "HW031"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not alias Camellia Japonica Seed Oil, Camellia Sinensis Seed Oil or any leaf extract."
+    },
+    {
+      "id": "corn_germ",
+      "canonical_inci": "ZEA MAYS GERM OIL",
+      "aliases": [
+        "ZEA MAYS (CORN) GERM OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "The 25 C physical value supports a light rough tendency, not a hair result. Food versus cosmetic grade and the declaration bridge make medium the nearest alternative.",
+        "evidence_ids": [
+          "HW032"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Zea Mays Oil, Zea Mays Germ Extract, Zea Mays Oil Unsaponifiables."
+    },
+    {
+      "id": "corn_oil",
+      "canonical_inci": "ZEA MAYS OIL",
+      "aliases": [
+        "ZEA MAYS (CORN) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "The physical result supports light as a provisional hair-film/spreading estimate under the technical anchor. It is not a cosmetic-grade or hair measurement, so medium stays close.",
+        "evidence_ids": [
+          "HW032"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Zea Mays Germ Oil, Zea Mays Oil Unsaponifiables."
+    },
+    {
+      "id": "soybean",
+      "canonical_inci": "GLYCINE SOJA OIL",
+      "aliases": [
+        "GLYCINE SOJA (SOYBEAN) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "This supports a low-confidence light supplier prior. Its skin absorption text is excluded; there is no neat-oil hair residue/volume comparison.",
+        "evidence_ids": [
+          "HW033"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Hydrogenated Soybean Oil, Glycine Soja Sterols, Glycine Soja Oil Unsaponifiables."
+    },
+    {
+      "id": "sesame",
+      "canonical_inci": "SESAMUM INDICUM SEED OIL",
+      "aliases": [
+        "SESAMUM INDICUM (SESAME) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "reason": "A deliberate medium material-texture classification supports medium rather than a generic fallback. Viscosity alone is not hair heaviness, and the prewash directions cannot establish leave-on weight.",
+        "evidence_ids": [
+          "HW034"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Sesamum Indicum Seed Extract, Sesame Oil Unsaponifiables."
+    },
+    {
+      "id": "rice_bran",
+      "canonical_inci": "ORYZA SATIVA BRAN OIL",
+      "aliases": [
+        "ORYZA SATIVA (RICE) BRAN OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "This is the clearest direct hair-use non-weight claim in the lane, but remains a supplier assertion for one grade, without a controlled comparison.",
+        "evidence_ids": [
+          "HW035"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Oryza Sativa Germ Oil, Oryza Sativa Bran Wax, Oryza Sativa Bran Extract, Oryza Sativa Oil."
+    },
+    {
+      "id": "oat_kernel",
+      "canonical_inci": "AVENA SATIVA KERNEL OIL",
+      "aliases": [
+        "AVENA SATIVA (OAT) KERNEL OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Low viscosity supports a light tentative coating/spreading estimate. This applies to the documented specialty grade only; generic INCI cannot determine that grade, so medium remains plausible.",
+        "evidence_ids": [
+          "HW036"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Avena Sativa Kernel Extract, Avena Sativa Kernel Flour, Avena Sativa Kernel Lipids."
+    },
+    {
+      "id": "rapeseed_campestris",
+      "canonical_inci": "BRASSICA CAMPESTRIS SEED OIL",
+      "aliases": [
+        "BRASSICA CAMPESTRIS (RAPESEED) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Light is a cross-Brassica physical proxy for the exact Campestris INCI, not a synonym claim or hair measurement. Medium remains the nearest alternative because species/cultivar/grade are unresolved.",
+        "evidence_ids": [
+          "HW032"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Brassica Napus Seed Oil, Canola Oil, Hydrogenated Rapeseed Oil, Brassica Oleracea Italica Seed Oil."
+    },
+    {
+      "id": "rapeseed_napus",
+      "canonical_inci": "BRASSICA NAPUS SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Neat rapeseed in a same-method comparison flows close to sunflower. At equal modest application this supports a readily distributed thin hair coating and LIGHT tendency; no skin-absorption transfer. Exact Napus identity is separately confirmed.",
+        "evidence_ids": [
+          "HW037",
+          "HW014"
+        ],
+        "unresolved": "Study botanical species/grade not specified; cosmetic Napus and high-erucic grades may differ."
+      },
+      "identity_limits": "Do not match: Brassica Campestris Seed Oil, Canola Oil, Brassica Rapa Seed Oil, Hydrogenated Rapeseed Oil."
+    },
+    {
+      "id": "canola_declaration",
+      "canonical_inci": "CANOLA OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "RBD canola has a documented fluid liquid profile rather than castor-like thick flow. A thin distributed hair film at modest dose is a reasonable LIGHT engineering estimate, with MEDIUM credible; not a generic synonym of Napus/Campestris.",
+        "evidence_ids": [
+          "HW038",
+          "HW014"
+        ],
+        "unresolved": "30 C food-grade viscosity is not a room-temperature cosmetic hair test; ordinary intact canola only."
+      },
+      "identity_limits": "Do not match: Brassica Campestris Seed Oil, Brassica Napus Seed Oil, Hydrogenated Canola Oil, Canola Oil Unsaponifiables."
+    },
+    {
+      "id": "flax_linseed",
+      "canonical_inci": "LINUM USITATISSIMUM SEED OIL",
+      "aliases": [
+        "LINUM USITATISSIMUM (LINSEED) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Exact refined Linum oil supplier explicitly describes lightweight hair moisturization. Retain LIGHT as weak practical guidance for fresh unmodified cosmetic oil.",
+        "evidence_ids": [
+          "HW039"
+        ],
+        "unresolved": "No dose, hair type or comparative panel disclosed; cold-pressed grades may differ."
+      },
+      "identity_limits": "Do not match: Linum Usitatissimum Seed Extract, boiled linseed oil, polymerized linseed oil."
+    },
+    {
+      "id": "evening_primrose",
+      "canonical_inci": "OENOTHERA BIENNIS OIL",
+      "aliases": [
+        "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Cold-pressed exact-species oil measured 54.6 mPa.s at 20 C: fluid enough for thin distribution over hair at equal modest dose. This is positive physical support for LIGHT, not averaging conflicting skin claims into MEDIUM.",
+        "evidence_ids": [
+          "HW040"
+        ],
+        "unresolved": "Single supplier batch; remaining surface oil and strand clumping not measured; MEDIUM plausible."
+      },
+      "identity_limits": "Do not match: Oenothera Biennis Extract, Oenothera Biennis Flower Extract, Oenothera Biennis Seed Extract."
+    },
+    {
+      "id": "borage",
+      "canonical_inci": "BORAGO OFFICINALIS SEED OIL",
+      "aliases": [
+        "BORAGO OFFICINALIS (BORAGE) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Measured exact-species cold-pressed oil is low-viscosity (18.7 mPa.s at 20 C), favouring easy distribution and less concentrated film on hair. LIGHT is more defensible than RICH inferred from skin oiliness.",
+        "evidence_ids": [
+          "HW040"
+        ],
+        "unresolved": "Unusually low measured value is one supplier sample; do not claim all borage grades share it or infer evaporation/absorption."
+      },
+      "identity_limits": "Do not match: Borago Officinalis Extract, Borago Officinalis Seed Extract."
+    },
+    {
+      "id": "camelina",
+      "canonical_inci": "CAMELINA SATIVA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Manufacturer explicitly describes light nourishment without weighing down the hair fibre and suitability even for fine hair; small amounts on lengths support LIGHT practical tendency.",
+        "evidence_ids": [
+          "HW041"
+        ],
+        "unresolved": "Commercial advice includes mixing and very small dosage, so no equal-dose neat-oil validation."
+      },
+      "identity_limits": "Do not match: Camelina Sativa Seed Extract, hydrogenated or esterified camelina derivatives."
+    },
+    {
+      "id": "chia",
+      "canonical_inci": "SALVIA HISPANICA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Unmodified chia oil measured about 43 mPa.s at 20 C supplies a direct fluidity anchor. Thin distribution over strands is plausible at modest dose, favouring LIGHT without claiming rapid hair absorption.",
+        "evidence_ids": [
+          "HW042"
+        ],
+        "unresolved": "Material from an engineering study rather than cosmetic hair test; spreading on hair remains inferred."
+      },
+      "identity_limits": "Do not match: Salvia Hispanica Seed Extract, Salvia Hispanica Seed Butter."
+    },
+    {
+      "id": "blackcurrant",
+      "canonical_inci": "RIBES NIGRUM SEED OIL",
+      "aliases": [
+        "RIBES NIGRUM (BLACK CURRANT) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Primary physical study finds a mobile blackcurrant seed oil (~27 cSt at 40 C). Compared at the same temperature with typical seed oils, it supports a thin-film LIGHT tendency instead of interpreting its heavy odour as rich coating.",
+        "evidence_ids": [
+          "HW043"
+        ],
+        "unresolved": "Supercritical extraction and 40 C are imperfect proxies for cold-pressed/refined room-temperature cosmetic oil; MEDIUM plausible."
+      },
+      "identity_limits": "Do not match: Ribes Nigrum Fruit Extract, Ribes Nigrum Seed Extract."
+    },
+    {
+      "id": "sunflower_hybrid",
+      "canonical_inci": "HELIANTHUS ANNUUS HYBRID OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Exact Heess high-oleic grade may use either Seed Oil or Hybrid Oil declaration. Retain approved sunflower LIGHT tendency through this limited grade bridge and fluid triglyceride film rationale, with no universal alias or claim that every hybrid is identical.",
+        "evidence_ids": [
+          "HW044",
+          "HW001"
+        ],
+        "unresolved": "Hybrid cultivar and grade variation can shift residual coating; approved ordinary sunflower remains a separate entry."
+      },
+      "identity_limits": "Do not match: Helianthus Annuus Seed Oil, Helianthus Annuus Seed Cera."
+    },
+    {
+      "id": "macadamia_ternifolia",
+      "canonical_inci": "MACADAMIA TERNIFOLIA SEED OIL",
+      "aliases": [
+        "MACADAMIA TERNIFOLIA (MACADAMIA) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "reason": "Suggest MEDIUM coherently with the macadamia family: producer physical anchor of 80 mPa.s at 20 C predicts somewhat more persistent localized coating than lower-viscosity seeds, yet far below castor. Exact ternifolia hair styling use supports a manageable film. Species transfer is explicit, weak, and not synonymy.",
+        "evidence_ids": [
+          "HW015",
+          "HW045"
+        ],
+        "unresolved": "80 mPa.s is integrifolia/tetraphylla family data, not measured ternifolia; refined ternifolia could be LIGHT. Difference from integrifolia is not established."
+      },
+      "identity_limits": "Do not match: Macadamia Integrifolia Seed Oil, Macadamia Integrifolia/Tetraphylla Seed Oil, Ethyl Macadamiate."
+    },
+    {
+      "id": "macadamia_hybrid",
+      "canonical_inci": "MACADAMIA INTEGRIFOLIA/TETRAPHYLLA SEED OIL",
+      "aliases": [
+        "MACADAMIA INTEGRIFOLIA / TETRAPHYLLA SEED OIL",
+        "MACADAMIA INTEGRIFOLIA TETRAPHYLLA SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "reason": "MEDIUM is a material-led macadamia-family estimate: mechanically pressed integrifolia/tetraphylla oil has ~80 mPa.s at 20 C, while the exact hybrid supplier calls its refined oil low-viscosity. Together suggest a modest persistent lubricating film, not RICH. LIGHT remains close for refined grades.",
+        "evidence_ids": [
+          "HW015",
+          "HW046"
+        ],
+        "unresolved": "Producer says integrifolia and/or tetraphylla, not certified botanical hybrid; family inference only, and qualitative low viscosity conflicts with a strict boundary."
+      },
+      "identity_limits": "Do not match: Macadamia Integrifolia Seed Oil, Macadamia Ternifolia Seed Oil, Macadamia Tetraphylla Seed Oil."
+    },
+    {
+      "id": "cottonseed_hirsutum",
+      "canonical_inci": "GOSSYPIUM HIRSUTUM SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Measured neat cottonseed flows almost identically to sunflower under the same method (41.67 vs40.96 cSt at35 C). This supports sunflower-like thin distribution on hair and a LIGHT estimate, with exact Hirsutum identity kept separate.",
+        "evidence_ids": [
+          "HW014",
+          "HW047"
+        ],
+        "unresolved": "Study lacks species declaration; Hirsutum transfer is family-level inference and depends on refining/winterization."
+      },
+      "identity_limits": "Do not match: Gossypium Herbaceum Seed Oil, Hydrogenated Cottonseed Oil, Gossypium Hirsutum Seed Extract."
+    },
+    {
+      "id": "buriti",
+      "canonical_inci": "MAURITIA FLEXUOSA FRUIT OIL",
+      "aliases": [
+        "MAURITIA FLEXUOSA (BURITI) FRUIT OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Supplier hair-specific guidance recommends blending buriti with lighter jojoba to lighten the finish. That positive relative coating signal supports a RICH tendency for neat fruit-pulp oil at equal dose; MEDIUM is the nearest alternative, not a skin-richness conclusion.",
+        "evidence_ids": [
+          "HW048",
+          "HW049"
+        ],
+        "unresolved": "Uncontrolled supplier advice and grade variation; comparison establishes heavier than jojoba, not a validated RICH cutoff."
+      },
+      "identity_limits": "Do not match: Mauritia Flexuosa Seed Oil, buriti extracts, finished blends."
+    },
+    {
+      "id": "meadowfoam",
+      "canonical_inci": "LIMNANTHES ALBA SEED OIL",
+      "aliases": [
+        "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "reason": "Manufacturer viscosity of49.6 cSt at40 C supports a more persistent lubricant film than lower-viscosity seed anchors at the same temperature. MEDIUM is a positive material inference; replacing current LIGHT based only on skin slip. Silky feel can coexist with residual coating.",
+        "evidence_ids": [
+          "HW050",
+          "HW051"
+        ],
+        "unresolved": "No neat equal-dose hair sensory test; LIGHT remains plausible for well-distributed modest application."
+      },
+      "identity_limits": "Do not match: Hydrogenated Meadowfoam Seed Oil, meadowfoam estolides, dimethicone copolyol meadowfoamate, fermented meadowfoam oils."
+    },
+    {
+      "id": "rosehip_canina_fruit",
+      "canonical_inci": "ROSA CANINA FRUIT OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Exact Canina Fruit Oil declaration can identify seed-pressed grades, and producer documentation describes such rosehip oil as low-viscosity. This supports thin hair-film distribution and LIGHT as a weak supplied-grade inference, preserving the separate Fruit Oil identity.",
+        "evidence_ids": [
+          "HW052",
+          "HW053"
+        ],
+        "unresolved": "Source offers alternate rosehip declarations; no exact-batch hair test and no blanket transfer from Rubiginosa."
+      },
+      "identity_limits": "Do not match: Rosa Canina Seed Oil, Rosa Rubiginosa Seed Oil, Rosa Moschata Seed Oil, rose essential oil, rosehip extracts."
+    },
+    {
+      "id": "rosehip_rubiginosa_seed",
+      "canonical_inci": "ROSA RUBIGINOSA SEED OIL",
+      "aliases": [
+        "ROSA RUBIGINOSA (ROSE HIP) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Producer low-viscosity rosehip seed-oil description includes a Rubiginosa declaration; separate exact pure Rubiginosa product confirms intact seed-oil identity. Thin distributed coating makes LIGHT a reasonable weak tendency without invoking skin absorption.",
+        "evidence_ids": [
+          "HW052",
+          "HW054"
+        ],
+        "unresolved": "Producer writes Rosa aff. Rubiginosa and alternative Canina declaration; inference is family/supplied-grade, not exact species equivalence."
+      },
+      "identity_limits": "Do not match: Rosa Canina Fruit Oil, Rosa Canina Seed Oil, Rosa Moschata Seed Oil, rose essential oil."
+    },
+    {
+      "id": "rosehip_moschata_seed",
+      "canonical_inci": "ROSA MOSCHATA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Retain light as a weak rosehip-family distribution tendency, with medium close. Exact Moschata identity is confirmed but its heaviness is unmeasured. Being liquid alone does not establish light.",
+        "evidence_ids": [
+          "HW055",
+          "HW052"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Rosa Canina Fruit Oil, Rosa Canina Seed Oil, Rosa Rubiginosa Seed Oil, rose essential oil."
+    },
+    {
+      "id": "passionfruit",
+      "canonical_inci": "PASSIFLORA EDULIS SEED OIL",
+      "aliases": [
+        "PASSIFLORA EDULIS (PASSIONFRUIT) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "28 cSt liquid material plus exact hair guidance weakly support light; neither is a comparative hair trial.",
+        "evidence_ids": [
+          "HW056",
+          "HW057"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Passiflora Incarnata Seed Oil, passionflower extracts."
+    },
+    {
+      "id": "prickly_pear",
+      "canonical_inci": "OPUNTIA FICUS INDICA SEED OIL",
+      "aliases": [
+        "OPUNTIA FICUS INDICA (PRICKLY PEAR) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "The exact-species study measured 53.1 mPa s at 20 C. Relative to nearby light candidate physical anchors, light is the rough equal-dose film proposal; it is not a direct hair result.",
+        "evidence_ids": [
+          "HW058"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Opuntia Ficus-Indica Fruit Extract, flower macerates, cactus extracts."
+    },
+    {
+      "id": "tamanu",
+      "canonical_inci": "CALOPHYLLUM INOPHYLLUM SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Unrefined tamanu measured 98.667 mPa s before refining versus 42.9 mPa s after; this supports a rich crude-material tendency through spread/coverage mechanism. Refined material is a medium/light alternative, so the generic INCI remains low confidence.",
+        "evidence_ids": [
+          "HW059",
+          "HW060"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Calophyllum Tacamahaca Seed Oil, tamanu extracts, unresolved Calophyllum species."
+    },
+    {
+      "id": "brazil_nut",
+      "canonical_inci": "BERTHOLLETIA EXCELSA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Exact-oil studies report 32.5 mPa s at 25 C and 41.06–41.35 cSt at 40 C across different extraction/harvest protocols. These flow observations support a light working tendency; medium remains the explicit protocol/grade alternative.",
+        "evidence_ids": [
+          "HW061",
+          "HW062"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Brazil nut extracts, Nut Oil."
+    },
+    {
+      "id": "kukui",
+      "canonical_inci": "ALEURITES MOLUCCANUS SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Pure-oil hair-specific maker guidance supports a light working finish; medium material viscosity is the counter-signal. Skin absorption and merely being liquid are excluded.",
+        "evidence_ids": [
+          "HW063",
+          "HW064"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Aleurites Moluccana Nut Oil, Aleurites Moluccana Seed Oil, kukui extracts."
+    },
+    {
+      "id": "sacha_inchi",
+      "canonical_inci": "PLUKENETIA VOLUBILIS SEED OIL",
+      "aliases": [
+        "PLUKENETIA VOLUBILIS (SACHA INCHI) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "35.4 mPa s physical observation supports a tentative light equal-dose film hypothesis, not a hair sensory finding.",
+        "evidence_ids": [
+          "HW065"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: sacha inchi proteins, Plukenetia Volubilis Seed Extract."
+    },
+    {
+      "id": "plum",
+      "canonical_inci": "PRUNUS DOMESTICA SEED OIL",
+      "aliases": [
+        "PRUNUS DOMESTICA (PLUM) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Low-to-medium supplier viscosity does not establish a conservative middle bin: retain the same light/low candidate as the identical qualitative Sinensis range. Ingredient-specific hair guidance gives additional weak support for this choice. Medium remains credible; no neat-hair panel establishes either boundary.",
+        "evidence_ids": [
+          "HW066",
+          "HW067"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Prunus Domestica Fruit Extract, other Prunus oils."
+    },
+    {
+      "id": "raspberry",
+      "canonical_inci": "RUBUS IDAEUS SEED OIL",
+      "aliases": [
+        "RUBUS IDAEUS (RASPBERRY) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Exact oil physical study gives about 22.3 mPa s near body temperature, supporting a low-residual-film light hypothesis; extraction/temperature variability remains.",
+        "evidence_ids": [
+          "HW068"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Rubus Occidentalis Seed Oil, Rubus Idaeus Fruit Extract."
+    },
+    {
+      "id": "coffee",
+      "canonical_inci": "COFFEA ARABICA SEED OIL",
+      "aliases": [
+        "COFFEA ARABICA (COFFEE) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "reason": "Exact TDS calls it a slightly viscous liquid; medium is a qualitative physical working hypothesis, with light credible and roasted/green processing unresolved.",
+        "evidence_ids": [
+          "HW069"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Coffea Canephora Seed Oil, Coffea Arabica Seed Extract, coffee fragrance oils, coffee macerates."
+    },
+    {
+      "id": "cranberry",
+      "canonical_inci": "VACCINIUM MACROCARPON SEED OIL",
+      "aliases": [
+        "VACCINIUM MACROCARPON (CRANBERRY) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Exact cold-pressed producer specification gives 40–60 mPa s at 25 C. Relative to nearby nonvolatile light physical anchors, this supports a light working film estimate; medium remains credible across grades.",
+        "evidence_ids": [
+          "HW070"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Vaccinium Vitis-Idaea Seed Oil, Vaccinium Macrocarpon Fruit Extract."
+    },
+    {
+      "id": "camellia_sinensis",
+      "canonical_inci": "CAMELLIA SINENSIS SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Exact sinensis RBDW supplier describes light-to-medium viscosity; light is a weak working tendency and not an oleifera/japonica transfer.",
+        "evidence_ids": [
+          "HW071"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Camellia Oleifera Seed Oil, Camellia Japonica Seed Oil, Camellia Sinensis Leaf Extract, tea tree essential oil."
+    },
+    {
+      "id": "broccoli_seed",
+      "canonical_inci": "BRASSICA OLERACEA ITALICA SEED OIL",
+      "aliases": [
+        "BRASSICA OLERACEA ITALICA (BROCCOLI) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Exact pure-oil hair-specific supplier guidance supports light/low with medium plausible; the retailer-only claim is replaced with primary supplier sources.",
+        "evidence_ids": [
+          "HW072",
+          "HW073"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Not broccoli extract, other Brassica species, hydrogenated oil or copolymer."
+    },
+    {
+      "id": "peanut",
+      "canonical_inci": "ARACHIS HYPOGAEA OIL",
+      "aliases": [
+        "ARACHIS HYPOGAEA (PEANUT) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "reason": "The exact refined-oil specification gives 35.2 mPa s at 37 C, in the broad flow neighborhood of the medium macadamia producer example at 38 C. Use medium/low as a qualitative, condition-scoped distribution/coating hypothesis, with light close. Different methods/grades prevent a quantitative ranking; air aging is not the class-deciding signal.",
+        "evidence_ids": [
+          "HW074"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match peanut flour, extract, hydrogenated oil or a proprietary oil blend."
+    },
+    {
+      "id": "sea_buckthorn_fruit_seed",
+      "canonical_inci": "HIPPOPHAE RHAMNOIDES FRUIT/SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "nearest_alternative": null,
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "reason": "Identity is covered and researched. Neither ratio nor exact-composite flow/hair-feel evidence is available; seed-only light and fruit-only rich cannot determine the combined declaration. Retain unknown with the explicit light–rich range. Do not invent a medium average.",
+        "evidence_ids": [
+          "HW075"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Separate from fruit-only, seed-only, extracts and mixtures with other carriers."
+    },
+    {
+      "id": "sea_buckthorn_seed",
+      "canonical_inci": "HIPPOPHAE RHAMNOIDES SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Reported seed-oil flow supports a low-confidence light distribution tendency. The original table is recovered; missing temperature/method and cultivar/grade transfer limit the estimate. Fruit oil and combined fruit/seed remain separate.",
+        "evidence_ids": [
+          "HW076"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Not fruit/pulp oil, fruit/seed combination, Kernel Extract, or CO2 extract blend unless exact INCI independently reconciled."
+    },
+    {
+      "id": "cacay",
+      "canonical_inci": "CARYODENDRON ORINOCENSE SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium",
+          "light"
+        ],
+        "reason": "The user-supplied hairdresser sheet places Cacay in its bottom hair-weight group. Use rich/low as a provisional practice-based tendency under the approved addition; manufacturer data establish identity only.",
+        "evidence_ids": [
+          "SHEET20261002",
+          "CACAYTDS20261002"
+        ],
+        "counter_signal": [
+          "No comparative hair heaviness observation or material-flow measurement was recovered from the manufacturer TDS. The exact ordering against castor, coconut or Calendula is not established."
+        ],
+        "unresolved": "Practical sheet guidance only; no measured hair-weight class. Dose, grade and distribution may support lighter outcomes; medium and light remain alternatives."
+      },
+      "identity_limits": "Exact seed-oil declaration only. Do not match Cacay trade names, extracts, blends, derivatives or a different species/plant part as this neat fixed oil."
+    },
+    {
+      "id": "hazelnut_seed",
+      "canonical_inci": "CORYLUS AVELLANA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Two primary commercial sources give hair-specific lightness guidance; one explicitly positions its exact cold-pressed hazelnut seed oil for fine hair. Use a rough light tendency at modest comparable leave-on dose under OE33, without treating the positioning as a measured fit or sensory result.",
+        "evidence_ids": [
+          "HAZELNUTNATURALHEROES20261003",
+          "HAZELNUTAROMAZONEHAIR20261003"
+        ],
+        "counter_signal": [
+          "Neither source discloses a standardized hair-heaviness or retained-film comparison at equal application dose; medium remains plausible with different grade, dose or hair substrate."
+        ],
+        "unresolved": "No controlled comparative hair-weight endpoint was found in the bounded search. Grade, processing, applied dose, distribution and hair condition can affect the estimate; no precise oil ranking or automatic thickness eligibility."
+      },
+      "identity_limits": "Exact Corylus Avellana Seed Oil only. No new generic parenthetical alias. Do not match hazelnut trade names, seed extract, other species/plant parts, macerates, derivatives or finished blends. Product-specific display normalization remains a separate exact receipt."
+    },
+    {
+      "id": "coconut_fruit_oil_declaration",
+      "canonical_inci": "COCOS NUCIFERA FRUIT OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "Two own-maker declarations pair this exact Oil name with pure pressed coconut. Apply the existing whole-coconut rich/low tendency as an explicit source/material-family estimate under OE35; the new name does not imply a lighter oil. The relative coconut hair-greasiness benchmark supports the inherited rough tendency, without validating every grade.",
+        "evidence_ids": [
+          "COCONUTFRUITBIOPARK20261003",
+          "COCONUTFRUIT6BIOLOGICO20261003",
+          "HW001",
+          "HW010"
+        ],
+        "counter_signal": [
+          "No controlled hair-heaviness test was found for all materials bearing this exact declaration. Dose, grade, processing, temperature and distribution may support a medium interpretation; maker semisolid/skin descriptors alone do not choose rich."
+        ],
+        "unresolved": "Source-backed transfer from the existing whole-coconut tendency, not a universal regulatory/analytical equivalence. Physical batch, exact supplier grade and standardized comparative hair weight are unverified. Conflicting preparation evidence in a particular product still requires review."
+      },
+      "identity_limits": "Match only exact Cocos Nucifera Fruit Oil. No generic alias to Cocos Nucifera Oil and no parenthetical alias is added. Exclude Fruit Extract, juice/water, macerates, hydrogenated/modified derivatives and processed C8/C10 MCT. Conflicting supplier preparation evidence remains a product-specific review gap."
+    },
+    {
+      "id": "sunflower_oil_declaration",
+      "canonical_inci": "HELIANTHUS ANNUUS OIL",
+      "aliases": [
+        "HELIANTHUS ANNUUS (SUNFLOWER) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "reason": "The ingredient database explicitly describes the shorter Helianthus annuus oil wording as seed-derived sunflower oil. Transfer the existing approved sunflower light/low tendency as a source/material-family estimate; medium remains the alternative. Existing same-method flow evidence informs a distribution hypothesis on hair, not measured hair weight.",
+        "evidence_ids": [
+          "SUNFLOWEROILCOSMILE20261004",
+          "SUNFLOWEROILNLM20261004",
+          "HW014"
+        ],
+        "counter_signal": [
+          "Grade, processing, applied dose and retained coating may support medium. Neither this shorter declaration nor Seed Oil establishes the oleic grade or a measured neat-hair ranking."
+        ],
+        "unresolved": "The literal omission of Seed is resolved for these two exact spellings; supplier grade, extraction/refining, oleic composition and comparative hair feel are unverified. Conflicting material evidence in a specific product still requires review."
+      },
+      "identity_limits": "Match only Helianthus Annuus Oil and the listed exact parenthetical spelling. Keep the existing Seed Oil and Hybrid Oil entries distinct. No removal of plant-part/form words or generic synonym normalization. Exclude flower/leaf/stem/sprout/seed extracts, wax, butter, unsaponifiables and modified/hydrogenated derivatives. Do not infer high-oleic grade or all-batch equivalence."
+    }
+  ],
+  "matching_limits": "Trim and collapse whitespace, compare case-insensitively against only canonical_inci and listed aliases. Retain parentheses and plant-part/form words. A documented exact-product display normalization is a separate receipt, never a new generic alias."
+}

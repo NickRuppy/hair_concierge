@@ -1,0 +1,5 @@
+# Current source-only derivation v0.1.1
+
+The original frozen method and inputs retain their historical scope. Root’s explicit follow-up authorized a new controlled stage2 derivation with the same property semantics, replacing only unblinded-packet.json with unblinded-packet-v0.1.1.json and writing new lane final-records/final-notes-v0.1.1 files. Current five input reads: original method.md, blind-packet.json, blind-lexicon.json, corrected unblinded-packet-v0.1.1.json, canonical original blind-stage-seal.json. Own previous output reads are separately disclosed workflow state.
+
+Current source facts are source-packet-v0.1.1.json; source/identity corrections are documented in post-seal-source-amendment-v0.1.1.json. The initial nine input files and initial stage2 outputs remain immutable. Current manifests pin both historical inputs and revised source facts. Identity_unresolved heroes with no exact match are unknown, not absent; this applies the original requirement to review identity before absence. No classifier policy, weight or fit rule changes.

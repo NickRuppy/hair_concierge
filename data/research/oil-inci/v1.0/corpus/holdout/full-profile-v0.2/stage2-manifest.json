@@ -1,0 +1,5 @@
+{
+  "stage2-packet.json": "cc598f53fef053fa9d1c5749e07664ee687860b7be6dc3c058da300dee978d42",
+  "blind-seal.json": "1594f91171bee2c8d10d7838d37f8189973b6ded96cf94c04a7a682a48615ae8",
+  "scope": "Own sealed blind record, method/dictionary and controlled source packet only"
+}

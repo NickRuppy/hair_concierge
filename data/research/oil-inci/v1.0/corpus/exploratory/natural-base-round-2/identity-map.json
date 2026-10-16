@@ -1,0 +1,203 @@
+{
+  "scope": "excluded from blind classifier access",
+  "records": [
+    {
+      "case_id": "N01",
+      "neutral_id": "B03",
+      "material_id": "jojoba",
+      "exact_name": "Jojobaöl bio*",
+      "brand": "PRIMAVERA",
+      "market": "DE",
+      "size": "50 ml or 100 ml",
+      "cosmetic_scope": "Cosmetic skin-care base oil; benchmark_material_only.",
+      "canonical_material": "SIMMONDSIA CHINENSIS SEED OIL",
+      "raw_inci": "Simmondsia Chinensis (Jojoba) Seed Oil*",
+      "normalization_basis": "reviewed_declared_alias; organic footnote marker retained as annotation only",
+      "normalization_receipts": [],
+      "identity_status": "complete_exact_cosmetic_product",
+      "source_urls": [
+        "https://www.primaveralife.com/jojobaoel-bio.html"
+      ],
+      "conflicts": []
+    },
+    {
+      "case_id": "N02",
+      "neutral_id": "B08",
+      "material_id": "grapeseed",
+      "exact_name": "Huile de Pépins de Raisin",
+      "brand": "Aromat'easy",
+      "market": "FR/EU",
+      "size": "unspecified on accessed page",
+      "cosmetic_scope": "Cosmetic ingredient/carrier oil; benchmark_material_only.",
+      "canonical_material": "VITIS VINIFERA SEED OIL",
+      "raw_inci": "Vitis vinifera Seed Oil",
+      "normalization_basis": "reviewed_declared_alias; organic footnote marker retained as annotation only",
+      "normalization_receipts": [],
+      "identity_status": "complete_exact_cosmetic_product",
+      "source_urls": [
+        "https://www.aromateasy.net/fr/huiles-vegetales-et-macerats/12521-huile-de-pepins-de-raisinv16020.html"
+      ],
+      "conflicts": []
+    },
+    {
+      "case_id": "N03",
+      "neutral_id": "B06",
+      "material_id": "c8_c10_mct",
+      "exact_name": "Caprylis - Emollient",
+      "brand": "Aroma-Zone",
+      "market": "FR/EU",
+      "size": "250 ml",
+      "cosmetic_scope": "Cosmetic emollient/oily base; benchmark_material_only.",
+      "canonical_material": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+      "raw_inci": "Caprylic / capric triglycerides",
+      "normalization_basis": "exact-product display normalization from documented official CCT nomenclature; no generic plural alias",
+      "normalization_receipts": [
+        {
+          "case_id": "N03",
+          "raw_product_declaration": "Caprylic / capric triglycerides",
+          "reviewed_label_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+          "authority": "Commission Decision 2006/257/EC, common nomenclature inventory",
+          "authority_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32006D0257",
+          "source_quote": "CAPRYLIC/CAPRIC TRIGLYCERIDE ... Glycerides, mixed decanoyl and octanoyl.",
+          "scope_limit": "This receipt supports only the product page's plural display as the singular official CCT label name. It does not substitute whole coconut oil or infer composition beyond the product and nomenclature texts."
+        }
+      ],
+      "identity_status": "complete_exact_cosmetic_product",
+      "source_urls": [
+        "https://www.aroma-zone.com/info/fiche-technique/emollient-caprylis-aroma-zone"
+      ],
+      "conflicts": []
+    },
+    {
+      "case_id": "N04",
+      "neutral_id": "B05",
+      "material_id": "sweet_almond",
+      "exact_name": "Mandelöl bio*",
+      "brand": "PRIMAVERA",
+      "market": "DE",
+      "size": "50 ml or 100 ml",
+      "cosmetic_scope": "Cosmetic skin-care base oil; benchmark_material_only.",
+      "canonical_material": "PRUNUS AMYGDALUS DULCIS OIL",
+      "raw_inci": "Prunus Amygdalus Dulcis (Sweet Almond) Oil*",
+      "normalization_basis": "reviewed_declared_alias; organic footnote marker retained as annotation only",
+      "normalization_receipts": [],
+      "identity_status": "complete_exact_cosmetic_product",
+      "source_urls": [
+        "https://www.primaveralife.com/mandeloel-bio.html"
+      ],
+      "conflicts": []
+    },
+    {
+      "case_id": "N05",
+      "neutral_id": "B02",
+      "material_id": "apricot_kernel",
+      "exact_name": "Aprikosenkernöl bio*",
+      "brand": "PRIMAVERA",
+      "market": "DE",
+      "size": "100 ml",
+      "cosmetic_scope": "Cosmetic skin-care base oil; benchmark_material_only.",
+      "canonical_material": "PRUNUS ARMENIACA KERNEL OIL",
+      "raw_inci": "Prunus Armeniaca (Apricot) Kernel Oil*",
+      "normalization_basis": "reviewed_declared_alias; organic footnote marker retained as annotation only",
+      "normalization_receipts": [],
+      "identity_status": "complete_exact_cosmetic_product",
+      "source_urls": [
+        "https://www.primaveralife.com/aprikosenkernoel-bio.html?p=6"
+      ],
+      "conflicts": []
+    },
+    {
+      "case_id": "N06",
+      "neutral_id": "B07",
+      "material_id": "safflower",
+      "exact_name": "Huile végétale Bio CARTHAME",
+      "brand": "Karandja",
+      "market": "FR/EU",
+      "size": "unspecified on accessed page",
+      "cosmetic_scope": "Cosmetic vegetable oil; benchmark_material_only.",
+      "canonical_material": "CARTHAMUS TINCTORIUS SEED OIL",
+      "raw_inci": "Carthamus tinctorius Seed Oil*",
+      "normalization_basis": "reviewed_declared_alias; organic footnote marker retained as annotation only",
+      "normalization_receipts": [],
+      "identity_status": "complete_exact_cosmetic_product",
+      "source_urls": [
+        "https://www.karandja.com/huiles-vegetales-et-macerats-huileux-bio/146-huile-vegetale-bio-carthame.html"
+      ],
+      "conflicts": []
+    },
+    {
+      "case_id": "N07",
+      "neutral_id": "B01",
+      "material_id": "castor",
+      "exact_name": "Huile de Ricin Bio - 100 ml",
+      "brand": "Alepia",
+      "market": "FR/EU",
+      "size": "100 ml",
+      "cosmetic_scope": "Cosmetic carrier oil with hair-use directions; benchmark_material_only.",
+      "canonical_material": "RICINUS COMMUNIS SEED OIL",
+      "raw_inci": "Ricinus Communis (Castor) Seed Oil",
+      "normalization_basis": "reviewed_declared_alias; organic footnote marker retained as annotation only",
+      "normalization_receipts": [],
+      "identity_status": "complete_exact_cosmetic_product",
+      "source_urls": [
+        "https://alepia.com/fr/huiles/66-huile-de-ricin-bio-30-ml.html"
+      ],
+      "conflicts": [
+        {
+          "kind": "prior_source_inci_specificity",
+          "prior_source": {
+            "brand": "Naissance",
+            "exact_name": "Olio di Ricino - Olio Vegetale (N° 217)",
+            "url": "https://eu.naissance.com/it/products/olio-di-ricino-olio-vegetale",
+            "raw_inci": "Ricinus Communis",
+            "accessed_at": "2026-10-02"
+          },
+          "detail": "Prior candidate had an underspecified official display without `Seed Oil`; it is retained as provenance only and is not used for the blind input."
+        }
+      ]
+    },
+    {
+      "case_id": "N08",
+      "neutral_id": "B04",
+      "material_id": "coconut_whole",
+      "exact_name": "Organic Coconut Oil",
+      "brand": "Biopark Cosmetics",
+      "market": "DE",
+      "size": "100 ml",
+      "cosmetic_scope": "Cosmetic hair/skin oil; benchmark_material_only.",
+      "canonical_material": "COCOS NUCIFERA OIL",
+      "raw_inci": "Cocos Nucifera Fruit Oil",
+      "normalization_basis": "source-reconciled whole coconut identity for this declaration; Fruit Oil is not admitted as a generic alias",
+      "normalization_receipts": [
+        {
+          "case_id": "N08",
+          "raw_product_declaration": "Cocos Nucifera Fruit Oil",
+          "reviewed_context": "exact manufacturer identifies the same 100 ml cosmetic product as cold-pressed, unrefined coconut oil",
+          "authority": "Biopark Cosmetics exact product page",
+          "authority_url": "https://biopark-cosmetics.com/products/organic-coconut-oil-100ml",
+          "source_quote": "Cold-pressed, unrefined coconut oil ... Composition: Cocos Nucifera Fruit Oil, from organic production.",
+          "scope_limit": "The mapping is limited to this named Biopark product and this manufacturer evidence. It does not create a generic Fruit Oil alias or merge the separate retailer display."
+        }
+      ],
+      "identity_status": "complete_reused_round1_exact_cosmetic_product",
+      "source_urls": [
+        "https://biopark-cosmetics.com/products/organic-coconut-oil-100ml",
+        "https://www.ecco-verde.de/biopark-cosmetics/coconut-oil"
+      ],
+      "conflicts": [
+        {
+          "kind": "ingredient_display_specificity",
+          "detail": "Round 1 retains a retailer display `Cocos Nucifera (Coconut)` beside the manufacturer's `Cocos Nucifera Fruit Oil`; this record preserves the manufacturer declaration as raw INCI and does not merge them."
+        }
+      ]
+    }
+  ],
+  "hypothetical_ids": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06"
+  ]
+}

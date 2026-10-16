@@ -1,0 +1,68 @@
+{
+  "artifact": "oil-inci-full-profile-holdout-source-selection-registration",
+  "version": "v0.1",
+  "registered_at": "2026-10-09",
+  "status": "frozen-before-source-collection",
+  "purpose": "Ordered source-collection candidates only. This file contains neither formula properties nor target classes.",
+  "admission_rule": "Select the first source-complete, exact-product declaration in each slot after duplicate and prior-corpus exclusion. A completed product must have a manufacturer source for its exact, coherent market formula and retained leave-on hair-use evidence. Do not merge formulations, packs, or markets.",
+  "slots": [
+    {
+      "slot": "volatile_mobile_oil_spray",
+      "candidates_in_order": [
+        "Bumble and bumble Hairdresser's Invisible Oil Dry Oil Finishing Spray",
+        "Moroccanoil Dry Body Oil Fragrance Originale",
+        "Kérastase Elixir Ultime L'Huile Originale"
+      ]
+    },
+    {
+      "slot": "silicone_led_non_spray",
+      "candidates_in_order": [
+        "L'Oréal Professionnel Mythic Oil Original Oil",
+        "Wella Professionals Ultimate Smooth Miracle Oil Serum",
+        "Kérastase Elixir Ultime L'Huile Originale"
+      ]
+    },
+    {
+      "slot": "ester_or_alkane_led_fluid",
+      "candidates_in_order": [
+        "Briogeo Farewell Frizz Rosehip, Argan & Coconut Oil Blend",
+        "Verb Ghost Oil",
+        "JVN Complete Nourishing Shine Drops"
+      ]
+    },
+    {
+      "slot": "botanical_oil_blend",
+      "candidates_in_order": [
+        "Sachajuan Intensive Hair Oil",
+        "Briogeo Farewell Frizz Rosehip, Argan & Coconut Oil Blend",
+        "Davines OI Oil"
+      ]
+    },
+    {
+      "slot": "structured_conditioning_or_film_challenge",
+      "candidates_in_order": [
+        "Davines OI Oil",
+        "Wella Professionals Ultimate Smooth Miracle Oil Serum",
+        "Kérastase Elixir Ultime L'Huile Originale"
+      ]
+    },
+    {
+      "slot": "aqueous_or_biphasic_oil_labelled_hair_product",
+      "candidates_in_order": [
+        "Davines SU Hair Milk",
+        "Kérastase Soleil Huile Sirène Bi-Phase Oil Mist",
+        "Bumble and bumble Hairdresser's Invisible Oil Heat/UV Protective Primer"
+      ]
+    }
+  ],
+  "known_exclusions_before_collection": [
+    {
+      "scope": "all prior finished formulas, material-only records, and hypothetical declarations",
+      "reason": "The plan requires exact-formula novelty after normalized name/alias and formula checks; the corpus audit will be recorded per admitted or rejected candidate."
+    },
+    {
+      "scope": "pure materials",
+      "reason": "The holdout accepts complete marketed hair-product declarations only."
+    }
+  ]
+}

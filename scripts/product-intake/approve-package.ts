@@ -1,3 +1,8 @@
+import {
+  extractOilPropertyScope,
+  oilReviewFingerprint,
+} from "../../packages/product-intake-core/src/oil-review-binding"
+import { validateProductIntakeApprovalPayload } from "@/lib/product-intake/category-validators"
 import { basename, resolve } from "node:path"
 import { readFile } from "node:fs/promises"
 
@@ -213,6 +218,79 @@ export async function approveResearchPackage(params: {
   const pack = await readResearchPackage(params.packageDir)
   const supabase = deps.createSupabaseClient()
   const submission = await deps.loadSubmissionById(supabase, pack.submissionId)
+  if (submission.category === "oil") {
+    const incoming = researchedPayloadWithFinalImageMetadata(pack)
+    const current = submission.researched_payload as Record<string, unknown> | null
+    if (!current || typeof current !== "object" || Array.isArray(current))
+      throw new Error(
+        "Oil current payload is missing; export the current intake before publication",
+      )
+    const incomingBinding = (incoming.draft as Record<string, unknown> | undefined)
+      ?.oil_research_binding
+    const currentBinding = (current.draft as Record<string, unknown> | undefined)
+      ?.oil_research_binding
+    if (
+      !incomingBinding ||
+      typeof incomingBinding !== "object" ||
+      Array.isArray(incomingBinding) ||
+      !currentBinding ||
+      typeof currentBinding !== "object" ||
+      Array.isArray(currentBinding)
+    )
+      throw new Error("Oil current or package research binding is missing")
+    if (
+      oilReviewFingerprint(extractOilPropertyScope(incoming.final)) !==
+        oilReviewFingerprint(extractOilPropertyScope(current.final)) ||
+      oilReviewFingerprint(incomingBinding) !== oilReviewFingerprint(currentBinding)
+    ) {
+      throw new Error(
+        "Oil package is stale; rework and review the current intake before publication",
+      )
+    }
+    const { data: artifact, error: imageError } = await supabase
+      .from("product_intake_research_artifacts")
+      .select("payload")
+      .eq("submission_id", submission.id)
+      .eq("kind", "processed_image")
+      .order("created_at", { ascending: false })
+      .order("id", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    if (imageError) throw imageError
+    const image = artifact?.payload as Record<string, unknown> | undefined
+    const decision = pack.imageFinalization as Record<string, unknown> | null
+    if (!image || !decision || decision.status !== "approved_asset")
+      throw new Error("Current oil processed image and approved package image required")
+    for (const [packageKey, artifactKey] of [
+      ["public_url", "planned_public_url"],
+      ["asset_sha256", "asset_sha256"],
+      ["thumbnail_public_url", "thumbnail_public_url"],
+      ["thumbnail_asset_sha256", "thumbnail_asset_sha256"],
+    ]) {
+      if (
+        typeof image[artifactKey] !== "string" ||
+        !image[artifactKey] ||
+        decision[packageKey] !== image[artifactKey]
+      )
+        throw new Error("Oil package image differs from the current reviewed artifact")
+    }
+    const product = (incoming.final as Record<string, unknown>).product as Record<string, unknown>
+    product.image_url = image.planned_public_url
+    product.canonical_image_sha256 = image.asset_sha256
+    product.thumbnail_image_url = image.thumbnail_public_url
+    // Rebuild all local validation/dry-run inputs from the reviewed image, while
+    // preserving the authoritative persisted payload and property binding.
+    pack.researchedPayload = incoming
+    const validation = validateProductIntakeApprovalPayload(incoming)
+    if (!validation.ok) throw new Error("Oil package validation failed")
+    const { error } = await supabase.rpc("product_intake_oil_publication_preflight", {
+      p_submission_id: submission.id,
+      p_final_payload: validation.normalizedPayload.final,
+      p_spec_operations: validation.targetSpecOperations,
+    })
+    if (error) throw error
+  }
+
   const dryRun = buildApprovePackageDryRun({
     pack,
     submission,
@@ -245,12 +323,15 @@ export async function approveResearchPackage(params: {
     confirm: true,
   })
   const approvalPayload = researchedPayloadWithFinalImageMetadata(pack)
-  const researchSave = await deps.savePayload({
-    supabase,
-    submission,
-    researchedPayload: approvalPayload,
-    markReady: true,
-  })
+  const researchSave =
+    submission.category === "oil"
+      ? { next_status: dryRun.research_save.next_status, dry_run: dryRun.research_save.dry_run }
+      : await deps.savePayload({
+          supabase,
+          submission,
+          researchedPayload: approvalPayload,
+          markReady: true,
+        })
   const approval = await deps.approveById({
     submissionId: pack.submissionId,
     reviewedBy: params.reviewedBy,

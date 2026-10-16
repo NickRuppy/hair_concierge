@@ -1,0 +1,1561 @@
+{
+  "run_id": "oil-targeted-coverage-v0.1",
+  "lane_id": "b",
+  "records": [
+    {
+      "case_id": "T01",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "AQUA/WATER",
+          "canonical_name": "AQUA/WATER",
+          "dictionary_roles": [
+            "aqueous_vehicle"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Leading aqueous vehicle with alcohol solvent, humectant and pH-adjustment support establishes a credible aqueous component of the vehicle.",
+          "ambiguity": "Phase arrangement and amount are not established."
+        },
+        {
+          "rank": 2,
+          "raw_name": "DICAPRYLYL CARBONATE",
+          "canonical_name": "DICAPRYLYL CARBONATE",
+          "dictionary_roles": [
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Early emollient participates in the synthetic distributing/conditioning backbone alongside dibutyl adipate and dicaprylyl ether.",
+          "ambiguity": "No exact grade, sensory measurement or quantitative share."
+        },
+        {
+          "rank": 3,
+          "raw_name": "ALCOHOL",
+          "canonical_name": "ALCOHOL",
+          "dictionary_roles": [
+            "solvent_alcohol"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Alcohol solvent is part of the early aqueous/emollient vehicle rather than a suffix auxiliary.",
+          "ambiguity": "Amount and evaporation in the complete application are not measured."
+        },
+        {
+          "rank": 4,
+          "raw_name": "DIBUTYL ADIPATE",
+          "canonical_name": "DIBUTYL ADIPATE",
+          "dictionary_roles": [
+            "defined_ester_emollient",
+            "solvent"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Defined ester emollient and solvent jointly supplies the synthetic vehicle and retained emollient system.",
+          "ambiguity": "No amount or finished-film measurement."
+        },
+        {
+          "rank": 5,
+          "raw_name": "DICAPRYLYL ETHER",
+          "canonical_name": "DICAPRYLYL ETHER",
+          "dictionary_roles": [
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Early emollient reinforces the non-botanical emollient system.",
+          "ambiguity": "Mobility and sensory contribution are qualitative whole-system judgments, not a measured grade."
+        },
+        {
+          "rank": 6,
+          "raw_name": "BRASSICA CAMPESTRIS (RAPESEED) SEED OIL",
+          "canonical_name": "BRASSICA CAMPESTRIS SEED OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Intact rapeseed oil contributes retained botanical conditioning within the aqueous/synthetic-emollient architecture.",
+          "ambiguity": "Not omitted from oil inventory; exact contribution and grade are unquantified."
+        },
+        {
+          "rank": 7,
+          "raw_name": "COCO-CAPRYLATE/CAPRATE",
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+          "dictionary_roles": [
+            "defined_ester_emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Defined ester extends the coherent synthetic emollient system rather than establishing a coconut fixed-oil carrier.",
+          "ambiguity": "Do not transfer intact coconut priors or penetration evidence."
+        },
+        {
+          "rank": 8,
+          "raw_name": "ETHYLHEXYL TRIAZONE",
+          "canonical_name": "ETHYLHEXYL TRIAZONE",
+          "dictionary_roles": [
+            "recognized_uv_filter"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized UV-filter function is ancillary to the carrier architecture.",
+          "ambiguity": "Presence does not establish a finished-product UV claim or negligible retained contribution."
+        },
+        {
+          "rank": 9,
+          "raw_name": "DIETHYLAMINO HYDROXYBENZOYL HEXYL BENZOATE",
+          "canonical_name": "DIETHYLAMINO HYDROXYBENZOYL HEXYL BENZOATE",
+          "dictionary_roles": [
+            "recognized_uv_filter"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized UV-filter function accompanies the vehicle rather than supplying an admitted conditioning backbone.",
+          "ambiguity": "No finished-product UV claim or retained-film amount established."
+        },
+        {
+          "rank": 10,
+          "raw_name": "PARFUM/FRAGRANCE",
+          "canonical_name": "PARFUM/FRAGRANCE",
+          "dictionary_roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 11,
+          "raw_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL",
+          "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Intact jojoba oil is a retained conditioning contributor; retained as an oil despite surrounding auxiliaries.",
+          "ambiguity": "No trace inference or concentration boundary."
+        },
+        {
+          "rank": 12,
+          "raw_name": "SODIUM CHLORIDE",
+          "canonical_name": "SODIUM CHLORIDE",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The permitted dictionary retains the literal identity but does not assess its formulation function; no carrier, negligible-residue or conditioning-film role is invented.",
+          "ambiguity": "Literal inorganic salt identity retained. Formulation function and impact are not assessed; do not infer film, low residue or concentration."
+        },
+        {
+          "rank": 13,
+          "raw_name": "COCOS NUCIFERA (COCONUT) OIL",
+          "canonical_name": "COCOS NUCIFERA OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Intact coconut oil contributes a botanical lipid/penetration counter-signal within the broader emollient vehicle.",
+          "ambiguity": "Ordinary dose, temperature and blend delivery differ from the admitted neat-oil study."
+        },
+        {
+          "rank": 14,
+          "raw_name": "PANTHENOL",
+          "canonical_name": "PANTHENOL",
+          "dictionary_roles": [
+            "humectant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Reviewed humectant supports the aqueous formulation without establishing a principal lipid or conditioning-film backbone.",
+          "ambiguity": "Contribution is not quantified and is not assumed absent."
+        },
+        {
+          "rank": 15,
+          "raw_name": "FRUCTOOLIGOSACCHARIDES",
+          "canonical_name": "FRUCTOOLIGOSACCHARIDES",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The permitted dictionary retains the literal identity but does not assess its formulation function; no carrier, negligible-residue or conditioning-film role is invented.",
+          "ambiguity": "Literal exact identity retained; qualitative cosmetic function is not assessed here. No carrier, film, volatility, low-residue, essential-oil or active-botanical inference."
+        },
+        {
+          "rank": 16,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL",
+          "dictionary_roles": [
+            "antioxidant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Reviewed antioxidant function is ancillary to the established carriers.",
+          "ambiguity": "No amount or measured finished-film behavior."
+        },
+        {
+          "rank": 17,
+          "raw_name": "INULIN",
+          "canonical_name": "INULIN",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The permitted dictionary retains the literal identity but does not assess its formulation function; no carrier, negligible-residue or conditioning-film role is invented.",
+          "ambiguity": "Literal exact identity retained; qualitative cosmetic function is not assessed here. No carrier, film, volatility, low-residue, essential-oil or active-botanical inference."
+        },
+        {
+          "rank": 18,
+          "raw_name": "CITRIC ACID",
+          "canonical_name": "CITRIC ACID",
+          "dictionary_roles": [
+            "acid",
+            "ph_adjustment_clue"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Reviewed acid and pH-adjustment clue supports formulation adjustment.",
+          "ambiguity": "Actual pH and amount are not known."
+        },
+        {
+          "rank": 19,
+          "raw_name": "PANTOLACTONE",
+          "canonical_name": "PANTOLACTONE",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The permitted dictionary retains the literal identity but does not assess its formulation function; no carrier, negligible-residue or conditioning-film role is invented.",
+          "ambiguity": "Literal exact identity retained; qualitative cosmetic function is not assessed here. No carrier, film, volatility, low-residue, essential-oil or active-botanical inference."
+        },
+        {
+          "rank": 20,
+          "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 21,
+          "raw_name": "CITRUS AURANTIUM PEEL OIL",
+          "canonical_name": "CITRUS AURANTIUM PEEL OIL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen",
+            "essential_oil"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 22,
+          "raw_name": "LINALYL ACETATE",
+          "canonical_name": "LINALYL ACETATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 23,
+          "raw_name": "LIMONENE",
+          "canonical_name": "LIMONENE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 24,
+          "raw_name": "LINALOOL",
+          "canonical_name": "LINALOOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 25,
+          "raw_name": "CITRONELLOL",
+          "canonical_name": "CITRONELLOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 26,
+          "raw_name": "DIMETHYL PHENETHYL ACETATE",
+          "canonical_name": "DIMETHYL PHENETHYL ACETATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 27,
+          "raw_name": "GERANIOL",
+          "canonical_name": "GERANIOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 28,
+          "raw_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+          "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+          "dictionary_roles": [
+            "aromatic_auxiliary"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 29,
+          "raw_name": "ISOEUGENYL ACETATE",
+          "canonical_name": "ISOEUGENYL ACETATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        }
+      ],
+      "auxiliary_suffix": {
+        "status": "no_boundary",
+        "start_rank": "none",
+        "markers": [],
+        "reason": "No valid boundary. Unassessed ranks 12, 15, 17 and 19 prevent earlier suffixes; after rank 19 only the aromatic/fragrance function remains, so several allergens do not provide two independent auxiliary functions. Botanical oils at 6, 11 and 13 retain their established secondary roles."
+      },
+      "base": {
+        "value": "water_based",
+        "estimate": true,
+        "confidence": "moderate",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "AQUA/WATER"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "DICAPRYLYL CARBONATE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "ALCOHOL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "DIBUTYL ADIPATE"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "DICAPRYLYL ETHER"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "COCO-CAPRYLATE/CAPRATE"
+          },
+          {
+            "rank": 14,
+            "canonical_name": "PANTHENOL"
+          },
+          {
+            "rank": 18,
+            "canonical_name": "CITRIC ACID"
+          }
+        ],
+        "counter_signal": [
+          "The synthetic emollient vehicle and intact oils at 6, 11 and 13 are substantive competing carrier clues; water rank alone would be insufficient."
+        ],
+        "nearest_alternative": "ester_alkane_led",
+        "reason": "Leading water together with alcohol solvent and aqueous humectant/pH-adjustment support gives a credible aqueous architecture. The full synthetic-emollient/oil system is acknowledged, but it does not eliminate this aqueous vehicle; no unsupported joint-backbone hybrid rule is used.",
+        "unresolved": [
+          "Phase arrangement, quantities and unassessed functions at 12, 15, 17 and 19 remain unknown."
+        ]
+      },
+      "weight": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "AQUA/WATER"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "DICAPRYLYL CARBONATE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "ALCOHOL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "DIBUTYL ADIPATE"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "DICAPRYLYL ETHER"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "BRASSICA CAMPESTRIS SEED OIL"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "COCO-CAPRYLATE/CAPRATE"
+          },
+          {
+            "rank": 11,
+            "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+          },
+          {
+            "rank": 13,
+            "canonical_name": "COCOS NUCIFERA OIL"
+          },
+          {
+            "rank": 14,
+            "canonical_name": "PANTHENOL"
+          }
+        ],
+        "counter_signal": [
+          "Nonvolatile emollients and fixed oils remain after distribution; coconut has a rich/low material tendency and is a meaningful medium counter-signal.",
+          "Unassessed ingredients are not evidence of negligible retained mass."
+        ],
+        "nearest_alternative": "medium",
+        "reason": "B0/B1 and B4 favor light from the coherent solvent/distributing synthetic-emollient architecture with light-tendency rapeseed and jojoba contributors. The secondary coconut contribution supports medium as the strongest rival, but does not establish a principal rich or structured residual system under B6. Water itself is not mapped to light.",
+        "unresolved": [
+          "Unknown proportions, emollient grades, temperature and unresolved formulation roles; no equal-dose hair sensory data."
+        ]
+      },
+      "penetration_potential": {
+        "value": "surface_led",
+        "estimate": true,
+        "confidence": "moderate",
+        "evidence": [
+          {
+            "rank": 2,
+            "canonical_name": "DICAPRYLYL CARBONATE"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "DIBUTYL ADIPATE"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "DICAPRYLYL ETHER"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "BRASSICA CAMPESTRIS SEED OIL"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "COCO-CAPRYLATE/CAPRATE"
+          },
+          {
+            "rank": 11,
+            "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+          },
+          {
+            "rank": 13,
+            "canonical_name": "COCOS NUCIFERA OIL"
+          }
+        ],
+        "counter_signal": [
+          "Rank 13 is an admitted exact-form coconut penetration anchor."
+        ],
+        "nearest_alternative": "penetration_potential",
+        "reason": "The coherent synthetic-emollient surface-conditioning system supplies the principal conditioning architecture; coconut is a secondary fixed oil, so its positive evidence does not establish a principal penetrating plant-oil backbone. This is an architecture judgment, not a negative inference from unstudied ingredients.",
+        "unresolved": [
+          "The coconut study used 1 g oil/g hair for 24 h at 40 C; blend delivery and ordinary leave-on use cannot be equated with that experiment."
+        ]
+      },
+      "persistence_potential": "moderate",
+      "ingredient_flags": {
+        "silicones": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Every ingredient has a reviewed exclusion for this family and there is no recognized exact match; no substring or function-based expansion was used.",
+          "unresolved": []
+        },
+        "mineral_oil": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Every ingredient has a reviewed exclusion for this family and there is no recognized exact match; no substring or function-based expansion was used.",
+          "unresolved": []
+        },
+        "drying_alcohol": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 3,
+              "canonical_name": "ALCOHOL"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": false,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Evidence includes every exact positive rank; this is an ingredient-presence fact, not tolerance, efficacy or application permission.",
+          "unresolved": []
+        },
+        "fragrance": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 10,
+              "canonical_name": "PARFUM/FRAGRANCE"
+            },
+            {
+              "rank": 20,
+              "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+            },
+            {
+              "rank": 21,
+              "canonical_name": "CITRUS AURANTIUM PEEL OIL"
+            },
+            {
+              "rank": 22,
+              "canonical_name": "LINALYL ACETATE"
+            },
+            {
+              "rank": 23,
+              "canonical_name": "LIMONENE"
+            },
+            {
+              "rank": 24,
+              "canonical_name": "LINALOOL"
+            },
+            {
+              "rank": 25,
+              "canonical_name": "CITRONELLOL"
+            },
+            {
+              "rank": 26,
+              "canonical_name": "DIMETHYL PHENETHYL ACETATE"
+            },
+            {
+              "rank": 27,
+              "canonical_name": "GERANIOL"
+            },
+            {
+              "rank": 28,
+              "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL"
+            },
+            {
+              "rank": 29,
+              "canonical_name": "ISOEUGENYL ACETATE"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": false,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Evidence includes every exact positive rank; this is an ingredient-presence fact, not tolerance, efficacy or application permission.",
+          "unresolved": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Every ingredient has a reviewed exclusion for this family and there is no recognized exact match; no substring or function-based expansion was used.",
+          "unresolved": []
+        }
+      }
+    },
+    {
+      "case_id": "T02",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE",
+          "dictionary_roles": [
+            "silicone_carrier",
+            "conditioning_film"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Leading silicone carrier with admitted conditioning-film function supplies the main conditioning backbone.",
+          "ambiguity": "Dimethicone grade, viscosity and amount are unspecified."
+        },
+        {
+          "rank": 2,
+          "raw_name": "Isododecane",
+          "canonical_name": "ISODODECANE",
+          "dictionary_roles": [
+            "hydrocarbon_carrier",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Hydrocarbon carrier distributes the silicone/emollient system and contributes to its mobile vehicle.",
+          "ambiguity": "No quantified carrier share or application evaporation measurement."
+        },
+        {
+          "rank": 3,
+          "raw_name": "C12-15 Alkyl Benzoate",
+          "canonical_name": "C12-15 ALKYL BENZOATE",
+          "dictionary_roles": [
+            "defined_ester_emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Defined ester emollient participates in the distributing vehicle and retained emollient coating.",
+          "ambiguity": "Amount and sensory contribution unknown."
+        },
+        {
+          "rank": 4,
+          "raw_name": "Argania Kernel Oil",
+          "canonical_name": "ARGANIA KERNEL OIL",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The permitted dictionary retains the literal identity but does not assess its formulation function; no carrier, negligible-residue or conditioning-film role is invented.",
+          "ambiguity": "Species-incomplete literal declaration. Do not alias to Argania Spinosa Kernel Oil or transfer an oil weight/penetration prior. Secondary contribution remains unresolved; review decisive-identity impact under the method."
+        },
+        {
+          "rank": 5,
+          "raw_name": "Phenyl Trimethicone",
+          "canonical_name": "PHENYL TRIMETHICONE",
+          "dictionary_roles": [
+            "silicone_carrier",
+            "conditioning_film"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Additional silicone carrier/conditioning film reinforces the principal dimethicone system.",
+          "ambiguity": "Not assumed trace; exact grade and share unknown."
+        },
+        {
+          "rank": 6,
+          "raw_name": "Fragrance (Parfum)",
+          "canonical_name": "FRAGRANCE (PARFUM)",
+          "dictionary_roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        }
+      ],
+      "auxiliary_suffix": {
+        "status": "no_boundary",
+        "start_rank": "none",
+        "markers": [],
+        "reason": "No valid boundary. The unresolved rank 4 and conditioning silicone at 5 prevent an earlier suffix; fragrance at 6 alone supplies only one auxiliary function."
+      },
+      "base": {
+        "value": "silicone_led",
+        "estimate": true,
+        "confidence": "moderate",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "PHENYL TRIMETHICONE"
+          }
+        ],
+        "counter_signal": [
+          "Isododecane and alkyl benzoate provide a coherent mobile distribution system.",
+          "Rank 4 species-incomplete oil wording has no admitted fixed-oil alias or transferred prior."
+        ],
+        "nearest_alternative": "hybrid",
+        "reason": "The principal dimethicone carrier/film is reinforced by phenyl trimethicone, making silicone-led conditioning the best backbone reading across the whole formula. The hydrocarbon/ester distribution system is substantive but does not by itself prove a jointly determining hybrid architecture.",
+        "unresolved": [
+          "Dimethicone grade, amounts and the exact secondary identity/contribution at rank 4 are unresolved."
+        ]
+      },
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "PHENYL TRIMETHICONE"
+          }
+        ],
+        "counter_signal": [
+          "The hydrocarbon/ester distribution system supports a lighter outcome.",
+          "Unspecified dimethicone grade could shift sensory load; no gum/wax-rich architecture is established."
+        ],
+        "nearest_alternative": "light",
+        "reason": "B5 favors medium because a principal conditioning silicone system persists alongside mobile hydrocarbon/ester carriers. Light remains credible if distribution produces a smaller coating, while B6 rich lacks an affirmative structured-film argument. No argan prior is assigned to the incomplete rank-4 declaration.",
+        "unresolved": [
+          "Dimethicone viscosity/grade, proportions, application amount and rank-4 identity/contribution are unverified."
+        ]
+      },
+      "penetration_potential": {
+        "value": "surface_led",
+        "estimate": true,
+        "confidence": "moderate",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "PHENYL TRIMETHICONE"
+          }
+        ],
+        "counter_signal": [
+          "The literal rank-4 oil identity and contribution are unresolved; it is not silently mapped to a studied botanical."
+        ],
+        "nearest_alternative": "unknown",
+        "reason": "Admitted silicone conditioning-film and ester-emollient functions positively describe a surface-conditioning backbone. The judgment does not claim that all silicones cannot penetrate, and does not treat missing studies as negative evidence.",
+        "unresolved": [
+          "Exact finished-formula penetration is untested and rank 4 remains an exact-identity limitation."
+        ]
+      },
+      "persistence_potential": "moderate",
+      "ingredient_flags": {
+        "silicones": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 1,
+              "canonical_name": "DIMETHICONE"
+            },
+            {
+              "rank": 5,
+              "canonical_name": "PHENYL TRIMETHICONE"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": false,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Evidence includes every exact positive rank; this is an ingredient-presence fact, not tolerance, efficacy or application permission.",
+          "unresolved": []
+        },
+        "mineral_oil": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Every ingredient has a reviewed exclusion for this family and there is no recognized exact match; no substring or function-based expansion was used.",
+          "unresolved": []
+        },
+        "drying_alcohol": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Every ingredient has a reviewed exclusion for this family and there is no recognized exact match; no substring or function-based expansion was used.",
+          "unresolved": []
+        },
+        "fragrance": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 6,
+              "canonical_name": "FRAGRANCE (PARFUM)"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": false,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Evidence includes every exact positive rank; this is an ingredient-presence fact, not tolerance, efficacy or application permission.",
+          "unresolved": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Every ingredient has a reviewed exclusion for this family and there is no recognized exact match; no substring or function-based expansion was used.",
+          "unresolved": []
+        }
+      }
+    },
+    {
+      "case_id": "T04",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "Arachis Hypogaea (Peanut) Oil",
+          "canonical_name": "ARACHIS HYPOGAEA OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil"
+          ],
+          "formula_role": "principal",
+          "role_reason": "The sole identified intact fixed-oil carrier gives an affirmative peanut-oil conditioning backbone.",
+          "ambiguity": "Exact grade and the effect/preparation of accompanying unassessed extracts are unknown."
+        },
+        {
+          "rank": 2,
+          "raw_name": "Trifolium Pratense (Clover) Flower Extract",
+          "canonical_name": "TRIFOLIUM PRATENSE FLOWER EXTRACT",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The permitted dictionary retains the literal identity but does not assess its formulation function; no carrier, negligible-residue or conditioning-film role is invented.",
+          "ambiguity": "Literal exact identity retained; qualitative cosmetic function is not assessed here. No carrier, film, volatility, low-residue, essential-oil or active-botanical inference."
+        },
+        {
+          "rank": 3,
+          "raw_name": "Fragrance (Parfum)",
+          "canonical_name": "FRAGRANCE (PARFUM)",
+          "dictionary_roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 4,
+          "raw_name": "Arctium Lappa Root Extract",
+          "canonical_name": "ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The permitted dictionary retains the literal identity but does not assess its formulation function; no carrier, negligible-residue or conditioning-film role is invented.",
+          "ambiguity": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established."
+        },
+        {
+          "rank": 5,
+          "raw_name": "Rosmarinus Officinalis (Rosemary) Leaf Oil",
+          "canonical_name": "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL",
+          "dictionary_roles": [
+            "essential_oil",
+            "aromatic_auxiliary"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 6,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 7,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 8,
+          "raw_name": "Geraniol",
+          "canonical_name": "GERANIOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 9,
+          "raw_name": "Coumarin",
+          "canonical_name": "COUMARIN",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        }
+      ],
+      "auxiliary_suffix": {
+        "status": "no_boundary",
+        "start_rank": "none",
+        "markers": [],
+        "reason": "No valid boundary. Unassessed extract functions at 2 and 4 prevent earlier suffixes; rosemary and the declared fragrance allergens after 4 constitute aromatic/fragrance evidence, not two independent auxiliary functions."
+      },
+      "base": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ARACHIS HYPOGAEA OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "TRIFOLIUM PRATENSE FLOWER EXTRACT"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL"
+          }
+        ],
+        "counter_signal": [
+          "Rank 1 positively identifies the sole admitted fixed-oil carrier; no competing synthetic carrier is declared."
+        ],
+        "nearest_alternative": "pure_plant_oil",
+        "reason": "The likely one-oil backbone cannot satisfy the exact pure_plant_oil rule requiring only recognized auxiliaries: both flower and root extracts have explicitly unassessed functions. Their names cannot be promoted to additional intact oils or assumed to be recognized auxiliaries. Unknown records this specific base-rule gap, not an inferred hybrid.",
+        "unresolved": [
+          "The function/preparation of ranks 2 and 4 is needed to establish whether the sole-carrier-plus-recognized-auxiliaries condition is met."
+        ]
+      },
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ARACHIS HYPOGAEA OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "TRIFOLIUM PRATENSE FLOWER EXTRACT"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT"
+          }
+        ],
+        "counter_signal": [
+          "The peanut material reference retains light as a close alternative; commercial grade and extract preparation could alter distribution.",
+          "No affirmative principal rich or structured-film system is supplied."
+        ],
+        "nearest_alternative": "light",
+        "reason": "B0/B1/B2 support medium from the identified principal peanut carrier and its exact medium/low material prior, a positive rough coating/distribution hypothesis. Unassessed extracts prevent certainty about their contribution but do not supply an equally persuasive alternative weight backbone. Rich has no affirmative whole-system support.",
+        "unresolved": [
+          "No standardized hair-weight comparison, proportions, grade or assessed extract functions; the base classification gap is preserved independently."
+        ]
+      },
+      "penetration_potential": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ARACHIS HYPOGAEA OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "TRIFOLIUM PRATENSE FLOWER EXTRACT"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT"
+          }
+        ],
+        "counter_signal": [
+          "The identified principal fixed oil plausibly gives a surface lipid coating, but that observation does not resolve penetration."
+        ],
+        "nearest_alternative": "surface_led",
+        "reason": "The plant-oil conditioning backbone has no admitted relevant exact-form penetration anchor, and the extract functions are unassessed. A surface verdict from absent study would violate the method; neither penetration architecture is established strongly enough.",
+        "unresolved": [
+          "Exact peanut-oil or finished-formula penetration evidence and extract-role characterization are missing."
+        ]
+      },
+      "persistence_potential": "moderate",
+      "ingredient_flags": {
+        "silicones": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Every ingredient has a reviewed exclusion for this family and there is no recognized exact match; no substring or function-based expansion was used.",
+          "unresolved": []
+        },
+        "mineral_oil": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Every ingredient has a reviewed exclusion for this family and there is no recognized exact match; no substring or function-based expansion was used.",
+          "unresolved": []
+        },
+        "drying_alcohol": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Every ingredient has a reviewed exclusion for this family and there is no recognized exact match; no substring or function-based expansion was used.",
+          "unresolved": []
+        },
+        "fragrance": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 3,
+              "canonical_name": "FRAGRANCE (PARFUM)"
+            },
+            {
+              "rank": 5,
+              "canonical_name": "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL"
+            },
+            {
+              "rank": 6,
+              "canonical_name": "LIMONENE"
+            },
+            {
+              "rank": 7,
+              "canonical_name": "LINALOOL"
+            },
+            {
+              "rank": 8,
+              "canonical_name": "GERANIOL"
+            },
+            {
+              "rank": 9,
+              "canonical_name": "COUMARIN"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": false,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Evidence includes every exact positive rank; this is an ingredient-presence fact, not tolerance, efficacy or application permission.",
+          "unresolved": []
+        },
+        "scalp_active_botanicals": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 5,
+              "canonical_name": "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": false,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Evidence includes every exact positive rank; this is an ingredient-presence fact, not tolerance, efficacy or application permission.",
+          "unresolved": []
+        }
+      }
+    },
+    {
+      "case_id": "T06",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "ISODODECANE",
+          "canonical_name": "ISODODECANE",
+          "dictionary_roles": [
+            "hydrocarbon_carrier",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Hydrocarbon carrier combines with alcohol and ester to establish the distributing backbone.",
+          "ambiguity": "Amount and finished-application evaporation are unmeasured."
+        },
+        {
+          "rank": 2,
+          "raw_name": "ALCOHOL DENAT.",
+          "canonical_name": "ALCOHOL DENAT.",
+          "dictionary_roles": [
+            "solvent_alcohol"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Alcohol solvent participates in the principal carrier system rather than an auxiliary suffix.",
+          "ambiguity": "No concentration or retained-fraction estimate."
+        },
+        {
+          "rank": 3,
+          "raw_name": "C12-15 ALKYL BENZOATE",
+          "canonical_name": "C12-15 ALKYL BENZOATE",
+          "dictionary_roles": [
+            "defined_ester_emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Defined ester emollient participates in the carrier and retained fluid conditioning system.",
+          "ambiguity": "Exact quantity and grade unspecified."
+        },
+        {
+          "rank": 4,
+          "raw_name": "HEXYLENE GLYCOL",
+          "canonical_name": "HEXYLENE GLYCOL",
+          "dictionary_roles": [
+            "solvent",
+            "emulsifying_auxiliary"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Reviewed solvent/emulsifying auxiliary supports delivery of the established carrier and conditioning components.",
+          "ambiguity": "Not treated as drying alcohol; no measured distribution or residue."
+        },
+        {
+          "rank": 5,
+          "raw_name": "ETHYLHEXYL METHOXYCINNAMATE",
+          "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+          "dictionary_roles": [
+            "recognized_uv_filter"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized filter is a functional adjunct to the vehicle.",
+          "ambiguity": "No finished-product protection claim or contribution to conditioning persistence inferred."
+        },
+        {
+          "rank": 6,
+          "raw_name": "QUATERNIUM-95",
+          "canonical_name": "QUATERNIUM-95",
+          "dictionary_roles": [
+            "cationic_conditioning_clue"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Admitted cationic conditioning clue contributes to retained conditioning within the mobile vehicle.",
+          "ambiguity": "Exact molecular architecture, grade and substantivity are expressly unestablished; not silently treated as a gum/polymer."
+        },
+        {
+          "rank": 7,
+          "raw_name": "SESAMUM INDICUM (SESAME) SEED OIL (SESAMUM INDICUM SEED OIL)",
+          "canonical_name": "SESAMUM INDICUM SEED OIL",
+          "dictionary_roles": [
+            "fixed_oil_carrier"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Fixed sesame oil contributes retained lipid conditioning alongside the primary synthetic vehicle.",
+          "ambiguity": "Its medium material-weight prior does not establish blend amount or finished persistence."
+        },
+        {
+          "rank": 8,
+          "raw_name": "FRAGRANCE (PARFUM)",
+          "canonical_name": "FRAGRANCE (PARFUM)",
+          "dictionary_roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 9,
+          "raw_name": "RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL)",
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Intact castor oil contributes a richer retained lipid counter-signal within the lighter vehicle.",
+          "ambiguity": "Not erased by fragrance position and not treated as trace; no rich floor imposed."
+        },
+        {
+          "rank": 10,
+          "raw_name": "TOCOPHERYL ACETATE",
+          "canonical_name": "TOCOPHERYL ACETATE",
+          "dictionary_roles": [
+            "antioxidant_auxiliary"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Reviewed antioxidant auxiliary supports the formulation.",
+          "ambiguity": "No standalone finished-film or weight inference."
+        },
+        {
+          "rank": 11,
+          "raw_name": "AMYL SALICYLATE",
+          "canonical_name": "AMYL SALICYLATE",
+          "dictionary_roles": [
+            "fragrance",
+            "skin_conditioner"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Reviewed fragrance function supports an aromatic adjunct; skin-conditioner role does not establish a principal hair-conditioning system.",
+          "ambiguity": "Dual-function ingredient does not supply two independent suffix markers."
+        },
+        {
+          "rank": 12,
+          "raw_name": "BENZYL SALICYLATE",
+          "canonical_name": "BENZYL SALICYLATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 13,
+          "raw_name": "BHT",
+          "canonical_name": "BHT",
+          "dictionary_roles": [
+            "antioxidant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Reviewed antioxidant supports the formulation.",
+          "ambiguity": "No amount or conditioning-film dominance inferred."
+        },
+        {
+          "rank": 14,
+          "raw_name": "CANANGA ODORATA FLOWER OIL (CANANGA ODORATA OIL/EXTRACT)",
+          "canonical_name": "CANANGA ODORATA FLOWER OIL",
+          "dictionary_roles": [
+            "essential_oil",
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 15,
+          "raw_name": "GERANYL ACETATE",
+          "canonical_name": "GERANYL ACETATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 16,
+          "raw_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+          "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+          "dictionary_roles": [
+            "antioxidant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Reviewed antioxidant supports the formulation.",
+          "ambiguity": "No polymer, structurant or conditioning-film inference from the long ingredient name."
+        },
+        {
+          "rank": 17,
+          "raw_name": "PROPANEDIOL",
+          "canonical_name": "PROPANEDIOL",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The permitted dictionary retains the literal identity but does not assess its formulation function; no carrier, negligible-residue or conditioning-film role is invented.",
+          "ambiguity": "Exact canonical identity and reviewed function clues only. Quantity, grade, formula position, and finished-form behavior are not established."
+        },
+        {
+          "rank": 18,
+          "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 19,
+          "raw_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL",
+          "canonical_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        },
+        {
+          "rank": 20,
+          "raw_name": "VANILLIN",
+          "canonical_name": "VANILLIN",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Exact reviewed aromatic/fragrance exposure supplies an ancillary fragrance role, not an intact fixed-oil carrier or independent conditioning backbone.",
+          "ambiguity": "No concentration or negligible contribution inferred; aromatic essential oils remain distinct from fixed conditioning oils."
+        }
+      ],
+      "auxiliary_suffix": {
+        "status": "no_boundary",
+        "start_rank": "none",
+        "markers": [],
+        "reason": "No valid boundary. Unassessed propanediol at 17 prevents a suffix starting at the earlier fragrance/antioxidant markers; after 17 there is only the fragrance function. Secondary sesame and castor roles are retained regardless of fragrance position."
+      },
+      "base": {
+        "value": "ester_alkane_led",
+        "estimate": true,
+        "confidence": "moderate",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ALCOHOL DENAT."
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "HEXYLENE GLYCOL"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "QUATERNIUM-95"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "SESAMUM INDICUM SEED OIL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+          }
+        ],
+        "counter_signal": [
+          "Sesame, castor and the cationic-conditioning clue contribute retained conditioning beyond the mobile vehicle."
+        ],
+        "nearest_alternative": "hybrid",
+        "reason": "The hydrocarbon carrier, alcohol solvent and defined ester jointly explain the principal distributing/emollient backbone. Secondary botanical lipids and a cationic clue do not affirmatively establish a competing principal backbone; their presence is retained without a hybrid-by-count rule.",
+        "unresolved": [
+          "Relative quantities, exact Quaternium-95 grade/architecture and propanediol function are not established."
+        ]
+      },
+      "weight": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ALCOHOL DENAT."
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "HEXYLENE GLYCOL"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "QUATERNIUM-95"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "SESAMUM INDICUM SEED OIL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+          }
+        ],
+        "counter_signal": [
+          "Medium-tendency sesame and rich-tendency castor add meaningful retained-lipid load.",
+          "Quaternium-95 supplies a cationic-conditioning clue and can oppose a very small coating interpretation."
+        ],
+        "nearest_alternative": "medium",
+        "reason": "B1/B4 favor light from the coherent hydrocarbon/alcohol/ester distribution architecture. The oils and secondary cationic route give a serious medium rival, but the permitted evidence does not establish a retained conditioning system strong enough to outweigh that carrier reading. B6 rich lacks a principal structured or rich-oil-leading argument; no later ingredient is assumed negligible.",
+        "unresolved": [
+          "Amounts, grade-specific cationic behavior, carrier evaporation in use, propanediol role and hair sensory comparison are absent."
+        ]
+      },
+      "penetration_potential": {
+        "value": "surface_led",
+        "estimate": true,
+        "confidence": "moderate",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "QUATERNIUM-95"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "SESAMUM INDICUM SEED OIL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+          }
+        ],
+        "counter_signal": [
+          "The retained fixed oils are real conditioning contributions, even without admitted penetration anchors."
+        ],
+        "nearest_alternative": "unknown",
+        "reason": "The principal hydrocarbon/ester emollient system and secondary cationic-conditioning clue affirmatively favor surface conditioning. Sesame/castor are secondary to that system; absence of admitted penetration studies is not used as proof of nonpenetration.",
+        "unresolved": [
+          "Exact finished-formula penetration and delivery are untested; Quaternium-95 architecture is not established."
+        ]
+      },
+      "persistence_potential": "moderate",
+      "ingredient_flags": {
+        "silicones": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Every ingredient has a reviewed exclusion for this family and there is no recognized exact match; no substring or function-based expansion was used.",
+          "unresolved": []
+        },
+        "mineral_oil": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Every ingredient has a reviewed exclusion for this family and there is no recognized exact match; no substring or function-based expansion was used.",
+          "unresolved": []
+        },
+        "drying_alcohol": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 2,
+              "canonical_name": "ALCOHOL DENAT."
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": false,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Evidence includes every exact positive rank; this is an ingredient-presence fact, not tolerance, efficacy or application permission.",
+          "unresolved": []
+        },
+        "fragrance": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 8,
+              "canonical_name": "FRAGRANCE (PARFUM)"
+            },
+            {
+              "rank": 11,
+              "canonical_name": "AMYL SALICYLATE"
+            },
+            {
+              "rank": 12,
+              "canonical_name": "BENZYL SALICYLATE"
+            },
+            {
+              "rank": 14,
+              "canonical_name": "CANANGA ODORATA FLOWER OIL"
+            },
+            {
+              "rank": 15,
+              "canonical_name": "GERANYL ACETATE"
+            },
+            {
+              "rank": 18,
+              "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+            },
+            {
+              "rank": 19,
+              "canonical_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL"
+            },
+            {
+              "rank": 20,
+              "canonical_name": "VANILLIN"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": false,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Evidence includes every exact positive rank; this is an ingredient-presence fact, not tolerance, efficacy or application permission.",
+          "unresolved": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "All primary ingredients were reviewed against the exact closed dictionary family. Every ingredient has a reviewed exclusion for this family and there is no recognized exact match; no substring or function-based expansion was used.",
+          "unresolved": []
+        }
+      }
+    }
+  ]
+}

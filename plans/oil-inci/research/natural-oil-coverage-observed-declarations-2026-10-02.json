@@ -1,0 +1,137 @@
+{
+  "audit_id": "natural-oil-coverage-observed-declarations-2026-10-02",
+  "status": "literal_local_declaration_audit",
+  "scope": "Observed spellings only. No alias, species, botanical-part, or weight inference is made here.",
+  "reference_comparison": {
+    "original_reference": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.2.json",
+    "original_entry_count": 25,
+    "v0_3_path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.3.json",
+    "v0_3_status_at_audit": "not_present",
+    "v0_3_exact_match_result": "pending: do not report an unmatched-v0.3 list until that file exists"
+  },
+  "finite_evidence_universe": [
+    "data/research/leave-in-inci/**",
+    "data/research/conditioner-inci/**",
+    "data/research/shampoo-inci/**",
+    "plans/oil-inci/capture/**",
+    "plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json"
+  ],
+  "observed_name_rows": [
+    {
+      "group": "absent_identity",
+      "observed_name": "Glycine Soja Oil",
+      "literal_forms": ["Glycine Soja Oil", "GLYCINE SOJA OIL / SOYBEAN OIL"],
+      "evidence": ["data/research/leave-in-inci/v1.0/calibration-envelopes/slot-04.json:32", "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/formula-source.json:17", "plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json:1080"],
+      "disposition_candidate": "candidate_reference_entry; retain the slash rendering as an observed literal form, not a created alias"
+    },
+    {
+      "group": "absent_identity",
+      "observed_name": "Zea Mays Oil",
+      "literal_forms": ["Zea Mays (Corn) Oil", "Zea Mays Oil"],
+      "evidence": ["plans/oil-inci/capture/round-1/olaplex-k18.json:67", "plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json:1477"],
+      "disposition_candidate": "candidate_reference_entry; supplement lexicon already lists the parenthetical form"
+    },
+    {
+      "group": "absent_identity",
+      "observed_name": "Salvia Hispanica Seed Oil",
+      "literal_forms": ["Salvia Hispanica Seed Oil"],
+      "evidence": ["data/research/leave-in-inci/v1.0/corpus/unseen-test/unseen-packet.json:506"],
+      "disposition_candidate": "candidate_reference_entry"
+    },
+    {
+      "group": "absent_identity",
+      "observed_name": "Gossypium Hirsutum Seed Oil",
+      "literal_forms": ["Gossypium Hirsutum Seed Oil"],
+      "evidence": ["data/research/shampoo-inci/holdout-v2/products/nivea-classic-care/formula-source.json:17"],
+      "disposition_candidate": "candidate_reference_entry"
+    },
+    {
+      "group": "absent_identity",
+      "observed_name": "Mauritia Flexuosa Fruit Oil",
+      "literal_forms": ["Mauritia Flexuosa Fruit Oil", "MAURITIA FLEXUOSA FRUIT OIL"],
+      "evidence": ["plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json:337", "plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json:1831"],
+      "disposition_candidate": "candidate_reference_entry; catalog source text only"
+    },
+    {
+      "group": "absent_identity",
+      "observed_name": "Brassica Oleracea Italica Seed Oil",
+      "literal_forms": ["Brassica Oleracea Italica Seed Oil* (Brokkolisamenöl)", "Brassica Oleracea Italica Seed Oil"],
+      "evidence": ["plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json:472", "plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json:476"],
+      "disposition_candidate": "candidate_reference_entry; German parenthetical is commercial source text, not a separate INCI alias"
+    },
+    {
+      "group": "absent_identity",
+      "observed_name": "Arachis Hypogaea Oil",
+      "literal_forms": ["Arachis Hypogaea (Peanut) Oil+"],
+      "evidence": ["plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json:1937"],
+      "disposition_candidate": "candidate_reference_entry; parenthetical/common name and organic marker are observed display text"
+    },
+    {
+      "group": "absent_identity",
+      "observed_name": "Avena Sativa Kernel Oil",
+      "literal_forms": ["Avena Sativa Kernel Oil"],
+      "evidence": ["data/research/conditioner-inci/v1.0/calibration-pilot-formulas.json:252"],
+      "disposition_candidate": "identity_review_before_reference_entry; the local record has no product identity"
+    },
+    {
+      "group": "absent_identity_common_name",
+      "observed_name": "Canola Oil",
+      "literal_forms": ["Canola Oil"],
+      "evidence": ["data/research/leave-in-inci/v1.0/calibration-envelopes/slot-03.json:28", "data/research/conditioner-inci/v1.0/calibration-pilot-formulas.json:501"],
+      "disposition_candidate": "identity_resolution_required; common-name spelling is not silently promoted to a species/plant-part INCI"
+    },
+    {
+      "group": "variant_of_original_25",
+      "observed_name": "Macadamia Ternifolia Seed Oil",
+      "literal_forms": ["Macadamia Ternifolia Seed Oil"],
+      "nearest_original_reference": "MACADAMIA INTEGRIFOLIA SEED OIL",
+      "evidence": ["data/research/leave-in-inci/v1.0/corpus/gold-set/calibration-packet.json:442"],
+      "disposition_candidate": "species_resolution_required"
+    },
+    {
+      "group": "variant_of_original_25",
+      "observed_name": "Macadamia Integrifolia/Tetraphylla Seed Oil",
+      "literal_forms": ["Macadamia Integrifolia/Tetraphylla Seed Oil"],
+      "nearest_original_reference": "MACADAMIA INTEGRIFOLIA SEED OIL",
+      "evidence": ["plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json:1502"],
+      "disposition_candidate": "mixed_species_resolution_required"
+    },
+    {
+      "group": "variant_of_original_25",
+      "observed_name": "Helianthus Annuus Hybrid Oil",
+      "literal_forms": ["Helianthus Annuus Hybrid Oil"],
+      "nearest_original_reference": "HELIANTHUS ANNUUS SEED OIL",
+      "evidence": ["data/research/leave-in-inci/v1.0/corpus/gold-set/calibration-packet.json:52", "plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json:38"],
+      "disposition_candidate": "declared_form_resolution_required"
+    },
+    {
+      "group": "variant_of_original_25",
+      "observed_name": "Cocos Nucifera Fruit Oil",
+      "literal_forms": ["Cocos Nucifera Fruit Oil"],
+      "nearest_original_reference": "COCOS NUCIFERA OIL",
+      "evidence": ["plans/oil-inci/capture/natural-base-round-2/products.json:138"],
+      "disposition_candidate": "plant_part_resolution_required; source capture expressly preserves it separately"
+    },
+    {
+      "group": "variant_of_original_25",
+      "observed_name": "Hippophae Rhamnoides Fruit/Seed Oil",
+      "literal_forms": ["Hippophae Rhamnoides (Sea Buckthorn/Argousier) Fruit/Seed Oil"],
+      "nearest_original_reference": "HIPPOPHAE RHAMNOIDES FRUIT OIL",
+      "evidence": ["data/research/leave-in-inci/v1.0/corpus/unseen-test/unseen-packet.json:799"],
+      "disposition_candidate": "mixed_plant_part_resolution_required"
+    }
+  ],
+  "other_observed_oil_like_boundaries": [
+    { "observed_name": "Olus Oil", "evidence": "plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json:495", "disposition_candidate": "mixture_identity_unknown_not_reference_entry" },
+    { "observed_name": "Butyrospermum Parkii Butter; Theobroma Cacao Seed Butter", "disposition_candidate": "butters_outside_intact_fixed_oil_reference" },
+    { "observed_name": "Brassica Campestris/Aleurites Fordi Oil Copolymer; PEG/hydrogenated/ferment/ester oil forms", "disposition_candidate": "modified_derivatives_outside_reference" },
+    { "observed_name": "citrus, rosemary, mint, juniper and patchouli oils", "disposition_candidate": "essential_or_aromatic_oils_outside_reference" }
+  ],
+  "coverage_result_against_original_25": {
+    "distinct_absent_identity_groups": 9,
+    "distinct_variant_groups": 5,
+    "additional_intact_fixed_botanical_oil_found_outside_these_14_groups": false,
+    "qualification": "Within the finite local evidence universe and after excluding boundary forms; not a global-market completeness assertion."
+  },
+  "non_actions": ["No weights, priors, aliases, frozen runs, or consumers were changed."]
+}

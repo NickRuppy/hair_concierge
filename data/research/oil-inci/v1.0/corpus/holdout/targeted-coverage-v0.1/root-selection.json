@@ -1,0 +1,37 @@
+{
+  "run_id": "oil-targeted-coverage-v0.1",
+  "cases": {
+    "T01": {
+      "lane": "a",
+      "reason": "Select coherent laneA aqueous/emollient interpretation: light weight with medium alternative, surface-led and ordinary retained emollient/lipid persistence. No source claim changed formula truth. LaneB has same direct classes; panthenol role differs (secondary versus auxiliary), retained as diagnostic."
+    },
+    "T02": {
+      "lane": "a",
+      "reason": "Select coherent laneA silicone carrier/film interpretation: medium with light alternative, surface-led and ordinary retained fluid silicone coating. Species-incomplete rank4 remains literal and unresolved. LaneB agrees on direct classes; ester role differs (secondary versus principal), retained as diagnostic."
+    },
+    "T04": {
+      "lane": "a",
+      "reason": "Select coherent laneA peanut-led interpretation: medium/low, light alternative and moderate lipid persistence. Under exact current base rule, unresolved clover/root extract functions prevent recognizing all noncarrier ingredients as auxiliaries, so base remains unknown; penetration also unknown. No source marketing repairs those blind gaps."
+    },
+    "T06": {
+      "lane": "a",
+      "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+    }
+  },
+  "after_both_blind_outputs_sealed": true,
+  "persistence_semantics_unchanged": true,
+  "diagnostic_role_differences": [
+    {
+      "case_id": "T01",
+      "rank": 14,
+      "lane_a": "secondary",
+      "lane_b": "auxiliary"
+    },
+    {
+      "case_id": "T02",
+      "rank": 3,
+      "lane_a": "secondary",
+      "lane_b": "principal"
+    }
+  ]
+}

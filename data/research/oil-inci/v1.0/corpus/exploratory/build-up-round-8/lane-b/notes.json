@@ -1,0 +1,42 @@
+{
+  "run_id": "oil-build-up-round-8",
+  "lane": "b",
+  "read_inputs": [
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/method.md",
+      "sha256": "0a2579c41ff0d2c64b0bfde27eb8c572867f3075be05eeaca091a48c82c494d5"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-packet.json",
+      "sha256": "12146506e1f1566c1abe3064f1c3e36608d0b784679c36d719b2a444b8383c6f"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+      "sha256": "b3974e95c9a7e3c77434a3be561f5c1dee464b5da7b3c35c907d9114985cb659"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/natural-oil-build-up-v0.1.json",
+      "sha256": "724f7688d0c97febcc569dd730528a47d9870ab0758367fc890a4fae956579e2"
+    }
+  ],
+  "recognized_formulas": [],
+  "access_incidents": [],
+  "completed_ids": [
+    "C01",
+    "C02",
+    "C03",
+    "C04"
+  ],
+  "limits": [
+    "Only the four declared absolute-path inputs were read. No linked source, identity packet, peer output, catalog, other research file, plan or repository instruction file was inspected. Read isolation was contractual rather than technically enforced.",
+    "No formula was recognized as an exact identified product; no identity search or product guessing was used.",
+    "The initial combined tool rendering truncated part of the packet and lexicon; both allowed files were rendered again completely in compact form before judging. This was an output-display limitation, not an out-of-scope access.",
+    "C03 contextual declaration retained separately: type formula_code; raw <ILN46770>; ordering not an ingredient. No independently ranked ingredient or concentration follows from it. Other records have no contextual declarations.",
+    "All four binary outputs are estimate:true and confidence:low; no sensory validation, human approval, production approval or measured cumulative build-up is claimed.",
+    "Formula-role principal/secondary/auxiliary assignments express qualitative architectural interpretation rather than concentration bands; unassessed functions remain unresolved and are not treated as negligible.",
+    "The only consumed accepted material prior is exact whole jojoba in C03 rank 3, oil-natural-build-up-v0.1 version 0.1, OE51 and the supplied scoped HW001 observation. It is a constituent clue only. Other materials, including pure marula in C04, retain their unassessed reference status.",
+    "The method v0.3 binary complete-formula rule governs these outputs; historical unknown alternatives in the material companion are not converted into product output values.",
+    "No user-fit, weight, claims, inferred percentages, concentration boundary, distribution target or external evidence was used. Low does not mean zero residue or easy washout.",
+    "Structural checks validate JSON schemas, IDs, all 84 rank/name/role copies, evidence references and opposite alternatives; they cannot validate the chemical judgments."
+  ]
+}

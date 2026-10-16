@@ -1,0 +1,11 @@
+neutral_id,brand,product,cohort,lane_a,lane_b,main_initial,working_weight,nearest_alternative,confidence,estimate
+Q01,NUXE,Huile Prodigieuse original,fresh,medium,medium,medium,medium,light,low,true
+Q02,PRIMAVERA,Calendulaöl bio,replay,light,light,light,light,medium,low,true
+Q03,Wella Professionals,Oil Reflections Luminous Smoothing Oil,fresh,light,light,medium,light,medium,low,true
+Q04,Mielle,Rosemary Mint Scalp & Hair Strengthening Oil (Original),fresh,medium,medium,medium,medium,rich,low,true
+Q05,OLAPLEX DE / New Flag,Original N°7 Bonding Oil,replay,medium,medium,medium,medium,light,low,true
+Q06,John Frieda,Der Bändiger – Extra Strong Serum,fresh,medium,medium,medium,medium,rich,low,true
+Q07,NEQI,Smooth Strength Rosemary Oil,replay,medium,medium,medium,medium,rich,low,true
+Q08,khadi,Strong Amla Haaröl,fresh,light,light,light,light,medium,low,true
+Q09,Moroccanoil,Behandlung Original,fresh,medium,medium,medium,medium,rich,low,true
+Q10,K18,Molecular Repair Hair Oil,replay,medium,medium,light,light,medium,low,true

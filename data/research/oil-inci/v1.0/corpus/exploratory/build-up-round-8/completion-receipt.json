@@ -1,0 +1,105 @@
+{
+  "date": "2026-10-06",
+  "status": "passed",
+  "scope": "Complete uncommitted OE54 increment: Bumble review, new round-8 corpus/verifier/plan/review summary and mutable indexes. Prior artifacts preservation-checked. Not a whole-branch publication review.",
+  "branch": "codex/oil-inci",
+  "base": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "upstream": "85398b00ac3acfa2e531750041ebe9584f2abfca",
+  "content_fingerprint": "0ec2b835574298e2176c7e0a367999d2a335b02f43731e816add8f1a1eb98c99",
+  "fingerprint_format": "SHA256 of sorted repository-relative-path TAB content-SHA256 newline manifest; completion receipt excluded to avoid self-reference",
+  "content_manifest": {
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json": "b3974e95c9a7e3c77434a3be561f5c1dee464b5da7b3c35c907d9114985cb659",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-packet.json": "12146506e1f1566c1abe3064f1c3e36608d0b784679c36d719b2a444b8383c6f",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-stage-seal.json": "171e6632024afffb82c2f26c4760c29fee20941c0de9084ee6285e16aba13bc9",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/function-evidence.json": "0f51516ecc7cf233db04684497e83d75dc3f35b1d21751a9fb7dc5e49928ee4d",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/historical-preservation.json": "31509cf854f97d2c091324918cd39d2a0c11fba5d74bd66c4010eeb11ea605ee",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/input-manifest.json": "0a9f5c9b00c92646f099783c4cbf60e0ad0afce6528aab57f1a2d90acc9fe296",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/lane-a/notes.json": "18889b48b46ec951acc756e60682329655122e55a30f1e5b571c1733f0ae7821",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/lane-a/records.json": "0c4b1bfabbfabe69162c6ec9b7de277d866b7e7d765dcb9441c0ddfa7a550874",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/lane-b/notes.json": "6bb68238c4078e4a5b24a352a46baf2258cc250a053178dcd04cfc92b2cd92c2",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/lane-b/records.json": "45862651d442e81d863dfea5c0419f61569e8f629653fbae817f3dffd4fa3199",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/method.md": "0a2579c41ff0d2c64b0bfde27eb8c572867f3075be05eeaca091a48c82c494d5",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/metrics.json": "37c1d6887d07b04a16028293e6cce25d5bf8f70b77b8fa9f9325361c6022b2a8",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/natural-oil-build-up-v0.1.json": "724f7688d0c97febcc569dd730528a47d9870ab0758367fc890a4fae956579e2",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/normalization-audit.json": "d2959a31a09ad2083b63a7ead54738d5d74f6661a1febb655ac6230437420f50",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/novelty-audit.json": "261bc91d83df5d7da7a2c6e425ff03df7421c5d5ae56ddef8191cce8762c9ebb",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/results-for-review.md": "fa7422a642403ffc422508282e1565b2a04275e1ff81fbeea4067d577cf96acb",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/results.csv": "e0dfb8bf74d08a435aa54c61ce444830515da2de80c363d9093bd1be14954719",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/source-notes.md": "342ea13ed9b91cee3b6fd02c0c28c66df2615b2c249b1656c56df9c817f6afae",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/source-packet.json": "d15f6b95b45efe5d7b257b1c47651d773563e3eae8ff8bbae882d9999abffd11",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/verification-receipt.json": "d4cdf113cff6eab15258e10f9669c34bbac9b386a036fd58b80ede4f80aa8fce",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/working-records.json": "063703f609b21cf9e9236320a96dc40d18fdbf8d5180156dc67150187efc2b23",
+    "docs/research/oil-inci/README.md": "d083614c7007b606d806c30895efbbdb449eeba4c8527e287e8c57cadab6c5e7",
+    "plans/oil-inci/build-up-round-8-plan.md": "a182d02ec3999e5b7e9423ac7db4cbe68706cad21c4052dd64f831f2621bdc17",
+    "plans/oil-inci/phase1-decision-coverage.md": "8d15264460c9bf63979e892ffca79c5f2a90ade510e96a368cccc1cee48a1e0a",
+    "plans/oil-inci/research/bumble-build-up-review-2026-10-06.json": "a171e70bd3c213907b32c219b599189273294726b7722765430c1377b8133175",
+    "plans/oil-inci/reviews/build-up-round-8-plan-review-2026-10-06.md": "d95b7c100ede58a4874930b88cb3e733197af372a820b987a11ce56180e6697f",
+    "plans/oil-inci/verify-build-up-round-8.py": "c341dc63549911a32255e1e1044f88e66b02fe581f5a57d05dbc4f3581871971"
+  },
+  "decision_coverage": {
+    "status": "confirmed",
+    "coverage_acknowledgement": "Nick do it after Bumble review then new-formula testing proposal, 2026-10-06",
+    "internal_revalidation": "All promised outcomes complete; OE52 binary policy retained; no new policy/fit/material-prior decision or human acceptance of unseen product values",
+    "open_consequential_choices": []
+  },
+  "promised_outcomes": [
+    "Source-scoped Bumble elevated estimate reviewed; low rival retained",
+    "Four eligible new exact declarations and function dictionary frozen before two independent lane dispatches",
+    "All rank/name/role entries and read attestations preserved; four lane outputs sealed before parent inspection",
+    "Source-linked recommendations, CSV and metrics complete; eight low/elevated estimated low-confidence outputs",
+    "365 previous non-index artifacts unchanged; no historical regeneration"
+  ],
+  "verification": {
+    "command": "python3 plans/oil-inci/verify-build-up-round-8.py",
+    "result": "passed",
+    "receipt": "verification-receipt.json",
+    "primary_ranks": 84,
+    "exact_dictionary_names": 64,
+    "historical_files_preserved": 365,
+    "corruption_controls": [
+      "unknown_output",
+      "missing_rank",
+      "wrong_evidence_name",
+      "changed_input"
+    ],
+    "all_in_scope_json_parsed": true,
+    "verifier_ast_parsed": true,
+    "local_markdown_links_checked": 123,
+    "inherited_method_links_resolved_in_document_origin": [
+      {
+        "copied_file": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/method.md",
+        "target": "09_natural-oil-build-up-reference-v0.1.md",
+        "source_context": "docs/research/oil-inci/v1.0/08_build-up-guidance-v0.3.md"
+      }
+    ],
+    "whitespace_check": "Passed for complete untracked increment and git diff --check"
+  },
+  "final_review": {
+    "router": "request-code-review",
+    "reviewer": "main Codex session; read-only review of complete integrated OE54 increment",
+    "correctness_lens": "No blocking findings. Exact source/blind/rank/role parity, unassessed-function ceilings, frozen versioned inputs, output/read seals, intact selected payloads, accepted-label separation and source-market limits inspected. Forced complete metadata is not persistence proof.",
+    "structural_lens": "Applied locally because verifier adds 200+ lines. Direct stdlib artifact checks stay outside runtime; no extra dependency, shared architecture leak or file-size explosion. No blocking structural findings.",
+    "counterpart_plan_review": "Completed once before dispatch; durable summary retained. Whole-branch publication counterpart review not triggered.",
+    "verdict": "Ready for local result review; not publication or general intake activation"
+  },
+  "artifact_disposition": {
+    "durables": "Commit-intended, uncommitted in existing task worktree",
+    "transient_counterpart_detail": "Discarded after retained summary",
+    "older_artifacts": "Preserved; existing .gitignore untouched",
+    "publication": "None"
+  },
+  "skipped_checks": [
+    "Runtime/browser/chat/database: no runtime, UI, catalog or database seam changed",
+    "Sensory/repeated application/shampoo validation: outside local repeatability scope",
+    "Whole-branch publication review: not requested; scope is OE54 increment"
+  ],
+  "residual_limits": [
+    "Contractual blinding, not technical isolation; no incidents/recognized exact identities reported",
+    "US maker pages are not physical-batch or German-SKU proof",
+    "4/4 agreement is reproducibility, not correctness; shared method can share errors",
+    "Aveda/Marula low judgments rest on weak fluid-film hypotheses with elevated alternatives",
+    "Native material build-up reference unchanged: Marula unassessed, one accepted jojoba prior",
+    "Copied method retains its original document-relative link; interpret in normative document context; lanes cannot follow links"
+  ],
+  "recommended_next": "Review Aveda seed-fat versus fluid-blend estimate first; then pure Marula, one exact case at a time"
+}

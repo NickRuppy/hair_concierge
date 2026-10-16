@@ -1,0 +1,23 @@
+{
+  "run_id": "oil-targeted-coverage-v0.1",
+  "case_ids": [
+    "T01",
+    "T02",
+    "T04",
+    "T06"
+  ],
+  "frozen_before_labels": true,
+  "source_slots": 4,
+  "unfilled_slots": [
+    {
+      "slot": "T03",
+      "reason": "All three registered candidates were attempted in order. No candidate supplied one stable, source-complete exact-product formula binding together with an admissible retained hair-fibre scenario."
+    },
+    {
+      "slot": "T05",
+      "reason": "All three registered candidates were attempted in order. The first and third are rinse-off/pre-wash treatments, and the second has retained strands/ends directions but only a generic three-item ingredient declaration rather than verbatim formal INCI. The slot remains unfilled rather than substituting or normalizing a declaration."
+    }
+  ],
+  "selection": "First registered source-complete candidate; incomplete secondary species token in T02 not normalized to botanical prior.",
+  "no_label_quota": true
+}

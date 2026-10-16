@@ -1,0 +1,104 @@
+{
+  "records": [
+    {
+      "neutral_id": "Q01",
+      "brand": "NUXE",
+      "product": "Huile Prodigieuse original",
+      "size": "30 ml selected; page variants retained separately",
+      "market": "DE",
+      "cohort_group": "fresh",
+      "source_url": "https://de.nuxe.com/products/wichtiger-ol%C2%AE/",
+      "reused_development_id": null
+    },
+    {
+      "neutral_id": "Q02",
+      "brand": "PRIMAVERA",
+      "product": "Calendulaöl bio",
+      "size": "100 ml",
+      "market": "DE",
+      "cohort_group": "replay",
+      "source_url": "https://www.primaveralife.com/calendulaoel-bio.html",
+      "reused_development_id": "W04"
+    },
+    {
+      "neutral_id": "Q03",
+      "brand": "Wella Professionals",
+      "product": "Oil Reflections Luminous Smoothing Oil",
+      "size": "DE maker page does not state size; US same-name 100 ml is corroboration only",
+      "market": "DE",
+      "cohort_group": "fresh",
+      "source_url": "https://www.wella.com/professional/de-DE/products/haarpflege/oil-reflections/oil-reflections-luminous-smoothing-oil",
+      "reused_development_id": null
+    },
+    {
+      "neutral_id": "Q04",
+      "brand": "Mielle",
+      "product": "Rosemary Mint Scalp & Hair Strengthening Oil (Original)",
+      "size": "2 fl oz US; corroborating DE offer 59 ml",
+      "market": "US maker with matching DE Notino listing; no universal batch equivalence",
+      "cohort_group": "fresh",
+      "source_url": "https://mielleorganics.com/products/rosemary-mint-oil",
+      "reused_development_id": null
+    },
+    {
+      "neutral_id": "Q05",
+      "brand": "OLAPLEX DE / New Flag",
+      "product": "Original N°7 Bonding Oil",
+      "size": "30 ml selected; shared page with size options",
+      "market": "DE",
+      "cohort_group": "replay",
+      "source_url": "https://olaplex.de/collections/glanz-shine/products/olaplex-no-7-bonding-oil",
+      "reused_development_id": "W09"
+    },
+    {
+      "neutral_id": "Q06",
+      "brand": "John Frieda",
+      "product": "Der Bändiger – Extra Strong Serum",
+      "size": "50 ml",
+      "market": "DE",
+      "cohort_group": "fresh",
+      "source_url": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/seren/der-baendiger-extra-strong-serum/",
+      "reused_development_id": null
+    },
+    {
+      "neutral_id": "Q07",
+      "brand": "NEQI",
+      "product": "Smooth Strength Rosemary Oil",
+      "size": "75 ml",
+      "market": "DE",
+      "cohort_group": "replay",
+      "source_url": "https://neqi-hair.com/products/smooth-strength-rosemary-oil",
+      "reused_development_id": "W06"
+    },
+    {
+      "neutral_id": "Q08",
+      "brand": "khadi",
+      "product": "Strong Amla Haaröl",
+      "size": "50 ml",
+      "market": "DE",
+      "cohort_group": "fresh",
+      "source_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "reused_development_id": null
+    },
+    {
+      "neutral_id": "Q09",
+      "brand": "Moroccanoil",
+      "product": "Behandlung Original",
+      "size": "100 ml selected; page also 25/50 ml",
+      "market": "DE",
+      "cohort_group": "fresh",
+      "source_url": "https://de.moroccanoil.com/products/moroccanoil-treatment-original",
+      "reused_development_id": null
+    },
+    {
+      "neutral_id": "Q10",
+      "brand": "K18",
+      "product": "Molecular Repair Hair Oil",
+      "size": "30 ml",
+      "market": "DE",
+      "cohort_group": "replay",
+      "source_url": "https://www.notino.de/k18/molecular-repair-hair-oil-pflegendes-trockenoel-fuer-beschaedigtes-und-bruechiges-haar/p-16220382/",
+      "reused_development_id": "W01"
+    }
+  ]
+}

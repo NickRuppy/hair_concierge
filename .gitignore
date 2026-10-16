@@ -216,6 +216,12 @@ test-screenshots*/
 /data/research/conditioner-inci/**/rework-queue.json
 !/data/research/leave-in-inci/
 !/data/research/leave-in-inci/**
+!/data/research/oil-inci/
+!/data/research/oil-inci/**
+!/data/research/shared/
+/data/research/shared/*
+!/data/research/shared/persistence-pilot-v0.1/
+!/data/research/shared/persistence-pilot-v0.1/**
 /data/research/leave-in-inci/**/lab-review-state.json
 /data/research/leave-in-inci/**/rework-queue.json
 !/data/research/shampoo-inci/
@@ -381,3 +387,16 @@ test-screenshots*/
 # artefacts are the postprocessed webp in public/images/tools/.
 !plans/mockups/tool-images-review-2026-08-25/wired-*.png
 !plans/mockups/feinschliff-revisit-2026-08-26/*.png
+
+# Oil intake planning evidence: contextual review proposal.
+!plans/oil-inci/intake-integration-review-preview-v0.1.png
+!plans/oil-inci/intake-integration-review-preview-v0.1-conflict.png
+
+# Existing Research Lab reference for oil integration planning.
+!plans/oil-inci/intake-integration-lab-reference-v0.1.png
+
+# Mutable local Oil Research Lab review and bundle state.
+/.local/oil-research-lab/
+
+# Oil Lab verification screenshots.
+!plans/oil-inci/evidence/oil-lab-*.png

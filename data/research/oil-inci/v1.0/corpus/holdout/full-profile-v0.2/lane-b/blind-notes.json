@@ -1,0 +1,43 @@
+{
+  "lane_id": "b",
+  "files_read": [
+    "method.md",
+    "blind-packet.json",
+    "dictionary.json",
+    "material-weight-reference.json"
+  ],
+  "input_hashes": {
+    "method.md": "bed580a121f35c344208add0a561a4291ade68586d4a8eb0120fe606370597e0",
+    "blind-packet.json": "34a5ea5a7fb45240c01963f50f54ebc80021fb798ca4c5394a22d8d97174fb42",
+    "dictionary.json": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+  },
+  "completed_ids": [
+    "H01",
+    "H02",
+    "H03",
+    "H04",
+    "H05",
+    "H06"
+  ],
+  "recognized_formulas": [
+    {
+      "case_id": "H04",
+      "disclosure": "The literal RAHUA word in the admitted ingredient parenthetical is familiar as a brand word. No finished-product identity was looked up, inferred further, or used."
+    },
+    {
+      "case_id": "H05",
+      "disclosure": "A spontaneous unverified possible Oribe association arose while reading the formula. It was not checked or pursued; no product claim, direction, identity, prior label or remembered finished-product behavior was used."
+    }
+  ],
+  "access_incidents": [],
+  "limitations": [
+    "Research-only Stage 1. Exactly the four authorized inputs were read; no linked source IDs, browser, memory, repository context, earlier corpus, source-staging, manifests, peer output or nested reviewer was accessed. Initial oversized tool output was truncated; sequential bounded reads completed all four inputs before assessment.",
+    "H04 retains unknown base, weight and penetration because leading preparations/carriers remain unresolved. Its required persistence scalar is a committed ordinary retained lipid-coating judgment, with the tipping assumption isolated in the trace.",
+    "H01 rank 3 and selected later functions, H02 ranks 7 and 13, and multiple H05 botanical/extract functions remain unresolved. They are retained explicitly in each ledger, never treated as zero or assigned guessed functions.",
+    "Every weight estimate is low confidence. Mixture role assignments, carrier balance and sensory classes are qualitative without amounts, grades, measured hair performance or inferred percentage boundaries.",
+    "The material-weight reference was used only for weight/identity limits. No material binary buildup prior was read or converted into persistence; weight does not determine persistence.",
+    "Dictionary flags were treated as the supplied closed exact-match contract, including reviewed false results for familiar names outside that contract. Every positive ranked match is retained.",
+    "Schema keys, 93 exact ordered ranks, raw/canonical names, dictionary roles, all flag matches, evidence references, persistence coverage and SHA-256 input stability were validated in memory before writing. No semantic output reread was performed. Stage 2 was not opened."
+  ]
+}

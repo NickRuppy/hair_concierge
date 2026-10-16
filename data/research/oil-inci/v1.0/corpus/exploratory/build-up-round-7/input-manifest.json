@@ -1,0 +1,24 @@
+{
+  "run_id": "oil-build-up-round-7",
+  "frozen_at": "2026-10-06T06:09:11.858440+00:00",
+  "files": {
+    "source-packet.json": "71d2ad5fb72c783a0abcdc89fd2a9eca25b74ce85ab90f8a4432a4e9e250ee83",
+    "normalization-audit.json": "270529c1017ff1181decc969599e0ae06cfd169a8a2cb1e69125253bc0d36c65",
+    "function-evidence.json": "4bd02107fa08eb4b92407a2b1ed7d66460138b57cb0f68cab17c1a922c6840ca",
+    "method.md": "6fead95a677024dad161a5cae0d508776d9914720aaa3cfd118ec2f45e011e48",
+    "blind-packet.json": "b90c9c06841ea4a5ec94028de4f659784c483edb5ce6319a18dbdbf3115a39d2",
+    "blind-lexicon.json": "0914d5743c52942fad30392e2e3293d0228d6d030c52feb3e7bb07ccc4a7d546"
+  },
+  "dependencies": {
+    "docs/research/oil-inci/v1.0/08_build-up-guidance-v0.1.md": "6fead95a677024dad161a5cae0d508776d9914720aaa3cfd118ec2f45e011e48",
+    "docs/research/oil-inci/v1.0/00_category_charter.md": "995023cdc782dd6989bb957e621594a97fdd9c2b62950cc8064107378927b82c"
+  },
+  "historical_snapshot_sha256": "96d8038252b1a3849392e18fe6ef287a775bdd4c88b289597b9f752057aebdb7",
+  "blind_lane_read_scope": [
+    "method.md",
+    "blind-packet.json",
+    "blind-lexicon.json"
+  ],
+  "eligible_cases": 4,
+  "scope": "local provisional build-up research; not activated general engine"
+}

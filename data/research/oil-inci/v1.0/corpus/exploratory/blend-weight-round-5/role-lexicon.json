@@ -1,0 +1,1179 @@
+{
+  "version": "oil-round5-function-projection-v1",
+  "entries": [
+    {
+      "canonical_name": "ADANSONIA DIGITATA (BAOBAB) SEED OIL",
+      "aliases": [],
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "validation_status": "source_scoped_function",
+      "notes": "Declared botanical carrier oil in the maker formula. Generic fixed-oil function only; spelling/plant-part differences remain unmatched unless independently present in material-reference. No hidden species weight or alias."
+    },
+    {
+      "canonical_name": "ALCOHOL DENAT.",
+      "aliases": [],
+      "roles": [
+        "solvent_alcohol"
+      ],
+      "validation_status": "admitted",
+      "notes": "Denaturant compositions differ; equivalence is to the denatured-ethanol flag class only, not an identical formulation."
+    },
+    {
+      "canonical_name": "ALOE BARBADENSIS LEAF OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "ALPHA-ISOMETHYL IONONE",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "APIUM GRAVEOLENS (CELERY) SEED EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness."
+    },
+    {
+      "canonical_name": "ARCTIUM LAPPA (BURDOCK ROOT) EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "ARGANIA SPINOSA (ARGAN) KERNEL OIL",
+      "aliases": [],
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "validation_status": "source_scoped_function",
+      "notes": "Declared botanical carrier oil in the maker formula. Generic fixed-oil function only; spelling/plant-part differences remain unmatched unless independently present in material-reference. No hidden species weight or alias."
+    },
+    {
+      "canonical_name": "ARGANIA SPINOSA KERNEL (ARGAN) OIL",
+      "aliases": [],
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "validation_status": "source_scoped_function",
+      "notes": "Declared botanical carrier oil in the maker formula. Generic fixed-oil function only; spelling/plant-part differences remain unmatched unless independently present in material-reference. No hidden species weight or alias."
+    },
+    {
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Direct-study candidate only: NOT in initial admitted positive-anchor set until full-method review; use unknown under that anchor policy."
+    },
+    {
+      "canonical_name": "ASCORBIC ACID (VITAMIN C)",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "AZADIRACHTA INDICA LEAF EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "BENZYL ALCOHOL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "BETA-CARYOPHYLLENE",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "BIOTIN",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness."
+    },
+    {
+      "canonical_name": "BRASSICA NIGRA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "validation_status": "source_scoped_function",
+      "notes": "Declared botanical carrier oil in the maker formula. Generic fixed-oil function only; spelling/plant-part differences remain unmatched unless independently present in material-reference. No hidden species weight or alias."
+    },
+    {
+      "canonical_name": "BRASSICA OLERACEA ITALICA (BROCCOLI) SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight."
+    },
+    {
+      "canonical_name": "BRASSICA OLERACEA ITALICA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight."
+    },
+    {
+      "canonical_name": "C13-15 ALKANE",
+      "aliases": [],
+      "roles": [
+        "hydrocarbon_carrier",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Not liquid mineral oil; feedstock and evaporation profile are not established by this INCI. Supplier blend evidence does not specify the retail grade."
+    },
+    {
+      "canonical_name": "CAMELINA SATIVA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight."
+    },
+    {
+      "canonical_name": "CAMELLIA JAPONICA FLOWER EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "CAMELLIA OLEIFERA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Initial method penetration anchor; 1 g oil/g hair, 24 h at 40 C in this study. Botanical-to-studied-material transfer and ordinary-use limits remain."
+    },
+    {
+      "canonical_name": "CAMPHOR",
+      "aliases": [],
+      "roles": [
+        "cooling_or_aromatic_auxiliary",
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Closed watch-out grouping includes isolated molecule, without asserting botanical origin, efficacy or directions."
+    },
+    {
+      "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+      "aliases": [],
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Processed emollient, not intact feedstock oil. Spreading or skin penetration evidence is not hair penetration or evaporation evidence."
+    },
+    {
+      "canonical_name": "CAPRYLYL CAPRYLATE/CAPRATE",
+      "aliases": [],
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Initial method penetration anchor; 1 g oil/g hair, 24 h at 40 C in this study. Botanical-to-studied-material transfer and ordinary-use limits remain."
+    },
+    {
+      "canonical_name": "CASSIA AURICULATA LEAF EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "CASTOR ISOSTEARATE SUCCINATE",
+      "aliases": [],
+      "roles": [
+        "modified_castor_derivative",
+        "not_assessed"
+      ],
+      "validation_status": "admitted",
+      "notes": "Not intact castor seed oil; film/conditioning role needs specific technical review. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "CENTELLA ASIATICA LEAF EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness."
+    },
+    {
+      "canonical_name": "CINNAMAL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "CITRAL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "CITRONELLOL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "CITRUS AURANTIUM BERGAMIA PEEL OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "CITRUS AURANTIUM PEEL OIL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen",
+        "essential_oil"
+      ],
+      "validation_status": "admitted",
+      "notes": "Fragrance exposure independent of perfuming intent; outside agreed closed scalp-active botanical group. Citrus group does not identify the particular bitter/sweet orange oil."
+    },
+    {
+      "canonical_name": "CITRUS LIMON PEEL OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "COCOS NUCIFERA (COCONUT) OIL",
+      "aliases": [],
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Oil carrier role, no quantified amount/grade or finished-film implication."
+    },
+    {
+      "canonical_name": "COCOS NUCIFERA OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight."
+    },
+    {
+      "canonical_name": "COUMARIN",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "CYCLOPENTASILOXANE",
+      "aliases": [],
+      "roles": [
+        "silicone_carrier",
+        "volatile_carrier"
+      ],
+      "validation_status": "admitted",
+      "notes": "Volatile D5; no blend-residue inference."
+    },
+    {
+      "canonical_name": "DIMETHICONE",
+      "aliases": [],
+      "roles": [
+        "silicone_carrier",
+        "conditioning_film"
+      ],
+      "validation_status": "admitted",
+      "notes": "Grade controls viscosity and volatility; INCI does not establish either. Historical silicone penetration observations do not transfer to an unspecified grade."
+    },
+    {
+      "canonical_name": "DIMETHICONOL",
+      "aliases": [],
+      "roles": [
+        "silicone_gum",
+        "conditioning_film"
+      ],
+      "validation_status": "admitted",
+      "notes": "Gum/residual-film signal; finished load and durability require architecture and grade."
+    },
+    {
+      "canonical_name": "DISILOXANE",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "ECLIPTA ALBA LEAF EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness."
+    },
+    {
+      "canonical_name": "EMBLICA OFFICINALIS FRUIT EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness."
+    },
+    {
+      "canonical_name": "EMBLICA OFFICINALIS FRUIT POWDER",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "EQUISETUM ARVENSE (HORSETAIL) EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness."
+    },
+    {
+      "canonical_name": "EUCALYPTUS GLOBULUS LEAF (EUCALYPTUS) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "EUCALYPTUS GLOBULUS OIL",
+      "aliases": [],
+      "roles": [
+        "essential_oil",
+        "aromatic_auxiliary"
+      ],
+      "validation_status": "admitted",
+      "notes": "Closed aromatic-oil watch-out; no extract/water or species-wide expansion."
+    },
+    {
+      "canonical_name": "EUGENIA CARYOPHYLLUS (CLOVE) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "EUGENOL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "FRAGRANCE (PARFUM)",
+      "aliases": [],
+      "roles": [
+        "fragrance_composition"
+      ],
+      "validation_status": "admitted",
+      "notes": "Mixture composition unspecified; not automatically volatile or negligible."
+    },
+    {
+      "canonical_name": "GARDENIA TAHITENSIS FLOWER EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "GERANIOL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "GERANYL ACETATE",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "GLYCERIN",
+      "aliases": [],
+      "roles": [
+        "humectant"
+      ],
+      "validation_status": "admitted",
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping."
+    },
+    {
+      "canonical_name": "GLYCINE SOJA (SOYBEAN) OIL",
+      "aliases": [],
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Oil carrier role, no quantified amount/grade or finished-film implication."
+    },
+    {
+      "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) OIL",
+      "aliases": [],
+      "roles": [
+        "botanical_oil_plant_part_unspecified",
+        "emollient"
+      ],
+      "validation_status": "admitted_scoped_declaration",
+      "notes": "Reviewed declared botanical oil identity sufficient for closed flag exclusion/qualitative emollient role in this scoped input. Plant part unspecified; NOT a sunflower seed oil alias and no seed-oil scientific transfer. No formula percentage, efficacy, volatility or prominence follows."
+    },
+    {
+      "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Not in initial direct-positive anchor set; no nonpenetration claim."
+    },
+    {
+      "canonical_name": "HEXYL CINNAMAL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "ISOAMYL LAURATE",
+      "aliases": [],
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "validation_status": "generic_function_reviewed",
+      "notes": "Liquid defined ester used in hair-care emollient systems. Generic ester carrier interpretation allowed; no evaporation or finished hair-weight prior. Skin absorption/sensory claims do not choose a hair class."
+    },
+    {
+      "canonical_name": "ISODODECANE",
+      "aliases": [],
+      "roles": [
+        "hydrocarbon_carrier",
+        "solvent",
+        "emollient"
+      ],
+      "validation_status": "generic_function_reviewed",
+      "notes": "Exact hydrocarbon solvent/emollient identity. No retail grade, evaporation rate, retained dose or hair-weight class established."
+    },
+    {
+      "canonical_name": "LAVANDULA LATIFOLIA (LAVENDER) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "LAVANDULA OIL/ EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "LAWSONIA INERMIS (HENNA) LEAF EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness."
+    },
+    {
+      "canonical_name": "LIMONENE",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "LINALOOL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "LINALYL ACETATE",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "MACADAMIA TERNIFOLIA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Oil carrier role, no quantified amount/grade or finished-film implication."
+    },
+    {
+      "canonical_name": "MELALEUCA ALTERNIFOLIA (TEA TREE) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "MELIA AZADIRACHTA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "MENTHA ARVENSIS (PEPPERMINT) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "MENTHA PIPERITA OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "MENTHOL",
+      "aliases": [],
+      "roles": [
+        "cooling_or_aromatic_auxiliary",
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Closed watch-out grouping includes isolated molecule, without asserting botanical origin, efficacy or directions."
+    },
+    {
+      "canonical_name": "NIGELLA SATIVA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight."
+    },
+    {
+      "canonical_name": "OCIMUM BASILICUM (BASIL) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL",
+      "aliases": [],
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Oil carrier role, no quantified amount/grade or finished-film implication."
+    },
+    {
+      "canonical_name": "OLEA EUROPAEA FRUIT OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Not in initial direct-positive anchor set; no nonpenetration claim."
+    },
+    {
+      "canonical_name": "ORYZA SATIVA (RICE) BRAN OIL",
+      "aliases": [],
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Oil carrier role, no quantified amount/grade or finished-film implication."
+    },
+    {
+      "canonical_name": "PARFUM",
+      "aliases": [],
+      "roles": [
+        "fragrance_composition"
+      ],
+      "validation_status": "admitted",
+      "notes": "Mixture composition unspecified; not automatically volatile or negligible."
+    },
+    {
+      "canonical_name": "PARFUM (FRAGRANCE)",
+      "aliases": [],
+      "roles": [
+        "fragrance_composition"
+      ],
+      "validation_status": "source_scoped_function",
+      "notes": "Maker literal expressly labels a fragrance composition; no amount, natural-source or volatility inference."
+    },
+    {
+      "canonical_name": "PARFUM (NATURALLY DERIVED FRAGRANCE)",
+      "aliases": [],
+      "roles": [
+        "fragrance_composition"
+      ],
+      "validation_status": "source_scoped_function",
+      "notes": "Maker literal expressly labels a fragrance composition; no amount, natural-source or volatility inference."
+    },
+    {
+      "canonical_name": "PARFUM/FRAGRANCE",
+      "aliases": [],
+      "roles": [
+        "fragrance_composition"
+      ],
+      "validation_status": "admitted",
+      "notes": "Mixture composition unspecified; not automatically volatile or negligible."
+    },
+    {
+      "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness."
+    },
+    {
+      "canonical_name": "PENTACLETHRA MACROLOBA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "validation_status": "source_scoped_function",
+      "notes": "Declared botanical carrier oil in the maker formula. Generic fixed-oil function only; spelling/plant-part differences remain unmatched unless independently present in material-reference. No hidden species weight or alias."
+    },
+    {
+      "canonical_name": "PERSEA GRATISSIMA (AVOCADO) OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Direct-study candidate only: NOT in initial admitted positive-anchor set until full-method review; use unknown under that anchor policy."
+    },
+    {
+      "canonical_name": "PERSEA GRATISSIMA OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Direct-study candidate only: NOT in initial admitted positive-anchor set until full-method review; use unknown under that anchor policy."
+    },
+    {
+      "canonical_name": "PHYLLANTHUS EMBLICA FRUIT EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "PIMENTA OFFICINALIS (PIMENTO) LEAF OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "PINENE",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "POGOSTEMON CABLIN (PATCHOULI) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness."
+    },
+    {
+      "canonical_name": "POGOSTEMON CABLIN OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "PROPANEDIOL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. No admitted penetration evidence in the bounded review; none means no admitted evidence, not demonstrated nonpenetration."
+    },
+    {
+      "canonical_name": "PRUNUS ARMENIACA (APRICOT) KERNEL OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight."
+    },
+    {
+      "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. No admitted penetration evidence in the bounded review; none means no admitted evidence, not demonstrated nonpenetration."
+    },
+    {
+      "canonical_name": "RICINUS COMMUNIS SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. No admitted penetration evidence in the bounded review; none means no admitted evidence, not demonstrated nonpenetration."
+    },
+    {
+      "canonical_name": "ROSA CANINA FRUIT OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight."
+    },
+    {
+      "canonical_name": "ROSA DAMASCENA FLOWER OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "ROSE KETONES",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "SALVIA OFFICINALIS (SAGE) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness."
+    },
+    {
+      "canonical_name": "SANTALUM ALBUM (SANDALWOOD) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "SCLEROCARYA BIRREA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight."
+    },
+    {
+      "canonical_name": "SESAMUM INDICUM (SESAME) SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight."
+    },
+    {
+      "canonical_name": "SH-OLIGOPEPTIDE-78",
+      "aliases": [],
+      "roles": [
+        "peptide",
+        "not_assessed"
+      ],
+      "validation_status": "admitted",
+      "notes": "Exact identity only; no repair, penetration, film, heat or benefit claim is adopted. Modified oil polymer is not intact source oils. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) OIL",
+      "aliases": [],
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "validation_status": "source_scoped_function",
+      "notes": "Declared botanical carrier oil in the maker formula. Generic fixed-oil function only; spelling/plant-part differences remain unmatched unless independently present in material-reference. No hidden species weight or alias."
+    },
+    {
+      "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. No admitted penetration evidence in the bounded review; none means no admitted evidence, not demonstrated nonpenetration. Wax-ester chemistry; retain intact-botanical identity precedence."
+    },
+    {
+      "canonical_name": "SQUALANE",
+      "aliases": [],
+      "roles": [
+        "hydrocarbon_emollient"
+      ],
+      "validation_status": "admitted",
+      "notes": "No plant-oil identity or feedstock follows from the name; no admitted penetration anchor."
+    },
+    {
+      "canonical_name": "TERPINEOL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Fragrance exposure independent of perfuming intent; outside agreed closed scalp-active botanical group. Citrus group does not identify the particular bitter/sweet orange oil."
+    },
+    {
+      "canonical_name": "TERPINOLENE",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness."
+    },
+    {
+      "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "validation_status": "admitted",
+      "notes": "Fragrance exposure independent of perfuming intent; outside agreed closed scalp-active botanical group. Citrus group does not identify the particular bitter/sweet orange oil."
+    },
+    {
+      "canonical_name": "TOCOPHEROL",
+      "aliases": [],
+      "roles": [
+        "antioxidant"
+      ],
+      "validation_status": "admitted",
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping."
+    },
+    {
+      "canonical_name": "TOCOPHERYL ACETATE",
+      "aliases": [],
+      "roles": [
+        "antioxidant_auxiliary"
+      ],
+      "validation_status": "admitted",
+      "notes": "Historical antioxidant-function listing does not prove formula-preservation activity or equal performance to Tocopherol. Do not silently equate vitamin-E forms or grant hair UV protection."
+    },
+    {
+      "canonical_name": "TRIDECANE",
+      "aliases": [],
+      "roles": [
+        "hydrocarbon_carrier",
+        "possible_volatile_vehicle_in_reviewed_pair"
+      ],
+      "validation_status": "admitted",
+      "notes": "Volatility support is for the specified supplier blend; do not silently transfer its rate to another grade or formula. BASF Ultimate supports volatile Undecane/Tridecane blend; pair/grade transfer is bounded, no all-alkane inference."
+    },
+    {
+      "canonical_name": "TRISILOXANE",
+      "aliases": [],
+      "roles": [
+        "silicone_carrier",
+        "volatile_carrier"
+      ],
+      "validation_status": "admitted",
+      "notes": "Volatility of this material does not resolve blend residue."
+    },
+    {
+      "canonical_name": "TRITICUM VULGARE (WHEAT) GERM OIL",
+      "aliases": [],
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Oil carrier role, no quantified amount/grade or finished-film implication."
+    },
+    {
+      "canonical_name": "UNDECANE",
+      "aliases": [],
+      "roles": [
+        "hydrocarbon_carrier",
+        "possible_volatile_vehicle_in_reviewed_pair"
+      ],
+      "validation_status": "admitted",
+      "notes": "Volatility support is for the specified supplier blend; do not silently transfer its rate to another grade or formula. BASF Ultimate supports volatile Undecane/Tridecane blend; pair/grade transfer is bounded, no all-alkane inference."
+    },
+    {
+      "canonical_name": "URTICA DIOICA (NETTLE) EXTRACT",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness."
+    },
+    {
+      "canonical_name": "VANILLIN",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "No generic identity/function or concentration inferred; retain as uncertainty. A tail position alone does not establish harmlessness."
+    },
+    {
+      "canonical_name": "VITAMIN E (MIXED TOCOPHEROL) OIL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "validation_status": "source_literal_unresolved",
+      "notes": "Literal declaration retained; generic function/preparation not independently reviewed in this weight-only round. Must be unresolved and named in gaps. Does not automatically prevent a class when the first-order architecture is established."
+    },
+    {
+      "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL",
+      "aliases": [],
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Oil carrier role, no quantified amount/grade or finished-film implication."
+    },
+    {
+      "canonical_name": "ZEA MAYS GERM OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "validation_status": "admitted_material_identity",
+      "notes": "Exact admitted intact oil declaration; generic fixed-oil role only, no formula quantity or automatic product weight."
+    }
+  ],
+  "unresolved_names": [
+    "ALOE BARBADENSIS LEAF OIL",
+    "APIUM GRAVEOLENS (CELERY) SEED EXTRACT",
+    "ARCTIUM LAPPA (BURDOCK ROOT) EXTRACT",
+    "ASCORBIC ACID (VITAMIN C)",
+    "AZADIRACHTA INDICA LEAF EXTRACT",
+    "BIOTIN",
+    "CAMELLIA JAPONICA FLOWER EXTRACT",
+    "CASSIA AURICULATA LEAF EXTRACT",
+    "CASTOR ISOSTEARATE SUCCINATE",
+    "CENTELLA ASIATICA LEAF EXTRACT",
+    "CITRUS AURANTIUM BERGAMIA PEEL OIL",
+    "CITRUS LIMON PEEL OIL",
+    "COUMARIN",
+    "DISILOXANE",
+    "ECLIPTA ALBA LEAF EXTRACT",
+    "EMBLICA OFFICINALIS FRUIT EXTRACT",
+    "EMBLICA OFFICINALIS FRUIT POWDER",
+    "EQUISETUM ARVENSE (HORSETAIL) EXTRACT",
+    "EUCALYPTUS GLOBULUS LEAF (EUCALYPTUS) OIL",
+    "EUGENIA CARYOPHYLLUS (CLOVE) OIL",
+    "GARDENIA TAHITENSIS FLOWER EXTRACT",
+    "LAVANDULA LATIFOLIA (LAVENDER) OIL",
+    "LAVANDULA OIL/ EXTRACT",
+    "LAWSONIA INERMIS (HENNA) LEAF EXTRACT",
+    "MELALEUCA ALTERNIFOLIA (TEA TREE) OIL",
+    "MELIA AZADIRACHTA SEED OIL",
+    "MENTHA ARVENSIS (PEPPERMINT) OIL",
+    "MENTHA PIPERITA OIL",
+    "OCIMUM BASILICUM (BASIL) OIL",
+    "PELARGONIUM GRAVEOLENS FLOWER OIL",
+    "PHYLLANTHUS EMBLICA FRUIT EXTRACT",
+    "PIMENTA OFFICINALIS (PIMENTO) LEAF OIL",
+    "POGOSTEMON CABLIN (PATCHOULI) OIL",
+    "POGOSTEMON CABLIN OIL",
+    "PROPANEDIOL",
+    "ROSA DAMASCENA FLOWER OIL",
+    "ROSE KETONES",
+    "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL",
+    "SALVIA OFFICINALIS (SAGE) OIL",
+    "SANTALUM ALBUM (SANDALWOOD) OIL",
+    "SH-OLIGOPEPTIDE-78",
+    "TERPINOLENE",
+    "URTICA DIOICA (NETTLE) EXTRACT",
+    "VANILLIN",
+    "VITAMIN E (MIXED TOCOPHEROL) OIL"
+  ],
+  "limits": "Functions, not amounts or finished-product weights. Exact literal scoped roles and unresolved declarations only."
+}

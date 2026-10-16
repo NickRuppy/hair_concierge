@@ -1,0 +1,1064 @@
+{
+  "entries": [
+    {
+      "slot": "E06",
+      "rank": 1,
+      "raw_name": "CAPRYLYL CAPRYLATE/CAPRATE",
+      "canonical_name": "CAPRYLYL CAPRYLATE/CAPRATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E06",
+      "rank": 2,
+      "raw_name": "SQUALANE",
+      "canonical_name": "SQUALANE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E06",
+      "rank": 3,
+      "raw_name": "PERSEA GRATISSIMA (AVOCADO) OIL",
+      "canonical_name": "PERSEA GRATISSIMA OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E06",
+      "rank": 4,
+      "raw_name": "HELIANTHUS ANNUUS (SUNFLOWER) OIL",
+      "canonical_name": "HELIANTHUS ANNUUS OIL",
+      "admission": "admitted_scoped_declaration"
+    },
+    {
+      "slot": "E06",
+      "rank": 5,
+      "raw_name": "C13-15 ALKANE",
+      "canonical_name": "C13-15 ALKANE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E06",
+      "rank": 6,
+      "raw_name": "UNDECANE",
+      "canonical_name": "UNDECANE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E06",
+      "rank": 7,
+      "raw_name": "BENZYL ALCOHOL",
+      "canonical_name": "BENZYL ALCOHOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E06",
+      "rank": 8,
+      "raw_name": "TRIDECANE",
+      "canonical_name": "TRIDECANE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E06",
+      "rank": 9,
+      "raw_name": "CASTOR ISOSTEARATE SUCCINATE",
+      "canonical_name": "CASTOR ISOSTEARATE SUCCINATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E06",
+      "rank": 10,
+      "raw_name": "PROPANEDIOL",
+      "canonical_name": "PROPANEDIOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E06",
+      "rank": 11,
+      "raw_name": "SH-OLIGOPEPTIDE-78",
+      "canonical_name": "SH-OLIGOPEPTIDE-78",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E06",
+      "rank": 12,
+      "raw_name": "FRAGRANCE (PARFUM)",
+      "canonical_name": "PARFUM",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E06",
+      "rank": 13,
+      "raw_name": "TOCOPHEROL",
+      "canonical_name": "TOCOPHEROL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E06",
+      "rank": 14,
+      "raw_name": "CINNAMAL",
+      "canonical_name": "CINNAMAL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E06",
+      "rank": 15,
+      "raw_name": "HEXYL CINNAMAL",
+      "canonical_name": "HEXYL CINNAMAL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E06",
+      "rank": 16,
+      "raw_name": "LIMONENE",
+      "canonical_name": "LIMONENE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E06",
+      "rank": 17,
+      "raw_name": "LINALOOL.",
+      "canonical_name": "LINALOOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 1,
+      "raw_name": "Prunus amygdalus dulcis (Sweet almond) oil",
+      "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 2,
+      "raw_name": "Ricinus communis (Castor) seed oil",
+      "canonical_name": "RICINUS COMMUNIS SEED OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 3,
+      "raw_name": "Carthamus tinctorius (Safflower) seed oil",
+      "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 4,
+      "raw_name": "Rosmarinus officinalis (Rosemary) leaf oil",
+      "canonical_name": "ROSMARINUS OFFICINALIS LEAF OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 5,
+      "raw_name": "Mentha arvensis (Wild mint) leaf oil",
+      "canonical_name": "MENTHA ARVENSIS LEAF OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 6,
+      "raw_name": "Lavandula oil/extract",
+      "canonical_name": "LAVANDULA OIL/EXTRACT",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 7,
+      "raw_name": "Camphor",
+      "canonical_name": "CAMPHOR",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 8,
+      "raw_name": "Menthol",
+      "canonical_name": "MENTHOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 9,
+      "raw_name": "Tocopheryl acetate",
+      "canonical_name": "TOCOPHERYL ACETATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 10,
+      "raw_name": "Beta-caryophyllene",
+      "canonical_name": "BETA-CARYOPHYLLENE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 11,
+      "raw_name": "Pinene",
+      "canonical_name": "PINENE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 12,
+      "raw_name": "Terpineol",
+      "canonical_name": "TERPINEOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 13,
+      "raw_name": "Geranyl acetate",
+      "canonical_name": "GERANYL ACETATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 14,
+      "raw_name": "Linalyl acetate",
+      "canonical_name": "LINALYL ACETATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 15,
+      "raw_name": "Geraniol",
+      "canonical_name": "GERANIOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 16,
+      "raw_name": "Limonene",
+      "canonical_name": "LIMONENE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E02",
+      "rank": 17,
+      "raw_name": "Linalool",
+      "canonical_name": "LINALOOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 1,
+      "raw_name": "Aqua / Water",
+      "canonical_name": "AQUA",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 2,
+      "raw_name": "Isopropyl Myristate",
+      "canonical_name": "ISOPROPYL MYRISTATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 3,
+      "raw_name": "Isododecane",
+      "canonical_name": "ISODODECANE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 4,
+      "raw_name": "Dimethicone",
+      "canonical_name": "DIMETHICONE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 5,
+      "raw_name": "Vp/Va Copolymer",
+      "canonical_name": "VP/VA COPOLYMER",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 6,
+      "raw_name": "Magnesium Sulfate",
+      "canonical_name": "MAGNESIUM SULFATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 7,
+      "raw_name": "Phenoxyethanol",
+      "canonical_name": "PHENOXYETHANOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 8,
+      "raw_name": "Chlorphenesin",
+      "canonical_name": "CHLORPHENESIN",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 9,
+      "raw_name": "Caprylyl Glycol",
+      "canonical_name": "CAPRYLYL GLYCOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 10,
+      "raw_name": "Cocos Nucifera Oil / Coconut Oil",
+      "canonical_name": "COCOS NUCIFERA OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 11,
+      "raw_name": "Ethylhexyl Salicylate",
+      "canonical_name": "ETHYLHEXYL SALICYLATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 12,
+      "raw_name": "Benzyl Alcohol",
+      "canonical_name": "BENZYL ALCOHOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 13,
+      "raw_name": "Orbignya Oleifera Seed Oil",
+      "canonical_name": "ORBIGNYA OLEIFERA SEED OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 14,
+      "raw_name": "Tocopherol",
+      "canonical_name": "TOCOPHEROL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 15,
+      "raw_name": "Citric Acid",
+      "canonical_name": "CITRIC ACID",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 16,
+      "raw_name": "Ci 19140 / Yellow 5",
+      "canonical_name": "CI 19140",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 17,
+      "raw_name": "Ci 17200 / Red 33",
+      "canonical_name": "CI 17200",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 18,
+      "raw_name": "Sodium Hydroxide",
+      "canonical_name": "SODIUM HYDROXIDE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E08",
+      "rank": 19,
+      "raw_name": "Parfum / Fragrance",
+      "canonical_name": "PARFUM",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E01",
+      "rank": 1,
+      "raw_name": "Cocos Nucifera Fruit Oil",
+      "canonical_name": "COCOS NUCIFERA OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 1,
+      "raw_name": "C13‐15 Alkane",
+      "canonical_name": "C13-15 ALKANE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 2,
+      "raw_name": "Isohexadecane",
+      "canonical_name": "ISOHEXADECANE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 3,
+      "raw_name": "Isododecane",
+      "canonical_name": "ISODODECANE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 4,
+      "raw_name": "Isoamyl Laurate",
+      "canonical_name": "ISOAMYL LAURATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 5,
+      "raw_name": "Ethylene/Propylene/Styrene Copolymer",
+      "canonical_name": "ETHYLENE/PROPYLENE/STYRENE COPOLYMER",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 6,
+      "raw_name": "C9-12 Alkane",
+      "canonical_name": "C9-12 ALKANE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 7,
+      "raw_name": "Hippophae Rhamnoides (Sea Buckthorn) Fruit Oil",
+      "canonical_name": "HIPPOPHAE RHAMNOIDES FRUIT OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 8,
+      "raw_name": "Helianthus Annus (Sunflower) Seed Oil",
+      "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 9,
+      "raw_name": "Coco Caprylate/Caprate",
+      "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 10,
+      "raw_name": "Brassica Campestris/Aleurites Fordi Oil Copolymer",
+      "canonical_name": "BRASSICA CAMPESTRIS/ALEURITES FORDI OIL COPOLYMER",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 11,
+      "raw_name": "Citrullus Lanatus Seed Oil",
+      "canonical_name": "CITRULLUS LANATUS SEED OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 12,
+      "raw_name": "Moringa Oleifera Seed Oil",
+      "canonical_name": "MORINGA OLEIFERA SEED OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 13,
+      "raw_name": "Simmondsia Chinensis (Jojoba) Seed Oil",
+      "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 14,
+      "raw_name": "Orbignya Oleifera Seed Oil",
+      "canonical_name": "ORBIGNYA OLEIFERA SEED OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 15,
+      "raw_name": "Phytosteryl/Octyldodecyl Lauroyl Glutamate",
+      "canonical_name": "PHYTOSTERYL/OCTYLDODECYL LAUROYL GLUTAMATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 16,
+      "raw_name": "Butylene/Ethylene/Styrene Copolymer",
+      "canonical_name": "BUTYLENE/ETHYLENE/STYRENE COPOLYMER",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 17,
+      "raw_name": "Amaranthus Caudatus Seed Extract",
+      "canonical_name": "AMARANTHUS CAUDATUS SEED EXTRACT",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 18,
+      "raw_name": "Diisostearyl Malate",
+      "canonical_name": "DIISOSTEARYL MALATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 19,
+      "raw_name": "Pentaerythrityl Tetra-Di-T-Butylhydroxyhydrocinnamate",
+      "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 20,
+      "raw_name": "Parfum",
+      "canonical_name": "PARFUM",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 21,
+      "raw_name": "Citronellol",
+      "canonical_name": "CITRONELLOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 22,
+      "raw_name": "Limonene",
+      "canonical_name": "LIMONENE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 23,
+      "raw_name": "Citral",
+      "canonical_name": "CITRAL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E05",
+      "rank": 24,
+      "raw_name": "Linalool",
+      "canonical_name": "LINALOOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 1,
+      "raw_name": "Aqua [Water]",
+      "canonical_name": "AQUA",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 2,
+      "raw_name": "Polyquaternium-10",
+      "canonical_name": "POLYQUATERNIUM-10",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 3,
+      "raw_name": "Polysorbate 20",
+      "canonical_name": "POLYSORBATE 20",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 4,
+      "raw_name": "Glycerin",
+      "canonical_name": "GLYCERIN",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 5,
+      "raw_name": "PEG-40 hydrogenated castor oil",
+      "canonical_name": "PEG-40 HYDROGENATED CASTOR OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 6,
+      "raw_name": "Avena sativa (Oat) peptide",
+      "canonical_name": "AVENA SATIVA PEPTIDE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 7,
+      "raw_name": "Gardenia taitensis flower extract",
+      "canonical_name": "GARDENIA TAITENSIS FLOWER EXTRACT",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 8,
+      "raw_name": "Lycium barbarum fruit extract",
+      "canonical_name": "LYCIUM BARBARUM FRUIT EXTRACT",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 9,
+      "raw_name": "Malva sylvestris (Mallow) extract",
+      "canonical_name": "MALVA SYLVESTRIS EXTRACT",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 10,
+      "raw_name": "Juniperus virginiana oil",
+      "canonical_name": "JUNIPERUS VIRGINIANA OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 11,
+      "raw_name": "Citrus aurantium peel oil",
+      "canonical_name": "CITRUS AURANTIUM PEEL OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 12,
+      "raw_name": "Phenoxyethanol",
+      "canonical_name": "PHENOXYETHANOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 13,
+      "raw_name": "PPG-3 caprylyl ether",
+      "canonical_name": "PPG-3 CAPRYLYL ETHER",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 14,
+      "raw_name": "Ethylhexylglycerin",
+      "canonical_name": "ETHYLHEXYLGLYCERIN",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 15,
+      "raw_name": "Tetramethyl acetyloctahydronaphthalenes",
+      "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 16,
+      "raw_name": "C13-15 alkane",
+      "canonical_name": "C13-15 ALKANE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 17,
+      "raw_name": "Ethylhexyl methoxycinnamate",
+      "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 18,
+      "raw_name": "Propylene glycol",
+      "canonical_name": "PROPYLENE GLYCOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 19,
+      "raw_name": "Citric acid",
+      "canonical_name": "CITRIC ACID",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 20,
+      "raw_name": "Linalyl acetate",
+      "canonical_name": "LINALYL ACETATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 21,
+      "raw_name": "CI 47005 [Yellow 10]",
+      "canonical_name": "CI 47005",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 22,
+      "raw_name": "1,2-Hexanediol",
+      "canonical_name": "1,2-HEXANEDIOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 23,
+      "raw_name": "Caprylyl glycol",
+      "canonical_name": "CAPRYLYL GLYCOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 24,
+      "raw_name": "Parfum [Fragrance]",
+      "canonical_name": "PARFUM",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 25,
+      "raw_name": "Limonene",
+      "canonical_name": "LIMONENE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 26,
+      "raw_name": "Hexyl cinnamal",
+      "canonical_name": "HEXYL CINNAMAL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E07",
+      "rank": 27,
+      "raw_name": "Linalool",
+      "canonical_name": "LINALOOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 1,
+      "raw_name": "Dimethicone",
+      "canonical_name": "DIMETHICONE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 2,
+      "raw_name": "Isohexadecane",
+      "canonical_name": "ISOHEXADECANE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 3,
+      "raw_name": "C13-14 Isoalkane",
+      "canonical_name": "C13-14 ISOALKANE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 4,
+      "raw_name": "Coco-Caprylate",
+      "canonical_name": "COCO-CAPRYLATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 5,
+      "raw_name": "Phenyl Trimethicone",
+      "canonical_name": "PHENYL TRIMETHICONE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 6,
+      "raw_name": "Bis-Aminopropyl Diglycol Dimaleate",
+      "canonical_name": "BIS-AMINOPROPYL DIGLYCOL DIMALEATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 7,
+      "raw_name": "Propanediol",
+      "canonical_name": "PROPANEDIOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 8,
+      "raw_name": "Zea Mays (Corn) Oil",
+      "canonical_name": "ZEA MAYS OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 9,
+      "raw_name": "Beta-Carotene",
+      "canonical_name": "BETA-CAROTENE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 10,
+      "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+      "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 11,
+      "raw_name": "Punica Granatum Seed Oil",
+      "canonical_name": "PUNICA GRANATUM SEED OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 12,
+      "raw_name": "Water/Aqua/Eau",
+      "canonical_name": "AQUA",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 13,
+      "raw_name": "Morinda Citrifolia Fruit Extract",
+      "canonical_name": "MORINDA CITRIFOLIA FRUIT EXTRACT",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 14,
+      "raw_name": "Tocopherol",
+      "canonical_name": "TOCOPHEROL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 15,
+      "raw_name": "Pseudozyma Epicola/Camellia Sinensis Seed Oil Ferment Extract Filtrate",
+      "canonical_name": "PSEUDOZYMA EPICOLA/CAMELLIA SINENSIS SEED OIL FERMENT EXTRACT FILTRATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 16,
+      "raw_name": "Fragrance (Parfum)",
+      "canonical_name": "PARFUM",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 17,
+      "raw_name": "Citral",
+      "canonical_name": "CITRAL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 18,
+      "raw_name": "Linalool",
+      "canonical_name": "LINALOOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 19,
+      "raw_name": "Limonene",
+      "canonical_name": "LIMONENE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 20,
+      "raw_name": "Citronellol",
+      "canonical_name": "CITRONELLOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E03",
+      "rank": 21,
+      "raw_name": "Hexyl Cinnamal",
+      "canonical_name": "HEXYL CINNAMAL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 1,
+      "raw_name": "Dimethicone",
+      "canonical_name": "DIMETHICONE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 2,
+      "raw_name": "Isopropyl Myristate",
+      "canonical_name": "ISOPROPYL MYRISTATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 3,
+      "raw_name": "Dimethiconol",
+      "canonical_name": "DIMETHICONOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 4,
+      "raw_name": "C12-15 Alkyl Benzoate",
+      "canonical_name": "C12-15 ALKYL BENZOATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 5,
+      "raw_name": "Argania Spinosa Kernel Oil",
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 6,
+      "raw_name": "Cocos Nucifera (Coconut) Oil",
+      "canonical_name": "COCOS NUCIFERA OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 7,
+      "raw_name": "Gardenia Taitensis Flower Extract",
+      "canonical_name": "GARDENIA TAITENSIS FLOWER EXTRACT",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 8,
+      "raw_name": "Vanilla Planifolia Fruit Extract",
+      "canonical_name": "VANILLA PLANIFOLIA FRUIT EXTRACT",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 9,
+      "raw_name": "Carthamus Tinctorius (Safflower) Seed Oil",
+      "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 10,
+      "raw_name": "Tocopheryl Acetate",
+      "canonical_name": "TOCOPHERYL ACETATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 11,
+      "raw_name": "Parfum/Fragrance",
+      "canonical_name": "PARFUM",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 12,
+      "raw_name": "Benzyl Benzoate",
+      "canonical_name": "BENZYL BENZOATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 13,
+      "raw_name": "Linalool",
+      "canonical_name": "LINALOOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 14,
+      "raw_name": "Benzyl Salicylate",
+      "canonical_name": "BENZYL SALICYLATE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 15,
+      "raw_name": "Limonene",
+      "canonical_name": "LIMONENE",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 16,
+      "raw_name": "Benzyl Alcohol",
+      "canonical_name": "BENZYL ALCOHOL",
+      "admission": "admitted"
+    },
+    {
+      "slot": "E04",
+      "rank": 17,
+      "raw_name": "Coumarin",
+      "canonical_name": "COUMARIN",
+      "admission": "admitted"
+    }
+  ],
+  "input_hashes": [
+    {
+      "neutral_id": "F01",
+      "slot": "E06",
+      "ingredient_count": 17,
+      "raw_inci_sha256": "48ff98d511f87ee302e4950a89179452020fef271f0abddfeba85feed5b2b47d",
+      "normalized_ingredient_sha256": "9f580f3b912abffb7530d09e9ae45ae1b29c13ef37f975aabf723b98890cd022"
+    },
+    {
+      "neutral_id": "F02",
+      "slot": "E02",
+      "ingredient_count": 17,
+      "raw_inci_sha256": "a2f4a532222b0be1083e6e7ff443a1d673c09912b8b60f9f02286524a86e1c68",
+      "normalized_ingredient_sha256": "6876995441866e72808d0deac639089d095ccd68bdf487776c27bb9f82936010"
+    },
+    {
+      "neutral_id": "F03",
+      "slot": "E08",
+      "ingredient_count": 19,
+      "raw_inci_sha256": "9c1bb5f4e619e3569b52a3bc2a2d52c45ab8a310feff259c8933b214a23399fe",
+      "normalized_ingredient_sha256": "59f4c86327c24be64656cc938a2d78c120637b6405c62a7b05a1b44444559ff7"
+    },
+    {
+      "neutral_id": "F04",
+      "slot": "E01",
+      "ingredient_count": 1,
+      "raw_inci_sha256": "12d315272564ff15869bd669ab67e3c97ee7009e31089e76838a510a166cd70a",
+      "normalized_ingredient_sha256": "b2c937f02e96dc517a26cba49681898b311aedc0f16768765d59eec1704fcae7"
+    },
+    {
+      "neutral_id": "F05",
+      "slot": "E05",
+      "ingredient_count": 24,
+      "raw_inci_sha256": "c1dd2dbaf452e4fe9e01a81c69059c0b82cf7a0eb0420bbffee588bc6153676b",
+      "normalized_ingredient_sha256": "e639d82669fb07d7db479769fd96531fce8be59a2d9cf0456cd09c89b5a36169"
+    },
+    {
+      "neutral_id": "F06",
+      "slot": "E07",
+      "ingredient_count": 27,
+      "raw_inci_sha256": "da4fa9ad6c6d521e3fc0ca85bbb3a1730b3a9f1e3ca445550974a18cfc08a0a8",
+      "normalized_ingredient_sha256": "fdc43a1f5729b4bc772c08fee361b880fe76a9b3096a60ada1658b1b5dc68789"
+    },
+    {
+      "neutral_id": "F07",
+      "slot": "E03",
+      "ingredient_count": 21,
+      "raw_inci_sha256": "f2cf36c05776f5e6d9202358439382ec7bdb5e62620fae6f5ac5e5d9a009d76e",
+      "normalized_ingredient_sha256": "81a906e935095e536ac60ac84e62d8d9d52f76053cd2e102723b52208d90c018"
+    },
+    {
+      "neutral_id": "F08",
+      "slot": "E04",
+      "ingredient_count": 17,
+      "raw_inci_sha256": "514034a70c1594f31913a5e35a2c45a1990ee7bf5d0a918672c9361150e625b5",
+      "normalized_ingredient_sha256": "aa3ecbb53d2a9c6f917c2b6e73aefde9499b2005e9e41d80e02850bbab564552"
+    }
+  ],
+  "scoped_material_receipt": "main-material-mappings.md"
+}

@@ -1,0 +1,39 @@
+{
+  "lane_id": "a",
+  "files_read": [
+    "method.md",
+    "blind-packet.json",
+    "dictionary.json",
+    "material-weight-reference.json"
+  ],
+  "input_hashes": {
+    "method.md": "bed580a121f35c344208add0a561a4291ade68586d4a8eb0120fe606370597e0",
+    "blind-packet.json": "34a5ea5a7fb45240c01963f50f54ebc80021fb798ca4c5394a22d8d97174fb42",
+    "dictionary.json": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+  },
+  "completed_ids": [
+    "H01",
+    "H02",
+    "H03",
+    "H04",
+    "H05",
+    "H06"
+  ],
+  "recognized_formulas": [
+    {
+      "case_id": "H04",
+      "detail": "The botanical parenthetical term RAHUA is spontaneously familiar as a commercial term; no exact product/formula identity was identified, looked up or used. No other complete formula was spontaneously recognized."
+    }
+  ],
+  "access_incidents": [],
+  "limitations": [
+    "The initial combined input display was truncated; bounded reads of the same four allowed files completed all content before assessment. No linked provenance source was opened.",
+    "Exact top-of-method case_id schema controls over the embedded older neutral_id example.",
+    "H04 base, weight and penetration remain unknown because leading exact preparations/functions are unresolved; its required moderate persistence commitment explicitly assumes ordinary retained lipid preparation behavior.",
+    "H01 rank 3 and several later functions; H02 malic acid/ascorbyl palmitate; and multiple H05 botanical/extract forms remain unresolved. They are not treated as negligible or assigned new functions.",
+    "Closed fragrance flags retain the supplied exact reviewed membership, including negatives for several fragrance-like names. No name-based expansion was made.",
+    "Every blend weight is a low-confidence estimate. Concentrations, grades, comparative hair outcomes and exact film behavior remain unmeasured. Material weight priors did not set persistence.",
+    "Source identity, directions, claims and source binding remain outside Stage 1; admitted neutral retained-fibre context is copied exactly. Stage 2 was not entered."
+  ]
+}

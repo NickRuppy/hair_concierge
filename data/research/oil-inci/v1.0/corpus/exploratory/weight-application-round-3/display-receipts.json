@@ -1,0 +1,95 @@
+{
+  "records": [
+    {
+      "neutral_id": "W02",
+      "rank": 1,
+      "raw_display": "Simmondsia Chinensis (Jojoba) Seed Oil*",
+      "resolved_display": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL",
+      "source_url": "https://www.primaveralife.com/jojobaoel-bio.html",
+      "scope": "exact captured product only",
+      "reason": "Manufacturer sourcing asterisk/common-name parenthetical or localized display resolved from this exact page; no generic alias added."
+    },
+    {
+      "neutral_id": "W03",
+      "rank": 1,
+      "raw_display": "MORINGA OLEIFERA (MORINGA) SEED OIL*",
+      "resolved_display": "MORINGA OLEIFERA SEED OIL",
+      "source_url": "https://www.cliganic.com/products/100-pure-organic-moringa-oil",
+      "scope": "exact captured product only",
+      "reason": "Manufacturer sourcing asterisk/common-name parenthetical or localized display resolved from this exact page; no generic alias added."
+    },
+    {
+      "neutral_id": "W04",
+      "rank": 1,
+      "raw_display": "Helianthus Annuus (Sunflower) Seed Oil*",
+      "resolved_display": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+      "source_url": "https://www.primaveralife.com/calendulaoel-bio.html",
+      "scope": "exact captured product only",
+      "reason": "Manufacturer sourcing asterisk/common-name parenthetical or localized display resolved from this exact page; no generic alias added."
+    },
+    {
+      "neutral_id": "W04",
+      "rank": 2,
+      "raw_display": "Olea Europaea (Olive) Fruit Oil*",
+      "resolved_display": "OLEA EUROPAEA (OLIVE) FRUIT OIL",
+      "source_url": "https://www.primaveralife.com/calendulaoel-bio.html",
+      "scope": "exact captured product only",
+      "reason": "Manufacturer sourcing asterisk/common-name parenthetical or localized display resolved from this exact page; no generic alias added."
+    },
+    {
+      "neutral_id": "W04",
+      "rank": 3,
+      "raw_display": "Calendula Officinalis Flower Extract*",
+      "resolved_display": "CALENDULA OFFICINALIS FLOWER EXTRACT",
+      "source_url": "https://www.primaveralife.com/calendulaoel-bio.html",
+      "scope": "exact captured product only",
+      "reason": "Manufacturer sourcing asterisk/common-name parenthetical or localized display resolved from this exact page; no generic alias added."
+    },
+    {
+      "neutral_id": "W04",
+      "rank": 4,
+      "raw_display": "Rosmarinus Officinalis (Rosemary) Leaf Extract*",
+      "resolved_display": "ROSMARINUS OFFICINALIS LEAF EXTRACT",
+      "source_url": "https://www.primaveralife.com/calendulaoel-bio.html",
+      "scope": "exact captured product only",
+      "reason": "Manufacturer sourcing asterisk/common-name parenthetical or localized display resolved from this exact page; no generic alias added."
+    },
+    {
+      "neutral_id": "W07",
+      "rank": 1,
+      "raw_display": "Argania Spinosa Kernel Oil*",
+      "resolved_display": "ARGANIA SPINOSA KERNEL OIL",
+      "source_url": "https://www.primaveralife.com/arganoel-bio.html",
+      "scope": "exact captured product only",
+      "reason": "Manufacturer sourcing asterisk/common-name parenthetical or localized display resolved from this exact page; no generic alias added."
+    },
+    {
+      "neutral_id": "W09",
+      "rank": 12,
+      "raw_display": "Wasser/Aqua/Eau",
+      "resolved_display": "AQUA",
+      "source_url": "https://olaplex.de/collections/glanz-shine/products/olaplex-no-7-bonding-oil",
+      "scope": "exact captured product only",
+      "reason": "Manufacturer sourcing asterisk/common-name parenthetical or localized display resolved from this exact page; no generic alias added."
+    },
+    {
+      "neutral_id": "W09",
+      "rank": 16,
+      "raw_display": "Parfüm (Parfum)",
+      "resolved_display": "PARFUM",
+      "source_url": "https://olaplex.de/collections/glanz-shine/products/olaplex-no-7-bonding-oil",
+      "scope": "exact captured product only",
+      "reason": "Manufacturer sourcing asterisk/common-name parenthetical or localized display resolved from this exact page; no generic alias added."
+    },
+    {
+      "neutral_id": "W10",
+      "rank": 1,
+      "raw_display": "Nigella Sativa Seed Oil*",
+      "resolved_display": "NIGELLA SATIVA SEED OIL",
+      "source_url": "https://www.primaveralife.com/schwarzkuemmeloel-bio.html",
+      "scope": "exact captured product only",
+      "reason": "Manufacturer sourcing asterisk/common-name parenthetical or localized display resolved from this exact page; no generic alias added."
+    }
+  ],
+  "generic_aliases_added": 0
+}

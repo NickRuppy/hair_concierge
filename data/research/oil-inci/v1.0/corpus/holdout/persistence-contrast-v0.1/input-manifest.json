@@ -1,0 +1,31 @@
+{
+  "policy_version": "oil-persistence-boundaries-v0.1",
+  "allowed_blind_inputs": {
+    "method.md": "923d20489567c35c81c5a6b2fcdbc7dc0d4e8e3587978de5d51e292bb64417c2",
+    "neutral-packet.json": "5927be82370de290f11b0abdf50b561422942da9bad31c2743f3af65fb1fec28",
+    "function-dictionary.json": "2b239859c6eec60b4da1fcd1c02151d946c482ba5d2d1d50c760f22a5a8cd92d"
+  },
+  "dependencies": {
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json": "5a440ee45d8ac0a1f2187fda63a8bd28c265cd9ec85060b2e3fe4b632aac70f2",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json": "45fbdca0710d99bbc813409c9de388a40b9a31ba20931535f831e9ee73ff0253",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.9.md": "d00a7fd6d870163e6d95ad0fb52e9a0208c9232736f4b0c204abf4b31a1446ba",
+    "docs/research/oil-inci/v1.0/10_persistence-guidance-v0.3.md": "01c3c1caa317d588cc4bdc429dc171fcc1f47c51f289402652ede1adae08b248",
+    "docs/research/oil-inci/v1.0/11_operating-guide-v0.3.md": "3087b412c1e9bb7b2d444a0c032a39086762318bcf3dde4094981ea4ffc2c925"
+  },
+  "source_bindings_sha256": "53c9b3f4dc46e45fa75b9c30d8c0ffc822c48e2f03484a8f5db5a5626dfb028f",
+  "source_receipts": {
+    "plans/oil-inci/research/persistence-contrast-2026-10-15/source-a/PA01-source-excerpt.md": "408992385cf985a759e9ef53551a433fff284ebfc8be360659e6ea09d0e9c5b8",
+    "plans/oil-inci/research/persistence-contrast-2026-10-15/source-a/PA02-source-excerpt.md": "a8064b5cc743c75c14074f5605b6022d9a5a09cf781d53ed2914f3f413a6fa56",
+    "plans/oil-inci/research/persistence-contrast-2026-10-15/source-a/candidates.json": "5b861d03c529fa1ac523c04a35182cf5eb1136a26b7c92f461564887ff931682",
+    "plans/oil-inci/research/persistence-contrast-2026-10-15/source-a/function-source-receipt.md": "d0f8aade653818be25423e92c9ff8fbb82eb528b3dd06bab34fddc33936ea037",
+    "plans/oil-inci/research/persistence-contrast-2026-10-15/source-a/function-supplement.json": "a7466fef8db2e7932dec69d215cf3a99a9b7adfdaa9eb3c1f389901051e7e5ca",
+    "plans/oil-inci/research/persistence-contrast-2026-10-15/source-b/PSB-S01-dr-hauschka.txt": "0cc23298060cd99eaf2886089ba9184412c75ef21f6f3e67130fd642ab771061",
+    "plans/oil-inci/research/persistence-contrast-2026-10-15/source-b/PSB-S02-loccitane.txt": "a2868544445d71faf0473eeb592faacbafb5a789aceeb71ad5efe382bc4fff1e",
+    "plans/oil-inci/research/persistence-contrast-2026-10-15/source-b/candidates.json": "2179cc004123a375def2538e4cec6505a945518ea6ebe66eb6b106e13b1ad5b5",
+    "plans/oil-inci/research/persistence-contrast-2026-10-15/source-b/function-supplement.json": "4bd9ffd63cd2439e5a7f6b3764518d58cd2e7db0b3599750d97e583155d64694"
+  },
+  "records": 4,
+  "ranks": 89,
+  "unique_exact_functions": 72,
+  "freeze_stage": "before_blind_assessment"
+}

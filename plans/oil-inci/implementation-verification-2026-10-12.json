@@ -1,0 +1,178 @@
+{
+  "branch": "codex/oil-intake-bridge-v1",
+  "base": "81201a9e4e577ce03730809cc367ab21b10ce091",
+  "reviewed_fingerprint": "719f414f020c3a86c574d3475834f0b42fa5706e16347cb9ac16f34dfc81d262",
+  "decision_coverage": {
+    "status": "confirmed",
+    "original_acknowledgement": "Yes manual matching tags for v1; start implementation using subagents; continue",
+    "internal_revalidation": "Exact three-field projection, lossless research retention, leave-on persistence and inactive routing remain within approved scope. No new product decisions."
+  },
+  "checks": {
+    "new_seam_tests": {
+      "command": "node --import ./tests/server-only-register.cjs --import tsx --test tests/oil-research-contracts.test.ts tests/oil-production-adapter.test.ts tests/oil-historical-exporter.test.ts tests/oil-product-intake-adapter.test.ts tests/oil-production-adapter-cli.test.ts",
+      "passed": 40
+    },
+    "existing_router_regression": {
+      "command": "node --import ./tests/server-only-register.cjs --import tsx --test tests/product-intake-category-research-router.test.ts",
+      "passed": 37,
+      "oil_engine_unavailable": true
+    },
+    "replay": {
+      "command": "npx tsx scripts/research/oil-inci/verify-adapter-replay.ts data/research/oil-inci/v1.0/adapter-replay-v0.2",
+      "count": 37,
+      "property_projection_ready": 33,
+      "needs_research": 4,
+      "not_applicable": 0,
+      "original_authority_files_checked": 141,
+      "reason_level_oracle": true,
+      "full_published_receipt_deep_equal": true
+    },
+    "typecheck": {
+      "command": "npm run typecheck",
+      "exit_code": 0
+    },
+    "lint": {
+      "command": "npm run lint",
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 17,
+      "warning_scope": "unchanged files"
+    },
+    "build": {
+      "command": "npm run build",
+      "exit_code": 0,
+      "compiled": true,
+      "typescript_completed": true,
+      "static_pages_generated": 226
+    },
+    "policy_pins": {
+      "matched": 12
+    },
+    "historical_transfer": {
+      "matched": 721,
+      "updated_routing_index_original_preserved": true
+    },
+    "original_read_only_targeted_check": {
+      "cases": 4,
+      "ranks": 64,
+      "scenario_roles": 7,
+      "frozen_files_unchanged": 160,
+      "current_view_cases": 4,
+      "execution": "module.validate only in preserved source worktree; refreshed main root ignore differs from historical pinned file, whose bytes are separately preserved"
+    },
+    "diff_check": {
+      "command": "git diff --check",
+      "exit_code": 0
+    },
+    "integrated_tests": {
+      "command": "node --import ./tests/server-only-register.cjs --import tsx --test tests/oil-research-contracts.test.ts tests/oil-production-adapter.test.ts tests/oil-historical-exporter.test.ts tests/oil-product-intake-adapter.test.ts tests/oil-production-adapter-cli.test.ts tests/product-intake-category-research-router.test.ts",
+      "passed": 77,
+      "failed": 0
+    },
+    "immutable_first_replay": {
+      "all_file_hashes_preserved": true,
+      "successor_envelope_hashes_identical": 37,
+      "fresh_export_matches_committed_bytes": 37
+    },
+    "real_product_cli_round_trip": {
+      "product": "K18 Molecular Repair Hair Oil",
+      "exit_codes": [
+        0,
+        0
+      ],
+      "status": "property_projection_ready",
+      "temporary_artifacts": "discarded"
+    },
+    "focused_source_and_test_lint": {
+      "exit_code": 0,
+      "includes_ignored_script_test_paths": true
+    },
+    "root_checkout": {
+      "branch": "main",
+      "clean": true,
+      "matches_origin_main": true
+    },
+    "final_fingerprint_unchanged": true,
+    "all_task_owned_paths_classified": true
+  },
+  "red_proof": {
+    "workers": [
+      "Callable neutral projector returned needs_research; three expected behavioral assertions failed, then restored",
+      "Raw digest guard neutralized: expected false got true; restored",
+      "Exact submission guard neutralized: named UUID/submission test lacked expected blocker; restored",
+      "Authority hash rejection initially accepted changed bytes; implemented hash/path/symlink rejection",
+      "Temporarily restored stable-key envelope writer: child CLI round-trip schema assertion failed false !== true; native writer restored and passes",
+      "Fourteen consistency/admission negative controls failed before supported schema fixes; final suite passes"
+    ],
+    "root_additional_probes": [
+      "Trace explanation and de-aliased fit mismatch accepted before fixes: assert expected false got true; final regressions pass",
+      "Malformed source binding and out-of-range rank accepted before fixes; final regressions pass",
+      "Fresh-export byte-preservation guard: temporarily changed serializer receipt; Immutable envelope bytes assertion failed exit1; restored and all37 hash guards pass",
+      "Focused final reviewer regressions all failed behaviorally before fixes: invalid prewash projected ready; valid multi-suffix refused; duplicate scenario masked unbound fit. All now pass."
+    ]
+  },
+  "counterpart_review": {
+    "initial": "Completed Claude Opus high read-only terminal whole-branch review, verdict Approve with revisions; verified revisions fixed or explicitly reconciled",
+    "delta": "Fixed-packet Claude Opus/high completed exit0: Correctness Approve with revisions; Structural No regression. Root reproduced and fixed supported findings, inspected final local delta, and reused unchanged counterpart conclusions.",
+    "single_external_lane_per_pass": true,
+    "delta_attempts": [
+      {
+        "mode": "tool-based focused delta",
+        "timeout_seconds": 600,
+        "exit_code": 142,
+        "verdict": null,
+        "limitation": "Timed out during dependency-internals exploration; not counted as completed review"
+      },
+      {
+        "mode": "fixed fourteen-file packet, no tools, read-only terminal Claude Opus high",
+        "fingerprint": "c42a7549cedba08037fe432e6729754294dc566ad2b02817466feddb842b1ee7",
+        "status": "completed",
+        "verdict": "Approve with revisions; structural no regression"
+      }
+    ],
+    "fixed_packet_fingerprint": "c42a7549cedba08037fe432e6729754294dc566ad2b02817466feddb842b1ee7",
+    "fixed_packet_completion": {
+      "subtype": "success",
+      "duration_ms": 287820,
+      "num_turns": 1
+    }
+  },
+  "artifact_disposition": {
+    "commit_intended": "all manifest paths plus these generated receipts; no commit authorized",
+    "discard": "Detailed counterpart packets/events and terminal scratch discarded after concise receipts",
+    "archive": "none"
+  },
+  "skipped_checks": {
+    "browser": "no activated or changed UI surface",
+    "database_live_state": "no database/schema/production change",
+    "chat_evaluation": "no chat/router/routines runtime change"
+  },
+  "limits": [
+    "Serialization/projection replay does not establish classification or sensory accuracy",
+    "Zero actual low-persistence examples; synthetic scalar probe is not product coverage",
+    "H04 unknown weight; O04/O18/O19 historical representation conflicts, O04 unresolved original identity source and O18 truncated raw declaration",
+    "Oil routing, matching-tag generation, method lock and publication remain unavailable",
+    "Base81201a9e verified locally; origin/main advanced5commits, future publication must integrate current main and recheck; singleton and router ownership unchanged"
+  ],
+  "publication": "Uncommitted task worktree; nothing pushed, activated or published",
+  "completed_local_date": "2026-10-13",
+  "initial_review_fingerprint": "539c415bf474608f7d3674a543e1da35e07896eca9f1a4f518916e8730fdafd2",
+  "canonical_content_fingerprint": "719f414f020c3a86c574d3475834f0b42fa5706e16347cb9ac16f34dfc81d262",
+  "incomplete_implementation_items": [],
+  "pending_verification": [],
+  "final_local_delta_review": {
+    "base_fingerprint": "c42a7549cedba08037fe432e6729754294dc566ad2b02817466feddb842b1ee7",
+    "final_fingerprint": "719f414f020c3a86c574d3475834f0b42fa5706e16347cb9ac16f34dfc81d262",
+    "changed_paths": [
+      "plans/oil-inci/implementation-status-2026-10-12.md",
+      "scripts/research/oil-inci/production-adapter.ts",
+      "src/lib/oil-research/contracts.ts",
+      "src/lib/oil-research/production-adapter.ts",
+      "tests/oil-production-adapter.test.ts",
+      "tests/oil-research-contracts.test.ts"
+    ],
+    "normal_correctness": "Supported findings reproduced and fixed; no blocking verified findings",
+    "structural": "Local guards, exact-set validation and tests; no architecture/scope change; counterpart No regression reused"
+  },
+  "readiness": "Verified review-ready for approved inactive local bridge scope"
+}

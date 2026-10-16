@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "scope": "marula accepted rationale/alternatives; unchanged substantive weights, identities, source records, coverage and whole-formula method; synchronized current routing; historical preservation. No sensory validation.",
+  "reference_version": "0.5",
+  "changed_material_ids": [
+    "marula"
+  ],
+  "weights_changed": [],
+  "material_count": 64,
+  "names_and_aliases": 103,
+  "source_count": 89,
+  "weights": {
+    "light": 40,
+    "medium": 10,
+    "rich": 6,
+    "unknown": 8
+  },
+  "historical_hash_checks": 8,
+  "historical_coverage_contract": "passed",
+  "sha256": {
+    "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.5.json": "7c538a118eb1d1fa1c3bfa57d5b92c7144da2746395eb2877023c9d318ca98ba",
+    "docs/research/oil-inci/v1.0/03_weight-reference-v0.5.md": "8784e11c73f8d9d79b500f27dcc339118472c282b9b0113e4675dff908d1dbed"
+  }
+}

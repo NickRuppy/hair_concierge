@@ -1,0 +1,79 @@
+{
+  "version": "0.3",
+  "base": "corrected-function-dictionary-v0.2.json",
+  "changes": [
+    {
+      "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+      "field": "scalp_active_botanicals",
+      "before": true,
+      "after": false
+    },
+    {
+      "canonical_name": "COCOS NUCIFERA (COCONUT) OIL",
+      "field": "scalp_active_botanicals",
+      "before": true,
+      "after": false
+    },
+    {
+      "canonical_name": "EUCALYPTUS GLOBOLUS (EUCALYPTUS) LEAF OIL",
+      "field": "fragrance",
+      "before": false,
+      "after": true
+    },
+    {
+      "canonical_name": "EUCALYPTUS GLOBULUS LEAF (EUCALYPTUS) OIL",
+      "field": "fragrance",
+      "before": false,
+      "after": true
+    },
+    {
+      "canonical_name": "MELALEUCA ALTERNIFOLIA (TEA TREE) OIL",
+      "field": "fragrance",
+      "before": false,
+      "after": true
+    },
+    {
+      "canonical_name": "MELALUECA ALTERNIFOLIA (TEA TREE) LEAF OIL",
+      "field": "fragrance",
+      "before": false,
+      "after": true
+    },
+    {
+      "canonical_name": "MENTHA ARVENSIS (PEPPERMINT) OIL",
+      "field": "fragrance",
+      "before": false,
+      "after": true
+    },
+    {
+      "canonical_name": "MENTHA PIPERITA (PEPPERMINT) OIL",
+      "field": "fragrance",
+      "before": false,
+      "after": true
+    },
+    {
+      "canonical_name": "MENTHA VIRIDIS (SPEARMINT) LEAF OIL",
+      "field": "fragrance",
+      "before": false,
+      "after": true
+    },
+    {
+      "canonical_name": "PHENYLPROPYLDIMETHYLSILOXYSILICATE",
+      "field": "silicones",
+      "before": false,
+      "after": true
+    },
+    {
+      "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF OIL",
+      "field": "fragrance",
+      "before": false,
+      "after": true
+    },
+    {
+      "canonical_name": "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL",
+      "field": "fragrance",
+      "before": false,
+      "after": true
+    }
+  ]
+}
+

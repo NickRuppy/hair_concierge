@@ -1,0 +1,658 @@
+{
+  "entries": [
+    {
+      "canonical_name": "ACETYL CEDRENE",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "source_refs": [],
+      "limits": "Exact declared identity; function requires source review. No assumed coating role or negligible residue."
+    },
+    {
+      "canonical_name": "ALPHA-ISOMETHYL IONONE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json"
+      ],
+      "limits": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "AMYL CINNAMAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ],
+      "limits": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "AMYL SALICYLATE",
+      "roles": [
+        "fragrance",
+        "skin_conditioner"
+      ],
+      "source_refs": [
+        "https://cosmileeurope.eu/inci/detail/987/amyl-salicylate/"
+      ],
+      "limits": "Exact fragrance/skin-conditioning functions; no measured residual contribution."
+    },
+    {
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct."
+    },
+    {
+      "canonical_name": "BAMBUSA VULGARIS EXTRACT",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "source_refs": [
+        "https://cosmileeurope.eu/pl/inci/szczegoly/1453/bambusa-vulgaris-extract/"
+      ],
+      "limits": "Exact botanical extract identity supported; preparation/carrier and residual conditioning function unassessed. Not an intact oil."
+    },
+    {
+      "canonical_name": "BENZYL BENZOATE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ],
+      "limits": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "BENZYL CINNAMATE",
+      "roles": [
+        "fragrance"
+      ],
+      "source_refs": [
+        "https://cosmileeurope.eu/inci/detail/19195/benzyl-cinnamate"
+      ],
+      "limits": "Exact fragrance identity; not assigned a substantial conditioning-film function."
+    },
+    {
+      "canonical_name": "BENZYL SALICYLATE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ],
+      "limits": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "BIXA ORELLANA SEED EXTRACT",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "source_refs": [
+        "https://cosmileeurope.eu/el/inci/%CF%83%CF%85%CF%83%CF%84%CE%B1%CF%84%CE%B9%CE%BA%CF%8C/1827/bixa-orellana-seed-extract/"
+      ],
+      "limits": "Exact botanical extract identity supported; preparation/carrier and residual conditioning function unassessed. Not an intact oil."
+    },
+    {
+      "canonical_name": "CAMELLIA SINENSIS LEAF EXTRACT",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "source_refs": [
+        "https://cosmileeurope.eu/el/inci/%CF%83%CF%85%CF%83%CF%84%CE%B1%CF%84%CE%B9%CE%BA%CF%8C/2499/camellia-sinensis-leaf-extract"
+      ],
+      "limits": "Exact botanical extract identity supported; preparation/carrier and residual conditioning function unassessed. Not an intact oil."
+    },
+    {
+      "canonical_name": "CAMPHOR",
+      "roles": [
+        "cooling_or_aromatic_auxiliary",
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json"
+      ],
+      "limits": "Closed watch-out grouping includes isolated molecule, without asserting botanical origin, efficacy or directions."
+    },
+    {
+      "canonical_name": "CAPRYLYL METHICONE",
+      "roles": [
+        "silicone_emollient"
+      ],
+      "source_refs": [
+        "https://www.dow.com/en-us/pdp.dowsil-fz-3196-p-fluid.545565z.html"
+      ],
+      "limits": "Supplier exact identity supports spreading emollient function; skin sensory wording is not hair residue. Grade/retained load unestablished."
+    },
+    {
+      "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct."
+    },
+    {
+      "canonical_name": "CINNAMAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ],
+      "limits": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "CINNAMYL ALCOHOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ],
+      "limits": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "CITRAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json"
+      ],
+      "limits": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "CITRONELLOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "COCOS NUCIFERA (COCONUT) OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct."
+    },
+    {
+      "canonical_name": "CYCLOHEXASILOXANE",
+      "roles": [
+        "silicone_carrier"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ],
+      "limits": "Species-specific carrier; do not infer finished evaporation rate."
+    },
+    {
+      "canonical_name": "CYCLOPENTASILOXANE",
+      "roles": [
+        "silicone_carrier",
+        "volatile_carrier"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Volatile D5; no blend-residue inference."
+    },
+    {
+      "canonical_name": "DIMETHICONE",
+      "roles": [
+        "silicone_carrier",
+        "conditioning_film"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Previously reviewed exact material functions copied; no weight, penetration or product build-up answer is included. Grade/dose/residual load remain unestablished."
+    },
+    {
+      "canonical_name": "DIMETHICONE CROSSPOLYMER",
+      "roles": [
+        "silicone_elastomer",
+        "texture_rheology_modifier"
+      ],
+      "source_refs": [
+        "https://www.dow.com/en-us/pdp.dowsil-9040-silicone-elastomer-blend.02877911z.html"
+      ],
+      "limits": "Supplier elastomer blend used in haircare; thickening/texture role. Not automatically an independent substantial conditioning film; no grade or blend percentages transfer."
+    },
+    {
+      "canonical_name": "DIMETHICONOL",
+      "roles": [
+        "silicone_gum",
+        "conditioning_film"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Gum/residual-film signal; finished load and durability require architecture and grade."
+    },
+    {
+      "canonical_name": "DISILOXANE",
+      "roles": [
+        "silicone_carrier",
+        "volatile_carrier"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ],
+      "limits": "Volatility of this material does not resolve blend residue."
+    },
+    {
+      "canonical_name": "DISODIUM EDTA",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "source_refs": [],
+      "limits": "Exact declared identity; function requires source review. No assumed coating role or negligible residue."
+    },
+    {
+      "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+      "roles": [
+        "recognized_uv_filter"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Optical filter/function recognition only. No current regulatory-compliance certification, SPF, dose, hair efficacy or manufacturer claim is inferred."
+    },
+    {
+      "canonical_name": "ETHYLHEXYLGLYCERIN",
+      "roles": [
+        "conditioning_auxiliary",
+        "humectant"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ],
+      "limits": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "EUCALYPTUS GLOBULUS OIL",
+      "roles": [
+        "essential_oil",
+        "aromatic_auxiliary"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ],
+      "limits": "Closed aromatic-oil watch-out; no extract/water or species-wide expansion."
+    },
+    {
+      "canonical_name": "FARNESOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ],
+      "limits": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "FRAGRANCE (PARFUM)",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Mixture composition unspecified; not automatically volatile or negligible."
+    },
+    {
+      "canonical_name": "GERANIOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json"
+      ],
+      "limits": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "GLYCERIN",
+      "roles": [
+        "humectant"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ],
+      "limits": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping."
+    },
+    {
+      "canonical_name": "GLYCERYL LINOLEATE",
+      "roles": [
+        "lipid_ester_emollient"
+      ],
+      "source_refs": [
+        "https://cosmileeurope.eu/de/inci/inhaltsstoff/6032/glyceryl-linoleate/"
+      ],
+      "limits": "Exact lipid ester; no generic weight or build-up class."
+    },
+    {
+      "canonical_name": "GLYCERYL LINOLENATE",
+      "roles": [
+        "lipid_ester_emollient"
+      ],
+      "source_refs": [
+        "https://cosmileeurope.eu/inci/detail/6033/glyceryl-linolenate/"
+      ],
+      "limits": "Exact lipid ester/emollient function; not a generic weight/build-up class."
+    },
+    {
+      "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct."
+    },
+    {
+      "canonical_name": "HEXAMETHYLINDANOPYRAN",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "source_refs": [],
+      "limits": "Exact declared identity; function requires source review. No assumed coating role or negligible residue."
+    },
+    {
+      "canonical_name": "HEXYL CINNAMAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "HYDROLYZED SOY PROTEIN",
+      "roles": [
+        "hydrolyzed_protein_conditioner"
+      ],
+      "source_refs": [
+        "https://cosmileeurope.eu/hu/inci/osszetevo/6993/hydrolyzed-soy-protein/"
+      ],
+      "limits": "Exact hydrolyzed protein conditioning clue; actual molecular-weight, grade, film load and behavior unestablished. No repair/protein-direction property."
+    },
+    {
+      "canonical_name": "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL",
+      "roles": [
+        "modified_protein_conditioner"
+      ],
+      "source_refs": [
+        "https://cosmileeurope.eu/fr/inci/ingredient/7023/hydrolyzed-vegetable-protein-pg-propyl-silanetriol/"
+      ],
+      "limits": "Exact modified ingredient distinct from plain vegetable protein. Functional clue only; no actual grade/film load or repair flag."
+    },
+    {
+      "canonical_name": "HYDROXYCITRONELLAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "LAVANDULA OIL/EXTRACT",
+      "roles": [
+        "fragrance_group",
+        "botanical_preparation_unspecified"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json"
+      ],
+      "limits": "Admitted for group/fragrance recognition ONLY. Oil versus extract is unresolved. Lavender is outside the agreed closed scalp-active grouping, so this token alone is not a scalp-positive match. Review role significance before finalizing base/weight/trace."
+    },
+    {
+      "canonical_name": "LIMONENE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "LINALOOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "LINALYL ACETATE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json"
+      ],
+      "limits": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive."
+    },
+    {
+      "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER",
+      "roles": [
+        "botanical_seed_fat"
+      ],
+      "source_refs": [
+        "https://cosmileeurope.eu/ro/inci/ingredient/8668/mangifera-indica-seed-butter/"
+      ],
+      "limits": "Maker parenthetical Mango identifies exact botanical seed fat. No finished solidity, melting point, concentration or retained film is established."
+    },
+    {
+      "canonical_name": "MAURITIA FLEXUOSA FRUIT OIL",
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "source_refs": [
+        "natural-oil-weight-v0.10#buriti"
+      ],
+      "limits": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct."
+    },
+    {
+      "canonical_name": "METHYL SALICYLATE",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "source_refs": [],
+      "limits": "Exact declared identity; function requires source review. No assumed coating role or negligible residue."
+    },
+    {
+      "canonical_name": "MORINGA OLEIFERA SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct."
+    },
+    {
+      "canonical_name": "ORYZA SATIVA BRAN OIL",
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "source_refs": [
+        "natural-oil-weight-v0.10#rice_bran"
+      ],
+      "limits": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct."
+    },
+    {
+      "canonical_name": "PARFUM",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json"
+      ],
+      "limits": "Mixture composition unspecified; not automatically volatile or negligible."
+    },
+    {
+      "canonical_name": "PARFUM/FRAGRANCE",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Mixture composition unspecified; not automatically volatile or negligible."
+    },
+    {
+      "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+      "roles": [
+        "aromatic_auxiliary"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json"
+      ],
+      "limits": "Exact declared identity reviewed for the closed five flag families; no unreviewed absence decision. Functional/scientific gaps stay explicit."
+    },
+    {
+      "canonical_name": "PERSEA GRATISSIMA OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json"
+      ],
+      "limits": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct."
+    },
+    {
+      "canonical_name": "PHENOXYETHANOL",
+      "roles": [
+        "preservative"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping."
+    },
+    {
+      "canonical_name": "PHENYL TRIMETHICONE",
+      "roles": [
+        "silicone_carrier",
+        "conditioning_film"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Exact hair-conditioning silicone; film load, grade and repeated washout unspecified."
+    },
+    {
+      "canonical_name": "POLYSILICONE-15",
+      "roles": [
+        "recognized_uv_filter",
+        "silicone_polymer"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ],
+      "limits": "Optical filter/function recognition only. No current regulatory-compliance certification, SPF, dose, hair efficacy or manufacturer claim is inferred."
+    },
+    {
+      "canonical_name": "POTASSIUM SORBATE",
+      "roles": [
+        "preservative"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ],
+      "limits": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping."
+    },
+    {
+      "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL",
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "source_refs": [
+        "natural-oil-weight-v0.10#pomegranate_seed"
+      ],
+      "limits": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct."
+    },
+    {
+      "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+      "roles": [
+        "botanical_extract",
+        "possible_antioxidant"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Literal leaf extract retained, distinct from leaf essential oil. Supplier antioxidant role/solvent grade not assured; no lipid/film inference."
+    },
+    {
+      "canonical_name": "SCLEROCARYA BIRREA SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json"
+      ],
+      "limits": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct."
+    },
+    {
+      "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct."
+    },
+    {
+      "canonical_name": "TERPINEOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json"
+      ],
+      "limits": "Fragrance exposure independent of perfuming intent; outside agreed closed scalp-active botanical group. Citrus group does not identify the particular bitter/sweet orange oil."
+    },
+    {
+      "canonical_name": "TOCOPHEROL",
+      "roles": [
+        "antioxidant"
+      ],
+      "source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ],
+      "limits": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping."
+    }
+  ],
+  "limits": "Source functions only; unassessed entries have no invented coating/absence role."
+}

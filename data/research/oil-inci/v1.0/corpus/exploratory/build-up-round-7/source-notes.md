@@ -1,0 +1,18 @@
+# Round-7 source and role preflight
+
+Initial preflight 2026-10-05; main maker-page refresh and input freeze 2026-10-06. These are four new exact published declarations relative to the prior oil-classification cohort, selected by convenience for architecture contrast. Earlier brand-family exposure is disclosed per record. They are not a representative shelf sample, unseen holdout or verified physical batch labels.
+
+- JVN Complete Nourishing Shine Drops: selected US maker 50 ml page; 13 primary ranks. The maker's fragrance constituent footnote remains nested under rank 13, with no independent concentration ordering. The literal missing separator in “Prenyl Acetate 2,6-Dimethylheptan-2-ol” is preserved as an identity gap inside the footnote; no chemical repair. The duplicated page rendering is captured once.
+- Biopark Jojoba Oil Organic: maker 30 ml EUR page, country unspecified; one primary rank. “From organic production” is a contextual annotation. The page establishes distinct shampooed treatment and retained dry-ends uses; skin absorption and repair language do not inform build-up.
+- Bumble and bumble original Hairdresser's Invisible Oil: US maker page declaration and listed 3.4/0.85 fl oz options, with no unsupported size/market join. This is distinct from the earlier market-survey Primer. The page advises checking the received package for current ingredients.
+- Color Wow Pop & Lock: US maker page with selected travel 0.4 fl oz, 19 primary ranks. F#500-2 is a formula code, not ingredient 20. Its explicit oil-serum positioning admits it under the existing charter, which retains water-based oil-labelled serums. Water/glycol position does not exclude it or establish low build-up. The page disclaims complete/current/error-free website information.
+
+Curlsmith was rejected because the retrieved CA INCI could not safely be joined to the EU 60 ml identity; JVN replaced it. Living Proof was rejected because it repeats prior exact E05.
+
+Exact material-function provenance is in function-evidence.json, separate from the closed blind lexicon. Primary registry/supplier functions are not sensory or repeated-wash validation. The same Jojoba Esters INCI spans liquid, paste and hard-wax supplier grades, so no whole-jojoba or fixed residue transfer is admitted. Hydrogenated Farnesene, Squalane, Meadowfoam Estolide, whole meadowfoam and modified olive fractions retain distinct identities. The Polyacrylamide/C13-14 Isoparaffin/Laureth-7 triad has an official supplier aqueous rheology precedent; neither that precedent nor the label establishes the exact commercial grade, dose or hair-hold film. C13-14 Isoparaffin remains the declared spelling; no generic rename.
+
+Dictionary names without admitted exact functions are explicitly marked unreviewed_function. They must remain visible in lane issues if material to a classification. No manufacturer no-build-up/lightweight language, skin-feel result, natural-oil weight class or conditioner/leave-in property rule is admitted as build-up evidence.
+
+The root source packet and function-evidence URLs are excluded from the classifier read scope. This is contractual read isolation, not a technical sandbox or proof of cognitive nonrecognition.
+
+Access limits: SEPPIC's official indexed 2024 PDF excerpt explicitly lists the older three-name INCI, and the indexed official product page describes aqueous thickening/stabilizing/texturizing. The subsequent main direct PDF open failed in the web tool and the product-page direct open returned no readable text. These are indexed-primary-source observations, not a full downloaded technical-sheet inspection. Their role-only restraint is unchanged in the sealed supplement; actual supplier grade is unestablished.

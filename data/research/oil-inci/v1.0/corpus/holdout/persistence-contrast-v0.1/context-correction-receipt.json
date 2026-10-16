@@ -1,0 +1,27 @@
+{
+  "stage": "before any blind assessment",
+  "reason": "Source application-context parity across all four formulas; no chemical or policy change, dose conversion or persistence prediction.",
+  "changes": [
+    {
+      "neutral_id": "PC01",
+      "before": "Retained leave-on hair-fibre conditioning; damp or dry hair. No scalp or shampoo-removal assessment.",
+      "after": "Retained leave-on hair-fibre application; small amount on towel-dried or dry hair; style as usual. No scalp or shampoo-removal assessment."
+    },
+    {
+      "neutral_id": "PC02",
+      "before": "Retained leave-on hair-fibre conditioning; damp or dry hair. No scalp or shampoo-removal assessment.",
+      "after": "Retained leave-on hair-fibre application; 1–2 pumps warmed in palms, applied from mid-lengths to ends on dry or towel-dried hair; do not rinse, then blow-dry or air-dry. No scalp or shampoo-removal assessment."
+    },
+    {
+      "neutral_id": "PC03",
+      "before": "Retained leave-on hair-fibre conditioning; very small amount on damp or dry ends after washing. No scalp or shampoo-removal assessment.",
+      "after": "Retained leave-on hair-fibre application; very small amount on damp or dry ends after washing; do not rinse. No scalp or shampoo-removal assessment."
+    },
+    {
+      "neutral_id": "PC04",
+      "before": "Retained leave-on hair-fibre conditioning; damp or dry hair. No scalp or shampoo-removal assessment.",
+      "after": "Retained leave-on hair-fibre application; 3–4 drops warmed between hands, applied to lengths and ends of damp or dry hair. No scalp or shampoo-removal assessment; separate overnight pre-wash scenario excluded."
+    }
+  ],
+  "original_inputs_preserved": true
+}

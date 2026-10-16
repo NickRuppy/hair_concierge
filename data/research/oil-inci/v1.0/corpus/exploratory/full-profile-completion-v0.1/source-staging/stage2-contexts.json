@@ -1,0 +1,41 @@
+{
+  "run_id": "oil-full-profile-completion-stage2-contexts-v0.1",
+  "purpose": "Per-case source pointers for a later controlled-unblind/direct-profile pass. No property values are produced here.",
+  "case_authority": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json#records[case_id]",
+  "case_authority_sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49",
+  "fields_preserved_in_case_authority": ["identity", "raw_inci", "source_refs", "source_limits", "selected_context", "application_context"],
+  "contexts": [
+    {"case_id":"O01","context_ref":"round-1/unblinded-packet.json#F01","full_unblind":{"status":"available","record_ref":"round-1/main-working-records-v0.1.1.json#F01"}},
+    {"case_id":"O03","context_ref":"direct-properties-round-6/source-packet-v0.1.1.json#D05","full_unblind":{"status":"available","record_ref":"direct-properties-round-6/working-records-v0.1.1.json#D05"}},
+    {"case_id":"O04","context_ref":"direct-properties-round-6/source-packet-v0.1.1.json#D02","full_unblind":{"status":"available","record_ref":"direct-properties-round-6/working-records-v0.1.1.json#D02"}},
+    {"case_id":"O05","context_ref":"round-1/unblinded-packet.json#F05","full_unblind":{"status":"available","record_ref":"round-1/main-working-records-v0.1.1.json#F05"}},
+    {"case_id":"O06","context_ref":"round-1/unblinded-packet.json#F06","full_unblind":{"status":"available","record_ref":"round-1/main-working-records-v0.1.1.json#F06"}},
+    {"case_id":"O07","context_ref":"round-1/unblinded-packet.json#F07","full_unblind":{"status":"available","record_ref":"round-1/main-working-records-v0.1.1.json#F07"}},
+    {"case_id":"O08","context_ref":"round-1/unblinded-packet.json#F08","full_unblind":{"status":"available","record_ref":"round-1/main-working-records-v0.1.1.json#F08"}},
+    {"case_id":"O09","context_ref":"blend-weight-round-4/source-capture.json#Q01","full_unblind":{"status":"not_captured_as_direct_profile"}},
+    {"case_id":"O10","context_ref":"blend-weight-round-4/source-capture.json#Q03","full_unblind":{"status":"not_captured_as_direct_profile"}},
+    {"case_id":"O11","context_ref":"blend-weight-round-4/source-capture.json#Q04","full_unblind":{"status":"not_captured_as_direct_profile"}},
+    {"case_id":"O12","context_ref":"blend-weight-round-4/source-capture.json#Q06","full_unblind":{"status":"not_captured_as_direct_profile"}},
+    {"case_id":"O13","context_ref":"blend-weight-round-4/source-capture.json#Q08","full_unblind":{"status":"not_captured_as_direct_profile"}},
+    {"case_id":"O14","context_ref":"blend-weight-round-4/source-capture.json#Q09","full_unblind":{"status":"not_captured_as_direct_profile"}},
+    {"case_id":"O15","context_ref":"direct-properties-round-6/source-packet-v0.1.1.json#D03","full_unblind":{"status":"available","record_ref":"direct-properties-round-6/working-records-v0.1.1.json#D03"}},
+    {"case_id":"O16","context_ref":"persistence-replay-v0.1/leave-on-source-supplement.json#O16","full_unblind":{"status":"not_captured_as_direct_profile"}},
+    {"case_id":"O17","context_ref":"blend-weight-round-5/source-capture.json#R04","full_unblind":{"status":"not_captured_as_direct_profile"}},
+    {"case_id":"O18","context_ref":"direct-properties-round-6/source-packet-v0.1.1.json#D06","full_unblind":{"status":"available","record_ref":"direct-properties-round-6/working-records-v0.1.1.json#D06"}},
+    {"case_id":"O19","context_ref":"direct-properties-round-6/source-packet-v0.1.1.json#D01","full_unblind":{"status":"available","record_ref":"direct-properties-round-6/working-records-v0.1.1.json#D01"}},
+    {"case_id":"O20","context_ref":"blend-weight-round-5/source-capture.json#R08","full_unblind":{"status":"not_captured_as_direct_profile"}},
+    {"case_id":"O21","context_ref":"build-up-round-7/source-packet.json#N01","full_unblind":{"status":"not_captured_as_direct_profile"}},
+    {"case_id":"O22","context_ref":"build-up-round-7/source-packet.json#N02","full_unblind":{"status":"not_captured_as_direct_profile"}},
+    {"case_id":"O23","context_ref":"build-up-round-7/source-packet.json#N03","full_unblind":{"status":"not_captured_as_direct_profile"}},
+    {"case_id":"O24","context_ref":"build-up-round-7/source-packet.json#N04","full_unblind":{"status":"not_captured_as_direct_profile"}},
+    {"case_id":"O25","context_ref":"build-up-round-8/source-packet.json#C01","full_unblind":{"status":"not_captured_as_direct_profile"}},
+    {"case_id":"O26","context_ref":"build-up-round-8/source-packet.json#C02","full_unblind":{"status":"not_captured_as_direct_profile"}},
+    {"case_id":"O27","context_ref":"persistence-replay-v0.1/context-source-supplement.json#O27","full_unblind":{"status":"not_captured_as_direct_profile"}},
+    {"case_id":"O28","context_ref":"persistence-replay-v0.1/context-source-supplement.json#O28","full_unblind":{"status":"not_captured_as_direct_profile"}}
+  ],
+  "field_availability_policy": {
+    "directions": "Each case has the selected retained-fibre context in the case authority. Full directions/uses are available only where full_unblind.status is available; otherwise later review must read the stated context source and record any missing fact explicitly.",
+    "positioning_heroes_package_claims": "Available only through full direct/unblind records for O01, O03-O08, O15, O18 and O19. For the other 17 cases this staging packet does not fabricate false, empty or unknown field values; the stated source may contain material for later review but no complete direct-profile capture exists.",
+    "dispenser": "Do not infer from package shape. Existing exact observations are retained only in full direct records; O18 remains explicitly unestablished."
+  }
+}
