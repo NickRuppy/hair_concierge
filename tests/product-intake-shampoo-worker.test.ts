@@ -158,7 +158,7 @@ async function workerFixture(t: TestContext, record = "A01") {
     binary,
     `#!/usr/bin/env node
 const fs=require('node:fs'); const a=process.argv.slice(2); const out=a[a.indexOf('--output-last-message')+1]; const prompt=a.at(-1)==='-' ? fs.readFileSync(0,'utf8') : a.at(-1); process.chdir(a[a.indexOf('--cd')+1]); fs.appendFileSync(process.env.SHAMPOO_FAKE_LOG,JSON.stringify({args:a,cwd:process.cwd(),prompt64:Buffer.from(prompt).toString('base64')})+'\\n'); const data=JSON.parse(fs.readFileSync(process.env.SHAMPOO_FAKE_OUTPUTS,'utf8')); let v;
-if(prompt.includes('Resolve the exact German Shampoo identity')) v=data.source;
+if(prompt.includes('Resolve the exact German Shampoo identity')) { if(data.malformed) {fs.writeFileSync(out,'{"summary":"incomplete",'); process.exit(0);} v=data.source; }
 else if(prompt.includes('Perform only the blind formula pass')) { const p=JSON.parse(prompt.split('\\nFORMULA\\n')[1].split('\\nSTANDARD\\n')[0]); v={blindId:p.blindId,inciFingerprintSha256:p.inciFingerprintSha256,formulaFacts:{surfactants:['SLES @2']},unresolvedMaterialIngredients:[],directProperties:data.blindProperties}; }
 else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=data.final; fs.writeFileSync(out,JSON.stringify(v));`,
     { mode: 0o700 },
@@ -236,7 +236,7 @@ else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=d
       if (table === "product_intake_reserve_model_run") {
         reserved++
         job.reserved_model_runs = reserved
-        job.cycle_deadline_at = new Date(Date.now() + 600000).toISOString()
+        job.cycle_deadline_at ??= new Date(Date.now() + 600000).toISOString()
         return reply(job)
       }
       if (table === "product_intake_update_research_job") {
@@ -250,7 +250,11 @@ else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=d
       if (table === "product_intake_renew_research_job_lease") return reply(job)
       if (table === "product_intake_commit_research_pass") {
         commits.push(body)
-        payload = body.researched_payload
+        if (body.researched_payload !== null) {
+          payload = body.researched_payload
+        }
+        // The real RPC targets researched_payload even when COALESCE retains
+        // its bytes; UPDATE OF therefore advances the revision on every pass.
         payloadRevision++
         for (const artifact of body.research_artifacts)
           artifacts.push({
@@ -311,10 +315,16 @@ else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=d
     return new Promise<void>((resolve) => server.close(() => resolve()))
   })
   const port = (server.address() as { port: number }).port
-  const run = async (judgeDefects: unknown[] = [], autoRework = false) => {
+  const run = async (judgeDefects: unknown[] = [], autoRework = false, malformed = false) => {
     writeFileSync(
       outputs,
-      JSON.stringify({ source, final, blindProperties: fixture.directProperties, judgeDefects }),
+      JSON.stringify({
+        source,
+        final,
+        blindProperties: fixture.directProperties,
+        judgeDefects,
+        malformed,
+      }),
     )
     const result = await runWorkerProcess(
       process.execPath,
@@ -391,6 +401,62 @@ else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=d
         })),
   }
 }
+
+test(
+  "malformed model output retries within the same cycle and then reaches raw-image review without publication",
+  { timeout: 30_000 },
+  async (t) => {
+    const f = await workerFixture(t)
+    const first = await f.run([], true, true)
+    assert.equal(first.next_status, "waiting_for_rework")
+    assert.equal(first.request_auto_rework, true)
+    assert.equal(first.researched_payload, null)
+    assert.equal(first.notification_payload, null)
+    assert.deepEqual(first.review_assets, [])
+    assert.equal(f.job.auto_rework_count, 1)
+    assert.equal(f.job.reserved_model_runs, 1)
+    const deadline = f.job.cycle_deadline_at
+    const second = await f.run([], true)
+    assert.equal(second.review_outcome, "ready_for_review")
+    assert.equal(second.expected_review_cycle_id, first.expected_review_cycle_id)
+    assert.equal(second.expected_payload_revision, 2)
+    assert.equal(f.job.cycle_deadline_at, deadline)
+    assert.equal(f.job.reserved_model_runs, 5)
+    assert.equal(f.uploads.length, 1)
+    assert.equal(
+      f.artifacts.filter((a) => a.kind === "model_run" && a.status === "failed").length,
+      1,
+    )
+    assert.equal(
+      f.calls.some((c) => /publish|approve/.test(c.name)),
+      false,
+    )
+  },
+)
+
+test(
+  "repeated malformed output stops after two corrections and creates an explicit review alert",
+  { timeout: 30_000 },
+  async (t) => {
+    const f = await workerFixture(t)
+    await f.run([], true, true)
+    const deadline = f.job.cycle_deadline_at
+    await f.run([], true, true)
+    const last = await f.run([], true, true)
+    assert.equal(last.next_status, "blocked")
+    assert.equal(last.review_outcome, "needs_nick")
+    assert.equal(last.request_auto_rework, false)
+    assert.ok(last.notification_payload)
+    assert.equal(f.job.auto_rework_count, 2)
+    assert.equal(f.job.reserved_model_runs, 3)
+    assert.equal(f.job.cycle_deadline_at, deadline)
+    assert.equal(f.uploads.length, 0)
+    assert.equal(
+      f.calls.some((c) => /publish|approve/.test(c.name)),
+      false,
+    )
+  },
+)
 
 test(
   "Shampoo CLI carries the isolated lane and Sol through four reservations and one atomic commit",

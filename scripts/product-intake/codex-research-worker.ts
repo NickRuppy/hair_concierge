@@ -37,6 +37,8 @@ import { runWorkerProcess, type WorkerSpawn } from "@/lib/product-intake/pipelin
 import { stageRawImageCandidate } from "@/lib/product-intake/pipeline/raw-candidate-staging"
 import {
   assertAllowedProductIntakeModel,
+  CODEX_OUTPUT_FORMAT_ERROR_MESSAGE,
+  CodexOutputFormatError,
   boundedNumber,
   errorMessage,
   hasFinalResearchPayload,
@@ -1296,6 +1298,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
         }
 
         let leasedJob = job
+        let researchStageInProgress: string | null = null
         try {
           const researchRuntimeConfig = codexResearchRuntimeConfig(process.env)
           const evaluationRuntimeConfig = modelEvaluationRuntimeConfig(process.env)
@@ -1326,9 +1329,18 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
                   reviewCycleId: leasedJob.review_cycle_id ?? "",
                   reservedModelRuns: leasedJob.reserved_model_runs ?? 0,
                   priorProof: prior?.payload.proof,
+                  allowUnfinishedSourceRetry:
+                    leasedJob.progress.error_code === "model_output_invalid_json" &&
+                    leasedJob.progress.failed_research_stage === "source_freeze" &&
+                    (leasedJob.auto_rework_count ?? 0) > 0,
                   model: async (request) => {
+                    researchStageInProgress = request.stage
                     const run = await measureModelRun("production_low", researchRuntimeConfig, () =>
-                      runCodexJson({ ...request, runtimeConfig: researchRuntimeConfig }),
+                      runCodexJson({
+                        ...request,
+                        runtimeConfig: researchRuntimeConfig,
+                        failureArchivePath: promptPacketPath,
+                      }),
                     )
                     leasedJob = await refreshModelRunLease({
                       supabase: options.supabase,
@@ -1338,7 +1350,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
                       message: `Shampoo ${request.stage} returned; worker lease refreshed.`,
                     })
                     await persistModelRunArtifact(options.supabase, leasedJob, run, request.stage)
-                    if (!run.success) throw new Error(run.error)
+                    if (!run.success) throwResearchRunFailure(run.error)
                     return run.output
                   },
                 }),
@@ -1379,7 +1391,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
                 message: "Luna/low research returned; worker lease refreshed.",
               })
               await persistModelRunArtifact(options.supabase, leasedJob, productionRun)
-              if (!productionRun.success) throw new Error(productionRun.error)
+              if (!productionRun.success) throwResearchRunFailure(productionRun.error)
 
               rawResearchOutput = productionRun.output
             }
@@ -1525,6 +1537,88 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
             continue
           }
           if (lease.aborted || error instanceof WorkerLeaseLostError) continue
+          if (error instanceof CodexOutputFormatError && options.executeCodex) {
+            const category = normalizeCategoryKey(detail?.category)
+            const outcome = decideProjectedResearchOutcome({
+              verdict: {
+                ok: true,
+                defects: [
+                  {
+                    code: "schema_or_adapter_invalid",
+                    field: "model_output",
+                    reason: CODEX_OUTPUT_FORMAT_ERROR_MESSAGE,
+                  },
+                ],
+              },
+              readiness: null,
+              rawBlockers: [],
+              engineState:
+                category === "oil"
+                  ? "pending_lock"
+                  : category
+                    ? CATEGORY_RESEARCH_REGISTRY[category].state
+                    : "engine_not_available",
+              autoReworkEnabled: process.env.PRODUCT_INTAKE_AUTO_REWORK === "true",
+              autoReworkCount: leasedJob.auto_rework_count,
+              reservedModelRuns: leasedJob.reserved_model_runs,
+              cycleDeadlineAt: leasedJob.cycle_deadline_at,
+              inciRetryAttempted: leasedJob.progress.inci_retry_attempted === true,
+            })
+            // There are no researched values to judge or publish. The parser's
+            // server-owned defect can only request bounded rework or a hold.
+            const rework = outcome.outcome === "needs_bounded_rework"
+            const updated = await commitResearchPass(options.supabase, {
+              jobId: leasedJob.id,
+              expectedLockedBy: leasedJob.locked_by,
+              expectedLockedAt: leasedJob.locked_at,
+              expectedReviewCycleId: leasedJob.review_cycle_id,
+              expectedPayloadRevision: detail?.payload_revision,
+              researchedPayload: null,
+              artifacts: [],
+              reviewAssets: [],
+              resolveDecisionIds: [],
+              autoRework: rework,
+              status: rework ? "waiting_for_rework" : "blocked",
+              stage: "rework",
+              reviewOutcome: rework ? "continue" : "needs_nick",
+              notificationPayload: rework
+                ? null
+                : {
+                    ...buildAdminReviewSnapshot({
+                      submissionId: leasedJob.submission_id,
+                      category: detail?.category,
+                      researchedPayload: detail?.payload,
+                      outcome: "needs_nick",
+                      questionCodes: [],
+                    }),
+                    question_1: outcome.questions[0] ?? "",
+                    question_2: outcome.questions[1] ?? "",
+                    question_3: outcome.questions[2] ?? "",
+                  },
+              progress: {
+                ...progressWithoutReadiness(leasedJob.progress),
+                message: rework ? outcome.reworkInstruction : outcome.questions.join("; "),
+                error_code: "model_output_invalid_json",
+                failed_research_stage: researchStageInProgress,
+                projected_review_outcome: outcome.outcome,
+                projected_review_defects: outcome.defects,
+                open_questions: outcome.questions,
+                prompt_packet_path: promptPacketPath,
+                worker_id: options.workerId,
+                mode: "codex_cli",
+                ...(rework
+                  ? {
+                      requested_by: "worker",
+                      requested_at: new Date().toISOString(),
+                      rework_type: "bounded_automatic",
+                    }
+                  : {}),
+              },
+              lastError: CODEX_OUTPUT_FORMAT_ERROR_MESSAGE,
+            })
+            result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+            continue
+          }
           const updated = await updateResearchJob(
             options.supabase,
             researchFailureUpdate({
@@ -2923,6 +3017,12 @@ async function runCodexJudge(
 
 type CodexInfrastructureCode = "codex_timeout" | "infra_auth"
 
+function throwResearchRunFailure(message: string): never {
+  // Model telemetry persists a bounded string rather than an Error instance.
+  if (message === CODEX_OUTPUT_FORMAT_ERROR_MESSAGE) throw new CodexOutputFormatError()
+  throw new Error(message)
+}
+
 class CodexInfrastructureError extends Error {
   constructor(
     readonly code: CodexInfrastructureCode,
@@ -2953,6 +3053,7 @@ export async function runCodexJson(
     webSearch?: "disabled" | "live"
     imagePaths?: string[]
     cwd?: string
+    failureArchivePath?: string
   },
   spawn: WorkerSpawn = runWorkerProcess,
 ): Promise<JsonRecord> {
@@ -3029,7 +3130,18 @@ export async function runCodexJson(
     throw new Error(`Codex CLI did not write ${params.outputPath}`)
   }
 
-  return parseJsonObject(readFileSync(params.outputPath, "utf8"))
+  const raw = readFileSync(params.outputPath, "utf8")
+  try {
+    return parseJsonObject(raw)
+  } catch (error) {
+    if (error instanceof CodexOutputFormatError)
+      writeFileSync(
+        `${params.failureArchivePath ?? params.outputPath}.invalid-${randomUUID()}.txt`,
+        raw,
+        { flag: "wx", mode: 0o600 },
+      )
+    throw error
+  }
 }
 
 export function codexResearchRuntimeConfig(

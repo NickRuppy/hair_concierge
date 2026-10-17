@@ -139,6 +139,52 @@ test("actual ordered migrations expose one service-only default-compatible hando
   )
 })
 
+test("a payload-less technical correction preserves research bytes but advances the fenced revision and only its bounded counter", async (t) => {
+  const pg = await publicationDatabase(t)
+  const initial = await runningJob(pg)
+  const job = (
+    await pg.query<Job & { cycle_deadline_at: Date }>(
+      "SELECT * FROM product_intake_reserve_model_run($1,$2,$3,$4)",
+      [initial.id, initial.locked_by, initial.locked_at, initial.review_cycle_id],
+    )
+  ).rows[0]!
+  const before = await submission(pg, job.submission_id)
+  const result = await commit(pg, {
+    ...request(job),
+    next_status: "waiting_for_rework",
+    next_stage: "rework",
+    next_progress: { error_code: "model_output_invalid_json" },
+    next_last_error: "Invalid model JSON",
+    researched_payload: null,
+    research_artifacts: [],
+    review_assets: [],
+    notification_payload: null,
+    review_outcome: "continue",
+    request_auto_rework: true,
+  })
+  const after = await submission(pg, job.submission_id)
+  assert.deepEqual(after.researched_payload, before.researched_payload)
+  assert.equal(after.payload_sha256, before.payload_sha256)
+  assert.equal(after.payload_revision, 2)
+  assert.equal(result.review_cycle_id, job.review_cycle_id)
+  const saved = (
+    await pg.query<{
+      auto_rework_count: number
+      reserved_model_runs: number
+      cycle_deadline_at: Date
+    }>(
+      "SELECT auto_rework_count,reserved_model_runs,cycle_deadline_at FROM product_intake_research_jobs WHERE id=$1",
+      [job.id],
+    )
+  ).rows[0]!
+  assert.equal(saved.auto_rework_count, 1)
+  assert.equal(saved.reserved_model_runs, 1)
+  assert.equal(saved.cycle_deadline_at.toISOString(), job.cycle_deadline_at.toISOString())
+  assert.deepEqual((await pg.query("SELECT id FROM product_intake_admin_notifications")).rows, [])
+  assert.deepEqual((await pg.query("SELECT id FROM product_intake_review_assets")).rows, [])
+  assert.deepEqual((await pg.query("SELECT id FROM product_intake_review_decisions")).rows, [])
+})
+
 test("legacy named 14-argument calls retain allocated IDs and exact replay through the single 16-argument RPC", async (t) => {
   const pg = await publicationDatabase(t)
   const job = await runningJob(pg)

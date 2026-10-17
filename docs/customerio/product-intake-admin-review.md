@@ -1,6 +1,6 @@
 # Product Review admin alerts
 
-Status, 2026-10-16: **outbox/template delivered and deployed; Nick approved the test email; automatic alerts remain disabled**. The recipient and dedicated API key are private runtime configuration. This is an internal review alert; customer notification remains part of the separately approved exact product handoff. Independent reconciliation monitoring and bounded research-cycle changes are implemented in the next local increment, awaiting their reviewed publication/migration/release gates.
+Status, 2026-10-17: **automatic review alerts for new work enabled with Nick’s approval; twenty historical alerts held unsent**. The recipient and dedicated API key are private runtime configuration. This is an internal review alert; customer notification remains part of the separately approved exact product handoff. Reconciliation monitoring and bounded research-cycle infrastructure are deployed; the continuation repair is tracked in [the follow-up plan](../../plans/product-intake-cloud-research/bounded-continuation-2026-10-17.md).
 
 Authority: [Product Intake operations](../product-intake-research-ops.md),
 [approved Admin journey](../../plans/product-intake-cloud-research/review-proposal/journey.md)
@@ -11,7 +11,7 @@ questions and authenticated Admin link; no new audience or marketing flow.
 ## Dedicated Customer.io template
 
 - Name/trigger: `product_intake_admin_review_v1`; transactional message **20**, template **190**, workspace **219516**.
-- [Provider template](https://fly.customer.io/workspaces/219516/journeys/transactional/20). Created as a draft, then enabled for explicit API calls. No automatic caller is enabled.
+- [Provider template](https://fly.customer.io/workspaces/219516/journeys/transactional/20). Created as a draft, then enabled for API calls. The worker’s automatic caller is enabled for new work.
 - Sender: `Chaarlie <info@chaarlie.de>`, using the existing verified sender.
 - Subject: `{% if trigger.is_test %}[TEST] {% endif %}Produktprüfung: {{ trigger.outcome_label }}`.
 - HTML: [canonical template](product-intake-admin-review-template.html).
@@ -52,16 +52,20 @@ lane, rather than this inbox.
 ## Runtime configuration and activation
 
 ```dotenv
-PRODUCT_INTAKE_REVIEW_EMAILS=false
+PRODUCT_INTAKE_REVIEW_EMAILS=true
 PRODUCT_INTAKE_REVIEW_ALERT_EMAIL=<Nick's confirmed address, private configuration>
 CUSTOMERIO_PRODUCT_INTAKE_REVIEW_TRANSACTIONAL_MESSAGE_ID=20
 ```
 
 These names are consumed by the deployed sender. The approved dedicated key,
 recipient and message ID are installed in the current Hetzner release’s private
-mode-0600 `.env.local`. The running worker explicitly has
-`PRODUCT_INTAKE_REVIEW_EMAILS=false`; the reviewed release identity is recorded in
-[the continuation checklist](../../plans/product-intake-cloud-research/continuation-2026-10-16.md).
+mode-0600 `.env.local`. The running worker has `PRODUCT_INTAKE_REVIEW_EMAILS=true` as of 2026-10-17.
+Before activation, the exact twenty historical pending/unattempted rows were
+archived privately and deferred with `next_attempt_at = infinity`. The claim RPC
+therefore skips them; contents, status, attempts and delivery history are intact.
+New notifications retain their default schedule. These holds are administrative
+backlog holds, not uncertain provider sends. Do not release them during queue
+cleanup without Nick’s separate instruction.
 
 The completion RPC now atomically saves the final preview, job outcome and
 immutable outbox snapshot. It extends the existing lease fence and resolves only
@@ -77,12 +81,11 @@ missing receipts are conservatively uncertain. No historical rows are backfilled
 
 The new migration is `20261015200636_product_intake_admin_notifications.sql`.
 Applied surgically as production version `20261015200636`; its table and three
-RPCs are service-only, with RLS verified and zero outbox rows. The running old
-worker is unchanged. Deploy the new worker only after reviewed release/CI gates.
-The Admin queue/detail must be live before automatic alerts are enabled. Full S3
-judge/budget/automatic-rework integration is still a separate parent task; it must
-continue to use `continue` for intermediate rounds and only enqueue final review
-outcomes. Technical worker exceptions use ops monitoring, not this email lane.
+RPCs remain service-only with RLS verified. The Admin queue/detail and bounded
+cycle infrastructure were deployed through #696 before alert activation.
+Intermediate correction rounds use `continue` and enqueue no email; only final
+review outcomes notify. Infrastructure exceptions use ops monitoring. A bounded
+technical correction that exhausts its allowance records an explicit review hold.
 
 The explicit test command uses the real migrations in an isolated local PGlite
 ledger and synthetic submission; it never claims the Supabase backlog or creates
@@ -125,19 +128,17 @@ contain the test disclosure, product and direct Admin-home link; no empty questi
 section. Received headers confirm open/click tracking both `false`, with SPF,
 DKIM and DMARC passing. See the [sanitized delivery receipt](../../plans/product-intake-cloud-research/receipts/admin-alert-delivery-2026-10-15.json).
 
-Automatic alerts remain `false`. The dedicated key/recipient are deployed privately;
+The test ran with automatic alerts `false`; future-work delivery was enabled on 2026-10-17. The dedicated key/recipient are deployed privately;
 the additive outbox migration `20261015200636` is applied and verified. Nick
-confirmed on 2026-10-16 that the test’s wording/layout/link look right. Pending-row
-reconciliation, independent monitoring/routing proof and the exact bounded-cohort
-activation decision remain gates. Hold-for-reconciliation is settled.
+confirmed on 2026-10-16 that the test’s wording/layout/link look right. Independent monitoring/routing proof is complete; the earlier cohort’s old alerts
+remain held separately from new-work delivery. Hold-for-reconciliation is settled.
 No live database rows or customer notifications were created by this test.
 
 Provider field reference: [Customer.io transactional email API](https://docs.customer.io/messaging/send/transactional/email/) (`tracked:false` disables opens and link clicks).
 
 ## Held-delivery reconciliation
 
-The next worker increment’s independent observer (implemented locally, not yet
-deployed) reads only `needs_reconciliation`, `sending`
+The deployed worker’s independent observer reads only `needs_reconciliation`, `sending`
 and `failed` rows every 60 seconds. It uses the same five-minute lease boundary
 as the SQL claim RPC: a `sending` row is attention-required only after that
 lease expires. It reports changed nonempty counts to technical monitoring, and

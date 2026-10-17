@@ -52,6 +52,16 @@ export function boundedNumber(value: unknown, min: number, max: number, field: s
   return value
 }
 
+export const CODEX_OUTPUT_FORMAT_ERROR_MESSAGE =
+  "Codex output contained no complete top-level JSON object."
+
+export class CodexOutputFormatError extends Error {
+  constructor() {
+    super(CODEX_OUTPUT_FORMAT_ERROR_MESSAGE)
+    this.name = "CodexOutputFormatError"
+  }
+}
+
 export function parseJsonObject(raw: string): JsonRecord {
   try {
     const record = normalizeRecord(JSON.parse(raw) as unknown)
@@ -113,7 +123,7 @@ export function parseJsonObject(raw: string): JsonRecord {
       }
     }
   }
-  throw new Error("Codex output contained no complete top-level JSON object.")
+  throw new CodexOutputFormatError()
 }
 
 export function hasFinalResearchPayload(value: JsonRecord | null | undefined): value is JsonRecord {

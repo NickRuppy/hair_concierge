@@ -526,6 +526,7 @@ export async function runShampooResearchStages(params: {
   reservedModelRuns: number
   priorProof?: unknown
   model: (request: ShampooStageModelRequest) => Promise<JsonRecord>
+  allowUnfinishedSourceRetry?: boolean
 }): Promise<{ output: JsonRecord; proof: JsonRecord | null; formula: JsonRecord | null }> {
   let ownedRoot: string | undefined
   try {
@@ -541,7 +542,18 @@ export async function runShampooResearchStages(params: {
       "Für Recherche und Qualitätsprüfung reicht das verbleibende Budget nicht aus.",
     )
     let prior: ReturnType<typeof decodedProof> | undefined
-    if (params.reservedModelRuns > 0 || params.priorProof !== undefined) {
+    // A parser failure before source freeze accepted any facts has no blind
+    // assessment to reuse. Only the worker's recorded source-parser failure may
+    // retry that initial source step, with all four stage/judge slots remaining.
+    const retryUnfinishedSource =
+      params.allowUnfinishedSourceRetry === true &&
+      params.priorProof === undefined &&
+      params.reservedModelRuns > 0 &&
+      params.reservedModelRuns <= 2
+    if (
+      (params.reservedModelRuns > 0 && !retryUnfinishedSource) ||
+      params.priorProof !== undefined
+    ) {
       prior = decodedProof(params.priorProof, params)
       validateRequestedIdentity(params.packet, prior.freeze)
       requireEvidence(
