@@ -1,5 +1,7 @@
 # Affiliate Link Backfill — Design
 
+> **Historical (removed 2026-10-05).** This one-off backfill ran once (PR #123, 2026-05-26). Its subagent fan-out pieces — `scripts/validate-slice.ts`, `scripts/aggregate-affiliate-research.ts`, `src/lib/affiliate-research/slice-validator.ts`, and `src/lib/affiliate-research/aggregate.ts` — were deleted because nothing used them anymore, and the aggregator's shop ranking predated the universal purchase-shop order. `url-gate.ts` and `csv.ts` remain (live callers). `export-missing-affiliate-links.ts` and `write-affiliate-links.ts` remain as legacy tooling; nothing produces `data/affiliate-research/approved.csv` anymore, so the writer needs a separately prepared, human-reviewed CSV with the same seven-column header. Purchase links now come from the product-intake worker and the price-audit lane.
+
 **Date:** 2026-05-13
 **Status:** Approved (brainstorming)
 **Owner:** Nick
