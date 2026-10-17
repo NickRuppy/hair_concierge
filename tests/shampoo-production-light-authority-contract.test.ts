@@ -164,6 +164,7 @@ function authorityInput(
       ],
       factFingerprint: "facts-fixture",
       spec: {
+        weight: null,
         thickness: row.thickness,
         shampooBucket: row.shampoo_bucket,
         scalpRoute: row.scalp_route,

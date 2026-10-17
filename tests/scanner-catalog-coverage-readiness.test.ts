@@ -32,6 +32,7 @@ function shampooFacts(
     factFingerprint: "test-shampoo-fingerprint",
     ...overrides,
     spec: {
+      weight: null,
       thickness: "normal",
       shampooBucket,
       scalpRoute: shampooBucket === "schuppen" ? "dandruff" : "balanced",
@@ -66,6 +67,7 @@ test("scanner readiness discovers a dandruff-only product through its live autho
           },
         ],
         spec: {
+          weight: null,
           thickness: "normal",
           shampooBucket: selection.role === "shampoo_dandruff" ? "schuppen" : null,
           scalpRoute: selection.role === "shampoo_dandruff" ? "dandruff" : null,

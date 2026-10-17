@@ -33,6 +33,7 @@ import {
 } from "./candidate-ranking"
 import {
   candidateDimensionCoverage,
+  rankingCautionCount,
   comparisonDimensions,
   positionLabel,
   criterionIdForDimension,
@@ -596,7 +597,7 @@ function assessCandidate(
     facts: candidate,
     targetMatchCount: coverage.matches,
     targetCount: coverage.total,
-    cautionCount: detached.criteria.filter((criterion) => criterion.result === "caution").length,
+    cautionCount: rankingCautionCount(input, detached.criteria),
     shampooGentleness: shampooGentlenessRank(input, candidate),
     dryShampooVolumePreference: dryShampooVolumeRank(input, candidate),
     priceEur: candidate.priceEur ?? null,

@@ -12,7 +12,7 @@ import type {
   Stage3CategoryAuthorityAdapter,
   Stage3ShampooFacts,
 } from "../contracts"
-import { candidateDimensionCoverage } from "../../comparison-dimensions"
+import { candidateDimensionCoverage, rankingCautionCount } from "../../comparison-dimensions"
 import {
   compareRankableCandidates,
   shampooGentlenessRank,
@@ -43,8 +43,14 @@ export function recommendationForShampoo(
     role: input.role,
     displayName: candidate.displayName,
     reason: supportive
-      ? evaluateFacts(input, candidate).criteria.find((item) => item.result === "caution")!
-          .explanation
+      ? evaluateFacts(input, candidate).criteria.find(
+          (item) =>
+            item.result === "caution" &&
+            !(
+              item.criterionId === "shampoo.thickness" &&
+              isScalpShampooTarget({ role: input.role, target: input.categoryDecision.target })
+            ),
+        )!.explanation
       : "Passt zur erforderlichen Shampoo-Aufgabe.",
     authorityRuleId: supportive
       ? "shampoo.selection.verified_supportive_intensity"
@@ -144,7 +150,7 @@ function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3Sham
     result.criteria.splice(
       intensityIndex,
       0,
-      criterion("shampoo.thickness", "Haardicke", "pass", "Entspricht deinem Bedarf."),
+      scalpThicknessCriterion(input.hairThickness, facts.spec.weight),
     )
   }
   const roleCriterion = result.criteria.find((row) => row.criterionId === "shampoo.role")!
@@ -163,6 +169,35 @@ function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3Sham
       ),
     )
   return result
+}
+
+/** T7: display the real check without adding fit steps or missing verdict facts (R19). */
+function scalpThicknessCriterion(
+  thickness: string | undefined,
+  weight: Stage3ShampooFacts["spec"]["weight"],
+) {
+  if (
+    !thickness ||
+    !["fine", "normal", "coarse"].includes(thickness) ||
+    !weight ||
+    !["light", "moderate", "heavy"].includes(weight)
+  )
+    return criterion("shampoo.thickness", "Haardicke", "unknown", "Noch nicht geprüft.")
+  const fits =
+    thickness === "fine"
+      ? weight === "light"
+      : thickness === "normal"
+        ? weight === "light" || weight === "moderate"
+        : weight === "heavy"
+  if (fits) return criterion("shampoo.thickness", "Haardicke", "pass", "Entspricht deinem Bedarf.")
+  return criterion(
+    "shampoo.thickness",
+    "Haardicke",
+    "caution",
+    thickness === "coarse"
+      ? "Eher leicht für dein Haar. Nur auf die Kopfhaut auftragen, Längen mit Conditioner pflegen."
+      : "Eher reichhaltig für dein Haar. Nur auf die Kopfhaut auftragen, Längen mit Conditioner pflegen.",
+  )
 }
 
 function bestCandidate(input: Stage3AuthorityInput<"shampoo">) {
@@ -185,7 +220,7 @@ function bestCandidate(input: Stage3AuthorityInput<"shampoo">) {
           candidate.item,
           candidate.result.criteria,
         ).matches,
-        cautionCount: candidate.result.criteria.filter((c) => c.result === "caution").length,
+        cautionCount: rankingCautionCount(input, candidate.result.criteria),
         shampooGentleness: shampooGentlenessRank(input, candidate.item),
         catalogSortOrder: candidate.item.catalogSortOrder,
         priceEur: candidate.item.priceEur ?? null,
