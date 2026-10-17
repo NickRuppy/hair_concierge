@@ -1,0 +1,118 @@
+{
+  "category": "shampoo",
+  "role": "shampoo_dandruff",
+  "cadence": {
+    "kind": "label_schedule",
+    "copy_de": "Täglich oder 2-3x pro Woche anwenden."
+  },
+  "application_stage": "wet_cleanse",
+  "application_state": null,
+  "placement": "scalp_roots",
+  "contact_time_seconds": null,
+  "rinse_action": "rinse_out",
+  "reapplication": "not_stated",
+  "instruction_modifiers": [],
+  "guidance_payload": {
+    "schemaVersion": 1,
+    "protocolVersion": 1,
+    "locale": "de",
+    "guidanceKey": "product-shampoo-dandruff-7e95671b-41a7-4f5c-9188-e535e46678ba",
+    "scope": {
+      "kind": "product",
+      "category": "shampoo",
+      "productId": "7e95671b-41a7-4f5c-9188-e535e46678ba"
+    },
+    "role": "cleanse",
+    "applicationFamily": "targeted_treatment_shampoo",
+    "compatibleDayTypes": [
+      "wash_day"
+    ],
+    "exactGuidanceRequired": true,
+    "sequence": {
+      "anchor": "wet_cleanse",
+      "before": [
+        "post_cleanse_rinse_off"
+      ],
+      "after": [],
+      "conflictsWith": []
+    },
+    "requirements": {
+      "requiredCatalogFacts": [],
+      "requiredProtocolFacts": [],
+      "requiredProfileFacts": []
+    },
+    "protocolFacts": {
+      "applicationArea": "scalp_roots",
+      "rinse": "rinse_out",
+      "contactTimeSeconds": null,
+      "conditionerRelationship": "not_applicable",
+      "reapplication": "none",
+      "amount": null,
+      "cautions": []
+    },
+    "steps": [
+      {
+        "stepKey": "apply-dandruff-shampoo",
+        "action": "apply_product",
+        "copyTemplateDe": "Das Shampoo mit etwas Wasser in den Handflächen aufschäumen. Auf der Kopfhaut verteilen und mit den Fingerkuppen sanft einmassieren."
+      },
+      {
+        "stepKey": "wait-dandruff-shampoo",
+        "action": "wait",
+        "copyTemplateDe": "2–3 Minuten einwirken lassen."
+      },
+      {
+        "stepKey": "rinse-dandruff-shampoo",
+        "action": "rinse",
+        "copyTemplateDe": "Gründlich lauwarm ausspülen – der ablaufende Schaum reinigt die Längen mit."
+      }
+    ],
+    "evidence": [
+      {
+        "sourceUrl": "https://sebamed.de/de/p/antischuppen-shampoo-plus/",
+        "sourceType": "manufacturer",
+        "checkedAt": "2026-10-13"
+      }
+    ]
+  },
+  "source_label": "Herstelleranleitung",
+  "source_url": "https://sebamed.de/de/p/antischuppen-shampoo-plus/",
+  "source_text": "Herstelleranleitung sebamed.de (abgerufen 2026-10-13): \"Shampoo in der Handinnenfläche aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Ausspülen. Täglich oder 2-3x pro Woche anwenden.\" Wirkstoff Piroctone Olamine.",
+  "guidance_payload_v2": {
+    "schemaVersion": 2,
+    "contractKind": "product_pointer",
+    "scope": {
+      "kind": "product",
+      "category": "shampoo",
+      "productId": "7e95671b-41a7-4f5c-9188-e535e46678ba"
+    },
+    "sourceRole": "shampoo_dandruff",
+    "role": "cleanse",
+    "applicationFamily": "targeted_treatment_shampoo",
+    "facts": {
+      "applicationState": "wet_hair",
+      "applicationArea": "scalp_roots",
+      "rinse": "rinse_out",
+      "contactTime": {
+        "kind": "range_seconds",
+        "minimumSeconds": 120,
+        "maximumSeconds": 180
+      },
+      "amount": null,
+      "heat": null,
+      "conditionerPolicy": "not_applicable"
+    },
+    "workflowId": null,
+    "requiredCompanionProductId": null,
+    "runtimeBlockerCode": null,
+    "exactSteps": [],
+    "cautionCodes": [],
+    "evidence": [
+      {
+        "sourceUrl": "https://sebamed.de/de/p/antischuppen-shampoo-plus/",
+        "sourceType": "manufacturer",
+        "checkedAt": "2026-10-13"
+      }
+    ]
+  }
+}
