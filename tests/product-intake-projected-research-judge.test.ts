@@ -201,6 +201,61 @@ test("raw blockers, readiness gaps and locked engines cannot be cleared by a cle
   )
 })
 
+test("an explicitly indexed technical blocker continues within budget while uncovered or human concerns stay held", () => {
+  const raw = "leave-in research adapter: property_synthesis.leave_in_research_envelope is required"
+  const machine = {
+    code: "schema_or_adapter_invalid",
+    field: "raw_blockers[0]",
+    reason: "The category envelope is missing; complete it from the supplied contract.",
+  }
+  const result = decideProjectedResearchOutcome(
+    input({
+      rawBlockers: [raw],
+      verdict: parseProjectedResearchJudgeVerdict({ defects: [machine] }),
+    }),
+  )
+  assert.equal(result.outcome, "needs_bounded_rework")
+  assert.deepEqual(result.questions, [])
+  assert.match(result.reworkInstruction!, /leave_in_research_envelope/)
+  for (const overrides of [
+    { rawBlockers: [raw, "An unclassified formula concern"] },
+    { rawBlockers: ["identity_conflict: manufacturer and bottle disagree"] },
+    {
+      verdict: parseProjectedResearchJudgeVerdict({
+        defects: [{ ...machine, field: "raw_blockers" }],
+      }),
+    },
+    {
+      verdict: parseProjectedResearchJudgeVerdict({
+        defects: [{ ...machine, field: "raw_blockers[1]" }],
+      }),
+    },
+    { autoReworkEnabled: false },
+    { autoReworkCount: 2 },
+    { reservedModelRuns: 5 },
+    { cycleDeadlineAt: "2026-10-16T07:59:59.999Z" },
+    {
+      verdict: parseProjectedResearchJudgeVerdict({
+        defects: [
+          machine,
+          { code: "identity_conflict", field: "formula", reason: "Different formulas." },
+        ],
+      }),
+    },
+  ]) {
+    assert.equal(
+      decideProjectedResearchOutcome(
+        input({
+          rawBlockers: [raw],
+          verdict: parseProjectedResearchJudgeVerdict({ defects: [machine] }),
+          ...overrides,
+        }),
+      ).outcome,
+      "blocked_needs_human",
+    )
+  }
+})
+
 test("automatic rework requires explicit switch, at most two rounds and two remaining model slots", () => {
   const machine = verdict("source_missing_for_field")
   for (const overrides of [

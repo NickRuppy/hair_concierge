@@ -367,8 +367,9 @@ proofs or approval flags cannot establish readiness. A correction reuses the fro
 assessment only with the same formula/cycle and budget for repair plus judge.
 All launches share the six-run/45-minute cap. D2 retains regular Shampoo research
 and asks Nick about the extra listing in “Entscheidung nötig”; no second product
-is created automatically. This integration is local until separately deployed;
-automatic email/image/rework switches remain disabled during setup.
+is created automatically. The integration is deployed. Email delivery for new work is enabled separately
+from bounded research correction and automatic image preparation; inspect the
+current private runtime flags before changing them.
 
 Conditioner-specific rule:
 
@@ -477,10 +478,11 @@ What this cockpit intentionally must not do:
 
 Internal Admin alert template/setup is tracked in
 [Product Review admin alerts](customerio/product-intake-admin-review.md).
-The outbox is deployed with automatic delivery disabled. Dedicated provider
-setup, production migration and one real email/inbox verification are complete;
-Nick approved the test email on 2026-10-16. Reconciliation monitoring, the complete
-review flow and a separate bounded activation decision remain gates. Uncertain sends are held for
+Automatic delivery for new work was enabled with Nick’s approval on 2026-10-17.
+The twenty historical pending alerts remain unsent with `next_attempt_at = infinity`;
+their original payloads and delivery history are preserved privately. New alerts
+keep their normal schedule. Provider setup, the tested template and independent
+reconciliation monitoring are deployed. Uncertain sends remain held for
 reconciliation, never automatically resent. This internal alert
 never authorizes customer notification or product publication.
 
@@ -1453,7 +1455,6 @@ After approval:
 - [ ] User notification was sent.
 - [ ] Daily product-addition record was written.
 
-
 ### Private raw candidate handoff
 
 With automatic image preparation disabled, otherwise complete research stages
@@ -1466,3 +1467,17 @@ then separately reviews the final image and confirms publication. Candidate
 storage never fills the final catalog-image fields. Interrupted private uploads
 may remain unreferenced; they must not be registered as stale evidence or deleted
 through speculative cleanup.
+
+### Bounded technical corrections
+
+An untyped research blocker may request a correction only when the projected
+Sol judge classifies its exact zero-based `raw_blockers[index]` field with one
+machine-fixable code. Explicit typed human blockers and any uncovered concern
+remain held. Technical defects are corrected within the existing two rounds,
+six reserved model runs and fixed 45-minute cycle; there is no extra retry budget.
+Malformed model JSON is retained privately and requests a payload-less atomic
+correction, never guessed JSON or a ready/publication verdict. A malformed initial
+Shampoo source-freeze response can retry only before any freeze was accepted and
+with all four source/blind/reveal/judge slots remaining. Existing frozen evidence
+is still required for subsequent Shampoo correction. Exhaustion creates a clear
+technical review hold and an alert rather than asking Nick to invent research facts.
